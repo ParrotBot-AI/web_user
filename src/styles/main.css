@@ -1,0 +1,21 @@
+@import './theme.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+html {
+  font-size: 16px;
+}
+body, html {
+  font-family: ui-sans-serif, -apple-system, Arial, Helvetica,
+  'Apple Color Emoji', sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol', monospace;
+}
+.app {
+  width: 100vw;
+  height: 100vh;
+}

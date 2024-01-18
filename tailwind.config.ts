@@ -1,0 +1,26 @@
+
+
+const tailwindConfig = {
+  content: ['./src/**/*.vue'],
+  mode: 'jit',
+  corePlugins: {
+    preflight: false,
+  },
+  theme: {
+    screens: {
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1200px',
+    },
+    colors: {
+      'login-bg': 'var(--color-login-bg)',
+      'green-1': 'var(--color-green)',
+      'white': 'var(--color-white)',
+      'gray-900': 'var(--color-gray-900)',
+      'gray-500': 'var(--color-gray-500)',
+    },
+  },
+}
+
+export default tailwindConfig;
