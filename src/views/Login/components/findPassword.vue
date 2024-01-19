@@ -1,6 +1,6 @@
 <template>
   <div class="absolute right-5 top-1/2 -translate-y-1/2 bg-white shadow-[0_4px_20px_0px_rgba(27,139,140,0.2)] w-[456px] z-10 rounded-lg p-12">
-      <h1 class="font-normal text-4xl text-gray-900">验证码登录/注册</h1>
+      <h1 class="font-normal text-4xl text-gray-900"><ArrowLeftOutlined class="pr-2" @click="onClickToPassword" />忘记密码</h1>
       <a-form
         ref="formRef"
         :model="formState"
@@ -35,45 +35,52 @@
           </template>
         </a-input>
       </a-form-item>
-      <a-form-item>
-        <span class="text-green-1 font-semibold cursor-pointer" @click="onClickChangeLogin">切换为密码登陆</span>
+      <a-form-item
+        label="设置新密码"
+        name="password"
+        :rules="rulesRef.password"
+      >
+        <a-input v-model:value="formState.password" class="py-2.5 px-3.5" placeholder="输入新密码">
+        </a-input>
       </a-form-item>
       <a-form-item class="mb-0">
-        <a-button type="primary" html-type="submit" class="shadow-none w-full px-4 py-2.5 h-auto">登录 / 注册</a-button>
+        <a-button type="primary" html-type="submit" class="shadow-none w-full px-4 py-2.5 h-auto">找回密码</a-button>
       </a-form-item>
     </a-form>
-    <h4 class="text-center pt-4 font-normal text-gray-600 text-[12px]">未注册的手机号验证通过后将直接注册</h4>
   </div>
 </template>
 <script setup lang="ts">
 import {reactive, ref} from "vue"
 import { useUserStore } from "@/stores/user"
 import { mobileRegex } from "@/utils/utils"
-import {useGetCode} from "@/utils/useGetCode"
+import { ArrowLeftOutlined } from '@ant-design/icons-vue';
 import type { FormInstance } from 'ant-design-vue'
+import {useGetCode} from "@/utils/useGetCode"
 const userStore = useUserStore()
 const formRef = ref<FormInstance>();
 const {getCodeBtnText, getCode} = useGetCode()
 const formState = reactive({
   mobile: '',
   code: '',
+  password: '',
   type: 'sms'
 })
 const rulesRef = reactive({
   mobile: [{ required: true, message: '请输入你的手机号！' }, { pattern: mobileRegex, message: '请输入正确的手机号！', trigger: 'blur'}],
-  code: [{ required: true, message: '请输入验证码！' }]
+  code: [{ required: true, message: '请输入验证码！' }],
+  password: [{ required: true, message: '请输入密码！' }]
 });
 const onFinish = () => {
   console.log('Success:', formState)
 }
 const onClickGetCode = () => {
   formRef.value.validateFields('mobile').then(() => {
-    getCode(formState.mobile, () => {
+     getCode(formState.mobile, () => {
       console.log(formState.mobile)
-    })
+     })
   })
 }
-const onClickChangeLogin = () => {
+const onClickToPassword = () => {
   userStore.onClickChangeLoginType('password')
 }
 </script>

@@ -25,11 +25,15 @@
         <a-input-password v-model:value="formState.password" class="px-3.5 py-2.5" placeholder="输入密码"></a-input-password>
       </a-form-item>
       <a-form-item>
-        <span class="text-green-1 font-semibold cursor-pointer" @click="onClickChangeLogin">切换为验证码登陆</span>
+        <div class="flex justify-between w-full">
+          <span class="text-green-1 font-semibold cursor-pointer" @click="userStore.onClickChangeLoginType('code')">切换为验证码登陆</span>
+          <span class="text-green-1 font-semibold cursor-pointer" @click="userStore.onClickChangeLoginType('findPassword')">忘记密码？</span>
+        </div>
       </a-form-item>
       <a-form-item class="mb-0">
         <a-button type="primary" html-type="submit" class="shadow-none w-full px-4 py-2.5 h-auto">登录</a-button>
       </a-form-item>
+      <h4 class="text-center pt-4 font-normal text-gray-600 text-[12px]" @click="userStore.onClickChangeLoginType('code')">还没有账号？ <span class="text-green-1">马上注册</span></h4>
     </a-form>
   </div>
 </template>
@@ -44,9 +48,5 @@ const formState = reactive({
 })
 const onFinish = () => {
   console.log('Success:', formState)
-  userStore.login(formState)
-}
-const onClickChangeLogin = () => {
-  userStore.onClickChangeLoginType('code')
 }
 </script>

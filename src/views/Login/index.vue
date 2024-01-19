@@ -14,9 +14,11 @@ import { useUserStore } from "@/stores/user";
 import { computed } from 'vue';
 import CodeLogin from './components/codeLogin.vue'
 import PasswordLogin from './components/passwordLogin.vue'
+import FindPassword from './components/findPassword.vue'
 const LoginComponents = {
   password: PasswordLogin,
-  code: CodeLogin
+  code: CodeLogin,
+  findPassword: FindPassword
 }
 const userStore = useUserStore()
 const loginComponent = computed(() => LoginComponents[userStore.loginType])
