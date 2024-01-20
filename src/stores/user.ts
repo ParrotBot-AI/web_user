@@ -1,17 +1,14 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import {request_login} from "@/service/login"
+type LoginType = 'code' | 'password' | 'findPassword'
 export const useUserStore = defineStore('user', () => {
-  const getCodeCountdown = ref(60)
-  const doubleCount = computed(() => count.value * 2)
-  function login() {
-    request_login()
+  const loginType = ref<LoginType>('code')
+  // 切换登录方式
+  const onClickChangeLoginType = (type:LoginType) => {
+    loginType.value = type
   }
-  function getCode(phoneNumber:string) {
-    if(phoneNumber){
-      console.log(phoneNumber)
-    }
-  }
+  
 
-  return { getCodeCountdown, doubleCount, login, getCode }
+  return {onClickChangeLoginType, loginType}
 })

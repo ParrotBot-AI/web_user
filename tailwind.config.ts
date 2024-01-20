@@ -15,13 +15,14 @@ const tailwindConfig = {
     },
     colors: {
       'login-bg': 'var(--color-login-bg)',
-      'green-1': 'var(--color-green)',
+      'green-1': 'var(--color-green-1)',
+      'green-2': 'var(--color-green-2)',
       'white': 'var(--color-white)',
       'gray-900': 'var(--color-gray-900)',
       'gray-500': 'var(--color-gray-500)',
-      'transparent': 'var(--color-transparent)'
+      'gray-600': 'var(--color-gray-600)',
+      'gray-700': 'var(--color-gray-700)',
     },
-    
   },
 }
 
