@@ -19,7 +19,9 @@ const tailwindConfig = {
       'white': 'var(--color-white)',
       'gray-900': 'var(--color-gray-900)',
       'gray-500': 'var(--color-gray-500)',
+      'transparent': 'var(--color-transparent)'
     },
+    
   },
 }
 
