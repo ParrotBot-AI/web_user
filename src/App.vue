@@ -8,6 +8,7 @@ import { RouterView } from 'vue-router'
     :theme="{
       token: {
         colorPrimary: '#1b8b8c',
+        colorText: '#344054',
         borderRadius: 8,
         fontSize: 16
       },
