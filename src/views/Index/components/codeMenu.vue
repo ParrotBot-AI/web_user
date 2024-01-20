@@ -15,7 +15,7 @@
     />
   </svg>
   <a-menu
-    class="bg-transparent text-white hover:before:text-green-1 pt-8"
+    class="bg-transparent text-white pt-8"
     v-model:openKeys="openKeys"
     v-model:selectedKeys="selectedKeys"
     mode="inline"
