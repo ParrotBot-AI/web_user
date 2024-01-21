@@ -58,12 +58,11 @@ import type { FormInstance } from 'ant-design-vue'
 import {useGetCode} from "@/utils/useGetCode"
 const userStore = useUserStore()
 const formRef = ref<FormInstance>();
-const {getCodeBtnText, getCode} = useGetCode()
+const {getCodeBtnText, getCode, resetCode} = useGetCode()
 const formState = reactive({
   mobile: '',
   code: '',
-  password: '',
-  type: 'sms'
+  password: ''
 })
 const rulesRef = reactive({
   mobile: [{ required: true, message: '请输入你的手机号！' }, { pattern: mobileRegex, message: '请输入正确的手机号！', trigger: 'blur'}],
@@ -76,7 +75,7 @@ const onFinish = () => {
 const onClickGetCode = () => {
   formRef.value!.validateFields('mobile').then(() => {
      getCode(formState.mobile, () => {
-      console.log(formState.mobile)
+        userStore.api_sms(formState.mobile, resetCode)
      })
   })
 }

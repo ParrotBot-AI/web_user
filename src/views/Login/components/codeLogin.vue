@@ -61,11 +61,12 @@ import { reactive, ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { mobileRegex } from '@/utils/utils'
 import { useGetCode } from '@/utils/useGetCode'
+import type {LOGIN_TYPE_SMS} from "@/service/user"
 import type { FormInstance } from 'ant-design-vue'
 const userStore = useUserStore()
 const formRef = ref<FormInstance>()
-const { getCodeBtnText, getCode } = useGetCode()
-const formState = reactive({
+const { getCodeBtnText, getCode, resetCode } = useGetCode()
+const formState = reactive<LOGIN_TYPE_SMS>({
   mobile: '',
   code: '',
   type: 'sms'
@@ -78,12 +79,12 @@ const rulesRef = reactive({
   code: [{ required: true, message: '请输入验证码！' }]
 })
 const onFinish = () => {
-  console.log('Success:', formState)
+  userStore.api_login(formState)
 }
 const onClickGetCode = () => {
   formRef.value!.validateFields('mobile').then(() => {
     getCode(formState.mobile, () => {
-      console.log(formState.mobile)
+      userStore.api_sms(formState.mobile, resetCode)
     })
   })
 }

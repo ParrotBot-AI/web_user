@@ -40,13 +40,14 @@
 <script setup lang="ts">
 import {reactive} from "vue"
 import {useUserStore} from "@/stores/user"
+import type {LOGIN_TYPE_PHOME} from "@/service/user"
 const userStore = useUserStore()
-const formState = reactive({
+const formState = reactive<LOGIN_TYPE_PHOME>({
   username: '',
   password: '',
   type: 'account',
 })
 const onFinish = () => {
-  console.log('Success:', formState)
+  userStore.api_login(formState)
 }
 </script>
