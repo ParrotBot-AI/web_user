@@ -67,7 +67,7 @@ const onFinish = () => {
   console.log('Success:', formState)
 }
 const onClickGetCode = () => {
-  formRef.value.validateFields('mobile').then(() => {
+  formRef.value!.validateFields('mobile').then(() => {
     getCode(formState.mobile, () => {
       console.log(formState.mobile)
     })

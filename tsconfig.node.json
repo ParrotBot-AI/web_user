@@ -5,8 +5,10 @@
     "vitest.config.*",
     "cypress.config.*",
     "nightwatch.conf.*",
-    "playwright.config.*"
+    "playwright.config.*",
+    "declarations.d.ts"
   ],
+  "exclude": ["node_modules", "dist", "build", "out", "public"],
   "compilerOptions": {
     "composite": true,
     "noEmit": true,

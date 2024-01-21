@@ -1,12 +1,12 @@
 class Storage {
-  set(key: string, value: any, date?: string | number | undefined = 'permanent') {
+  set(key: string, value: any, date: string | number | undefined = 'permanent') {
     const data = {
       value,
       date
     }
     if (date != 'permanent') {
       const d = (new Date()).valueOf()
-      data.date = Number(d) + date
+      data.date = Number(d) + Number(date)
     }
     localStorage.setItem(key, JSON.stringify(data))
   }

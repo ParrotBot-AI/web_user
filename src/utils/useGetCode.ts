@@ -1,5 +1,5 @@
 import {ref, computed} from "vue"
-export function useGetCode(count?:number = 60) {
+export function useGetCode(count:number = 60) {
   const getCodeCountdown = ref(count)
   const getCodeCountdownFlag = ref(false)
   const getCodeBtnText = computed(() => {
@@ -25,5 +25,9 @@ export function useGetCode(count?:number = 60) {
       }
     }, 1000)
   }
-  return {getCode, getCodeBtnText, getCodeCountdownFlag}
+  function resetCode() {
+    getCodeCountdown.value = 60
+    getCodeCountdownFlag.value = false
+  }
+  return {getCode, getCodeBtnText, getCodeCountdownFlag, resetCode}
 }

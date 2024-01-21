@@ -11,7 +11,10 @@
           <a-form-item
             label="怎么称呼您呢？"
             name="username"
-            :rules="rulesRef"
+            :rules="[{
+              required: true,
+              message: '请输入您的昵称'
+            }]"
           >
             <a-input v-model:value="formState.username" type="tel" class="py-2.5 px-3.5" placeholder="输入您的手机号">
             </a-input>
@@ -30,8 +33,6 @@
 <script setup lang="ts">
 import {reactive} from "vue"
 import welcomeBg from "@/assets/images/welcome-bg.png"
-import {useUserStore} from "@/stores/user"
-const userStore = useUserStore()
 const formState = reactive({
   username: '',
 })

@@ -3,7 +3,7 @@ import axios from 'axios'
 import { message } from 'ant-design-vue';
 
 
-export const SUCCESS_CODE = 10000
+export const SUCCESS_CODE = 20000
 export const AUTHERROT_CODE = 10005
 export const UNCONFIRMED_MSG = 'UNCONFIRMED'
 interface IRequestOptions extends AxiosRequestConfig {
@@ -19,7 +19,10 @@ export interface IResponseData {
 interface IResponse<T = IResponseData> extends AxiosResponse {
   data: T
 }
-
+type USERINFO = {
+  AccessToken: string
+  TokenType: string
+}
 class Axios {
   private instance: AxiosInstance
 
@@ -51,7 +54,7 @@ class Axios {
   private async handleSuccessRequeset(config: IRequestOptions) {
     const {ignoreAuth = false} = config
     if (!ignoreAuth) {
-      const userInfo = {}
+      const userInfo = {} as USERINFO
       config.headers.Authorization =
         `${userInfo?.TokenType} ${userInfo?.AccessToken}` || ``
     }
@@ -118,6 +121,9 @@ class Axios {
   private refreshToken(): Promise<any> {
     // 发起请求刷新token
     console.log('refreshToken')
+    return new Promise(() => {
+
+    })
   }
 
   private subscribeTokenRefresh(callback: (token: string) => void) {
