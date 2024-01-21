@@ -9,3 +9,7 @@ type LOGIN_TYPE = {
 export const request_login = (data:LOGIN_TYPE) => {
   return http.post('/login', data)
 }
+
+export const request_menu = () => {
+  return http.post('/menu')
+}

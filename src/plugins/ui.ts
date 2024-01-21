@@ -1,4 +1,4 @@
-import { Button, message, ConfigProvider, StyleProvider, Form, Input, Layout } from 'ant-design-vue';
+import { Button, message, ConfigProvider, StyleProvider, Form, Input, Layout, Menu } from 'ant-design-vue';
 import type { App } from 'vue'
 
 export function registerUI() {
@@ -9,6 +9,7 @@ export function registerUI() {
     app.use(Form)
     app.use(Input)
     app.use(Layout)
+    app.use(Menu)
     app.config.globalProperties.$message = message
   }
 }
