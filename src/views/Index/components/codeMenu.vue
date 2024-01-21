@@ -20,11 +20,19 @@
     @click="handleClick"
   ></a-menu>
 
-  <div class="absolute left-5 bottom-16 w-1/2 text-white flex">
-    <img :src="Ellipse" alt="user" />
-    <div class="absolute left-11">
-      <div>Luna</div>
-      <div>138****7894</div>
+  <div class="absolute left-5 bottom-16 text-white w-90">
+    <div class="flex">
+      <img :src="Ellipse" alt="user" />
+      <div class="absolute left-11">
+        <div>Luna</div>
+        <div>138****7894</div>
+      </div>
+      <img
+        :src="LayOut"
+        alt="layout"
+        class="absolute left-20 pl-16 pt-2"
+        @click="router.push('/login')"
+      />
     </div>
   </div>
 </template>
@@ -33,9 +41,14 @@ import { reactive, ref, watch, VueElement, h } from 'vue'
 import type { MenuProps, ItemType } from 'ant-design-vue'
 import { useMenuStore } from '@/stores/menu'
 import logoBg from '@image/logo-bg.png'
-import HomeLine from '@image/home-line.svg'
+import LayOut from '@image/log-out-01.svg'
 import Ellipse from '@image/Ellipse.png'
 import { createFromIconfontCN } from '@ant-design/icons-vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const userStore = useMenuStore()
+const menu_data = userStore.getValue()
 
 const customIconFontUrl = '//at.alicdn.com/t/c/font_4417762_uuyyk8jsk1n.js'
 
@@ -53,11 +66,6 @@ const SumIcon = () => h(IconFont, { type: 'icon-rentou' })
 const GoalIcon = () => h(IconFont, { type: 'icon-mubiaoguanli' })
 const SettingIcon = () => h(IconFont, { type: 'icon-shezhi' })
 
-const userStore = useMenuStore()
-const a = userStore.getValue()
-
-console.log(a)
-
 const selectedKeys = ref<string[]>(['1'])
 const openKeys = ref<string[]>(['sub1'])
 
@@ -71,18 +79,18 @@ function getItem(label: VueElement | string, key: string, icon?: any, type?: 'gr
 }
 
 const items1: ItemType[] = reactive([
-  getItem(a[0]['name'], 'sub1', () => h(BoardIcon)),
-  getItem(a[1]['name'], 'sub2', () => h(BookIcon)),
-  getItem(a[2]['name'], 'sub3', () => h(HearingIcon)),
-  getItem(a[3]['name'], 'sub4', () => h(SpokenIcon)),
-  getItem(a[4]['name'], 'sub5', () => h(WriteIcon)),
-  getItem(a[5]['name'], 'sub6', () => h(ReciteIcon)),
-  getItem(a[6]['name'], 'sub7', () => h(SumIcon))
+  getItem(menu_data[0]['name'], 'sub1', () => h(BoardIcon)),
+  getItem(menu_data[1]['name'], 'sub2', () => h(BookIcon)),
+  getItem(menu_data[2]['name'], 'sub3', () => h(HearingIcon)),
+  getItem(menu_data[3]['name'], 'sub4', () => h(SpokenIcon)),
+  getItem(menu_data[4]['name'], 'sub5', () => h(WriteIcon)),
+  getItem(menu_data[5]['name'], 'sub6', () => h(ReciteIcon)),
+  getItem(menu_data[6]['name'], 'sub7', () => h(SumIcon))
 ])
 
 const items2: ItemType[] = reactive([
-  getItem(a[7]['name'], 'sub8', () => h(GoalIcon)),
-  getItem(a[8]['name'], 'sub9', () => h(SettingIcon))
+  getItem(menu_data[7]['name'], 'sub8', () => h(GoalIcon)),
+  getItem(menu_data[8]['name'], 'sub9', () => h(SettingIcon))
 ])
 
 const handleClick: MenuProps['onClick'] = (e) => {
