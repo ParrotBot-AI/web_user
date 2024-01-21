@@ -1,7 +1,9 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import {request_login, request_sms} from "@/service/user"
-import type { LOGIN_TYPE_SMS, LOGIN_TYPE_PHOME } from "@/service/user"
+import {request_login, request_sms, request_resetPassword} from "@/service/user"
+import {setWithExpiry} from "@/utils/storage"
+import router from "@/router"
+import type { LOGIN_TYPE_SMS, LOGIN_TYPE_PHOME, RESRPASSWOED } from "@/service/user"
 import {message} from "ant-design-vue"
 type LoginType = 'code' | 'password' | 'findPassword'
 export const useUserStore = defineStore('user', () => {
@@ -19,7 +21,19 @@ export const useUserStore = defineStore('user', () => {
     }
   }
   const api_login = async (data: LOGIN_TYPE_SMS | LOGIN_TYPE_PHOME) => {
-    await request_login(data)
+    const res = await request_login(data)
+    setWithExpiry('userinfo', res, null);
+    message.success('登录成功',1, () => {
+      if((res.name)) {
+        router.push('/')
+      } else {
+        router.push('/welcome')
+      }
+    })
   }
-  return {onClickChangeLoginType, loginType, api_sms, api_login}
+  const api_findPassword = async (data: RESRPASSWOED) => {
+    const res = await request_resetPassword(data)
+    console.log('api_findPassword', res)
+  }
+  return {onClickChangeLoginType, loginType, api_sms, api_login, api_findPassword}
 })

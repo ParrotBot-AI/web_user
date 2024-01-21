@@ -5,7 +5,7 @@
     <a-layout>
       <a-layout-content class="bg-green-2 flex">
         <div class="flex flex-col">
-
+          <!--首页中间部分-->
         </div>
         <AIComponent />
       </a-layout-content>

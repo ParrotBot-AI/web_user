@@ -31,23 +31,31 @@
         </div>
       </a-form-item>
       <a-form-item class="mb-0">
-        <a-button type="primary" html-type="submit" class="shadow-none w-full px-4 py-2.5 h-auto">登录</a-button>
+        <a-button type="primary" html-type="submit" class="shadow-none w-full px-4 py-2.5 h-auto" :loading="loading">登录</a-button>
       </a-form-item>
       <h4 class="text-center pt-4 font-normal text-gray-600 text-[12px]" @click="userStore.onClickChangeLoginType('code')">还没有账号？ <span class="text-green-1">马上注册</span></h4>
     </a-form>
   </div>
 </template>
 <script setup lang="ts">
-import {reactive} from "vue"
+import {reactive, ref} from "vue"
 import {useUserStore} from "@/stores/user"
 import type {LOGIN_TYPE_PHOME} from "@/service/user"
 const userStore = useUserStore()
+const loading = ref(false)
 const formState = reactive<LOGIN_TYPE_PHOME>({
   username: '',
   password: '',
   type: 'account',
 })
-const onFinish = () => {
-  userStore.api_login(formState)
+const onFinish = async () => {
+  try {
+    loading.value = true
+    await userStore.api_login(formState)
+  } catch (error) {
+    console.log(error)
+  } finally {
+    loading.value = false
+  }
 }
 </script>

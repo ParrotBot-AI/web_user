@@ -1,22 +1,18 @@
-import type {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios'
+import type {AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig} from 'axios'
 import axios from 'axios'
 import { message } from 'ant-design-vue';
 
 
-export const SUCCESS_CODE = 20000
+export const SUCCESS_CODE = 2000
 export const AUTHERROT_CODE = 10005
 export const UNCONFIRMED_MSG = 'UNCONFIRMED'
 interface IRequestOptions extends AxiosRequestConfig {
-  showLoading?: boolean
   ignoreAuth?: boolean
-  headers?: any
+  headers?: AxiosRequestConfig['headers'] & {
+    Authorization?: string
+  }
 }
-export interface IResponseData {
-  code: number
-  msg: string
-  data: any
-}
-interface IResponse<T = IResponseData> extends AxiosResponse {
+interface IResponse<T> extends AxiosResponse {
   data: T
 }
 type USERINFO = {
@@ -46,7 +42,7 @@ class Axios {
       this.handleErrorRequeset,
     )
     this.instance.interceptors.response.use(
-      this.handleSuccessResponse as any,
+      this.handleSuccessResponse,
       this.handleErrorResponse,
     )
   }
@@ -55,10 +51,10 @@ class Axios {
     const {ignoreAuth = false} = config
     if (!ignoreAuth) {
       const userInfo = {} as USERINFO
-      config.headers.Authorization =
+      config.headers!.Authorization =
         `${userInfo?.TokenType} ${userInfo?.AccessToken}` || ``
     }
-    return config
+    return Promise.resolve(config)
   }
 
   private handleErrorRequeset = (error: any) => {
@@ -70,7 +66,6 @@ class Axios {
     // 成功请求
     if (
       response?.data?.code === SUCCESS_CODE ||
-      /success/i.test(response?.data?.msg) ||
       response.status === 304 ||
       response.status === 204 ||
       (response.config.responseType === 'arraybuffer' &&
@@ -138,7 +133,7 @@ class Axios {
     url: string,
     params?: any,
     options?: IRequestOptions,
-  ): Promise<IResponse<T>> {
+  ): Promise<T> {
     return this.instance.get(url, {
       params,
       ...options,
@@ -149,7 +144,7 @@ class Axios {
     url: string,
     data?: any,
     options?: IRequestOptions,
-  ): Promise<IResponse<T>> {
+  ): Promise<T> {
     return this.instance.post(url, data, options)
   }
 }

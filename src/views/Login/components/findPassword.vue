@@ -44,7 +44,7 @@
         </a-input>
       </a-form-item>
       <a-form-item class="mb-0">
-        <a-button type="primary" html-type="submit" class="shadow-none w-full px-4 py-2.5 h-auto">找回密码</a-button>
+        <a-button type="primary" html-type="submit" class="shadow-none w-full px-4 py-2.5 h-auto" :loading="loading">确认</a-button>
       </a-form-item>
     </a-form>
   </div>
@@ -54,12 +54,14 @@ import {reactive, ref} from "vue"
 import { useUserStore } from "@/stores/user"
 import { mobileRegex } from "@/utils/utils"
 import { ArrowLeftOutlined } from '@ant-design/icons-vue';
+import type { RESRPASSWOED } from "@/service/user"
 import type { FormInstance } from 'ant-design-vue'
 import {useGetCode} from "@/utils/useGetCode"
 const userStore = useUserStore()
+const loading = ref(false)
 const formRef = ref<FormInstance>();
 const {getCodeBtnText, getCode, resetCode} = useGetCode()
-const formState = reactive({
+const formState = reactive<RESRPASSWOED>({
   mobile: '',
   code: '',
   password: ''
@@ -69,8 +71,15 @@ const rulesRef = reactive({
   code: [{ required: true, message: '请输入验证码！' }],
   password: [{ required: true, message: '请输入密码！' }]
 });
-const onFinish = () => {
-  console.log('Success:', formState)
+const onFinish = async () => {
+  try {
+    loading.value = true
+    await userStore.api_findPassword(formState)
+  }catch(e){
+    console.log(e)
+  }finally{
+    loading.value = false
+  }
 }
 const onClickGetCode = () => {
   formRef.value!.validateFields('mobile').then(() => {
