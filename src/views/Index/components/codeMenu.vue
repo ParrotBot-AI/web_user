@@ -20,11 +20,19 @@
     @click="handleClick"
   ></a-menu>
 
-  <div class="absolute left-5 bottom-16 w-1/2 text-white flex">
-    <img :src="Ellipse" alt="user" />
-    <div class="absolute left-11">
-      <div>Luna</div>
-      <div>138****7894</div>
+  <div class="absolute left-5 bottom-16 text-white w-90">
+    <div class="flex">
+      <img :src="Ellipse" alt="user" />
+      <div class="absolute left-11">
+        <div>Luna</div>
+        <div>138****7894</div>
+      </div>
+      <img
+        :src="LayOut"
+        alt="layout"
+        class="absolute left-20 pl-16 pt-2"
+        @click="router.push('/login')"
+      />
     </div>
   </div>
 </template>
@@ -33,9 +41,12 @@ import { reactive, ref, watch, VueElement, h } from 'vue'
 import type { MenuProps, ItemType } from 'ant-design-vue'
 import { useIndexStore } from '@/stores/index'
 import logoBg from '@image/logo-bg.png'
-import HomeLine from '@image/home-line.svg'
+import LayOut from '@image/log-out-01.svg'
 import Ellipse from '@image/Ellipse.png'
 import { createFromIconfontCN } from '@ant-design/icons-vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const customIconFontUrl = '//at.alicdn.com/t/c/font_4417762_uuyyk8jsk1n.js'
 
@@ -53,7 +64,6 @@ const SumIcon = () => h(IconFont, { type: 'icon-rentou' })
 const GoalIcon = () => h(IconFont, { type: 'icon-mubiaoguanli' })
 const SettingIcon = () => h(IconFont, { type: 'icon-shezhi' })
 
-const userStore = useIndexStore()
 
 
 const selectedKeys = ref<string[]>(['1'])
@@ -83,6 +93,7 @@ function getItem(label: VueElement | string, key: string, icon?: any, type?: 'gr
 //   getItem(a[8]['name'], 'sub9', () => h(SettingIcon))
 // ])
 
+
 const handleClick: MenuProps['onClick'] = (e) => {
   console.log('click', e)
 }
@@ -92,5 +103,3 @@ watch(openKeys, (val) => {
 })
 </script>
 
-<style></style>
-@/stores@/stores
