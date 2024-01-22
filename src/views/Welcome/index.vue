@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full bg-green-2">
     <div class="container h-full flex relative mx-auto">
-      <div class="absolute w-[380px] left-10 top-1/2 -translate-y-1/2">
+      <div class="absolute w-[380px] left-10 top-1/2 -translate-y-1/2 z-1">
         <h1 class="text-4xl text-gray-900">开始你的学习第一步</h1>
         <p class="text-gray-600 pt-5">在开始之前，我们希望通过几个问题来了解您的学习目标和期望，来为您制定最适合的学习方案。</p>
         <a-form
@@ -24,7 +24,7 @@
           </a-form-item>
         </a-form>
       </div>
-      <div class="absolute right-0 bottom-16 w-1/2">
+      <div class="absolute right-0 bottom-16 w-1/2 z-0">
         <img :src="welcomeBg" alt="welcome" class="w-full"/>
       </div>
     </div>
