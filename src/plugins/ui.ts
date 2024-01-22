@@ -1,4 +1,4 @@
-import { Button, message, ConfigProvider, StyleProvider, Form, Input, Layout, Menu } from 'ant-design-vue';
+import { Button, message, ConfigProvider, StyleProvider, Form, Input, Layout, Menu, Card} from 'ant-design-vue';
 import type { App } from 'vue'
 import { createFromIconfontCN } from '@ant-design/icons-vue'
 const customIconFontUrl = '//at.alicdn.com/t/c/font_4417762_yydhf30j98j.js'
@@ -14,6 +14,7 @@ export function registerUI() {
     app.use(Input)
     app.use(Layout)
     app.use(Menu)
+    app.use(Card)
     app.component('IconFont', IconFont)
     app.config.globalProperties.$message = message
   }

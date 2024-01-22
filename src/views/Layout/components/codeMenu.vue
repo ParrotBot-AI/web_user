@@ -18,17 +18,12 @@
         <div>Luna</div>
         <div>138****7894</div>
       </div>
-      <img
-        :src="LayOut"
-        alt="layout"
-        class="absolute left-20 pl-16 pt-2"
-        @click="onClickOut"
-      />
+      <img :src="LayOut" alt="layout" class="absolute left-20 pl-16 pt-2" @click="onClickOut" />
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import type { MenuProps } from 'ant-design-vue';
+import type { MenuProps } from 'ant-design-vue'
 import { useIndexStore } from '@/stores/index'
 import { useUserStore } from '@/stores/user'
 import logoBg from '@image/logo-bg.png'
@@ -38,8 +33,12 @@ import { RouterLink, useRouter } from 'vue-router'
 const $router = useRouter()
 const indexStore = useIndexStore()
 const userStore = useUserStore()
-const onClickMenu: MenuProps['onClick'] = ({key}) => {
-  $router.push({path: `/${key}`})
+
+console.log('indexstore是' + indexStore.menuList)
+console.log(indexStore.menuList)
+
+const onClickMenu: MenuProps['onClick'] = ({ key }) => {
+  $router.push({ path: `/${key}` })
 }
 const onClickOut = () => {
   userStore.api_out()
@@ -47,24 +46,27 @@ const onClickOut = () => {
 }
 </script>
 <style scoped>
-  .my-menu-list :global(.ant-menu-vertical .ant-menu-item) {
-    width: 100%;
-    margin-inline: 0;
-    border-radius: 0;
-  }
-  .my-menu-list :global(.ant-menu-light .ant-menu-item-selected) {
-    background: #167778;
-    color: #fff;
-  }
-  .my-menu-list :global(.ant-menu-light .ant-menu-item:hover:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected)) {
-    color: #fff;
-  }
-  .my-menu-list :global(.ant-menu-light .ant-menu-item:not(.ant-menu-item-disabled):focus-visible){
-    outline: none;
-    outline-offset: 0;
-  }
-  .my-menu-list :global(.ant-menu .ant-menu-item .ant-menu-item-icon) {
-    opacity: 0.6;
-  }
+.my-menu-list :global(.ant-menu-vertical .ant-menu-item) {
+  width: 100%;
+  margin-inline: 0;
+  border-radius: 0;
+}
+.my-menu-list :global(.ant-menu-light .ant-menu-item-selected) {
+  background: #167778;
+  color: #fff;
+}
+.my-menu-list
+  :global(
+    .ant-menu-light
+      .ant-menu-item:hover:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected)
+  ) {
+  color: #fff;
+}
+.my-menu-list :global(.ant-menu-light .ant-menu-item:not(.ant-menu-item-disabled):focus-visible) {
+  outline: none;
+  outline-offset: 0;
+}
+.my-menu-list :global(.ant-menu .ant-menu-item .ant-menu-item-icon) {
+  opacity: 0.6;
+}
 </style>
-

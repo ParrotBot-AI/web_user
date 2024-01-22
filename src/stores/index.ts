@@ -20,7 +20,9 @@ export const useIndexStore = defineStore('menu', () => {
     menuData.list = [
       { "id": "home", "name": "看板", icon: 'home'}, 
       ...data, 
-      { "id": "setting", "name": "设置", icon: 'setting'}
+      { "id": "setting", "name": "设置", icon: 'setting'},
+      { "id": "write", "name": "写作", icon: 'write'},
+      { "id": "read", "name": "阅读", icon: 'read'}
     ]
     menuData.current = [(curRoute.name as string) || 'home']
   }
