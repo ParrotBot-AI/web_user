@@ -1,10 +1,12 @@
 :root {
   --color-login-bg: #CFE4DA;
+  --color-border: #EAECF0;
   --color-white: #fff;
   --color-gray-900: #101828;
   --color-gray-600: #475467;
   --color-gray-500: #667085;
   --color-green-1: #1B8B8C;
+  --color-green-3: #163642;
   --color-green-2:#F0F7F7;
   --color-gray-700: #344054;
 }
