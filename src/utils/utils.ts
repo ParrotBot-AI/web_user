@@ -11,3 +11,7 @@ export function parse (jsonString = '{}', defaultValue = {}) {
   return result
 }
 
+
+export function formatStr (str: string){
+  return str.split(/[-_]/).map(val => val.slice(0, 1).toUpperCase() + val.slice(1)).join('')
+}

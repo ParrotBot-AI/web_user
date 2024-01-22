@@ -22,6 +22,8 @@ const tailwindConfig = {
       'gray-500': 'var(--color-gray-500)',
       'gray-600': 'var(--color-gray-600)',
       'gray-700': 'var(--color-gray-700)',
+      'border-1': 'var(--color-border)',
+      'green-3': 'var(--color-green-3)',
       'transparent': 'var(--color-transparent)'
     },
   },
