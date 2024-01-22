@@ -42,7 +42,6 @@ export const useIndexStore = defineStore('menu', () => {
   async function getMenuValue (data: MENUITEM[]) {
     menuData.list = [
       { "id": "home", "name": "看板", icon: 'home', key: 'home'}, 
-      { "id": "read", "name": "阅读", icon: 'read', key: 'read'}, 
       ...data.map(item => {
         const name = formatStr(item.icon)
         return {
