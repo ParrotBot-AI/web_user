@@ -16,5 +16,7 @@
 <script setup lang="ts">
 import CodeMenu from './components/codeMenu.vue'
 import AIComponent from '@/components/AI/index.vue'
-console.log('index')
+import { useIndexStore } from "@/stores/index"
+const indexStore = useIndexStore()
+indexStore.getMenuValue()
 </script>

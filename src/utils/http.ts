@@ -1,7 +1,7 @@
 import type {AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig} from 'axios'
 import axios from 'axios'
 import { message } from 'ant-design-vue';
-
+import {getWithExpiry} from "@/utils/storage"
 
 export const SUCCESS_CODE = 2000
 export const AUTHERROT_CODE = 10005
@@ -16,8 +16,7 @@ interface IResponse<T> extends AxiosResponse {
   data: T
 }
 type USERINFO = {
-  AccessToken: string
-  TokenType: string
+  access: string
 }
 class Axios {
   private instance: AxiosInstance
@@ -50,9 +49,9 @@ class Axios {
   private async handleSuccessRequeset(config: IRequestOptions) {
     const {ignoreAuth = false} = config
     if (!ignoreAuth) {
-      const userInfo = {} as USERINFO
+      const userInfo = getWithExpiry('userinfo') as USERINFO
       config.headers!.Authorization =
-        `${userInfo?.TokenType} ${userInfo?.AccessToken}` || ``
+        `JWT ${userInfo?.access}` || ``
     }
     return Promise.resolve(config)
   }
@@ -83,9 +82,9 @@ class Axios {
         return this.refreshToken()
           .then((userInfo) => {
             this.isRefreshing = false
-            this.onRefreshed(userInfo?.AccessToken)
+            this.onRefreshed(userInfo?.access)
             // 更新token并重新发送之前被拦截的请求
-            originalRequest.headers.Authorization = `Bearer ${userInfo?.AccessToken}`
+            originalRequest.headers.Authorization = `JWT ${userInfo?.access}`
             return this.instance(originalRequest)
           })
           .catch((refreshError) => {

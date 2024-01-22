@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-
+import { request_menu } from "@/service/user"
 const mockMenuData = {
   "content": [
     { "id": "kanban", "name": "看板" },
@@ -15,13 +15,14 @@ const mockMenuData = {
   ]
 };
 
-export const useMenuStore = defineStore('menu', () => {
+export const useIndexStore = defineStore('menu', () => {
   const menuData = ref<{ id: string; name: string }[]>([]);
   
-  function getValue() {
-    menuData.value = mockMenuData.content;
-    return menuData.value;
+
+  async function getMenuValue () {
+    const res = await request_menu()
+    console.log(res)
   }
-  return { getValue, menuData } ;
+  return { getMenuValue, menuData } ;
 })
 

@@ -31,7 +31,7 @@
 <script lang="ts" setup>
 import { reactive, ref, watch, VueElement, h } from 'vue'
 import type { MenuProps, ItemType } from 'ant-design-vue'
-import { useMenuStore } from '@/stores/menu'
+import { useIndexStore } from '@/stores/index'
 import logoBg from '@image/logo-bg.png'
 import HomeLine from '@image/home-line.svg'
 import Ellipse from '@image/Ellipse.png'
@@ -53,10 +53,8 @@ const SumIcon = () => h(IconFont, { type: 'icon-rentou' })
 const GoalIcon = () => h(IconFont, { type: 'icon-mubiaoguanli' })
 const SettingIcon = () => h(IconFont, { type: 'icon-shezhi' })
 
-const userStore = useMenuStore()
-const a = userStore.getValue()
+const userStore = useIndexStore()
 
-console.log(a)
 
 const selectedKeys = ref<string[]>(['1'])
 const openKeys = ref<string[]>(['sub1'])
@@ -70,20 +68,20 @@ function getItem(label: VueElement | string, key: string, icon?: any, type?: 'gr
   } as ItemType
 }
 
-const items1: ItemType[] = reactive([
-  getItem(a[0]['name'], 'sub1', () => h(BoardIcon)),
-  getItem(a[1]['name'], 'sub2', () => h(BookIcon)),
-  getItem(a[2]['name'], 'sub3', () => h(HearingIcon)),
-  getItem(a[3]['name'], 'sub4', () => h(SpokenIcon)),
-  getItem(a[4]['name'], 'sub5', () => h(WriteIcon)),
-  getItem(a[5]['name'], 'sub6', () => h(ReciteIcon)),
-  getItem(a[6]['name'], 'sub7', () => h(SumIcon))
-])
+// const items1: ItemType[] = reactive([
+//   getItem(a[0]['name'], 'sub1', () => h(BoardIcon)),
+//   getItem(a[1]['name'], 'sub2', () => h(BookIcon)),
+//   getItem(a[2]['name'], 'sub3', () => h(HearingIcon)),
+//   getItem(a[3]['name'], 'sub4', () => h(SpokenIcon)),
+//   getItem(a[4]['name'], 'sub5', () => h(WriteIcon)),
+//   getItem(a[5]['name'], 'sub6', () => h(ReciteIcon)),
+//   getItem(a[6]['name'], 'sub7', () => h(SumIcon))
+// ])
 
-const items2: ItemType[] = reactive([
-  getItem(a[7]['name'], 'sub8', () => h(GoalIcon)),
-  getItem(a[8]['name'], 'sub9', () => h(SettingIcon))
-])
+// const items2: ItemType[] = reactive([
+//   getItem(a[7]['name'], 'sub8', () => h(GoalIcon)),
+//   getItem(a[8]['name'], 'sub9', () => h(SettingIcon))
+// ])
 
 const handleClick: MenuProps['onClick'] = (e) => {
   console.log('click', e)
@@ -95,3 +93,4 @@ watch(openKeys, (val) => {
 </script>
 
 <style></style>
+@/stores@/stores
