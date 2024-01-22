@@ -1,28 +1,39 @@
-import { ref } from 'vue'
+import { reactive, computed, h } from 'vue'
 import { defineStore } from 'pinia'
 import { request_menu } from "@/service/user"
-const mockMenuData = {
-  "content": [
-    { "id": "kanban", "name": "看板" },
-    { "id": "reading", "name": "阅读" },
-    { "id": "listening", "name": "听力" },
-    { "id": "speaking", "name": "口语" },
-    { "id": "writing", "name": "写作" },
-    { "id": "vocabulary", "name": "单词背诵" },
-    { "id": "weekly_report", "name": "周报总结" },
-    { "id": "goal_management", "name": "目标管理" },
-    { "id": "setting", "name": "设置" }
-  ]
-};
-
+import type {MENUITEM} from "@/service/user"
+import {IconFont} from "@/plugins/ui"
+import { useRoute } from "vue-router"
 export const useIndexStore = defineStore('menu', () => {
-  const menuData = ref<{ id: string; name: string }[]>([]);
+  const menuData = reactive<{
+    list: MENUITEM[];
+    current: Array<string | number>;
+  }>({
+    list: [],
+    current: ['home']
+  });
   
 
   async function getMenuValue () {
-    const res = await request_menu()
-    console.log(res)
+    const curRoute = useRoute()
+    const {data} = await request_menu()
+    menuData.list = [
+      { "id": "home", "name": "看板", icon: 'home'}, 
+      ...data, 
+      { "id": "setting", "name": "设置", icon: 'setting'}
+    ]
+    menuData.current = [(curRoute.name as string) || 'home']
   }
-  return { getMenuValue, menuData } ;
+
+  const menuList = computed(() => {
+    return menuData.list.map(item => {
+      return {
+        key: item.id,
+        label: item.name,
+        icon: () => h(IconFont, { type: `icon-${item.icon}`})
+      }
+    })
+  })
+  return { getMenuValue, menuData, menuList } ;
 })
 

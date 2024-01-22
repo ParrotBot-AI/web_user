@@ -53,6 +53,12 @@ export const request_logout = () => {
   return http.post('/api/logout/')
 }
 
+export type MENUITEM = { id: string; name: string, icon: string }
 export const request_menu = () => {
-  return http.get('/api/system/menu/')
+  return http.get<{
+    page: number;
+    limit: number; 
+    total: number;
+    data: MENUITEM[]
+  }>('/api/system/menu/')
 }

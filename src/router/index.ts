@@ -6,7 +6,19 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('@/views/Index/index.vue')
+      children: [
+        {
+          path: '/home',
+          name: 'home',
+          component: () => import('@/views/Home/index.vue')
+        },
+        {
+          path: '/setting',
+          name: 'setting',
+          component: () => import('@/views/Setting/index.vue')
+        }
+      ],
+      component: () => import('@/views/Layout/index.vue')
     },
     {
       path: '/login',
