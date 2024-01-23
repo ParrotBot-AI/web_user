@@ -1,24 +1,27 @@
 <template>
-  <RouterLink class="block w-[145px] h-[49px] p-[5px] ml-4" to="/">
-    <img :src="logoBg" alt="login-bg" class="w-full h-full" />
-  </RouterLink>
-  <a-menu
-    class="bg-transparent text-white mt-8 font-misans my-menu-list"
-    v-model:selectedKeys="indexStore.menuData.current"
-    mode="vertical"
-    :items="indexStore.menuList"
-    @click="onClickMenu"
-  >
-  </a-menu>
-
-  <div class="flex mt-[460px] ml-4 text-white">
-    <div class="flex">
-      <img :src="Ellipse" alt="user" />
-      <div class="ml-2">
-        <div>Luna</div>
-        <div>138****7894</div>
+  <div class="flex w-full h-full">
+    <div class="flex container flex-col">
+      <RouterLink class="block w-[145px] h-[49px] p-[5px] ml-4" to="/">
+        <img :src="logoBg" alt="login-bg" class="w-full h-full" />
+      </RouterLink>
+      <a-menu
+        class="bg-transparent text-white mt-8 font-misans my-menu-list"
+        v-model:selectedKeys="indexStore.menuData.current"
+        mode="vertical"
+        :items="indexStore.menuList"
+        @click="onClickMenu"
+      >
+      </a-menu>
+      <div class="flex items-end text-white h-full mb-20 ml-4">
+        <div class="flex">
+          <img :src="Ellipse" alt="user" />
+          <div class="ml-2">
+            <div>Luna</div>
+            <div>138****7894</div>
+          </div>
+          <img :src="LayOut" alt="layout" class="ml-2 mb-3" @click="onClickOut" />
+        </div>
       </div>
-      <img :src="LayOut" alt="layout" class="ml-2 mb-3" @click="onClickOut" />
     </div>
   </div>
 </template>
