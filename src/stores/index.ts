@@ -1,9 +1,10 @@
 import { reactive, computed, h, watchEffect } from 'vue'
 import { defineStore } from 'pinia'
-import type {MENUITEM} from "@/service/user"
-import {IconFont} from "@/plugins/ui"
+import { request_userInfo } from '@/service/user'
+import type { MENUITEM } from "@/service/user"
+import { IconFont } from "@/plugins/ui"
 import { useRoute } from "vue-router"
-import {formatStr} from "@/utils/utils"
+import { formatStr } from "@/utils/utils"
 import Union from "@/assets/homeIcon/Union.svg"
 import Hourglass from "@/assets/homeIcon/Hourglass.svg"
 import Group from "@/assets/homeIcon/Group.svg"
@@ -39,9 +40,9 @@ export const useIndexStore = defineStore('menu', () => {
     current: ['home']
   });
 
-  async function getMenuValue (data: MENUITEM[]) {
+  async function getMenuValue(data: MENUITEM[]) {
     menuData.list = [
-      { "id": "home", "name": "看板", icon: 'home', key: 'home'}, 
+      { "id": "home", "name": "看板", icon: 'home', key: 'home' },
       ...data.map(item => {
         const name = formatStr(item.icon)
         return {
@@ -50,8 +51,8 @@ export const useIndexStore = defineStore('menu', () => {
           "name": item.name,
           icon: item.icon
         }
-      }), 
-      { "id": "setting", "name": "设置", icon: 'setting', 'key': 'setting'}
+      }),
+      { "id": "setting", "name": "设置", icon: 'setting', 'key': 'setting' }
     ]
   }
   watchEffect(() => {
@@ -62,12 +63,15 @@ export const useIndexStore = defineStore('menu', () => {
       return {
         key: item.key,
         label: item.name,
-        icon: () => h(IconFont, { type: `icon-${item.icon}`})
+        icon: () => h(IconFont, { type: `icon-${item.icon}` })
       }
     })
   })
 
-  
-  return { getMenuValue, menuData, menuList, userTargets } ;
+  const requestUserInfo = async (userId: number) => {
+    await request_userInfo(userId)
+  }
+
+  return { getMenuValue, menuData, menuList, userTargets, requestUserInfo };
 })
 

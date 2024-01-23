@@ -1,7 +1,7 @@
-import type {AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig} from 'axios'
+import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import axios from 'axios'
 import { message } from 'ant-design-vue';
-import {getWithExpiry} from "@/utils/storage"
+import { getWithExpiry } from "@/utils/storage"
 
 export const SUCCESS_CODE = 2000
 export const AUTHERROT_CODE = 10005
@@ -47,7 +47,7 @@ class Axios {
   }
 
   private async handleSuccessRequeset(config: IRequestOptions) {
-    const {ignoreAuth = false} = config
+    const { ignoreAuth = false } = config
     if (!ignoreAuth) {
       const userInfo = getWithExpiry('userinfo') as USERINFO
       config.headers!.Authorization =
@@ -130,13 +130,25 @@ class Axios {
 
   public async get<T = any>(
     url: string,
+    bodyData?: any,
     params?: any,
     options?: IRequestOptions,
   ): Promise<T> {
-    return this.instance.get(url, {
-      params,
-      ...options,
-    })
+    if (url === '/api/system/user/get_user/') {
+      return this.instance({
+        url,
+        method: 'GET',
+        data: {
+          useId: 39
+        }
+      })
+    } else {
+      return this.instance.get(url, {
+        data: bodyData,
+        params,
+        ...options,
+      })
+    }
   }
 
   public async post<T = any>(

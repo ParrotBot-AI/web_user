@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import {getWithExpiry} from "@/utils/storage"
-import type {MENUITEM} from "@/service/user"
-import {formatStr} from "@/utils/utils"
+import { getWithExpiry } from "@/utils/storage"
+import type { MENUITEM } from "@/service/user"
+import { formatStr } from "@/utils/utils"
 import { request_menu } from "@/service/user"
 import { useIndexStore } from "@/stores/index"
-let isRoutesAdded:boolean = false
+let isRoutesAdded: boolean = false
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -43,7 +43,7 @@ const router = createRouter({
   ]
 })
 
-function addRoutes (data: MENUITEM[]) {
+function addRoutes(data: MENUITEM[]) {
   data.forEach(item => {
     const filename = formatStr(item.icon)
     const pathName = filename[0].toLowerCase() + filename.slice(1)
@@ -63,20 +63,23 @@ function addRoutes (data: MENUITEM[]) {
 
 const whiteList = ['login', 'welcome']
 router.beforeEach(async (to, from, next) => {
-  if(whiteList.includes(to.name as string)) {
+  if (whiteList.includes(to.name as string)) {
     next()
     return
   }
-  const isLoggedIn = getWithExpiry('userinfo')?.access;
+  const userInfo = getWithExpiry('userinfo');
+  const isLoggedIn = userInfo?.access
   const indexStore = useIndexStore()
-  if(isLoggedIn) {
-    if(!isRoutesAdded) {
+  if (isLoggedIn) {
+    if (!isRoutesAdded) {
       try {
-        const {data} = await request_menu()
-        indexStore.getMenuValue(data)
-        addRoutes(data)
-        next({...to, replace: true})
-      }catch(error) {
+        const res = await Promise.allSettled([request_menu(), indexStore.requestUserInfo(userInfo?.userId)])
+        const menuData = res[0].value.data
+        console.log(menuData, "| menuData");
+        indexStore.getMenuValue(menuData)
+        addRoutes(menuData)
+        next({ ...to, replace: true })
+      } catch (error) {
         console.error(error)
         next(false)
       }

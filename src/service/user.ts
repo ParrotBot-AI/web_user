@@ -15,7 +15,7 @@ export type RESRPASSWOED = {
   code: string;
   password: string;
 }
-export const request_login = (data:LOGIN_TYPE_SMS | LOGIN_TYPE_PHOME) => {
+export const request_login = (data: LOGIN_TYPE_SMS | LOGIN_TYPE_PHOME) => {
   return http.post<{
     name: string;
     access: string;
@@ -33,7 +33,7 @@ type SMS_TYPE = {
   phone: string;
   type: 1
 }
-export const request_sms = (data:SMS_TYPE) => {
+export const request_sms = (data: SMS_TYPE) => {
   return http.post('/api/sms/send_login_sms/', {
     ...data,
   }, {
@@ -41,7 +41,7 @@ export const request_sms = (data:SMS_TYPE) => {
   })
 }
 
-export const request_resetPassword = (data:RESRPASSWOED) => {
+export const request_resetPassword = (data: RESRPASSWOED) => {
   return http.post('/api/system/user/39/reset_password/', {
     ...data,
   }, {
@@ -57,8 +57,12 @@ export type MENUITEM = { id: string; name: string, icon: string, key: string }
 export const request_menu = () => {
   return http.get<{
     page: number;
-    limit: number; 
+    limit: number;
     total: number;
     data: MENUITEM[]
   }>('/api/system/menu/user_menu/')
+}
+export const request_userInfo = (userId: number) => {
+  console.log(userId, "| userId");
+  return http.get('/api/system/user/get_user/', { userId })
 }
