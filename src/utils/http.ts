@@ -53,6 +53,7 @@ class Axios {
       config.headers!.Authorization =
         `JWT ${userInfo?.access}` || ``
     }
+    console.log(config)
     return Promise.resolve(config)
   }
 
@@ -130,25 +131,13 @@ class Axios {
 
   public async get<T = any>(
     url: string,
-    bodyData?: any,
     params?: any,
     options?: IRequestOptions,
   ): Promise<T> {
-    if (url === '/api/system/user/get_user/') {
-      return this.instance({
-        url,
-        method: 'GET',
-        data: {
-          useId: 39
-        }
-      })
-    } else {
-      return this.instance.get(url, {
-        data: bodyData,
-        params,
-        ...options,
-      })
-    }
+    return this.instance.get(url, {
+      params,
+      ...options,
+    })
   }
 
   public async post<T = any>(

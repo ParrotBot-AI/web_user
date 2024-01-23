@@ -63,6 +63,5 @@ export const request_menu = () => {
   }>('/api/system/menu/user_menu/')
 }
 export const request_userInfo = (userId: number) => {
-  console.log(userId, "| userId");
   return http.get('/api/system/user/get_user/', { userId })
 }
