@@ -8,7 +8,9 @@
         </div>
         <div class="flex mt-16">
           <dl v-for="val in indexStore.userTargets" :key="val.id" class="flex flex-1">
-            <dt class="w-14 h-14 bg-white flex justify-center items-center rounded-lg border border-solid border-border-1 shadow-[0_1px_2px_0px_rgba(16,24,40,0.05)]">
+            <dt
+              class="w-14 h-14 bg-white flex justify-center items-center rounded-lg border border-solid border-border-1 shadow-[0_1px_2px_0px_rgba(16,24,40,0.05)]"
+            >
               <img :src="val.icon" />
             </dt>
             <dd class="ml-3.5 -mt-1.5">
@@ -19,15 +21,13 @@
         </div>
       </div>
       <!--今日任务-->
-      <div class="bg-white rounded-md border border-border-1 border-solid flex-1">
-
-      </div>
+      <div class="bg-white rounded-md border border-border-1 border-solid flex-1"></div>
     </div>
     <AIComponent />
   </div>
 </template>
 <script setup lang="ts">
 import AIComponent from '@/components/AI/index.vue'
-import {useIndexStore} from "@/stores/index"
+import { useIndexStore } from '@/stores/index'
 const indexStore = useIndexStore()
 </script>

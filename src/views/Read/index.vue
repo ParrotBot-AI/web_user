@@ -15,6 +15,22 @@
               d="M0 8C0 3.58173 3.58172 0 8 0H255.538C259.956 0 263.538 3.58172 263.538 8V179H0V8Z"
               fill="#D0F0E6"
             />
+            <svg
+              width="213"
+              height="73"
+              viewBox="0 0 213 73"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle cx="8" cy="9" r="8" fill="#8EDCC3" />
+              <circle cx="114.877" cy="64" r="8" fill="#8EDCC3" />
+              <circle cx="181" cy="9" r="8" fill="#8EDCC3" />
+              <circle cx="205" cy="9" r="8" fill="#8EDCC3" />
+              <rect x="23.1038" width="138.75" height="17" rx="8.5" fill="#8EDCC3" />
+              <rect x="0.415039" y="28" width="206.816" height="17" rx="8.5" fill="#8EDCC3" />
+              <rect x="0.415039" y="56" width="99.4811" height="17" rx="8.5" fill="#8EDCC3" />
+              <rect x="131.311" y="56" width="53.2311" height="17" rx="8.5" fill="#8EDCC3" />
+            </svg>
           </svg>
         </template>
         <a-card-meta

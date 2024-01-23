@@ -11,14 +11,14 @@
   >
   </a-menu>
 
-  <div class="absolute left-5 bottom-16 text-white w-90">
+  <div class="fixed bottom-0 mb-16 ml-5 text-white">
     <div class="flex">
       <img :src="Ellipse" alt="user" />
-      <div class="absolute left-11">
+      <div class="ml-2">
         <div>Luna</div>
         <div>138****7894</div>
       </div>
-      <img :src="LayOut" alt="layout" class="absolute left-20 pl-16 pt-2" @click="onClickOut" />
+      <img :src="LayOut" alt="layout" class="ml-2" @click="onClickOut" />
     </div>
   </div>
 </template>
