@@ -147,6 +147,14 @@ class Axios {
   ): Promise<T> {
     return this.instance.post(url, data, options)
   }
+
+  public async patch<T = any>(
+    url: string,
+    data?: any,
+    options?: IRequestOptions,
+  ): Promise<T> {
+    return this.instance.patch(url, data, options)
+  }
 }
 
 export default new Axios()

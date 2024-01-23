@@ -65,3 +65,7 @@ export const request_menu = () => {
 export const request_userInfo = (userId: number) => {
   return http.get('/api/system/user/get_user/', { userId })
 }
+
+export const request_setUserInfo = (userId:number, data:{name:string}) => {
+  return http.patch(`/api/system/user/${userId}/`, data)
+}

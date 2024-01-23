@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import {request_login, request_sms, request_resetPassword, request_logout} from "@/service/user"
+import {request_login, request_sms, request_resetPassword, request_logout, request_setUserInfo} from "@/service/user"
 import {setWithExpiry} from "@/utils/storage"
 import router from "@/router"
 import type { LOGIN_TYPE_SMS, LOGIN_TYPE_PHOME, RESRPASSWOED } from "@/service/user"
@@ -35,8 +35,13 @@ export const useUserStore = defineStore('user', () => {
     const res = await request_resetPassword(data)
     console.log('api_findPassword', res)
   }
+
+  const api_setUserInfo = async (userId:number, data) => {
+    await request_setUserInfo(userId, data)
+  } 
+
   const api_out = async () => {
     await request_logout()
   }
-  return {onClickChangeLoginType, loginType, api_sms, api_login, api_findPassword, api_out}
+  return {onClickChangeLoginType, loginType, api_sms, api_login, api_findPassword, api_out, api_setUserInfo}
 })
