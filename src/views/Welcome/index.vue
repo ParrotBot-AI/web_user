@@ -47,6 +47,7 @@ import { reactive, ref } from 'vue'
 import welcomeBg from '@/assets/images/welcome-bg.png'
 import router from '@/router'
 import { useUserStore } from '@/stores/user'
+import type {USERINFO} from "@/service/user"
 import { getWithExpiry } from '@/utils/storage'
 const userStore = useUserStore()
 const formState = reactive({
@@ -57,7 +58,7 @@ const onFinish = async () => {
   try {
     loading.value = true
     // console.log("onFinish");
-    const { userId } = getWithExpiry('userinfo')
+    const { userId } = getWithExpiry<USERINFO>('userinfo')!
     userStore.api_setUserInfo(userId, {
       name: formState.username
     })

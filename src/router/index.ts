@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { getWithExpiry } from "@/utils/storage"
-import type { MENUITEM } from "@/service/user"
+import type { MENUITEM, USERINFO, MENURES } from "@/service/user"
 import { formatStr } from "@/utils/utils"
 import { request_menu } from "@/service/user"
 import { useIndexStore } from "@/stores/index"
@@ -67,14 +67,13 @@ router.beforeEach(async (to, from, next) => {
     next()
     return
   }
-  const userInfo = getWithExpiry('userinfo');
+  const userInfo = getWithExpiry<USERINFO>('userinfo')!;
   const isLoggedIn = userInfo?.access
   const indexStore = useIndexStore()
   if (isLoggedIn) {
     if (!isRoutesAdded) {
       try {
         const res = await Promise.allSettled([request_menu(), indexStore.requestUserInfo(userInfo?.userId)])
-        console.log(res)
         const menuData = res[0].value.data
         indexStore.getMenuValue(menuData)
         addRoutes(menuData)
