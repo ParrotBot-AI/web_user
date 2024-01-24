@@ -31,6 +31,11 @@ const router = createRouter({
       component: () => import('@/views/Layout/index.vue')
     },
     {
+      path: '/mock-exam',
+      name: 'mockExam',
+      component: () => import('@/views/MockExam/index.vue')
+    },
+    {
       path: '/login',
       name: 'login',
       component: () => import('@/views/Login/index.vue')
@@ -61,7 +66,7 @@ function addRoutes(data: MENUITEM[]) {
   isRoutesAdded = true
 }
 
-const whiteList = ['login', 'welcome']
+const whiteList = ['login']
 router.beforeEach(async (to, from, next) => {
   if (whiteList.includes(to.name as string)) {
     next()
