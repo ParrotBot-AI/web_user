@@ -1,9 +1,8 @@
 <template>
-  <div class="flex flex-col w-full h-full">
-    <div class="flex flex-col">
-      <h1 class="font-inter text-3xl font-semibold leading-9 ml-[60px] mt-[62px]">专项训练</h1>
-      <div class="flex mt-[37px]">
-        <a-card class="w-[262px] h-[353px] ml-[59px] justify-start">
+  <div class="flex flex-col w-full h-full p-14 overflow-y-auto">
+    <h1 class="font-inter text-3xl font-semibold leading-9 mb-10">专项训练</h1>
+      <div class="flex justify-between lg:w-[900px]">
+        <a-card class="w-[262px] h-[353px]">
           <template #cover>
             <svg
               width="264"
@@ -45,8 +44,7 @@
             >去完成</a-button
           >
         </a-card>
-
-        <a-card class="w-[262px] h-[353px] mx-auto">
+        <a-card class="w-[262px] h-[353px]">
           <template #cover>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -103,7 +101,7 @@
             >去完成</a-button
           >
         </a-card>
-        <a-card class="w-[262px] h-[353px] mr-[85px] justify-end">
+        <a-card class="w-[262px] h-[353px]">
           <template #cover>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -153,27 +151,26 @@
           >
         </a-card>
       </div>
-    </div>
-    <div class="flex flex-col">
-      <h1 class="font-inter text-3xl font-semibold leading-9 ml-[60px] mt-[62px]">训练与模考</h1>
-      <div class="flex mt-[37px]">
+    <div class="flex flex-col mt-12">
+      <h1 class="font-inter text-3xl font-semibold leading-9 mb-10">训练与模考</h1>
+      <div class="flex">
         <div
-          class="w-[393px] h-[126px] ml-[60px] flex items-start border-l-1 border-Gray-200 bg-gradient-to-r from-blue-1 via-blue-1 to-blue-2 shadow-lg"
+          class="w-[393px] h-[126px] flex px-10 items-center rounded-8 border-l-1 border-Gray-200 bg-gradient-to-r from-blue-1 via-blue-1 to-blue-2 shadow-lg overflow-hidden mr-10"
         >
-          <img :src="IsolationBg" alt="isolation" class="ml-[34px] mt-[16px]" />
-          <div class="text-black-1 text-[24px] font-semibold leading-[38px] ml-[38px] mt-[44px]">
+          <img :src="IsolationBg" alt="isolation" class="w-[60px]"/>
+          <div class="text-black-1 text-[24px] font-semibold flex-1 px-9 truncate">
             错题精选
           </div>
-          <img :src="Group" alt="group" class="ml-[95px] mt-[50px]" />
+          <img :src="Group" alt="group" />
         </div>
         <div
-          class="w-[393px] h-[126px] mx-auto flex items-start rounded-8 border-l-1 border-Gray-200 bg-gradient-to-r from-blue-1 via-blue-1 to-blue-2 shadow-lg"
+          class="w-[393px] h-[126px] flex px-10  items-center rounded-8 border-l-1 border-Gray-200 bg-gradient-to-r from-blue-1 via-blue-1 to-blue-2 shadow-lg overflow-hidden"
         >
-          <img :src="Clock" alt="clock" class="ml-[29px] mt-[34px]" />
-          <div class="text-black-1 text-[24px] font-semibold leading-[38px] ml-[38px] mt-[44px]">
+          <img :src="Clock" alt="clock" class="w-[60px]" />
+          <div class="text-black-1 text-[24px] font-semibold flex-1 px-9 truncate">
             模拟考试
           </div>
-          <img :src="Group" alt="group" class="ml-[95px] mt-[50px]" />
+          <img :src="Group" alt="group" />
         </div>
       </div>
     </div>

@@ -1,12 +1,12 @@
 <template>
   <div class="flex w-full h-full">
     <div class="flex container flex-col">
-      <div class="flex-1">
+      <div class="flex-1 overflow-hidden flex flex-col">
         <RouterLink class="block w-[145px] h-[49px] p-[5px] ml-4" to="/">
           <img :src="logoBg" alt="login-bg" class="w-full h-full" />
         </RouterLink>
         <a-menu
-          class="bg-transparent text-white mt-8 font-misans my-menu-list"
+          class="bg-transparent text-white mt-8 font-misans my-menu-list flex-1 overflow-y-auto"
           v-model:selectedKeys="indexStore.menuData.current"
           mode="vertical"
           :items="indexStore.menuList"
@@ -14,15 +14,13 @@
         >
         </a-menu>
       </div>
-      <div class="flex text-white mb-[100px] ml-4">
-        <div class="flex">
-          <img :src="Ellipse" alt="user" />
-          <div class="ml-2">
-            <div>Luna</div>
-            <div>138****7894</div>
-          </div>
-          <img :src="LayOut" alt="layout" class="ml-3" @click="onClickOut" />
+      <div class="flex text-white mb-24 mt-4 px-4 w-full overflow-hidden items-center cursor-pointer" @click="onClickOut">
+        <img :src="Ellipse" alt="user" class="w-10 h-10 overflow-hidden"/>
+        <div class="mx-2 flex-1 overflow-hidden">
+          <div class="truncate w-full">Luna</div>
+          <div>138****7894</div>
         </div>
+        <img :src="LayOut" alt="layout" class="w-5 h-5 overflow-hidden"/>
       </div>
     </div>
   </div>
