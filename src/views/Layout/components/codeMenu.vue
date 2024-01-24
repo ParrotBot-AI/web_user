@@ -1,25 +1,27 @@
 <template>
   <div class="flex w-full h-full">
     <div class="flex container flex-col">
-      <RouterLink class="block w-[145px] h-[49px] p-[5px] ml-4" to="/">
-        <img :src="logoBg" alt="login-bg" class="w-full h-full" />
-      </RouterLink>
-      <a-menu
-        class="bg-transparent text-white mt-8 font-misans my-menu-list"
-        v-model:selectedKeys="indexStore.menuData.current"
-        mode="vertical"
-        :items="indexStore.menuList"
-        @click="onClickMenu"
-      >
-      </a-menu>
-      <div class="flex items-end text-white h-full mb-20 ml-4">
+      <div class="flex-1">
+        <RouterLink class="block w-[145px] h-[49px] p-[5px] ml-4" to="/">
+          <img :src="logoBg" alt="login-bg" class="w-full h-full" />
+        </RouterLink>
+        <a-menu
+          class="bg-transparent text-white mt-8 font-misans my-menu-list"
+          v-model:selectedKeys="indexStore.menuData.current"
+          mode="vertical"
+          :items="indexStore.menuList"
+          @click="onClickMenu"
+        >
+        </a-menu>
+      </div>
+      <div class="flex text-white mb-[100px] ml-4">
         <div class="flex">
           <img :src="Ellipse" alt="user" />
           <div class="ml-2">
             <div>Luna</div>
             <div>138****7894</div>
           </div>
-          <img :src="LayOut" alt="layout" class="ml-2 mb-3" @click="onClickOut" />
+          <img :src="LayOut" alt="layout" class="ml-3" @click="onClickOut" />
         </div>
       </div>
     </div>
@@ -36,9 +38,6 @@ import { RouterLink, useRouter } from 'vue-router'
 const $router = useRouter()
 const indexStore = useIndexStore()
 const userStore = useUserStore()
-
-console.log('indexstore是' + indexStore.menuList)
-console.log(indexStore.menuList)
 
 const onClickMenu: MenuProps['onClick'] = ({ key }) => {
   $router.push({ path: `/${key}` })

@@ -154,10 +154,36 @@
         </a-card>
       </div>
     </div>
-    <h1 class="font-inter text-3xl font-semibold leading-9 ml-[60px] mt-[62px]">训练与模考</h1>
+    <div class="flex flex-col">
+      <h1 class="font-inter text-3xl font-semibold leading-9 ml-[60px] mt-[62px]">训练与模考</h1>
+      <div class="flex mt-[37px]">
+        <div
+          class="w-[393px] h-[126px] ml-[60px] flex items-start border-l-1 border-Gray-200 bg-gradient-to-r from-blue-1 via-blue-1 to-blue-2 shadow-lg"
+        >
+          <img :src="IsolationBg" alt="isolation" class="ml-[34px] mt-[16px]" />
+          <div class="text-black-1 text-[24px] font-semibold leading-[38px] ml-[38px] mt-[44px]">
+            错题精选
+          </div>
+          <img :src="Group" alt="group" class="ml-[95px] mt-[50px]" />
+        </div>
+        <div
+          class="w-[393px] h-[126px] mx-auto flex items-start rounded-8 border-l-1 border-Gray-200 bg-gradient-to-r from-blue-1 via-blue-1 to-blue-2 shadow-lg"
+        >
+          <img :src="Clock" alt="clock" class="ml-[29px] mt-[34px]" />
+          <div class="text-black-1 text-[24px] font-semibold leading-[38px] ml-[38px] mt-[44px]">
+            模拟考试
+          </div>
+          <img :src="Group" alt="group" class="ml-[95px] mt-[50px]" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import IsolationBg from '@/assets/images/Isolation_Mode.png'
+import Clock from '@/assets/images/Clock.png'
+import Group from '@/assets/images/Group.png'
+</script>
 
 <style scoped></style>
