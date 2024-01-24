@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col w-full h-full">
-    <div class="flex container flex-col">
+    <div class="flex flex-col">
       <h1 class="font-inter text-3xl font-semibold leading-9 ml-[60px] mt-[62px]">专项训练</h1>
-      <div class="flex mt-[37px] a-card-meta">
-        <a-card class="w-[262px] h-[353px] ml-[59px] mr-[28px]">
+      <div class="flex mt-[37px]">
+        <a-card class="w-[262px] h-[353px] ml-[59px] justify-start">
           <template #cover>
             <svg
               width="264"
@@ -45,7 +45,8 @@
             >去完成</a-button
           >
         </a-card>
-        <a-card class="w-[262px] h-[353px] mr-[28px]">
+
+        <a-card class="w-[262px] h-[353px] mx-auto">
           <template #cover>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -102,7 +103,7 @@
             >去完成</a-button
           >
         </a-card>
-        <a-card class="w-[262px] h-[353px]">
+        <a-card class="w-[262px] h-[353px] mr-[85px] justify-end">
           <template #cover>
             <svg
               xmlns="http://www.w3.org/2000/svg"
