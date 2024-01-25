@@ -56,12 +56,12 @@ export const request_logout = () => {
   return http.post('/api/logout/')
 }
 
-export type MENUITEM = { id: string; name: string, icon: string, key: string }
+export type MENUITEM = { id: string; name: string, icon: string, key: string, pattern_id?: number }
 export type MENURES = {
   page: number;
   limit: number;
   total: number;
-  data: MENUITEM[]
+  data: MENUITEM[];
 }
 export const request_menu = () => {
   return http.get<MENURES>('/api/system/menu/user_menu/')
@@ -70,8 +70,8 @@ export const request_userInfo = (userId: number) => {
   return http.get(`/api/system/user/get_user/${userId}/`)
 }
 export type SETUSERINFO = {
-  name:string
+  name: string
 }
-export const request_setUserInfo = (userId:number, data:SETUSERINFO) => {
+export const request_setUserInfo = (userId: number, data: SETUSERINFO) => {
   return http.patch(`/api/system/user/${userId}/`, data)
 }

@@ -60,7 +60,8 @@ export const useIndexStore = defineStore('menu', () => {
           key: name[0].toLowerCase() + name.slice(1),
           "id": item.id,
           "name": item.name,
-          icon: item.icon
+          icon: item.icon,
+          pattern_id: item.pattern_id
         }
       }),
       { "id": "setting", "name": "设置", icon: 'setting', 'key': 'setting' }
