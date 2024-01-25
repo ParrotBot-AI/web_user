@@ -155,7 +155,7 @@
       <h1 class="font-inter text-3xl font-semibold leading-9 mb-10">训练与模考</h1>
       <div class="flex">
         <div
-          class="w-[393px] h-[126px] flex px-10 items-center rounded-8 border-l-1 border-Gray-200 bg-gradient-to-r from-blue-1 via-blue-1 to-blue-2 shadow-lg overflow-hidden mr-10"
+          class="w-[393px] h-[126px] flex px-10 items-center rounded-8 border-l-1 border-Gray-200 bg-gradient-to-r from-blue-1 via-blue-1 to-blue-2 shadow-lg overflow-hidden cursor-pointer mr-10"
         >
           <img :src="IsolationBg" alt="isolation" class="w-[60px]"/>
           <div class="text-black-1 text-[24px] font-semibold flex-1 px-9 truncate">
@@ -164,7 +164,8 @@
           <img :src="Group" alt="group" />
         </div>
         <div
-          class="w-[393px] h-[126px] flex px-10  items-center rounded-8 border-l-1 border-Gray-200 bg-gradient-to-r from-blue-1 via-blue-1 to-blue-2 shadow-lg overflow-hidden"
+          class="w-[393px] h-[126px] flex px-10  items-center rounded-8 border-l-1 border-Gray-200 bg-gradient-to-r from-blue-1 via-blue-1 to-blue-2 shadow-lg overflow-hidden cursor-pointer"
+          @click="onClickToExamList"
         >
           <img :src="Clock" alt="clock" class="w-[60px]" />
           <div class="text-black-1 text-[24px] font-semibold flex-1 px-9 truncate">
@@ -181,6 +182,10 @@
 import IsolationBg from '@/assets/images/Isolation_Mode.png'
 import Clock from '@/assets/images/Clock.png'
 import Group from '@/assets/images/Group.png'
+import {useRouter} from "vue-router"
+const $router = useRouter()
+const onClickToExamList = () => {
+  $router.push('/exam/list')
+}
 </script>
 
-<style scoped></style>
