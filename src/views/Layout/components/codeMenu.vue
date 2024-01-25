@@ -15,10 +15,12 @@
         </a-menu>
       </div>
       <div class="flex text-white mb-24 mt-4 px-4 w-full overflow-hidden items-center cursor-pointer" @click="onClickOut">
-        <img :src="Ellipse" alt="user" class="w-10 h-10 overflow-hidden"/>
-        <div class="mx-2 flex-1 overflow-hidden">
-          <div class="truncate w-full">Luna</div>
-          <div>138****7894</div>
+        <a-avatar :src="indexStore.userInfo.avatar" :alt="indexStore.userInfo.username" :size="40">
+          {{ indexStore.userInfo.username[0] || '' }}
+        </a-avatar>
+        <div class="mx-1.5 flex-1 overflow-hidden">
+          <div class="truncate w-full">{{ indexStore.userInfo.username }}</div>
+          <div>{{ indexStore.userInfo.mobile || '136****7890' }}</div>
         </div>
         <img :src="LayOut" alt="layout" class="w-5 h-5 overflow-hidden"/>
       </div>

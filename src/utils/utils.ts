@@ -15,3 +15,18 @@ export function parse (jsonString = '{}', defaultValue = {}) {
 export function formatStr (str: string){
   return str.split(/[-_]/).map(val => val.slice(0, 1).toUpperCase() + val.slice(1)).join('')
 }
+
+type TimeOfDay = '上午' | '下午' | '晚上';
+
+export function getCurrentTimeOfDay(): TimeOfDay {
+  const now = new Date();
+  const hours = now.getHours();
+
+  if (hours < 12) {
+    return '上午';
+  } else if (hours >= 12 && hours < 18) {
+    return '下午';
+  } else {
+    return '晚上';
+  }
+}

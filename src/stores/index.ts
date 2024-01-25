@@ -11,27 +11,38 @@ import Group from "@/assets/homeIcon/Group.svg"
 
 export const useIndexStore = defineStore('menu', () => {
   const curRoute = useRoute()
-  const userInfo = reactive({})
+  const userInfo = reactive({
+    "userId": 0,
+    "username": "",
+    "email": "",
+    "mobile": "",
+    "avatar": "",
+    "name": "",
+  })
   const userTargets = reactive([
     {
-      id: '1',
+      id: 'est_score',
       icon: Union,
       val: 0,
       desc: '目前预测分数',
     },
     {
-      id: '2',
+      id: 'total_study',
       icon: Group,
       val: 0,
       desc: '已经学习天数',
     },
     {
-      id: '3',
+      id: 'next_test',
       val: 0,
       icon: Hourglass,
       desc: '距离考试天数',
     }
   ])
+  const userTargetsList = reactive({
+    today: [],
+    tomorrow: [],
+  })
   const menuData = reactive<{
     list: MENUITEM[];
     current: Array<string | number>;
@@ -69,9 +80,20 @@ export const useIndexStore = defineStore('menu', () => {
   })
 
   const requestUserInfo = async (userId: number) => {
-    await request_userInfo(userId)
+    const res = await request_userInfo(userId)
+    userTargets.forEach(val => {
+      val.val = res[val.id]
+    })
+    userTargetsList.today = res.tdy
+    userTargetsList.tomorrow = res.tmr
+    userInfo.userId = userId
+    userInfo.username = res.username
+    userInfo.email = res.email
+    userInfo.mobile = res.mobile
+    userInfo.avatar = res.avatar
+    userInfo.name = res.name
   }
 
-  return { getMenuValue, menuData, menuList, userTargets, requestUserInfo };
+  return { getMenuValue, menuData, menuList, userTargets, requestUserInfo, userTargetsList, userInfo };
 })
 

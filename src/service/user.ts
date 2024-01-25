@@ -67,7 +67,7 @@ export const request_menu = () => {
   return http.get<MENURES>('/api/system/menu/user_menu/')
 }
 export const request_userInfo = (userId: number) => {
-  return http.get('/api/system/user/get_user/', { userId })
+  return http.get(`/api/system/user/get_user/${userId}/`)
 }
 export type SETUSERINFO = {
   name:string
