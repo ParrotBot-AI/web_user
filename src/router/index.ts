@@ -36,7 +36,7 @@ const router = createRouter({
       component: () => import('@/views/ExamList/index.vue')
     },
     {
-      path: '/mock-exam/:id',
+      path: '/mock-exam/:arrayParam',
       name: 'mockExam',
       component: () => import('@/views/MockExam/index.vue')
     },

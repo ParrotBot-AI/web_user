@@ -15,10 +15,10 @@
       </div>
     </div>
   </a-layout>
-  <a-modal class="exam-modal" v-model:open="open" :cancelText="'返回'" :okText="'进入模拟考试'">
+  <a-modal class="exam-modal" v-model:open="open" :cancelText="'返回'" :okText="'进入模拟考试'" @ok="startMockExam">
     <h1>{{ examModalData.resource_name }}</h1>
     <p v-for="v in examModalData.sections[0].questions" :key="v.question_id">
-      <a-checkbox class="radius"></a-checkbox>
+      <a-checkbox class="radius" :value="v.question_id" @change="getQuestionId"></a-checkbox>
       <span>{{ v.remark }}</span>
       <span>{{ v.question_name }}</span>
     </p>
@@ -29,11 +29,14 @@ import { useRouter } from "vue-router"
 import { onMounted, computed } from 'vue'
 import { ArrowLeftOutlined } from '@ant-design/icons-vue';
 import { useExamStore } from '@/stores/exam'
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
+import type { CheckboxChangeEvent } from "ant-design-vue/es/_util/EventInterface";
 const open = ref<boolean>(false);
 const checkExamDataId = ref<number | null>(null)
 const $router = useRouter()
 const examStore = useExamStore()
+// 存储选中的复选框的id值
+const checkboxId = reactive<Array<string | number>>([])
 onMounted(() => {
   examStore.getExamResource()
 })
@@ -47,8 +50,22 @@ const showExamModal = (id: number) => {
 }
 
 const examModalData = computed(() => {
-  return examStore.exam_data.list.find((item) => item.resource_id === checkExamDataId.value)
+  return examStore.getExamModalData(checkExamDataId.value!)
+  // return examStore.exam_data.list.find((item) => item.resource_id === checkExamDataId.value)
 })
+
+// 跳转到开始考试
+const startMockExam = () => {
+  if (checkboxId.length !== 0) {
+    checkboxId.push(checkExamDataId.value as number)
+    $router.push({ name: 'mockExam', params: { arrayParam: checkboxId.join(',') } })
+  }
+}
+// 获取复选框的id值
+const getQuestionId = (e: CheckboxChangeEvent) => {
+  const { value } = e.target as HTMLInputElement
+  checkboxId.push(value)
+}
 </script>
 
 

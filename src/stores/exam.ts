@@ -18,5 +18,9 @@ export const useExamStore = defineStore('exam', () => {
     exam_data.list = res.data
     console.log('exam_data: ', exam_data);
   }
-  return { getExamResource, exam_data };
+
+  const getExamModalData = (checkExamDataId: number) => {
+    return exam_data.list.find((item) => item.resource_id === checkExamDataId)
+  }
+  return { getExamResource, exam_data, getExamModalData };
 })
