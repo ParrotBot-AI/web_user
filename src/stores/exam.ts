@@ -14,9 +14,8 @@ export const useExamStore = defineStore('exam', () => {
       pattern_id: indexStore.menuData.list.find((item) => item?.id === 22)?.pattern_id!,
       whether_zt: false,
     })
-    console.log("res |", res);
     exam_data.list = res.data
-    console.log('exam_data: ', exam_data);
+    return res
   }
 
   const getExamModalData = (checkExamDataId: number) => {
