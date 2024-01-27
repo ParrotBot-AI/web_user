@@ -4,18 +4,14 @@
       <div class="font-normal text-2xl text-gray-900 px-6">
         <ArrowLeftOutlined class="pr-2" @click="onClickToRead" />题库选择
       </div>
-       <!--题目区间-->
-       <a-tabs v-model:activeKey="activeKey" class="page-tab">
+      <!--题目区间-->
+      <a-tabs v-model:activeKey="activeKey" class="page-tab">
         <a-tab-pane v-for="v in examStore.exam_data.pageArr" :tab="`${v.start}-${v.end}`" :key="v.id"></a-tab-pane>
       </a-tabs>
     </header>
     <div class="flex flex-1 overflow-y-auto py-5 px-3 bg-green-2">
-      <ExamCard 
-        v-for="val in examStore.exam_data.list" 
-        :key="val.resource_id" 
-        v-bind="val"
-        @showExamModal="showExamModal"
-      />
+      <ExamCard v-for="val in examStore.exam_data.list" :key="val.resource_id" v-bind="val"
+        @showExamModal="showExamModal" />
     </div>
   </a-layout>
   <a-modal class="exam-modal" v-model:open="open" :cancelText="'返回'" :okText="'进入模拟考试'" @ok="startMockExam">
@@ -35,6 +31,7 @@ import { useExamStore } from '@/stores/exam'
 import { ref, reactive } from 'vue';
 import type { CheckboxChangeEvent } from "ant-design-vue/es/_util/EventInterface";
 import ExamCard from "./components/ExamCart.vue"
+import { message } from "ant-design-vue"
 const open = ref<boolean>(false);
 const checkExamDataId = ref<number | null>(null)
 const $router = useRouter()
@@ -63,6 +60,8 @@ const startMockExam = () => {
   if (checkboxId.length !== 0) {
     checkboxId.push(checkExamDataId.value as number)
     $router.push({ name: 'mockExam', params: { arrayParam: checkboxId.join(',') } })
+  } else {
+    message.info('请选择Passage')
   }
 }
 // 获取复选框的id值
@@ -97,11 +96,12 @@ const getQuestionId = (e: CheckboxChangeEvent) => {
 .page-tab :global(.ant-tabs-top >.ant-tabs-nav) {
   margin: 0;
 }
+
 .page-tab :global(.ant-tabs .ant-tabs-tab) {
   padding: 12px 15px;
 }
 
-.page-tab :global(.ant-tabs-nav){
+.page-tab :global(.ant-tabs-nav) {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 }
