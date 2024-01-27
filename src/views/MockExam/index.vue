@@ -43,5 +43,7 @@ const getmockExamData = () => {
 }
 onMounted(() => {
   getmockExamData()
+  // 连接socket
+
 })
 </script>
