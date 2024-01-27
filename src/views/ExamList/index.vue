@@ -1,38 +1,21 @@
 <template>
   <a-layout class="w-full h-full overflow-hidden">
-    <header class="bg-green-2 px-6 py-4 flex justify-between items-center">
-      <div class="font-normal text-2xl text-gray-900 ">
+    <header class="bg-green-2 pt-4 flex flex-col">
+      <div class="font-normal text-2xl text-gray-900 px-6">
         <ArrowLeftOutlined class="pr-2" @click="onClickToRead" />题库选择
       </div>
-    </header>
-    <div>
-      <!--题目区间-->
-      <a-tabs v-model:activeKey="activeKey">
-        <a-tab-pane v-for="v in  totalData " tab="1-20" :key="v.toString()">
-          <div class="flex flex-1 overflow-y-auto">
-            <!--列表-->
-            <div v-for="v in  examStore.exam_data.list " :key="v.resource_id"
-              :style="{ height: '184px', width: '550px', marginLeft: '20px', display: 'flex' }">
-              <div class="left" :style="{ backgroundColor: '#DAF5E9', width: '256px' }">
-                <p>REPORT</p>
-                <p>Official 1</p>
-                <div :style="{ display: 'flex' }">
-                  <a-button @click="showExamModal(v.resource_id)">模考</a-button>
-                  <a-button @click="showExamModal(v.resource_id)">练习</a-button>
-                </div>
-              </div>
-              <div class="right" :style="{ display: 'flex', flexDirection: 'column', flex: 1 }">
-                <div v-for="v in 3" :key="v" :style="{ height: '180px', marginBottom: '4px', border: '1px solid' }">
-                  <span>Paragraph1</span>
-                  <span>未完成</span>
-                  <span>icon1</span>
-                  <span>icon2</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </a-tab-pane>
+       <!--题目区间-->
+       <a-tabs v-model:activeKey="activeKey" class="page-tab">
+        <a-tab-pane v-for="v in examStore.exam_data.pageArr" :tab="`${v.start}-${v.end}`" :key="v.id"></a-tab-pane>
       </a-tabs>
+    </header>
+    <div class="flex flex-1 overflow-y-auto py-5 px-3 bg-green-2">
+      <ExamCard 
+        v-for="val in examStore.exam_data.list" 
+        :key="val.resource_id" 
+        v-bind="val"
+        @showExamModal="showExamModal"
+      />
     </div>
   </a-layout>
   <a-modal class="exam-modal" v-model:open="open" :cancelText="'返回'" :okText="'进入模拟考试'" @ok="startMockExam">
@@ -51,18 +34,16 @@ import { ArrowLeftOutlined } from '@ant-design/icons-vue';
 import { useExamStore } from '@/stores/exam'
 import { ref, reactive } from 'vue';
 import type { CheckboxChangeEvent } from "ant-design-vue/es/_util/EventInterface";
+import ExamCard from "./components/ExamCart.vue"
 const open = ref<boolean>(false);
 const checkExamDataId = ref<number | null>(null)
-const totalData = ref<number | null>(null)
 const $router = useRouter()
 const examStore = useExamStore()
-const activeKey = ref('1');
+const activeKey = ref(0);
 // 存储选中的复选框的id值
 const checkboxId = reactive<Array<string | number>>([])
 onMounted(async () => {
-  const all_data = await examStore.getExamResource()
-  const { total } = all_data
-  totalData.value = Math.ceil(total / 20)
+  await examStore.getExamResource()
 })
 const onClickToRead = () => {
   $router.push("/read")
@@ -111,5 +92,17 @@ const getQuestionId = (e: CheckboxChangeEvent) => {
 
 :global(.radius .ant-checkbox-inner) {
   border-radius: 100%;
+}
+
+.page-tab :global(.ant-tabs-top >.ant-tabs-nav) {
+  margin: 0;
+}
+.page-tab :global(.ant-tabs .ant-tabs-tab) {
+  padding: 12px 15px;
+}
+
+.page-tab :global(.ant-tabs-nav){
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 </style>
