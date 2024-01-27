@@ -6,8 +6,8 @@ import "@/styles/main.css"
 import router from './router'
 import VueNativeSock from "vue-native-websocket-vue3";
 import { useSocketStore } from '@/stores/useSocketStore'
-
-
+import { getWithExpiry } from '@/utils/storage'
+const { access } = getWithExpiry('userinfo')!
 const app = createApp(App)
 app.use(createPinia())
 app.use(router)
@@ -16,7 +16,7 @@ app.mount('#app')
 // 使用VueNativeSock插件，并进行相关配置
 app.use(
   VueNativeSock,
-  `wss://www.kaisir.cn/websocket/${localStorage.getItem("userID")}`,
+  `ws://${import.meta.env.VITE_WS_BASEURL}ws/question/${access}`,
   {
     // 启用pinia集成 | enable pinia integration
     store: useSocketStore(app),

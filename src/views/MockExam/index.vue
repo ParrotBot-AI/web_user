@@ -20,6 +20,8 @@ import { useRouter, useRoute } from "vue-router"
 import { onMounted } from 'vue'
 import { ArrowLeftOutlined } from '@ant-design/icons-vue';
 import { useExamStore } from '@/stores/exam'
+import { getCurrentInstance } from "vue";
+import type { ComponentInternalInstance } from 'vue'
 
 const $router = useRouter()
 const { params } = useRoute();
@@ -44,6 +46,7 @@ const getmockExamData = () => {
 onMounted(() => {
   getmockExamData()
   // 连接socket
-
+  const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+  proxy?.$connect();
 })
 </script>
