@@ -33,7 +33,7 @@ const onClickToRead = () => {
 // 获取模拟考试数据
 const getmockExamData = () => {
   // console.log(params, "| params");
-  const arrParams = params.arrayParam.split(',')
+  const arrParams = params.arrayParam.split('-')
   const id = arrParams.pop()
   const { sections } = examStore.getExamModalData(Number(id))
   const { questions } = sections[0]

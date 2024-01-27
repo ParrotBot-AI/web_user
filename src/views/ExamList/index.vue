@@ -9,7 +9,7 @@
         <a-tab-pane v-for="v in examStore.exam_data.pageArr" :tab="`${v.start}-${v.end}`" :key="v.id"></a-tab-pane>
       </a-tabs>
     </header>
-    <div class="flex flex-1 overflow-y-auto py-5 px-3 bg-green-2">
+    <div class="flex content-start flex-wrap flex-1 overflow-y-auto py-5 px-3 bg-green-2">
       <ExamCard v-for="val in examStore.exam_data.list" :key="val.resource_id" v-bind="val"
         @showExamModal="showExamModal" />
     </div>
@@ -59,7 +59,7 @@ const examModalData = computed(() => {
 const startMockExam = () => {
   if (checkboxId.length !== 0) {
     checkboxId.push(checkExamDataId.value as number)
-    $router.push({ name: 'mockExam', params: { arrayParam: checkboxId.join(',') } })
+    $router.push({ name: 'mockExam', query: { arrayParam: checkboxId.join('-') } })
   } else {
     message.info('请选择Passage')
   }

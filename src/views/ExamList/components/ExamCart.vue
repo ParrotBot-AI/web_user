@@ -1,20 +1,37 @@
 <template>
-  <div class="flex bg-white h-48 exam-card mx-3 w-1/2">
-    <div class="left overflow-hidden h-full relative">
-      <p class="text-white text-[30px] text-center pt-14">Official 1</p>
-      <div class="absolute bottom-6 w-full px-2 flex">
-        <a-button @click="onClickExam(props.resource_id)" class="flex justify-between items-center  w-1/2 mx-2">
-          <img :src="Time" alt="time" class="w-5 h-5 align-middle" />
-          模考
-        </a-button>
-        <a-button @click="onClickPractice(props.resource_id)" class="flex justify-between items-center w-1/2 mx-2">
-          <img :src="Practice" alt="practice" class="w-5 h-5 align-middle" />
-          练习
-        </a-button>
+  <div class="flex h-48 px-3 pb-5 w-1/2">
+    <div class="flex bg-white exam-card w-full">
+      <div class="left overflow-hidden h-full relative">
+        <p class="text-white text-[30px] text-center pt-14">Official 1</p>
+        <div class="absolute bottom-6 w-full px-2 flex">
+          <a-button @click="onClickExam(props.resource_id)" class="flex justify-between items-center  w-1/2 mx-2">
+            <img :src="Time" alt="time" class="w-5 h-5 align-middle" />
+            模考
+          </a-button>
+          <a-button @click="onClickPractice(props.resource_id)" class="flex justify-between items-center w-1/2 mx-2">
+            <img :src="Practice" alt="practice" class="w-5 h-5 align-middle" />
+            练习
+          </a-button>
+        </div>
       </div>
-    </div>
-    <div class="flex-1 overflow-hidden pl-2">
-      <div class="w-full border-b"></div>
+      <div class="flex-1 overflow-hidden pl-2">
+        <div class="flex w-full border-b h-1/3 justify-center items-center" v-for="v in sections[0].questions"
+          :key="v.question_id">
+          <p class="w-1/2">{{ v.remark }}</p>
+          <div class="flex justify-center items-center w-1/2">
+            <div class="w-1/2">
+              <div class="flex flex-col items-center text-[#F7A705]" v-if="v.last_record === 10">
+                <span>完成得分</span>
+                <span>{{ `${v.last_record}/${v.question_count}` }}</span>
+              </div>
+              <div v-else>
+                <span class="text-[#6b728099]">未完成</span>
+              </div>
+            </div>
+            <img :src="Practice" alt="practice" class="w-1/2 h-5 align-middle" />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -25,6 +42,7 @@ import Time from '@/assets/images/time.svg'
 const emits = defineEmits(["showExamModal"])
 const props = defineProps<{
   resource_id: number
+  sections: Array<{ questions: [] }>
 }>()
 const onClickExam = (id) => {
   emits("showExamModal", id)
