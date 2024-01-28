@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
-import { request_getExamResource } from '@/service/exam'
+import { request_getExamResource, request_startExam } from '@/service/exam'
 import { useIndexStore } from '@/stores/index'
-
+import { getWithExpiry } from "@/utils/storage"
 export const useExamStore = defineStore('exam', () => {
   const exam_data = reactive({
     list: [],
@@ -29,8 +29,12 @@ export const useExamStore = defineStore('exam', () => {
     return res
   }
 
-  const getExamModalData = (checkExamDataId: number) => {
-    return exam_data.list.find((item) => item.resource_id === checkExamDataId)
+  const startExam = (question_ids: number[]) => {
+    const { userId } = getWithExpiry('userinfo')
+    return request_startExam({
+      user_id: userId,
+      question_ids
+    })
   }
-  return { getExamResource, exam_data, getExamModalData };
+  return { getExamResource, exam_data, startExam };
 })
