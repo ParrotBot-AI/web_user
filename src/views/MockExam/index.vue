@@ -9,8 +9,8 @@
     <div class="text-center h-16 flex items-center justify-center bg-white">
       Question 1 of 10
     </div>
-    <div class="flex flex-1 overflow-hidden bg-white" :style="{borderTop: `1px solid #D0D5DD`}">
-      <div class="flex-1 h-full overflow-h-auto overflow-x-hidden" :style="{borderRight: `1px solid #D0D5DD`}">1</div>
+    <div class="flex flex-1 overflow-hidden bg-white" :style="{ borderTop: `1px solid #D0D5DD` }">
+      <div class="flex-1 h-full overflow-h-auto overflow-x-hidden" :style="{ borderRight: `1px solid #D0D5DD` }">1</div>
       <div class="flex-1 h-full overflow-h-auto overflow-x-hidden">2</div>
     </div>
   </a-layout>
@@ -25,7 +25,6 @@ import { useExamStore } from '@/stores/exam'
 import { getWithExpiry } from '@/utils/storage'
 const { access } = getWithExpiry('userinfo')!
 const socket = ref<WebSocketClient | null>(null)
-import type { ComponentInternalInstance } from 'vue'
 
 const $router = useRouter()
 const { query } = useRoute();
@@ -41,7 +40,7 @@ const getmockExamData = async () => {
 }
 onMounted(() => {
   getmockExamData()
-  socket.value = new WebSocketClient('ws://yingwuzhixue.com:19780/ws/question/' + access + '/');
+  socket.value = new WebSocketClient('ws://' + import.meta.env.VITE_WS_BASEURL + '/ws/question/' + access + '/');
 })
 
 onUnmounted(() => {
