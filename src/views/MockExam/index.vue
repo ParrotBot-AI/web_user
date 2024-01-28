@@ -17,11 +17,14 @@
 </template>
 <script setup lang="ts">
 import { useRouter, useRoute } from "vue-router"
+import WebSocketClient from '@/utils/ws'
 import HeaderBtns from "./components/HeaderBtns.vue"
-import { onMounted } from 'vue'
+import { onMounted, ref, onUnmounted } from 'vue'
 import { ArrowLeftOutlined } from '@ant-design/icons-vue';
 import { useExamStore } from '@/stores/exam'
-import { getCurrentInstance } from "vue";
+import { getWithExpiry } from '@/utils/storage'
+const { access } = getWithExpiry('userinfo')!
+const socket = ref<WebSocketClient | null>(null)
 import type { ComponentInternalInstance } from 'vue'
 
 const $router = useRouter()
@@ -38,8 +41,11 @@ const getmockExamData = async () => {
 }
 onMounted(() => {
   getmockExamData()
-  // 连接socket
-  const { proxy } = getCurrentInstance() as ComponentInternalInstance;
-  proxy?.$connect();
+  socket.value = new WebSocketClient('ws://yingwuzhixue.com:19780/ws/question/' + access + '/');
 })
+
+onUnmounted(() => {
+  console.log(1111)
+  socket.value?.close()
+}) 
 </script>
