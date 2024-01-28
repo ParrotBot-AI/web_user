@@ -17,7 +17,7 @@
       <div class="flex-1 overflow-hidden pl-2">
         <div class="flex w-full border-b h-1/3 justify-center items-center" v-for="v in sections[0].questions"
           :key="v.question_id">
-          <p class="w-1/2">{{ v.remark }}</p>
+          <p class="w-1/2 truncate">{{ v.remark }}</p>
           <div class="flex justify-center items-center w-1/2">
             <div class="w-1/2">
               <div class="flex flex-col items-center text-[#F7A705]" v-if="v.last_record === 10">
