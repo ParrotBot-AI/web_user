@@ -25,7 +25,6 @@ import { useExamStore } from '@/stores/exam'
 import { getWithExpiry } from '@/utils/storage'
 const { access } = getWithExpiry('userinfo')!
 const socket = ref<WebSocketClient | null>(null)
-import type { ComponentInternalInstance } from 'vue'
 
 const $router = useRouter()
 const { query } = useRoute();
@@ -45,7 +44,6 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  console.log(1111)
   socket.value?.close()
 }) 
 </script>
