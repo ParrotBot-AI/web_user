@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="flex-1 overflow-hidden pl-2">
-        <div class="flex w-full border-b h-1/3 justify-center items-center" v-for="v in sections[0].questions"
+        <div class="flex w-full border-b h-1/3 justify-center items-center mb-[1px]" :style="{borderBottom: '1px solid #D0D5DD'}" v-for="v in sections[0].questions"
           :key="v.question_id">
           <p class="w-1/2 truncate">{{ v.remark }}</p>
           <div class="flex justify-center items-center w-1/2">
