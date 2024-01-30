@@ -50,7 +50,7 @@ class Axios {
   private async handleSuccessRequeset(config: IRequestOptions) {
     const { ignoreAuth = false } = config
     if (!ignoreAuth) {
-      const userInfo = getWithExpiry('userinfo') as USERINFO
+      const userInfo = getWithExpiry<USERINFO>('userinfo')
       config.headers!.Authorization =
         `JWT ${userInfo?.access}` || ``
     }

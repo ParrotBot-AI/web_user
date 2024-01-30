@@ -18,13 +18,13 @@
 <script setup lang="ts">
 import { useRouter, useRoute } from "vue-router"
 import WebSocketClient from '@/utils/ws'
-import type {USERINFO} from "@/utils/http"
+import type {USERINFO} from "@/service/user"
 import HeaderBtns from "./components/HeaderBtns.vue"
 import { onMounted, ref, onUnmounted } from 'vue'
 import { ArrowLeftOutlined } from '@ant-design/icons-vue';
 import { useExamStore } from '@/stores/exam'
 import { getWithExpiry } from '@/utils/storage'
-const { access } = getWithExpiry('userinfo') as USERINFO
+const { access } = getWithExpiry<USERINFO>('userinfo')!
 const socket = ref<WebSocketClient | null>(null)
 
 const $router = useRouter()
