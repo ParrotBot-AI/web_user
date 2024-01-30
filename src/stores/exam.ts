@@ -35,12 +35,13 @@ export const useExamStore = defineStore('exam', () => {
   const getExamModalData = (checkExamDataId: number) => {
     return exam_data.list.find((item) => item.resource_id === checkExamDataId)
   }
-  const startExam = (question_ids: number[]) => {
+  const startExam = async (question_ids: number[]) => {
     const { userId } = getWithExpiry<USERINFO>('userinfo')!
-    return request_startExam({
+    const res = await request_startExam({
       user_id: userId,
       question_ids
     })
+    console.log(res)
   }
   return { getExamResource, exam_data, startExam, getExamModalData };
 })

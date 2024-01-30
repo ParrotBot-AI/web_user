@@ -23,11 +23,14 @@
     :closable="false"
   >
     <h1 class="text-[18px] font-bold pb-4">{{ examModalData.resource_name }}</h1>
-    <p v-for="v in examModalData.sections[0].questions " :key="v.question_id" class="py-2">
-      <a-checkbox class="radius" :value="v.question_id" @change="getQuestionId"></a-checkbox>
-      <span class="font-bold pl-2">{{ v.remark }}</span>
-      <span class="pl-2">{{ v.question_name }}</span>
-    </p>
+    <a-checkbox-group v-model:value="checkboxId">
+      <p v-for="v in examModalData.sections[0].questions " :key="v.question_id" class="py-2">
+        <a-checkbox class="radius" :value="v.question_id">
+          <span class="font-bold pl-2">{{ v.remark }}</span>
+          <span class="pl-2">{{ v.question_name }}</span>
+        </a-checkbox>
+      </p>
+    </a-checkbox-group>
   </a-modal>
 </template>
 <script setup lang="ts">
@@ -35,8 +38,7 @@ import { useRouter } from "vue-router"
 import { onMounted, computed } from 'vue'
 import { ArrowLeftOutlined } from '@ant-design/icons-vue';
 import { useExamStore } from '@/stores/exam'
-import { ref, reactive } from 'vue';
-import type { CheckboxChangeEvent } from "ant-design-vue/es/_util/EventInterface";
+import { ref } from 'vue';
 import ExamCard from "./components/ExamCart.vue"
 import { message } from "ant-design-vue"
 const open = ref<boolean>(false);
@@ -45,7 +47,7 @@ const $router = useRouter()
 const examStore = useExamStore()
 const activeKey = ref(0);
 // 存储选中的复选框的id值
-const checkboxId = reactive<Array<string | number>>([])
+const checkboxId = ref([])
 onMounted(async () => {
   await examStore.getExamResource()
 })
@@ -59,22 +61,15 @@ const showExamModal = (id: number) => {
 }
 const examModalData = computed(() => {
   return examStore.getExamModalData(checkExamDataId.value!)
-  // return examStore.exam_data.list.find((item) => item.resource_id === checkExamDataId.value)
 })
 
 // 跳转到开始考试
 const startMockExam = () => {
-  if (checkboxId.length !== 0) {
-    checkboxId.push(checkExamDataId.value as number)
-    $router.push({ name: 'mockExam', query: { arrayParam: checkboxId.join('-') } })
+  if (checkboxId.value.length !== 0) {
+    $router.push({ name: 'mockExam', query: { arrayParam: checkboxId.value.join('-') } })
   } else {
     message.info('请选择Passage')
   }
-}
-// 获取复选框的id值
-const getQuestionId = (e: CheckboxChangeEvent) => {
-  const { value } = e.target as HTMLInputElement
-  checkboxId.push(value)
 }
 
 </script>

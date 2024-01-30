@@ -11,7 +11,9 @@
     </div>
     <div class="flex flex-1 overflow-hidden bg-white" :style="{ borderTop: `1px solid #D0D5DD` }">
       <div class="flex-1 h-full overflow-h-auto overflow-x-hidden" :style="{ borderRight: `1px solid #D0D5DD` }">1</div>
-      <div class="flex-1 h-full overflow-h-auto overflow-x-hidden">2</div>
+      <div class="flex-1 h-full overflow-h-auto overflow-x-hidden">
+        <h1>{{  }}</h1>
+      </div>
     </div>
   </a-layout>
 </template>
