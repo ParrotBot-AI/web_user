@@ -15,8 +15,9 @@ interface IRequestOptions extends AxiosRequestConfig {
 interface IResponse<T> extends AxiosResponse {
   data: T
 }
-type USERINFO = {
+export type USERINFO = {
   access: string
+  userId: number
 }
 class Axios {
   private instance: AxiosInstance

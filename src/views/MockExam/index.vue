@@ -18,12 +18,13 @@
 <script setup lang="ts">
 import { useRouter, useRoute } from "vue-router"
 import WebSocketClient from '@/utils/ws'
+import type {USERINFO} from "@/utils/http"
 import HeaderBtns from "./components/HeaderBtns.vue"
 import { onMounted, ref, onUnmounted } from 'vue'
 import { ArrowLeftOutlined } from '@ant-design/icons-vue';
 import { useExamStore } from '@/stores/exam'
 import { getWithExpiry } from '@/utils/storage'
-const { access } = getWithExpiry('userinfo')!
+const { access } = getWithExpiry('userinfo') as USERINFO
 const socket = ref<WebSocketClient | null>(null)
 
 const $router = useRouter()
@@ -35,7 +36,7 @@ const onClickToRead = () => {
 }
 // 获取模拟考试数据
 const getmockExamData = async () => {
-  const arrParams = query.arrayParam.split('-').map(Number)
+  const arrParams = (query.arrayParam as string)!.split('-').map(Number)
   examStore.startExam(arrParams)
 }
 onMounted(() => {

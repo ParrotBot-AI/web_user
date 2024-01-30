@@ -3,8 +3,12 @@ import { reactive } from 'vue'
 import { request_getExamResource, request_startExam } from '@/service/exam'
 import { useIndexStore } from '@/stores/index'
 import { getWithExpiry } from "@/utils/storage"
+import type {USERINFO} from "@/utils/http"
 export const useExamStore = defineStore('exam', () => {
-  const exam_data = reactive({
+  const exam_data = reactive<{
+    list: any[];
+    pageArr: { start: number; end: number; id: number; }[];
+  }>({
     list: [],
     pageArr: []
   })
@@ -14,7 +18,7 @@ export const useExamStore = defineStore('exam', () => {
   const getExamResource = async () => {
     const res = await request_getExamResource({
       exam_id: 1,
-      pattern_id: indexStore.menuData.list.find((item) => item?.id === readId)?.pattern_id!,
+      pattern_id: indexStore.menuData.list.find((item) => Number(item?.id) === readId)?.pattern_id!,
       whether_zt: false,
     })
     exam_data.list = res.data
@@ -32,7 +36,7 @@ export const useExamStore = defineStore('exam', () => {
     return exam_data.list.find((item) => item.resource_id === checkExamDataId)
   }
   const startExam = (question_ids: number[]) => {
-    const { userId } = getWithExpiry('userinfo')
+    const { userId } = getWithExpiry('userinfo') as USERINFO
     return request_startExam({
       user_id: userId,
       question_ids

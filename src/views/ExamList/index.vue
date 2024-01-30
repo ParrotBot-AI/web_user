@@ -14,12 +14,19 @@
         @showExamModal="showExamModal" />
     </div>
   </a-layout>
-  <a-modal class="exam-modal" v-model:open="open" :cancelText="'返回'" :okText="'进入模拟考试'" @ok="startMockExam">
-    <h1>{{ examModalData.resource_name }}</h1>
-    <p v-for=" v  in  examModalData.sections[0].questions " :key="v.question_id">
+  <a-modal 
+    class="exam-modal" 
+    v-model:open="open" 
+    :cancelText="'返回'" 
+    :okText="'进入模拟考试'" 
+    @ok="startMockExam" 
+    :closable="false"
+  >
+    <h1 class="text-[18px] font-bold pb-4">{{ examModalData.resource_name }}</h1>
+    <p v-for="v in examModalData.sections[0].questions " :key="v.question_id" class="py-2">
       <a-checkbox class="radius" :value="v.question_id" @change="getQuestionId"></a-checkbox>
-      <span>{{ v.remark }}</span>
-      <span>{{ v.question_name }}</span>
+      <span class="font-bold pl-2">{{ v.remark }}</span>
+      <span class="pl-2">{{ v.question_name }}</span>
     </p>
   </a-modal>
 </template>
@@ -74,6 +81,12 @@ const getQuestionId = (e: CheckboxChangeEvent) => {
 
 
 <style scoped>
+:global(.exam-modal) {
+  width: 750px!important;
+}
+:global(.exam-modal .ant-modal-body) {
+  padding: 20px 60px;
+}
 :global(.exam-modal .ant-modal-footer .ant-btn) {
   width: 166px;
   height: 44px;

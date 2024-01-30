@@ -42,12 +42,12 @@ import Time from '@/assets/images/time.svg'
 const emits = defineEmits(["showExamModal"])
 const props = defineProps<{
   resource_id: number
-  sections: Array<{ questions: [] }>
+  sections: Array<any>
 }>()
-const onClickExam = (id) => {
+const onClickExam = (id: number) => {
   emits("showExamModal", id)
 }
-const onClickPractice = (id) => {
+const onClickPractice = (id: number) => {
   console.log('练习', id)
 }
 </script>
