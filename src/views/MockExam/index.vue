@@ -6,13 +6,18 @@
       </div>
       <HeaderBtns />
     </header>
-    <div class="text-center h-16 flex items-center justify-center bg-white">
-      Question 1 of 10
+    <div class="text-center h-16 flex items-center justify-between bg-white px-8">
+      <span></span>
+      <h2 class="text-gray-900 text[20px] font-bold">Question 1 of 10</h2>
+      <div></div>
     </div>
     <div class="flex flex-1 overflow-hidden bg-white" :style="{ borderTop: `1px solid #D0D5DD` }">
-      <div class="flex-1 h-full overflow-h-auto overflow-x-hidden" :style="{ borderRight: `1px solid #D0D5DD` }">1</div>
+      <div class="flex-1 h-full overflow-h-auto overflow-x-hidden" :style="{ borderRight: `1px solid #D0D5DD` }">
+        {{ examStore.examing_data.curQuestionChildren }}
+      </div>
       <div class="flex-1 h-full overflow-h-auto overflow-x-hidden">
-        <h1>{{  }}</h1>
+        <h1 class="text-center text-[20px] text-gray-900 py-5">{{ examStore.examing_data.curQuestion.question_title }}</h1>
+        <p class="px-8 text-gray-500 text-[18px] leading-7">{{ examStore.examing_data.curQuestion.questions_content }}</p>
       </div>
     </div>
   </a-layout>

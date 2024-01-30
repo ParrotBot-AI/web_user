@@ -12,6 +12,29 @@ export const useExamStore = defineStore('exam', () => {
     list: [],
     pageArr: []
   })
+  const examing_data = reactive<{
+    curQuestionIndex: number; // 答题下标
+    curQuestionChildrenIndex: number;
+    time_remain: number;
+    practice_id: number | null;
+    questions: any[];
+    curQuestionChildren: {},
+    curQuestion: {
+      question_title: string;
+      questions_content: string;
+    }
+  }>({
+    curQuestionIndex: 0,
+    curQuestionChildrenIndex: 0,
+    curQuestionChildren: {},
+    time_remain: 0,
+    practice_id: null,
+    questions: [],
+    curQuestion: {
+      question_title: '',
+      questions_content: ''
+    }
+  })
   const readId = 22;
   const limit = 20;
   const indexStore = useIndexStore()
@@ -41,7 +64,13 @@ export const useExamStore = defineStore('exam', () => {
       user_id: userId,
       question_ids
     })
-    console.log(res)
+    examing_data.curQuestionIndex = 0;
+    examing_data.curQuestionChildrenIndex = 0;
+    examing_data.time_remain = res.time_remain;
+    examing_data.practice_id = res.practice_id;
+    examing_data.questions = res.questions;
+    examing_data.curQuestion = res.questions[examing_data.curQuestionIndex];
+    examing_data.curQuestionChildren = res.questions[examing_data.curQuestionIndex].children[examing_data.curQuestionChildrenIndex];
   }
-  return { getExamResource, exam_data, startExam, getExamModalData };
+  return { getExamResource, exam_data, startExam, getExamModalData, examing_data };
 })
