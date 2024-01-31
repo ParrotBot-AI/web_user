@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1 class="text-gray-500 text[18px] pb-10 font-bold">{{ props.stem }}</h1>
-    <a-radio-group v-model:value="sc_value" v-if="props.restriction_count === 1">
+    <h1 class="text-gray-500 text-[18px] pb-10 font-bold">{{ props.stem }}</h1>
+    <a-radio-group v-model:value="sc_value" v-if="props.restriction_count === 1 && props.keywords.k !== '$$' && props.question_type !== 'TR_fill_sentence'">
       <a-radio 
         v-for="(item, index) in props.choice" 
         :key="index" 
@@ -11,7 +11,7 @@
         <span class="pl-3 pr-2">{{ props.choice_label[index] }}.</span><p class="flex-1">{{ item }}</p>
       </a-radio>
     </a-radio-group>
-    <a-checkbox-group v-model:value="mc_value" v-else class="flex flex-col">
+    <a-checkbox-group v-model:value="mc_value" v-else-if="props.restriction_count > 1" class="flex flex-col">
       <a-checkbox 
         v-for="(item, index) in props.choice" 
         :key="index" 
@@ -21,6 +21,9 @@
         <span class="pl-3 pr-2">{{ props.choice_label[index] }}.</span><p class="flex-1 overflow-hidden text-wrap">{{ item }}</p>
       </a-checkbox>
     </a-checkbox-group>
+    <h2 v-else-if="props.keywords.k === '$$' || props.question_type=== 'TR_fill_sentence'" class="text-green-1 text-[18px]">
+      {{ typeof props.keywords === 'string' ? props.keywords : props.keywords.s }}
+    </h2>
   </div>
 </template>
 <script setup lang="ts">
@@ -34,6 +37,11 @@ const props = defineProps<{
   choice_label: string[];
   choice: string[];
   restriction_count: number;
+  keywords: {
+    p: string;
+    k: string;
+    s?: string
+  }
 }>()
 </script>
 <style scoped>

@@ -17,7 +17,6 @@
         <p class="px-8 text-gray-500 text-[18px] leading-7">{{ examStore.curQuestion?.questions_content }}</p>
       </div>
       <div class="flex-1 h-full overflow-h-auto overflow-x-hidden px-12 py-7">
-        {{ examStore.curQuestionChildren }}
         <component v-if="examStore.curQuestionChildren" :is="examItems[examStore.curQuestionChildren?.question_type]" v-bind="examStore.curQuestionChildren"/>
       </div>
     </div>
@@ -40,7 +39,7 @@ const socket = ref<WebSocketClient | null>(null)
 const examItems = {
   TR_sc: ExamSCItem,
   TR_mc: ExamSCItem,
-  TR_fill_sentence : ExamFillSentence,
+  TR_fill_sentence : ExamSCItem,
   TR_last_mc: ExamLaseMcItem,
 }
 const $router = useRouter()
