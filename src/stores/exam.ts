@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
-import { reactive } from 'vue'
-import { request_getExamResource, request_startExam } from '@/service/exam'
+import { reactive, computed } from 'vue'
+import { request_getExamResource, request_startExam, request_getExam } from '@/service/exam'
 import { useIndexStore } from '@/stores/index'
 import { getWithExpiry } from "@/utils/storage"
 import type {USERINFO} from "@/service/user"
@@ -15,25 +15,17 @@ export const useExamStore = defineStore('exam', () => {
   const examing_data = reactive<{
     curQuestionIndex: number; // 答题下标
     curQuestionChildrenIndex: number;
+    curIndex: number;
     time_remain: number;
     practice_id: number | null;
     questions: any[];
-    curQuestionChildren: {},
-    curQuestion: {
-      question_title: string;
-      questions_content: string;
-    }
   }>({
     curQuestionIndex: 0,
+    curIndex: 0,
     curQuestionChildrenIndex: 0,
-    curQuestionChildren: {},
     time_remain: 0,
     practice_id: null,
     questions: [],
-    curQuestion: {
-      question_title: '',
-      questions_content: ''
-    }
   })
   const readId = 22;
   const limit = 20;
@@ -64,13 +56,44 @@ export const useExamStore = defineStore('exam', () => {
       user_id: userId,
       question_ids
     })
+    examing_data.practice_id = res.practice_id;
+  }
+  const getExamData = async (id: string) => {
+    const res = await request_getExam(id)
+    console.log(res);
     examing_data.curQuestionIndex = 0;
     examing_data.curQuestionChildrenIndex = 0;
     examing_data.time_remain = res.time_remain;
-    examing_data.practice_id = res.practice_id;
     examing_data.questions = res.questions;
-    examing_data.curQuestion = res.questions[examing_data.curQuestionIndex];
-    examing_data.curQuestionChildren = res.questions[examing_data.curQuestionIndex].children[examing_data.curQuestionChildrenIndex];
   }
-  return { getExamResource, exam_data, startExam, getExamModalData, examing_data };
+  const changeQuestion = (question: number) => {
+    let index = examing_data.curIndex + question;
+    const childrenLength = examing_data.questions.reduce((prev, item) => prev + item.children.length, 0);
+    if (index <= 0) {
+      index = 0;
+    }
+    if( index === childrenLength) {
+      index = childrenLength - 1;
+    }
+    let start = 0;
+    let questionIndexRes = 0;
+    examing_data.questions.forEach((v, i) => {
+      const children = v.children;
+      const end = start + children.length;
+      if (index >= start && index <= end) {
+        questionIndexRes = i;
+      }
+      start = end;
+    })
+    examing_data.curIndex = index;
+    examing_data.curQuestionIndex = questionIndexRes;
+    examing_data.curQuestionChildrenIndex = questionIndexRes > 0 ? index - examing_data.questions.slice(0, questionIndexRes).reduce((prev, item) => prev + item.children.length, 0) : index;
+  } 
+  const curQuestion = computed(() => {
+    return examing_data.questions[examing_data.curQuestionIndex];
+  })
+  const curQuestionChildren = computed(() => {
+    return curQuestion.value?.children[examing_data.curQuestionChildrenIndex];
+  })
+  return { getExamResource, exam_data, startExam, getExamModalData, examing_data, changeQuestion, curQuestion, curQuestionChildren, getExamData };
 })

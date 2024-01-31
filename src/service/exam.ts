@@ -18,3 +18,7 @@ type EXAN_START = {
 export const request_startExam = (data: EXAN_START) => {
   return http.post(`/api/system/microservice/create_mock/`, data)
 }
+
+export const request_getExam = (id: string) => {
+  return http.get(`/api/system/microservice/get_mock/${id}`)
+}

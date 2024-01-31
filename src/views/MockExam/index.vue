@@ -13,11 +13,12 @@
     </div>
     <div class="flex flex-1 overflow-hidden bg-white" :style="{ borderTop: `1px solid #D0D5DD` }">
       <div class="flex-1 h-full overflow-h-auto overflow-x-hidden" :style="{ borderRight: `1px solid #D0D5DD` }">
-        {{ examStore.examing_data.curQuestionChildren }}
+        <h1 class="text-center text-[20px] text-gray-900 py-5">{{ examStore.curQuestion?.question_title }}</h1>
+        <p class="px-8 text-gray-500 text-[18px] leading-7">{{ examStore.curQuestion?.questions_content }}</p>
       </div>
-      <div class="flex-1 h-full overflow-h-auto overflow-x-hidden">
-        <h1 class="text-center text-[20px] text-gray-900 py-5">{{ examStore.examing_data.curQuestion.question_title }}</h1>
-        <p class="px-8 text-gray-500 text-[18px] leading-7">{{ examStore.examing_data.curQuestion.questions_content }}</p>
+      <div class="flex-1 h-full overflow-h-auto overflow-x-hidden px-12 py-7">
+        {{ examStore.curQuestionChildren }}
+        <component v-if="examStore.curQuestionChildren" :is="examItems[examStore.curQuestionChildren?.question_type]" v-bind="examStore.curQuestionChildren"/>
       </div>
     </div>
   </a-layout>
@@ -31,9 +32,17 @@ import { onMounted, ref, onUnmounted } from 'vue'
 import { ArrowLeftOutlined } from '@ant-design/icons-vue';
 import { useExamStore } from '@/stores/exam'
 import { getWithExpiry } from '@/utils/storage'
+import ExamSCItem from './components/ExamSCItem.vue'
+import ExamFillSentence from './components/ExamFillSentenceItem.vue'
+import ExamLaseMcItem from './components/ExamLaseMcItem.vue'
 const { access } = getWithExpiry<USERINFO>('userinfo')!
 const socket = ref<WebSocketClient | null>(null)
-
+const examItems = {
+  TR_sc: ExamSCItem,
+  TR_mc: ExamSCItem,
+  TR_fill_sentence : ExamFillSentence,
+  TR_last_mc: ExamLaseMcItem,
+}
 const $router = useRouter()
 const { query } = useRoute();
 const examStore = useExamStore()
@@ -43,12 +52,11 @@ const onClickToRead = () => {
 }
 // 获取模拟考试数据
 const getmockExamData = async () => {
-  const arrParams = (query.arrayParam as string)!.split('-').map(Number)
-  examStore.startExam(arrParams)
+  examStore.getExamData(query.id as string)
 }
 onMounted(() => {
   getmockExamData()
-  socket.value = new WebSocketClient('ws://' + import.meta.env.VITE_WS_BASEURL + '/ws/question/' + access + '/');
+  socket.value = new WebSocketClient('ws://' + import.meta.env.VITE_WS_BASEURL + 'ws/question/' + access + '/');
 })
 
 onUnmounted(() => {

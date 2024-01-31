@@ -19,6 +19,9 @@
     v-model:open="open" 
     :cancelText="'返回'" 
     :okText="'进入模拟考试'" 
+    :okButtonProps="{
+      loading: startExamLoading
+    }"
     @ok="startMockExam" 
     :closable="false"
   >
@@ -43,6 +46,7 @@ import ExamCard from "./components/ExamCart.vue"
 import { message } from "ant-design-vue"
 const open = ref<boolean>(false);
 const checkExamDataId = ref<number | null>(null)
+const startExamLoading = ref<boolean>(false)
 const $router = useRouter()
 const examStore = useExamStore()
 const activeKey = ref(0);
@@ -64,9 +68,12 @@ const examModalData = computed(() => {
 })
 
 // 跳转到开始考试
-const startMockExam = () => {
+const startMockExam = async () => {
   if (checkboxId.value.length !== 0) {
-    $router.push({ name: 'mockExam', query: { arrayParam: checkboxId.value.join('-') } })
+    startExamLoading.value = true
+    await examStore.startExam(checkboxId.value)
+    startExamLoading.value = false
+    $router.push({ name: 'mockExam', query: { id: examStore.examing_data.practice_id} })
   } else {
     message.info('请选择Passage')
   }
@@ -96,7 +103,10 @@ const startMockExam = () => {
   background: var(--color-green-4);
   color: var(--color-green-1);
 }
-
+:global(.radius .ant-checkbox) {
+    border-radius: 50%;
+    overflow: hidden;
+}
 :global(.radius .ant-checkbox-inner) {
   border-radius: 100%;
 }
