@@ -8,20 +8,27 @@
         :key="val" 
         :resource="resource"
         :onDrop="onDrop"
+        :onDel="onDel"
         :index="i"
       ></DropBox>
     </div>
     <h2 class="text-gray-500 text-[16px] font-bold pb-3 pt-4">Answer Choices</h2>
     <div class="flex flex-wrap w-[calc(100%+20px)] -ml-[10px]">
-      <DragBox v-for="(val,i) in props.choice" :key="props.choice_label[i]" :val="val" :type="props.choice_label[i]"></DragBox>
+      <DragBox 
+        v-for="(val,i) in props.choice" 
+        :key="props.choice_label[i]" 
+        :val="val" 
+        :type="props.choice_label[i]"
+        :res="res"
+      ></DragBox>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, computed } from 'vue'
-import { isMobile } from "@/utils/utils"
+import { defineProps, computed, ref } from 'vue'
 import DropBox from './DropBox.vue'
 import DragBox from './DragBox.vue'
+const res = ref([])
 const props = defineProps<{
   question_id: number;
   question_type: string;
@@ -42,6 +49,9 @@ const resource = computed(() => {
   }, {})
 })
 const onDrop = ({type, index}) => {
-  console.log('onDrop::',type, index)
+  res.value[index] = type
+}
+const onDel = ({index}) => {
+  res.value[index] = ''
 }
 </script>
