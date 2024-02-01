@@ -126,10 +126,7 @@ const computedCheckboxId = computed(() => {
 })
 // 返回到考试
 const backExam = () => {
-  // 逻辑1:没返回页面
-  isShowBtn.value = !isShowBtn.value
-  checkboxId.value = []
-  // 逻辑2:返回read
+  // 返回read
   $router.push({ name: 'read' })
 }
 </script>
