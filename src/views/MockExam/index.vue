@@ -7,17 +7,23 @@
       <HeaderBtns />
     </header>
     <div class="text-center h-16 flex items-center justify-between bg-white px-8">
+      <h2 class="text-gray-900 text[20px] font-bold">{{ examStore.curQuestion?.question_title }}</h2>
       <span></span>
-      <h2 class="text-gray-900 text[20px] font-bold">Question 1 of 10</h2>
-      <div></div>
+      <div class="text-[18px] text-green-1 cursor-pointer" v-if="examStore.curQuestionChildren?.isShowViewText" @click="onClickViewText">VIEW TEXT</div>
     </div>
     <div class="flex flex-1 overflow-hidden bg-white" :style="{ borderTop: `1px solid #D0D5DD` }">
-      <div class="flex-1 h-full overflow-h-auto overflow-x-hidden" :style="{ borderRight: `1px solid #D0D5DD` }">
+      <div 
+        class="flex-1 h-full overflow-h-auto overflow-x-hidden" 
+        :style="{ borderRight: `1px solid #D0D5DD` }"
+        v-show="isViewText || !examStore.curQuestionChildren?.isShowViewText"
+      >
         <h1 class="text-center text-[20px] text-gray-900 py-5">{{ examStore.curQuestion?.question_title }}</h1>
-        <p class="px-8 text-gray-500 text-[18px] leading-7">{{ examStore.curQuestion?.questions_content }}</p>
+        <p class="px-8 text-gray-500 text-[18px] leading-7" ref="contentDiv" v-html="examStore.curQuestion?.cur_questions_content"></p>
       </div>
       <div class="flex-1 h-full overflow-h-auto overflow-x-hidden px-12 py-7">
-        <component v-if="examStore.curQuestionChildren" :is="examItems[examStore.curQuestionChildren?.question_type]" v-bind="examStore.curQuestionChildren"/>
+        <div v-show="!(examStore.curQuestionChildren?.isShowViewText && isViewText)">
+          <component v-if="examStore.curQuestionChildren" :is="examItems[examStore.curQuestionChildren?.question_type]" v-bind="examStore.curQuestionChildren"/>
+        </div>
       </div>
     </div>
   </a-layout>
@@ -32,10 +38,10 @@ import { ArrowLeftOutlined } from '@ant-design/icons-vue';
 import { useExamStore } from '@/stores/exam'
 import { getWithExpiry } from '@/utils/storage'
 import ExamSCItem from './components/ExamSCItem.vue'
-import ExamFillSentence from './components/ExamFillSentenceItem.vue'
 import ExamLaseMcItem from './components/ExamLaseMcItem.vue'
 const { access } = getWithExpiry<USERINFO>('userinfo')!
 const socket = ref<WebSocketClient | null>(null)
+const isViewText = ref<boolean>(false)
 const examItems = {
   TR_sc: ExamSCItem,
   TR_mc: ExamSCItem,
@@ -43,7 +49,8 @@ const examItems = {
   TR_last_mc: ExamLaseMcItem,
 }
 const $router = useRouter()
-const { query } = useRoute();
+const { query } = useRoute()
+const contentDiv = ref<HTMLDivElement | null>(null)
 const examStore = useExamStore()
 
 const onClickToRead = () => {
@@ -53,8 +60,28 @@ const onClickToRead = () => {
 const getmockExamData = async () => {
   examStore.getExamData(query.id as string)
 }
+// 查看原文
+const onClickViewText = () => {
+  isViewText.value = !isViewText.value
+}
 onMounted(() => {
   getmockExamData()
+  contentDiv.value?.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement
+    let spanTarget = null;
+    if(target.parentElement?.classList.contains('fill-item')){
+      spanTarget = target.parentElement
+    } else if (target.classList.contains('fill-item')) {
+      spanTarget = target
+    } 
+    if(spanTarget){
+      contentDiv.value?.querySelectorAll('.fill-item').forEach(item => {
+        item.innerHTML = '【 <b></b> 】'
+      })
+      const text = examStore.curQuestionChildren.keywords
+      spanTarget.innerHTML = `【 <em>${typeof text === 'string' ? text : text?.s}</em> 】`
+    }
+  })
   socket.value = new WebSocketClient('ws://' + import.meta.env.VITE_WS_BASEURL + 'ws/question/' + access + '/');
 })
 
@@ -62,3 +89,23 @@ onUnmounted(() => {
   socket.value?.close()
 }) 
 </script>
+<style scoped>
+:global(.fill-item){
+  cursor: pointer;
+  display: inline-block;
+}
+:global(.fill-item){
+  font-weight: 700;
+}
+:global(.fill-item b){
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background: var(--color-green-1);
+  border-radius: 50%;
+  margin: 0 2px;
+}
+:global(.fill-item em) {
+  font-style: normal;
+}
+</style>

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { reactive, computed } from 'vue'
+import { reactive, computed, ref } from 'vue'
 import { request_getExamResource, request_startExam, request_getExam } from '@/service/exam'
 import { useIndexStore } from '@/stores/index'
 import { getWithExpiry } from "@/utils/storage"
@@ -15,6 +15,7 @@ export const useExamStore = defineStore('exam', () => {
   const examing_data = reactive<{
     curQuestionIndex: number; // 答题下标
     curQuestionChildrenIndex: number;
+    childrenLength: number;
     curIndex: number;
     time_remain: number;
     practice_id: number | null;
@@ -22,6 +23,7 @@ export const useExamStore = defineStore('exam', () => {
   }>({
     curQuestionIndex: 0,
     curIndex: 0,
+    childrenLength: 0,
     curQuestionChildrenIndex: 0,
     time_remain: 0,
     practice_id: null,
@@ -60,7 +62,7 @@ export const useExamStore = defineStore('exam', () => {
   }
   const getExamData = async (id: string) => {
     const res = await request_getExam(id)
-    console.log(res);
+    examing_data.childrenLength = res.questions.reduce((prev, item) => prev + item.children.length, 0);
     examing_data.curQuestionIndex = 0;
     examing_data.curQuestionChildrenIndex = 0;
     examing_data.time_remain = res.time_remain;
@@ -68,7 +70,7 @@ export const useExamStore = defineStore('exam', () => {
   }
   const changeQuestion = (question: number) => {
     let index = examing_data.curIndex + question;
-    const childrenLength = examing_data.questions.reduce((prev, item) => prev + item.children.length, 0);
+    const childrenLength = examing_data.childrenLength;
     if (index <= 0) {
       index = 0;
     }
@@ -90,10 +92,34 @@ export const useExamStore = defineStore('exam', () => {
     examing_data.curQuestionChildrenIndex = questionIndexRes > 0 ? index - examing_data.questions.slice(0, questionIndexRes).reduce((prev, item) => prev + item.children.length, 0) : index;
   } 
   const curQuestion = computed(() => {
-    return examing_data.questions[examing_data.curQuestionIndex];
+    const value = examing_data.questions[examing_data.curQuestionIndex]
+    if(value && value.questions_content && value.children.length > 0) {
+      const questionItem = value?.children[examing_data.curQuestionChildrenIndex];
+      const ifFill = questionItem?.question_type === 'TR_fill_sentence'
+      let i = 0;
+      const cur_questions_content = ifFill ? value.questions_content?.replace(/\$\$/g, () => {
+        return `<span class="fill-item" data-index="${i++}" data-qid="${value.question_id}">【 <b></b> 】</span>`
+      }) : value.questions_content?.replace(/\$\$/g, '')
+      return {
+        ...value,
+        cur_questions_content
+      }
+    }
+    return {
+      children: [],
+      questions_content: '',
+      question_title: '',
+    };
   })
   const curQuestionChildren = computed(() => {
-    return curQuestion.value?.children[examing_data.curQuestionChildrenIndex];
+    const value = curQuestion.value?.children[examing_data.curQuestionChildrenIndex]
+    if(value) {
+      return {
+        ...value,
+        isShowViewText: value.question_type === 'TR_last_mc'
+      }
+    }
+    return null;
   })
   return { getExamResource, exam_data, startExam, getExamModalData, examing_data, changeQuestion, curQuestion, curQuestionChildren, getExamData };
 })

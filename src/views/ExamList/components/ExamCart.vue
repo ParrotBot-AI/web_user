@@ -17,7 +17,7 @@
       <div class="flex-1 overflow-hidden pl-2">
         <div class="flex w-full border-b h-1/3 justify-center items-center mb-[1px]" :style="{borderBottom: '1px solid #D0D5DD'}" v-for="v in sections[0].questions"
           :key="v.question_id">
-          <p class="w-1/2 truncate">{{ v.remark }}</p>
+          <p class="w-1/2 truncate text-gray-500">{{ v.remark }}</p>
           <div class="flex justify-center items-center w-1/2">
             <div class="w-1/2">
               <div class="flex flex-col items-center text-[#F7A705]" v-if="v.last_record === 10">
@@ -25,10 +25,10 @@
                 <span>{{ `${v.last_record}/${v.question_count}` }}</span>
               </div>
               <div v-else>
-                <span class="text-[#6b728099]">未完成</span>
+                <span class="text-[#6b728099] text-[12px]">未完成</span>
               </div>
             </div>
-            <img :src="Practice" alt="practice" class="w-1/2 h-5 align-middle" />
+            <img :src="edit" alt="practice" class="w-1/2 h-5 align-middle" />
           </div>
         </div>
       </div>
@@ -37,6 +37,7 @@
 </template>
 <script setup lang="ts">
 import { defineProps, defineEmits } from "vue"
+import edit from '@/assets/images/edit.svg'
 import Practice from '@/assets/images/practice.svg'
 import Time from '@/assets/images/time.svg'
 const emits = defineEmits(["showExamModal"])

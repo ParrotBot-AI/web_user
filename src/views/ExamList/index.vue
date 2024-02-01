@@ -1,7 +1,7 @@
 <template>
   <a-layout class="w-full h-full overflow-hidden">
     <header class="bg-green-2 pt-4 flex flex-col">
-      <div class="font-normal text-2xl text-gray-900 px-6">
+      <div class="font-normal text-2xl text-gray-900 px-6 pb-3">
         <ArrowLeftOutlined class="pr-2" @click="onClickToRead" />题库选择
       </div>
       <!--题目区间-->
@@ -116,7 +116,7 @@ const startMockExam = async () => {
 }
 
 .page-tab :global(.ant-tabs .ant-tabs-tab) {
-  padding: 12px 15px;
+  padding: 0 15px 12px;
 }
 
 .page-tab :global(.ant-tabs-nav) {
