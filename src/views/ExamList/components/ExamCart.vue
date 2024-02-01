@@ -43,7 +43,7 @@
           <a-button class="mr-4" @click="backExam">
             取消
           </a-button>
-          <a-button type="primary" class="mr-4" @click="startMockExam">
+          <a-button type="primary" class="mr-4" @click="startMockExam" :loading="loading">
             确定
           </a-button>
         </div>
@@ -62,6 +62,7 @@ import { useRouter } from "vue-router"
 import { message } from "ant-design-vue"
 import ExamStart from './ExamStart.vue'
 
+const loading = ref(false)
 const emits = defineEmits(["showExamModal"])
 // 显示按钮
 const isShowBtn = ref(true)
@@ -103,7 +104,14 @@ const showScore = computed(() => {
 
 // 开始模拟考试
 const startExam = () => {
-  isShowBtn.value = !isShowBtn.value
+  try {
+    loading.value = true
+  } catch (e) {
+    console.log(e)
+  } finally {
+    isShowBtn.value = !isShowBtn.value
+    loading.value = false
+  }
 }
 
 // 跳转到开始考试
@@ -126,8 +134,8 @@ const computedCheckboxId = computed(() => {
 })
 // 返回到考试
 const backExam = () => {
-  // 返回read
-  $router.push({ name: 'read' })
+  isShowBtn.value = !isShowBtn.value
+  checkboxId.value = []
 }
 </script>
 <style scoped>
