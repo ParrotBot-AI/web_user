@@ -36,6 +36,11 @@ const router = createRouter({
       component: () => import('@/views/ExamList/index.vue')
     },
     {
+      path: '/result',
+      name: 'result',
+      component: () => import('@/views/Result/index.vue')
+    },
+    {
       path: '/mock-exam',
       name: 'mockExam',
       component: () => import('@/views/MockExam/index.vue')
