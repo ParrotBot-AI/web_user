@@ -23,7 +23,7 @@
       <div v-if="isShowBtn" class="flex flex-col flex-1 justify-around overflow-hidden">
         <div v-for="v in examModalData.sections[0].questions" :key="v.question_id"
           class="flex justify-around separator h-1/3 items-center">
-          <span class="pl-2">{{ v.remark }}</span>
+          <span class="pl-2 text-gray-500">{{ v.remark }}</span>
           <span class="flex flex-col justify-center text-xs" :style="{ color: showScore(v).color }">
             <span v-if="v.last_record">完成得分</span>
             {{ showScore(v).text }}
@@ -32,18 +32,18 @@
         </div>
       </div>
       <div v-else class="flex flex-col flex-1 overflow-hidden pt-3">
-        <a-checkbox-group v-model:value="checkboxId" class="flex flex-col mr-52">
+        <a-checkbox-group v-model:value="checkboxId" class="w-full pl-2 flex flex-col">
           <p v-for="v in examModalData.sections[0].questions " :key="v.question_id" class="py-2">
             <a-checkbox class="radius" :value="v.question_id">
-              <span class="font-bold pl-2">{{ v.remark }}</span>
+              <span class="font-bold pl-2 text-gray-500">{{ v.remark }}</span>
             </a-checkbox>
           </p>
         </a-checkbox-group>
-        <div class="flex justify-end mr-8">
-          <a-button class="mr-4" @click="backExam">
+        <div class="flex justify-end">
+          <a-button class="mr-4 text-green-1 border-green-1" @click="backExam">
             取消
           </a-button>
-          <a-button type="primary" class="mr-4" @click="startMockExam" :loading="loading">
+          <a-button type="primary" class="mr-4" @click="startMockExam" :loading="startExamLoading">
             确定
           </a-button>
         </div>
@@ -62,7 +62,6 @@ import { useRouter } from "vue-router"
 import { message } from "ant-design-vue"
 import ExamStart from './ExamStart.vue'
 
-const loading = ref(false)
 const emits = defineEmits(["showExamModal"])
 // 显示按钮
 const isShowBtn = ref(true)
@@ -104,14 +103,7 @@ const showScore = computed(() => {
 
 // 开始模拟考试
 const startExam = () => {
-  try {
-    loading.value = true
-  } catch (e) {
-    console.log(e)
-  } finally {
-    isShowBtn.value = !isShowBtn.value
-    loading.value = false
-  }
+  isShowBtn.value = !isShowBtn.value
 }
 
 // 跳转到开始考试
