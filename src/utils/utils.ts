@@ -30,3 +30,14 @@ export function getCurrentTimeOfDay(): TimeOfDay {
     return '晚上';
   }
 }
+
+export function isMobile() {
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+  // Check for iOS and Android mobile devices
+  if (/android/i.test(userAgent) || /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    return true; // Mobile Device
+  }
+
+  return false; // PC or Other Device
+}
