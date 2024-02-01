@@ -3,7 +3,7 @@ import { reactive, computed, ref } from 'vue'
 import { request_getExamResource, request_startExam, request_getExam } from '@/service/exam'
 import { useIndexStore } from '@/stores/index'
 import { getWithExpiry } from "@/utils/storage"
-import type {USERINFO} from "@/service/user"
+import type { USERINFO } from "@/service/user"
 export const useExamStore = defineStore('exam', () => {
   const exam_data = reactive<{
     list: any[];
@@ -74,7 +74,7 @@ export const useExamStore = defineStore('exam', () => {
     if (index <= 0) {
       index = 0;
     }
-    if( index === childrenLength) {
+    if (index === childrenLength) {
       index = childrenLength - 1;
     }
     let start = 0;
@@ -90,10 +90,10 @@ export const useExamStore = defineStore('exam', () => {
     examing_data.curIndex = index;
     examing_data.curQuestionIndex = questionIndexRes;
     examing_data.curQuestionChildrenIndex = questionIndexRes > 0 ? index - examing_data.questions.slice(0, questionIndexRes).reduce((prev, item) => prev + item.children.length, 0) : index;
-  } 
+  }
   const curQuestion = computed(() => {
     const value = examing_data.questions[examing_data.curQuestionIndex]
-    if(value && value.questions_content && value.children.length > 0) {
+    if (value && value.questions_content && value.children.length > 0) {
       const questionItem = value?.children[examing_data.curQuestionChildrenIndex];
       const ifFill = questionItem?.question_type === 'TR_fill_sentence'
       let i = 0;
@@ -113,7 +113,7 @@ export const useExamStore = defineStore('exam', () => {
   })
   const curQuestionChildren = computed(() => {
     const value = curQuestion.value?.children[examing_data.curQuestionChildrenIndex]
-    if(value) {
+    if (value) {
       return {
         ...value,
         isShowViewText: value.question_type === 'TR_last_mc'

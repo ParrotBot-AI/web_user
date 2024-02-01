@@ -13,19 +13,6 @@
       <ExamCard v-for="val in examStore.exam_data.list" :key="val.resource_id" v-bind="val" />
     </div>
   </a-layout>
-  <!-- <a-modal class="exam-modal" v-model:open="open" :cancelText="'返回'" :okText="'进入模拟考试'" :okButtonProps="{
-    loading: startExamLoading
-  }" @ok="startMockExam" :closable="false">
-    <h1 class="text-[18px] font-bold pb-4">{{ examModalData.resource_name }}</h1>
-    <a-checkbox-group v-model:value="checkboxId">
-      <p v-for="v in examModalData.sections[0].questions " :key="v.question_id" class="py-2">
-        <a-checkbox class="radius" :value="v.question_id">
-          <span class="font-bold pl-2">{{ v.remark }}</span>
-          <span class="pl-2">{{ v.question_name }}</span>
-        </a-checkbox>
-      </p>
-    </a-checkbox-group>
-  </a-modal> -->
 </template>
 <script setup lang="ts">
 import { useRouter } from "vue-router"
@@ -34,8 +21,6 @@ import { ArrowLeftOutlined } from '@ant-design/icons-vue';
 import { useExamStore } from '@/stores/exam'
 import { ref } from 'vue';
 import ExamCard from "./components/ExamCart.vue"
-// const open = ref<boolean>(false);
-// const checkExamDataId = ref<number | null>(null)
 const $router = useRouter()
 const examStore = useExamStore()
 const activeKey = ref(0);
@@ -46,24 +31,6 @@ onMounted(async () => {
 const onClickToRead = () => {
   $router.push("/read")
 }
-// const showExamModal = (id: number) => {
-//   checkExamDataId.value = id
-//   // 弹框
-//   open.value = true;
-// }
-
-
-// 跳转到开始考试
-// const startMockExam = async () => {
-//   if (checkboxId.value.length !== 0) {
-//     startExamLoading.value = true
-//     await examStore.startExam(checkboxId.value)
-//     startExamLoading.value = false
-//     $router.push({ name: 'mockExam', query: { id: examStore.examing_data.practice_id } })
-//   } else {
-//     message.info('请选择Passage')
-//   }
-// }
 
 </script>
 
