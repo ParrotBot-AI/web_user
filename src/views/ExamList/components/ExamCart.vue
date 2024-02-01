@@ -5,8 +5,8 @@
         class="left relative overflow-hidden h-full flex flex-col justify-around items-start pt-8 text-white text-center">
         <img class="absolute top-4 right-4" :src="examEdit" alt="examEdit" />
         <span class="text-[30px] pl-6">Official 1</span>
-        <div class="flex justify-around items-center w-full">
-          <a-button class="flex justify-between items-center w-[98px] h-[32px] overflow-hidden">
+        <div v-if="isShowBtn" class="flex justify-around items-center w-full">
+          <a-button @click="startExam" class="flex justify-between items-center w-[98px] h-[32px] overflow-hidden">
             <img :src="time" alt="time" />
             模考
           </a-button>
@@ -15,8 +15,12 @@
             练习
           </a-button>
         </div>
+        <template v-else>
+          <span class="pl-6 pb-4 pt-2">请选择此次模考文章</span>
+          <span class="pl-6 pb-6">{{ `${computedCheckboxId.length}/${2}` }}</span>
+        </template>
       </div>
-      <div class="flex flex-col flex-1 justify-around overflow-hidden">
+      <div v-if="isShowBtn" class="flex flex-col flex-1 justify-around overflow-hidden">
         <div v-for="v in examModalData.sections[0].questions" :key="v.question_id"
           class="flex justify-around separator h-1/3 items-center">
           <span class="pl-2">{{ v.remark }}</span>
@@ -25,6 +29,23 @@
             {{ showScore(v).text }}
           </span>
           <img :src="edit" alt="edit" />
+        </div>
+      </div>
+      <div v-else class="flex flex-col flex-1 overflow-hidden pt-3">
+        <a-checkbox-group v-model:value="checkboxId" class="flex flex-col mr-52">
+          <p v-for="v in examModalData.sections[0].questions " :key="v.question_id" class="py-2">
+            <a-checkbox class="radius" :value="v.question_id">
+              <span class="font-bold pl-2">{{ v.remark }}</span>
+            </a-checkbox>
+          </p>
+        </a-checkbox-group>
+        <div class="flex justify-end mr-8">
+          <a-button class="mr-4" @click="backExam">
+            取消
+          </a-button>
+          <a-button type="primary" class="mr-4" @click="startMockExam">
+            确定
+          </a-button>
         </div>
       </div>
     </div>
@@ -40,12 +61,19 @@ import { useExamStore } from '@/stores/exam'
 import { useRouter } from "vue-router"
 import { message } from "ant-design-vue"
 import ExamStart from './ExamStart.vue'
+
 const emits = defineEmits(["showExamModal"])
+// 显示按钮
+const isShowBtn = ref(true)
 const props = defineProps<{
   resource_id: number
   sections: Array<any>
 }>()
 const examStore = useExamStore()
+const $router = useRouter()
+// 存储选中的复选框的id值
+const checkboxId = ref([])
+const startExamLoading = ref<boolean>(false)
 
 const examModalData = computed(() => {
   return examStore.getExamModalData(1)
@@ -59,7 +87,7 @@ const showScore = computed(() => {
         color: '#F7A705',
         text: `${item.last_record} / ${item.question_count}`
       }
-    } else if(item.xxx) {
+    } else if (item.xxx) {
       return {
         color: '#1B8B8C',
         text: '继续考试'
@@ -73,6 +101,37 @@ const showScore = computed(() => {
   }
 })
 
+// 开始模拟考试
+const startExam = () => {
+  isShowBtn.value = !isShowBtn.value
+}
+
+// 跳转到开始考试
+const startMockExam = async () => {
+  if (checkboxId.value.length !== 0) {
+    startExamLoading.value = true
+    await examStore.startExam(checkboxId.value)
+    startExamLoading.value = false
+    $router.push({ name: 'mockExam', query: { id: examStore.examing_data.practice_id } })
+  } else {
+    message.info('请选择Passage')
+  }
+}
+// 计算选中的checkboxId
+const computedCheckboxId = computed(() => {
+  if (checkboxId.value.length > 2) {
+    checkboxId.value.shift()
+  }
+  return checkboxId.value
+})
+// 返回到考试
+const backExam = () => {
+  // 逻辑1:没返回页面
+  isShowBtn.value = !isShowBtn.value
+  checkboxId.value = []
+  // 逻辑2:返回read
+  $router.push({ name: 'read' })
+}
 </script>
 <style scoped>
 .exam-card {

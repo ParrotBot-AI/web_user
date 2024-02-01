@@ -1,11 +1,11 @@
 <template>
-  <div class="left overflow-hidden h-full relative">
+  <!-- <div class="left overflow-hidden h-full relative">
     <div class="flex flex-col items-start pl-6 text-white text-center pt-12">
       <span class="text-[30px]">Official 1</span>
       <span class="mt-2">请选择此次模考文章</span>
       <span class="mt-2">{{ `${computedCheckboxId.length}/${2}` }}</span>
     </div>
-  </div>
+  </div> -->
   <div class="flex flex-col flex-1 overflow-hidden pt-3">
     <a-checkbox-group v-model:value="checkboxId" class="flex flex-col mr-52">
       <p v-for="v in examModalData.sections[0].questions " :key="v.question_id" class="py-2">
