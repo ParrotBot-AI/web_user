@@ -59,10 +59,15 @@ const showScore = computed(() => {
         color: '#F7A705',
         text: `${item.last_record} / ${item.question_count}`
       }
-    } else {
+    } else if(item.xxx) {
       return {
         color: '#1B8B8C',
         text: '继续考试'
+      }
+    } else {
+      return {
+        color: 'rgba(107, 114, 128, 0.60)',
+        text: '未完成'
       }
     }
   }
