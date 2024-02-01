@@ -1,6 +1,7 @@
 <template>
   <div 
     class="w-full h-14 border border-green-1 border-solid mb-1.5" 
+    @click="onDelClick"
     :ref="drop"
     :style="style"
   >
@@ -15,6 +16,7 @@ import { computed, defineProps, unref, ref} from 'vue'
 const typevalue = ref<string>('')
 const props = defineProps<{
   onDrop: (item: any) => void,
+  onDel: (item: any) => void,
   index: number,
   resource: string,
 }>()
@@ -31,15 +33,20 @@ const [collect, drop] = useDrop(() => ({
   collect: (monitor: DropTargetMonitor) => {
     return {
       isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
     }
   },
 }))
-const { isOver, canDrop } = toRefs(collect)
+const { isOver } = toRefs(collect)
 const style = computed(() => {
   return unref(isOver) ? {
     backgroundColor: 'rgba(27, 139, 140, 0.05)',
     border: '1px dashed #1B8B8C',
   } : {}
 })
+const onDelClick = () => {
+  typevalue.value = ''
+  props.onDel({
+    index: props.index,
+  })
+}
 </script>

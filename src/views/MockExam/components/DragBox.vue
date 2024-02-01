@@ -1,31 +1,49 @@
 <template>
-  <div class="w-1/2 px-[10px] py-[5px]" :ref="drag">
-    <div class="h-14 overflow-auto border border-green-1 border-solid pt-2.5 pl-4 cursor-pointer select-bar">
-      <p class="text-[14px] text-gray-500">{{ props.val }}</p>
+  <div class="w-1/2 px-[10px] py-[5px]" :ref="drag" :style="containerStyle">
+    <div 
+      class="h-14 overflow-auto pt-2.5 pl-4 cursor-pointer select-bar"
+      :class="{
+        'selected-bar': props.res.includes(props.type)
+      }"
+    >
+      <p class="text-[14px] text-gray-500" >{{ props.val }}</p>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, ref, toRefs } from 'vue'
+import { defineProps, ref, unref, computed } from 'vue'
 import { useDrag } from 'vue3-dnd'
 import type {DragSourceMonitor} from "vue3-dnd"
-const forbidDrag = ref(false)
+import { toRefs } from '@vueuse/core'
+const forbidDrag = computed(() => !props.res.includes(props.type))
 const props = defineProps<{
   val: string;
   type: string;
+  res: string[];
 }>()
 const [collect, drag] = useDrag(() => ({
   type: props.type,
-  canDrag: !forbidDrag.value,
+  canDrag: forbidDrag.value,
   collect: (monitor: DragSourceMonitor) => ({
     isDragging: monitor.isDragging(),
   }),
 }))
 const { isDragging } = toRefs(collect)
+const containerStyle = computed(() => ({
+  opacity: unref(isDragging) ? 0: 1,
+}))
+
 </script>
 <style scoped>
   .select-bar {
     position: relative;
+    border: 1px solid #1B8B8C;
+  }
+  .selected-bar {
+    border: 1px solid transparent;
+  }
+  .selected-bar p {
+    opacity: 0;
   }
   .select-bar:before {
     content: '';

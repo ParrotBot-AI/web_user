@@ -54,7 +54,7 @@ const contentDiv = ref<HTMLDivElement | null>(null)
 const examStore = useExamStore()
 
 const onClickToRead = () => {
-  $router.push("/read")
+  $router.push("/exam/list")
 }
 // 获取模拟考试数据
 const getmockExamData = async () => {
