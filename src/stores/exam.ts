@@ -87,10 +87,15 @@ export const useExamStore = defineStore('exam', () => {
       }
       start = end;
     })
+    console.log(index, "| index");
+    console.log(childrenLength, "| childrenLength");
     examing_data.curIndex = index;
     examing_data.curQuestionIndex = questionIndexRes;
     examing_data.curQuestionChildrenIndex = questionIndexRes > 0 ? index - examing_data.questions.slice(0, questionIndexRes).reduce((prev, item) => prev + item.children.length, 0) : index;
   }
+  const isExamEnding = computed(() => {
+    return examing_data.curIndex === (examing_data.childrenLength - 1)
+  })
   const curQuestion = computed(() => {
     const value = examing_data.questions[examing_data.curQuestionIndex]
     if (value && value.questions_content && value.children.length > 0) {
@@ -122,12 +127,12 @@ export const useExamStore = defineStore('exam', () => {
     return null;
   })
 
-  const saveQuestion = async (question_id:number, answer:number[]) => {
+  const saveQuestion = async (question_id: number, answer: number[]) => {
     await request_saveAnswer({
       question_id,
       answer,
       duration: 0
     })
   }
-  return { getExamResource, exam_data, startExam, getExamModalData, examing_data, changeQuestion, curQuestion, curQuestionChildren, getExamData, saveQuestion };
+  return { getExamResource, exam_data, startExam, getExamModalData, examing_data, changeQuestion, curQuestion, curQuestionChildren, getExamData, saveQuestion, isExamEnding };
 })
