@@ -3,7 +3,7 @@
     <div class="flex bg-white exam-card w-full">
       <div
         class="left relative overflow-hidden h-full flex flex-col justify-around items-start pt-8 text-white text-center">
-        <img class="absolute top-4 right-4" :src="examEdit" alt="examEdit" />
+        <img class="absolute top-4 right-4" :src="examEdit" alt="examEdit" @click="toResult"/>
         <span class="text-[30px] pl-6">Official 1</span>
         <div v-if="isShowBtn" class="flex justify-around items-center w-full">
           <a-button @click="startExam" class="flex justify-between items-center w-[98px] h-[32px] overflow-hidden">
@@ -128,6 +128,10 @@ const computedCheckboxId = computed(() => {
 const backExam = () => {
   isShowBtn.value = !isShowBtn.value
   checkboxId.value = []
+}
+
+const toResult = () => {
+  $router.push({ name: 'result' })
 }
 </script>
 <style scoped>

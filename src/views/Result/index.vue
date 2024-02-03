@@ -7,7 +7,7 @@
       <HeaderBtns />
     </header>
     <div class="flex-1 bg-green-2">
-      <div class="flex items-center justify-center pt-14">
+      <div class="flex items-center justify-center pt-28">
         <div class="w-14 h-14 rounded-full bg-white flex justify-center items-center mr-14 cursor-pointer" :style="{boxShadow: '0px 3px 3px 0 rgb(27 139 140 / 60%)'}">
           <LeftOutlined class="text-green-1 text-[22px]" />
         </div>

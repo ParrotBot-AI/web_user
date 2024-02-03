@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { reactive, computed, ref } from 'vue'
-import { request_getExamResource, request_startExam, request_getExam } from '@/service/exam'
+import { request_getExamResource, request_startExam, request_getExam, request_saveAnswer } from '@/service/exam'
 import { useIndexStore } from '@/stores/index'
 import { getWithExpiry } from "@/utils/storage"
 import type { USERINFO } from "@/service/user"
@@ -121,5 +121,13 @@ export const useExamStore = defineStore('exam', () => {
     }
     return null;
   })
-  return { getExamResource, exam_data, startExam, getExamModalData, examing_data, changeQuestion, curQuestion, curQuestionChildren, getExamData };
+
+  const saveQuestion = async (question_id:number, answer:number[]) => {
+    await request_saveAnswer({
+      question_id,
+      answer,
+      duration: 0
+    })
+  }
+  return { getExamResource, exam_data, startExam, getExamModalData, examing_data, changeQuestion, curQuestion, curQuestionChildren, getExamData, saveQuestion };
 })

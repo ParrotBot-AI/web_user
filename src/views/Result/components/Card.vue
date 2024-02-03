@@ -18,7 +18,7 @@
             {{ val.title }}: {{ val.correct }}/{{ val.total }}
         </span>
       </div>
-      <div :style="{background: 'rgba(208, 240, 230, 0.50)'}" class="rounded-md p-5 pt-6 mt-12 ai-comment relative">{{props.aiComment}}</div>
+      <div :style="{background: 'rgba(208, 240, 230, 0.50)'}" class="rounded-md p-5 pt-6 mt-12 ai-comment relative text-gray-500 text-[16px] leading-6">{{props.aiComment}}</div>
     </div>
   </div>
 </template>

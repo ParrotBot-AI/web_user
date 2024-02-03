@@ -75,6 +75,7 @@ onMounted(() => {
       spanTarget = target
     } 
     if(spanTarget){
+      examStore.saveQuestion(examStore.curQuestionChildren?.question_id, examStore.curQuestionChildren?.choice.map((val,i) => i == spanTarget.dataset.index ? 1 : 0) )
       contentDiv.value?.querySelectorAll('.fill-item').forEach(item => {
         item.innerHTML = '【 <b></b> 】'
       })
