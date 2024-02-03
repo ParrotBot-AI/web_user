@@ -12,6 +12,7 @@ import {
   Modal, 
   Checkbox, 
   Tabs,
+  Table,
   Radio
 } from 'ant-design-vue';
 import type { App } from 'vue'
@@ -35,6 +36,7 @@ export function registerUI() {
     app.use(Checkbox)
     app.use(Tabs)
     app.use(Radio)
+    app.use(Table)
     app.component('IconFont', IconFont)
     app.config.globalProperties.$message = message
   }

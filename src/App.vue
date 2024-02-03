@@ -4,12 +4,8 @@ import { DndProvider } from 'vue3-dnd'
 import { computed } from "vue"
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { TouchBackend } from 'react-dnd-touch-backend'
-import type { TouchBackendOptions } from 'react-dnd-touch-backend'
 import {isMobile} from "@/utils/utils"
 const mobile = isMobile()
-const options: TouchBackendOptions = {
-  enableMouseEvents: true,
-}
 const backend = computed(() => {
   console.log(111)
   if (mobile) {
@@ -21,7 +17,7 @@ const backend = computed(() => {
 </script>
 
 <template>
-  <DndProvider :backend="backend" :options="options">
+  <DndProvider :backend="backend">
     <a-style-provider hash-priority="low">
       <a-config-provider
         :theme="{

@@ -1,10 +1,17 @@
 import { defineStore } from 'pinia'
 import { reactive, computed, ref } from 'vue'
-import { request_getExamResource, request_startExam, request_getExam, request_saveAnswer } from '@/service/exam'
+import {
+  request_getExamResource,
+  request_startExam,
+  request_getExam,
+  request_saveAnswer,
+  request_getExamStutas
+} from '@/service/exam'
 import { useIndexStore } from '@/stores/index'
 import { getWithExpiry } from "@/utils/storage"
 import type { USERINFO } from "@/service/user"
 export const useExamStore = defineStore('exam', () => {
+  const showProcessDialog = ref(false)
   const exam_data = reactive<{
     list: any[];
     pageArr: { start: number; end: number; id: number; }[];
@@ -29,6 +36,7 @@ export const useExamStore = defineStore('exam', () => {
     practice_id: null,
     questions: [],
   })
+  const processData = reactive([])
   const readId = 22;
   const limit = 20;
   const indexStore = useIndexStore()
@@ -62,7 +70,7 @@ export const useExamStore = defineStore('exam', () => {
   }
   const getExamData = async (id: string) => {
     const res = await request_getExam(id)
-    examing_data.childrenLength = res.questions.reduce((prev, item) => prev + item.children.length, 0);
+    examing_data.childrenLength = res.questions.reduce((prev: number, item: any) => prev + item.children.length, 0);
     examing_data.curQuestionIndex = 0;
     examing_data.curQuestionChildrenIndex = 0;
     examing_data.time_remain = res.time_remain;
@@ -134,5 +142,13 @@ export const useExamStore = defineStore('exam', () => {
       duration: 0
     })
   }
-  return { getExamResource, exam_data, startExam, getExamModalData, examing_data, changeQuestion, curQuestion, curQuestionChildren, getExamData, saveQuestion, isExamEnding };
+  const setShowProcessDialog = () => {
+    showProcessDialog.value = !showProcessDialog.value
+  }
+  const getExamProcess = async (id: string) => {
+    const res = await request_getExamStutas(id)
+    processData.length = 0
+    processData.push(...res)
+  }
+  return { getExamProcess, processData, setShowProcessDialog, showProcessDialog, getExamResource, exam_data, startExam, getExamModalData, examing_data, changeQuestion, curQuestion, curQuestionChildren, getExamData, saveQuestion, isExamEnding };
 })
