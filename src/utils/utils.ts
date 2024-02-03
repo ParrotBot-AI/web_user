@@ -32,10 +32,10 @@ export function getCurrentTimeOfDay(): TimeOfDay {
 }
 
 export function isMobile() {
-  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+  const userAgent = navigator.userAgent || navigator.vendor;
 
   // Check for iOS and Android mobile devices
-  if (/android/i.test(userAgent) || /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+  if (/android/i.test(userAgent) || /iPad|iPhone|iPod/.test(userAgent)) {
     return true; // Mobile Device
   }
 

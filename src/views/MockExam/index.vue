@@ -1,4 +1,5 @@
 <template>
+  <ProcessDialog v-if="examStore.showProcessDialog" />
   <a-layout class="w-full h-full flex flex-col">
     <header class="bg-green-2 px-6 py-4 flex justify-between items-center">
       <div class="font-normal text-2xl text-gray-900 ">
@@ -39,6 +40,7 @@ import { useExamStore } from '@/stores/exam'
 import { getWithExpiry } from '@/utils/storage'
 import ExamSCItem from './components/ExamSCItem.vue'
 import ExamLaseMcItem from './components/ExamLaseMcItem.vue'
+import ProcessDialog from './components/ProcessDialog.vue'
 const { access } = getWithExpiry<USERINFO>('userinfo')!
 const socket = ref<WebSocketClient | null>(null)
 const isViewText = ref<boolean>(false)

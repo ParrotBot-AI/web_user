@@ -60,7 +60,6 @@ import edit from '@/assets/images/edit.svg'
 import { useExamStore } from '@/stores/exam'
 import { useRouter } from "vue-router"
 import { message } from "ant-design-vue"
-import ExamStart from './ExamStart.vue'
 
 const emits = defineEmits(["showExamModal"])
 // 显示按钮

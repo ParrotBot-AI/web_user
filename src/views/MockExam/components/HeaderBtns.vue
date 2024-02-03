@@ -27,7 +27,7 @@ const config = [
     id: 'progress',
     icon: progress,
     onClick: () => {
-      console.log('progress')
+      examStore.setShowProcessDialog()
     }
   },
   {
