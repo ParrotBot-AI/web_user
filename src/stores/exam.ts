@@ -5,11 +5,13 @@ import {
   request_startExam,
   request_getExam,
   request_saveAnswer,
-  request_getExamStutas
+  request_getExamStutas,
+  request_submitExam
 } from '@/service/exam'
 import { useIndexStore } from '@/stores/index'
 import { getWithExpiry } from "@/utils/storage"
 import type { USERINFO } from "@/service/user"
+import { message } from 'ant-design-vue'
 export const useExamStore = defineStore('exam', () => {
   const showProcessDialog = ref(false)
   const exam_data = reactive<{
@@ -66,6 +68,8 @@ export const useExamStore = defineStore('exam', () => {
       user_id: userId,
       question_ids
     })
+    console.log(res, "| 开始考试");
+
     examing_data.practice_id = res.practice_id;
   }
   const getExamData = async (id: string) => {
@@ -95,8 +99,6 @@ export const useExamStore = defineStore('exam', () => {
       }
       start = end;
     })
-    console.log(index, "| index");
-    console.log(childrenLength, "| childrenLength");
     examing_data.curIndex = index;
     examing_data.curQuestionIndex = questionIndexRes;
     examing_data.curQuestionChildrenIndex = questionIndexRes > 0 ? index - examing_data.questions.slice(0, questionIndexRes).reduce((prev, item) => prev + item.children.length, 0) : index;
@@ -147,8 +149,14 @@ export const useExamStore = defineStore('exam', () => {
   }
   const getExamProcess = async (id: string) => {
     const res = await request_getExamStutas(id)
+    console.log(res, "| res");
     processData.length = 0
     processData.push(...res)
   }
-  return { getExamProcess, processData, setShowProcessDialog, showProcessDialog, getExamResource, exam_data, startExam, getExamModalData, examing_data, changeQuestion, curQuestion, curQuestionChildren, getExamData, saveQuestion, isExamEnding };
+
+  const requestSubmitExam = async (practice_id: string) => {
+    await request_submitExam(practice_id)
+  }
+
+  return { getExamProcess, processData, setShowProcessDialog, showProcessDialog, getExamResource, exam_data, startExam, getExamModalData, examing_data, changeQuestion, curQuestion, curQuestionChildren, getExamData, saveQuestion, isExamEnding, requestSubmitExam };
 })
