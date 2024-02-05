@@ -21,7 +21,11 @@
     <div class="bg-white w-full overflow-hidden flex-1 flex flex-col">
       <div class="flex justify-end px-8 h-12 items-center"
         :style="{ borderBottom: '1px solid #D0D5DD', boxShadow: 'box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05)' }">
-        <div><span>隐藏时间</span></div>
+        <div class="flex justify-between items-center w-[165px] h-[32px] overflow-hidden">
+          <span>{{ showTime }}</span>
+          <img :src="hideEye" alt="hide-eye" class="w-[35px] h-full" />
+          <span class="text-[#1B8B8C]">Hide Timer</span>
+        </div>
       </div>
       <div class="text-gray-500 px-8 py-3"
         :style="{ borderBottom: '1px solid #D0D5DD', boxShadow: 'box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05)' }">
@@ -43,10 +47,16 @@
 </template>
 <script setup lang="ts">
 import right from '@/assets/images/right.svg'
+import openEye from '@/assets/images/open-eye.svg'
+import hideEye from '@/assets/images/hide-eye.svg'
 import { ArrowLeftOutlined } from '@ant-design/icons-vue';
 import { useExamStore } from "@/stores/exam"
 import { useRoute } from "vue-router"
-import { onMounted } from "vue"
+import { onMounted, computed } from "vue"
+import dayjs from 'dayjs'
+import duration from 'dayjs/plugin/duration'
+dayjs.extend(duration)
+
 const examStore = useExamStore()
 const $route = useRoute()
 const columns = [
@@ -72,6 +82,11 @@ const onClickBack = () => {
 onMounted(() => {
   examStore.getExamProcess($route.query.id)
 })
+
+const showTime = computed(() => {
+  return dayjs.duration(examStore.examing_data.time_remain, 'seconds').format('mm:ss')
+})
+
 </script>
 
 
@@ -82,5 +97,9 @@ onMounted(() => {
 
 :global(.ant-table-tbody>tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected)>td) {
   background: #D0F0E6;
+}
+
+:global(.ant-table-container table>thead>tr:first-child>*:last-child) {
+  border-start-end-radius: 0px !important
 }
 </style>
