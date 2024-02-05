@@ -38,7 +38,7 @@ export const useExamStore = defineStore('exam', () => {
     practice_id: null,
     questions: [],
   })
-  const processData = reactive([])
+  const processData = reactive<any[]>([])
   const readId = 22;
   const limit = 20;
   const indexStore = useIndexStore()
@@ -149,7 +149,6 @@ export const useExamStore = defineStore('exam', () => {
   }
   const getExamProcess = async (id: string) => {
     const res = await request_getExamStutas(id)
-    console.log(res, "| res");
     processData.length = 0
     processData.push(...res)
   }
