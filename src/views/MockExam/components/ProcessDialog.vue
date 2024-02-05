@@ -71,7 +71,7 @@ const columns = [
   {
     title: 'Status',
     dataIndex: 'is_answer',
-    customRender: ({ text }) => {
+    customRender: ({ text }: { text: string }) => {
       return text ? "Answered" : "Not Answered"
     },
   }
@@ -80,7 +80,7 @@ const onClickBack = () => {
   examStore.setShowProcessDialog()
 }
 onMounted(() => {
-  examStore.getExamProcess($route.query.id)
+  examStore.getExamProcess($route.query.id as string)
 })
 
 const showTime = computed(() => {

@@ -22,7 +22,8 @@
       </div>
       <div class="flex-1 h-full overflow-h-auto overflow-x-hidden px-12 py-7">
         <div v-show="!(examStore.curQuestionChildren?.isShowViewText && isViewText)">
-          <component v-if="examStore.curQuestionChildren" :is="examItems[examStore.curQuestionChildren?.question_type]"
+          <component v-if="examStore.curQuestionChildren"
+            :is="examItems[examStore.curQuestionChildren?.question_type as keyof IExamItems]"
             v-bind="examStore.curQuestionChildren" />
         </div>
       </div>
@@ -41,15 +42,23 @@ import { getWithExpiry } from '@/utils/storage'
 import ExamSCItem from './components/ExamSCItem.vue'
 import ExamLastMcItem from './components/ExamLastMcItem.vue'
 import ProcessDialog from './components/ProcessDialog.vue'
+import type { DefineComponent } from 'vue'
 const { access } = getWithExpiry<USERINFO>('userinfo')!
 const socket = ref<WebSocketClient | null>(null)
 const isViewText = ref<boolean>(false)
-const examItems = {
+type IExamItems = {
+  TR_sc: typeof ExamSCItem
+  TR_mc: typeof ExamSCItem,
+  TR_fill_sentence: typeof ExamSCItem,
+  TR_last_mc: typeof ExamLastMcItem,
+}
+const examItems: IExamItems = {
   TR_sc: ExamSCItem,
   TR_mc: ExamSCItem,
   TR_fill_sentence: ExamSCItem,
   TR_last_mc: ExamLastMcItem,
 }
+
 const $router = useRouter()
 const { query } = useRoute()
 const contentDiv = ref<HTMLDivElement | null>(null)
@@ -70,14 +79,14 @@ onMounted(() => {
   getmockExamData()
   contentDiv.value?.addEventListener('click', (e) => {
     const target = e.target as HTMLElement
-    let spanTarget = null;
+    let spanTarget: HTMLElement | null = null;
     if (target.parentElement?.classList.contains('fill-item')) {
       spanTarget = target.parentElement
     } else if (target.classList.contains('fill-item')) {
       spanTarget = target
     }
     if (spanTarget) {
-      examStore.saveQuestion(examStore.curQuestionChildren?.question_id, examStore.curQuestionChildren?.choice.map((val, i) => i == spanTarget.dataset.index ? 1 : 0))
+      examStore.saveQuestion(examStore.curQuestionChildren?.question_id, examStore.curQuestionChildren?.choice.map((val: any, i: any) => i == spanTarget?.dataset.index ? 1 : 0))
       contentDiv.value?.querySelectorAll('.fill-item').forEach(item => {
         item.innerHTML = '【 <b></b> 】'
       })
