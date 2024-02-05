@@ -22,7 +22,7 @@
 import { defineProps, computed, ref } from 'vue'
 import DropBox from './DropBox.vue'
 import DragBox from './DragBox.vue'
-const res = ref([])
+const res = ref<any[]>([])
 const props = defineProps<{
   question_id: number;
   question_type: string;
@@ -37,15 +37,15 @@ const props = defineProps<{
   }
 }>()
 const resource = computed(() => {
-  return props.choice.reduce((def, val, i) => {
+  return props.choice.reduce((def: any, val, i) => {
     def[props.choice_label[i]] = val
     return def
   }, {})
 })
-const onDrop = ({ type, index }) => {
+const onDrop = ({ type, index }: { type: string, index: number }) => {
   res.value[index] = type
 }
-const onDel = ({ index }) => {
+const onDel = ({ index }: { index: number }) => {
   res.value[index] = ''
 }
 </script>
