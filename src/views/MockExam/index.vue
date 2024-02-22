@@ -42,7 +42,6 @@ import { getWithExpiry } from '@/utils/storage'
 import ExamSCItem from './components/ExamSCItem.vue'
 import ExamLastMcItem from './components/ExamLastMcItem.vue'
 import ProcessDialog from './components/ProcessDialog.vue'
-import type { DefineComponent } from 'vue'
 const { access } = getWithExpiry<USERINFO>('userinfo')!
 const socket = ref<WebSocketClient | null>(null)
 const isViewText = ref<boolean>(false)

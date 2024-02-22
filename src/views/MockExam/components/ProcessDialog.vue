@@ -21,11 +21,7 @@
     <div class="bg-white w-full overflow-hidden flex-1 flex flex-col">
       <div class="flex justify-end px-8 h-12 items-center"
         :style="{ borderBottom: '1px solid #D0D5DD', boxShadow: 'box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05)' }">
-        <div class="flex justify-between items-center w-[165px] h-[32px] overflow-hidden">
-          <span>{{ showTime }}</span>
-          <img :src="hideEye" alt="hide-eye" class="w-[35px] h-full" />
-          <span class="text-[#1B8B8C]">Hide Timer</span>
-        </div>
+       <Timer />
       </div>
       <div class="text-gray-500 px-8 py-3"
         :style="{ borderBottom: '1px solid #D0D5DD', boxShadow: 'box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05)' }">
@@ -39,26 +35,30 @@
         <p class="pt-2">To leave Review and return to where you were in the test, click on Return. </p>
       </div>
       <div class="flex-1 overflow-y-auto px-8 pt-4">
-        <a-table :columns="columns" size="small" :dataSource="examStore.processData" :pagination="false" :rowKey="'order'"
-          :bordered="true" />
+        <a-table 
+          :loading="tableLoading"
+          :columns="columns" 
+          size="small" 
+          :dataSource="examStore.processData" 
+          :pagination="false" 
+          :rowKey="'order'"
+          class="text-center"
+        />
       </div>
     </div>
   </a-layout>
 </template>
 <script setup lang="ts">
 import right from '@/assets/images/right.svg'
-import openEye from '@/assets/images/open-eye.svg'
-import hideEye from '@/assets/images/hide-eye.svg'
+import Timer from "./Timer.vue"
 import { ArrowLeftOutlined } from '@ant-design/icons-vue';
 import { useExamStore } from "@/stores/exam"
 import { useRoute } from "vue-router"
-import { onMounted, computed } from "vue"
-import dayjs from 'dayjs'
-import duration from 'dayjs/plugin/duration'
-dayjs.extend(duration)
+import { onMounted, ref } from "vue"
 
 const examStore = useExamStore()
 const $route = useRoute()
+const tableLoading = ref(true)
 const columns = [
   {
     title: 'Number',
@@ -66,11 +66,12 @@ const columns = [
   },
   {
     title: 'Description',
-    dataIndex: 'stem'
+    dataIndex: 'question_content'
   },
   {
     title: 'Status',
     dataIndex: 'is_answer',
+    width: 280,
     customRender: ({ text }: { text: string }) => {
       return text ? "Answered" : "Not Answered"
     },
@@ -79,20 +80,25 @@ const columns = [
 const onClickBack = () => {
   examStore.setShowProcessDialog()
 }
-onMounted(() => {
-  examStore.getExamProcess($route.query.id as string)
+onMounted(async () => {
+  tableLoading.value = true
+  await examStore.getExamProcess($route.query.id as string)
+  tableLoading.value = false
 })
 
-const showTime = computed(() => {
-  return dayjs.duration(examStore.examing_data.time_remain, 'seconds').format('mm:ss')
-})
+
 
 </script>
 
 
 <style scoped>
+:global(.ant-table-wrapper table) {
+  border: 1px solid #1B8B8C;
+  border-radius: 0;
+}
 :global(.ant-table-thead>tr>th.ant-table-cell) {
   background-color: #B2DAC8;
+  text-align: center;
 }
 
 :global(.ant-table-tbody>tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected)>td) {
@@ -101,5 +107,23 @@ const showTime = computed(() => {
 
 :global(.ant-table-container table>thead>tr:first-child>*:last-child) {
   border-start-end-radius: 0px !important
+}
+:global(.ant-table-container table>thead>tr:first-child>*:first-child) {
+  border-start-start-radius: 0px !important
+}
+:global(.ant-table-wrapper .ant-table-thead >tr>th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before ){
+  display: none;
+}
+:global(.ant-table-wrapper .ant-table:not(.ant-table-bordered) .ant-table-tbody >tr>td:first-child),
+:global(.ant-table-wrapper .ant-table:not(.ant-table-bordered) .ant-table-tbody >tr>td:last-child) {
+  text-align: center;
+  font-weight: 700;
+  color: #667085;
+}
+:global(.ant-table-wrapper .ant-table:not(.ant-table-bordered) .ant-table-tbody >tr >td) {
+  border-top: 1px solid #1B8B8C;
+}
+:global(.ant-table-wrapper .ant-table-thead >tr>th) {
+  border-bottom: 1px solid #1B8B8C;
 }
 </style>

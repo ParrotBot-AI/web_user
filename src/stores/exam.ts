@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import { reactive, computed, ref } from 'vue'
+import { request_getAccount_id } from '@/service/user' 
+import type {EXAN_START} from "@/service/exam"
 import {
   request_getExamResource,
   request_startExam,
@@ -11,7 +13,6 @@ import {
 import { useIndexStore } from '@/stores/index'
 import { getWithExpiry } from "@/utils/storage"
 import type { USERINFO } from "@/service/user"
-import { message } from 'ant-design-vue'
 export const useExamStore = defineStore('exam', () => {
   const showProcessDialog = ref(false)
   const exam_data = reactive<{
@@ -27,7 +28,7 @@ export const useExamStore = defineStore('exam', () => {
     childrenLength: number;
     curIndex: number;
     time_remain: number;
-    practice_id: number | null;
+    sheet_id: number | null;
     questions: any[];
   }>({
     curQuestionIndex: 0,
@@ -35,17 +36,19 @@ export const useExamStore = defineStore('exam', () => {
     childrenLength: 0,
     curQuestionChildrenIndex: 0,
     time_remain: 0,
-    practice_id: null,
+    sheet_id: null,
     questions: [],
   })
   const processData = reactive<any[]>([])
-  const readId = 22;
+  const readId = 22; // 阅读id
   const limit = 20;
   const indexStore = useIndexStore()
-  const getExamResource = async () => {
+  const getExamResource = async (page: number) => {
     const res = await request_getExamResource({
       exam_id: 1,
       pattern_id: indexStore.menuData.list.find((item) => Number(item?.id) === readId)?.pattern_id!,
+      limit,
+      page: page + 1,
       whether_zt: false,
     })
     exam_data.list = res.data
@@ -59,18 +62,17 @@ export const useExamStore = defineStore('exam', () => {
     })
     return res
   }
-  const getExamModalData = (checkExamDataId: number) => {
-    return exam_data.list.find((item) => item.resource_id === checkExamDataId)
-  }
-  const startExam = async (question_ids: number[]) => {
+  const startExam = async (q_type:EXAN_START['q_type'], question_ids: number[]) => {
     const { userId } = getWithExpiry<USERINFO>('userinfo')!
+    const {account_id} = await request_getAccount_id(userId, { exam_id: 1 })
     const res = await request_startExam({
-      user_id: userId,
-      question_ids
+      q_type,
+      question_ids,
+      account_id,
     })
     console.log(res, "| 开始考试");
 
-    examing_data.practice_id = res.practice_id;
+    examing_data.sheet_id = res.sheet_id;
   }
   const getExamData = async (id: string) => {
     const res = await request_getExam(id)
@@ -157,5 +159,5 @@ export const useExamStore = defineStore('exam', () => {
     await request_submitExam(practice_id)
   }
 
-  return { getExamProcess, processData, setShowProcessDialog, showProcessDialog, getExamResource, exam_data, startExam, getExamModalData, examing_data, changeQuestion, curQuestion, curQuestionChildren, getExamData, saveQuestion, isExamEnding, requestSubmitExam };
+  return { getExamProcess, processData, setShowProcessDialog, showProcessDialog, getExamResource, exam_data, startExam, examing_data, changeQuestion, curQuestion, curQuestionChildren, getExamData, saveQuestion, isExamEnding, requestSubmitExam };
 })

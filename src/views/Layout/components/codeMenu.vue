@@ -2,8 +2,8 @@
   <div class="flex w-full h-full">
     <div class="flex container flex-col">
       <div class="flex-1 overflow-hidden flex flex-col">
-        <RouterLink class="block w-[145px] h-[49px] p-[5px] ml-4" to="/">
-          <img :src="logoBg" alt="login-bg" class="w-full h-full" />
+        <RouterLink class="block w-[150px] h-[45px] p-[5px] ml-4" to="/">
+          <img :src="logoBg" alt="login-bg" class="w-full h-auto" />
         </RouterLink>
         <a-menu
           class="bg-transparent text-white mt-8 font-misans my-menu-list flex-1 overflow-y-auto"

@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { getWithExpiry } from "@/utils/storage"
-import type { MENUITEM, USERINFO, MENURES } from "@/service/user"
+import type { MENUITEM, USERINFO } from "@/service/user"
 import { formatStr } from "@/utils/utils"
 import { request_menu } from "@/service/user"
 import { useIndexStore } from "@/stores/index"
@@ -11,6 +11,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'layout',
+      redirect: '/home',
       children: [
         {
           path: '/home',

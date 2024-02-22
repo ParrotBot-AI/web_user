@@ -7,9 +7,7 @@ import { TouchBackend } from 'react-dnd-touch-backend'
 import {isMobile} from "@/utils/utils"
 const mobile = isMobile()
 const backend = computed(() => {
-  console.log(111)
   if (mobile) {
-    console.log('isMobile')
     return TouchBackend
   }
   return HTML5Backend

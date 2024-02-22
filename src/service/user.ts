@@ -72,6 +72,9 @@ export const request_userInfo = (userId: number) => {
 export type SETUSERINFO = {
   name: string
 }
+export const request_getAccount_id = (userId: number, data: {exam_id: number}) => {
+  return http.post(`/api/system/user/get_user_accounts/${userId}/`, data)
+}
 export const request_setUserInfo = (userId: number, data: SETUSERINFO) => {
   return http.patch(`/api/system/user/${userId}/`, data)
 }

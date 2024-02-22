@@ -10,8 +10,9 @@ export const request_getExamResource = (data: EXAM_RESOURCE) => {
   return http.post(`/api/system/microservice/resource/`, data)
 }
 
-type EXAN_START = {
-  user_id: number
+export type EXAN_START = {
+  q_type: 'practice' | 'mock_exam'
+  account_id: number
   question_ids: number[]
 }
 

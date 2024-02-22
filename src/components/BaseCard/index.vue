@@ -5,7 +5,7 @@
       <li v-for="item in props.list" :key="item.id" class="flex justify-between items-center py-4 overflow-hidden">
         <span v-if="item.status === 0" class="text-[12px] py-[2px] px-[6px] text-gray-700 rounded-md btn-status-0" :style="{border:'1px solid var(--color-gray-300)'}">未开始</span>
         <span v-if="item.status === 1" class="text-[12px] py-[2px] px-[6px] rounded-md btn-status-1" :style="{border:'1px solid var(--color-gray-300)'}">已完成</span>
-        <p class="text-gray-500 flex-1 truncate px-2 text-center">{{ item.task_name }}</p>
+        <p class="text-gray-500 flex-1 truncate px-2 text-left indent-5">{{ item.task_name }}</p>
         <a-button v-if="item.status === 0" class="text-[12px] text-green-1 border-green-1">去完成</a-button>
         <a-button v-if="item.status === 1" class="text-[12px] text-yellow-1 border-yellow-1">已完成</a-button>
       </li>

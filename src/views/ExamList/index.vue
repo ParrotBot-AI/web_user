@@ -5,7 +5,7 @@
         <ArrowLeftOutlined class="pr-2" @click="onClickToRead" />题库选择
       </div>
       <!--题目区间-->
-      <a-tabs v-model:activeKey="activeKey" class="page-tab">
+      <a-tabs v-model:activeKey="activeKey" @change="onTabChange" class="page-tab">
         <a-tab-pane v-for="v in examStore.exam_data.pageArr" :tab="`${v.start}-${v.end}`" :key="v.id"></a-tab-pane>
       </a-tabs>
     </header>
@@ -24,9 +24,11 @@ import ExamCard from "./components/ExamCart.vue"
 const $router = useRouter()
 const examStore = useExamStore()
 const activeKey = ref(0);
-
+const onTabChange = async (activeKey:number) => {
+  await examStore.getExamResource(activeKey)
+}
 onMounted(async () => {
-  await examStore.getExamResource()
+  await examStore.getExamResource(activeKey.value)
 })
 const onClickToRead = () => {
   $router.push("/read")
