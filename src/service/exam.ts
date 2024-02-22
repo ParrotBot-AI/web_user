@@ -31,6 +31,7 @@ type EXAM_ANSWER = {
   question_id: number
   answer: number[]
   duration: number
+  sheet_id: number | string
 }
 // 保存答案
 export const request_saveAnswer = (data: EXAM_ANSWER) => {

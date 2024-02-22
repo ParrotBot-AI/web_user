@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { reactive, computed, ref } from 'vue'
 import { request_getAccount_id } from '@/service/user' 
 import type {EXAN_START} from "@/service/exam"
+import {useRoute} from "vue-router"
 import {
   request_getExamResource,
   request_startExam,
@@ -15,6 +16,7 @@ import { getWithExpiry } from "@/utils/storage"
 import type { USERINFO } from "@/service/user"
 export const useExamStore = defineStore('exam', () => {
   const showProcessDialog = ref(false)
+  const route = useRoute()
   const exam_data = reactive<{
     list: any[];
     pageArr: { start: number; end: number; id: number; }[];
@@ -70,8 +72,6 @@ export const useExamStore = defineStore('exam', () => {
       question_ids,
       account_id,
     })
-    console.log(res, "| 开始考试");
-
     examing_data.sheet_id = res.sheet_id;
   }
   const getExamData = async (id: string) => {
@@ -141,6 +141,7 @@ export const useExamStore = defineStore('exam', () => {
 
   const saveQuestion = async (question_id: number, answer: number[]) => {
     await request_saveAnswer({
+      sheet_id: route.query.id as string,
       question_id,
       answer,
       duration: 0
