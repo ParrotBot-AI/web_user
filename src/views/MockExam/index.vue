@@ -12,13 +12,19 @@
       <span></span>
       <div class="text-[18px] text-green-1 cursor-pointer" v-if="examStore.curQuestionChildren?.isShowViewText"
         @click="onClickViewText">VIEW TEXT</div>
+      <Timer v-else/>
     </div>
     <div class="flex flex-1 overflow-hidden bg-white" :style="{ borderTop: `1px solid #D0D5DD` }">
       <div class="flex-1 h-full overflow-h-auto overflow-x-hidden" :style="{ borderRight: `1px solid #D0D5DD` }"
         v-show="isViewText || !examStore.curQuestionChildren?.isShowViewText">
         <h1 class="text-center text-[20px] text-gray-900 py-5">{{ examStore.curQuestion?.question_title }}</h1>
-        <p class="px-8 text-gray-500 text-[18px] leading-7" ref="contentDiv"
-          v-html="examStore.curQuestion?.cur_questions_content"></p>
+        <p 
+          class="px-8 text-gray-500 text-[18px] leading-7" 
+          ref="contentDiv" 
+          v-for="(val, i) in examStore.curQuestion?.cur_questions_content"
+          v-html="val"
+          :key="i"
+        ></p>
       </div>
       <div class="flex-1 h-full overflow-h-auto overflow-x-hidden px-12 py-7">
         <div v-show="!(examStore.curQuestionChildren?.isShowViewText && isViewText)">
@@ -42,20 +48,20 @@ import { getWithExpiry } from '@/utils/storage'
 import ExamSCItem from './components/ExamSCItem.vue'
 import ExamLastMcItem from './components/ExamLastMcItem.vue'
 import ProcessDialog from './components/ProcessDialog.vue'
+import Timer from "./components/Timer.vue"
+
 const { access } = getWithExpiry<USERINFO>('userinfo')!
 const socket = ref<WebSocketClient | null>(null)
 const isViewText = ref<boolean>(false)
 type IExamItems = {
-  TR_sc: typeof ExamSCItem
-  TR_mc: typeof ExamSCItem,
-  TR_fill_sentence: typeof ExamSCItem,
-  TR_last_mc: typeof ExamLastMcItem,
+  Toefl_Reading_sc: typeof ExamSCItem  // 单选题和填充题
+  Toefl_Reading_mc2: typeof ExamSCItem,  // 4选2多选题
+  Toefl_Reading_mc: typeof ExamLastMcItem,  // 6选3 拖动题
 }
 const examItems: IExamItems = {
-  TR_sc: ExamSCItem,
-  TR_mc: ExamSCItem,
-  TR_fill_sentence: ExamSCItem,
-  TR_last_mc: ExamLastMcItem,
+  Toefl_Reading_sc: ExamSCItem,
+  Toefl_Reading_mc2: ExamSCItem,
+  Toefl_Reading_mc: ExamLastMcItem,
 }
 
 const $router = useRouter()

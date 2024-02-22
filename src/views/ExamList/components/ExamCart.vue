@@ -72,7 +72,7 @@ const props = defineProps<{
 }>()
 const examStore = useExamStore()
 const $router = useRouter()
-const type = ref<EXAN_START['q_type']>('exam')
+const type = ref<EXAN_START['q_type']>('mock_exam')
 // 存储选中的复选框的id值
 const checkboxId = ref([])
 const startExamLoading = ref<boolean>(false)

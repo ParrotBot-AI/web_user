@@ -14,7 +14,7 @@
         >
         </a-menu>
       </div>
-      <div class="flex text-white mb-24 mt-4 px-4 w-full overflow-hidden items-center cursor-pointer" @click="onClickOut">
+      <div class="flex text-white mb-24 mt-4 px-3 w-full overflow-hidden items-center cursor-pointer" @click="onClickOut">
         <a-avatar :src="indexStore.userInfo.avatar" :alt="indexStore.userInfo.username" :size="40">
           {{ indexStore.userInfo.username[0] || '' }}
         </a-avatar>
@@ -33,7 +33,6 @@ import { useIndexStore } from '@/stores/index'
 import { useUserStore } from '@/stores/user'
 import logoBg from '@image/logo-bg.png'
 import LayOut from '@image/log-out-01.svg'
-import Ellipse from '@image/Ellipse.png'
 import { RouterLink, useRouter } from 'vue-router'
 const $router = useRouter()
 const indexStore = useIndexStore()

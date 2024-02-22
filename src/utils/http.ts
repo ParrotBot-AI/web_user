@@ -54,7 +54,6 @@ class Axios {
       config.headers!.Authorization =
         `JWT ${userInfo?.access}` || ``
     }
-    console.log(config)
     return Promise.resolve(config)
   }
 

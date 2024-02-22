@@ -110,22 +110,22 @@ export const useExamStore = defineStore('exam', () => {
   })
   const curQuestion = computed(() => {
     const value = examing_data.questions[examing_data.curQuestionIndex]
-    if (value && value.questions_content && value.children.length > 0) {
-      const questionItem = value?.children[examing_data.curQuestionChildrenIndex];
-      const ifFill = questionItem?.question_type === 'TR_fill_sentence'
+    console.log(value)
+    if (value && value.question_content && value.children.length > 0) {
       let i = 0;
-      const cur_questions_content = ifFill ? value.questions_content?.replace(/\$\$/g, () => {
+      const cur_questions_content = value.question_content?.replace(/\$\$/g, () => {
         return `<span class="fill-item" data-index="${i++}" data-qid="${value.question_id}">【 <b></b> 】</span>`
-      }) : value.questions_content?.replace(/\$\$/g, '')
+      }) 
       return {
         ...value,
-        cur_questions_content
+        cur_questions_content: cur_questions_content.split(/\\n/),
       }
     }
     return {
       children: [],
-      questions_content: '',
+      question_content: '',
       question_title: '',
+      cur_questions_content: ''
     };
   })
   const curQuestionChildren = computed(() => {
@@ -133,7 +133,7 @@ export const useExamStore = defineStore('exam', () => {
     if (value) {
       return {
         ...value,
-        isShowViewText: value.question_type === 'TR_last_mc'
+        isShowViewText: value.question_type === 'Toefl_Reading_mc'
       }
     }
     return null;

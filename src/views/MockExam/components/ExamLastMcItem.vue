@@ -6,14 +6,14 @@
       not presented in the passage or are minor ideas in the passage. This questions is worth 2 points. Drag your answer
       choices to the spaces here they belong. To remove an answer choice, click on it. To review the passage, click VIEW
       TEXT.</h2>
-    <h1 class="text-green-1 text-[16px] pb-8 font-bold">{{ props.stem }}</h1>
+    <h1 class="text-green-1 text-[16px] pb-8 font-bold">{{ props.question_content }}</h1>
     <div>
-      <DropBox v-for="(val, i) in props.restriction_count" :key="val" :resource="resource" :onDrop="onDrop" :onDel="onDel"
+      <DropBox v-for="(val, i) in props.restriction.rc" :key="val" :resource="resource" :onDrop="onDrop" :onDel="onDel"
         :index="i"></DropBox>
     </div>
     <h2 class="text-gray-500 text-[16px] font-bold pb-3 pt-4">Answer Choices</h2>
     <div class="flex flex-wrap w-[calc(100%+20px)] -ml-[10px]">
-      <DragBox v-for="(val, i) in props.choice" :key="props.choice_label[i]" :val="val" :type="props.choice_label[i]"
+      <DragBox v-for="(val, i) in props.detail" :key="props.options_label[i]" :val="val" :type="props.options_label[i]"
         :res="res"></DragBox>
     </div>
   </div>
@@ -26,10 +26,13 @@ const res = ref<any[]>([])
 const props = defineProps<{
   question_id: number;
   question_type: string;
-  stem: string;
-  choice_label: string[];
-  choice: string[];
-  restriction_count: number;
+  question_content: string;
+  options_label: string[];
+  detail: string[];
+  restriction: {
+    rc: number;
+    r: number
+  };
   keywords: {
     p: string;
     k: string;
@@ -37,8 +40,8 @@ const props = defineProps<{
   }
 }>()
 const resource = computed(() => {
-  return props.choice.reduce((def: any, val, i) => {
-    def[props.choice_label[i]] = val
+  return props.detail.reduce((def: any, val, i) => {
+    def[props.options_label[i]] = val
     return def
   }, {})
 })
