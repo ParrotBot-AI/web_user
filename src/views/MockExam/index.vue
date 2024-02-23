@@ -18,13 +18,14 @@
       <div class="flex-1 h-full overflow-h-auto overflow-x-hidden" :style="{ borderRight: `1px solid #D0D5DD` }"
         v-show="isViewText || !examStore.curQuestionChildren?.isShowViewText">
         <h1 class="text-center text-[20px] text-gray-900 py-5">{{ examStore.curQuestion?.question_title }}</h1>
-        <p 
-          class="px-8 text-gray-500 text-[18px] leading-7" 
-          ref="contentDiv" 
-          v-for="(val, i) in examStore.curQuestion?.cur_questions_content"
-          v-html="val"
-          :key="i"
-        ></p>
+        <div ref="contentDiv" id="content">
+          <p 
+            class="px-8 text-gray-500 text-[18px] leading-7" 
+            v-for="(val, i) in examStore.curQuestion?.cur_questions_content"
+            v-html="val"
+            :key="i"
+          ></p>
+        </div>
       </div>
       <div class="flex-1 h-full overflow-h-auto overflow-x-hidden px-12 py-7">
         <div v-show="!(examStore.curQuestionChildren?.isShowViewText && isViewText)">
@@ -46,6 +47,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons-vue';
 import { useExamStore } from '@/stores/exam'
 import { getWithExpiry } from '@/utils/storage'
 import ExamSCItem from './components/ExamSCItem.vue'
+import ExamMCItem from './components/ExamMcItem.vue'
 import ExamLastMcItem from './components/ExamLastMcItem.vue'
 import ProcessDialog from './components/ProcessDialog.vue'
 import Timer from "./components/Timer.vue"
@@ -55,12 +57,12 @@ const socket = ref<WebSocketClient | null>(null)
 const isViewText = ref<boolean>(false)
 type IExamItems = {
   Toefl_Reading_sc: typeof ExamSCItem  // 单选题和填充题
-  Toefl_Reading_mc2: typeof ExamSCItem,  // 4选2多选题
+  Toefl_Reading_mc2: typeof ExamMCItem,  // 4选2多选题
   Toefl_Reading_mc: typeof ExamLastMcItem,  // 6选3 拖动题
 }
 const examItems: IExamItems = {
   Toefl_Reading_sc: ExamSCItem,
-  Toefl_Reading_mc2: ExamSCItem,
+  Toefl_Reading_mc2: ExamMCItem,
   Toefl_Reading_mc: ExamLastMcItem,
 }
 
@@ -91,7 +93,7 @@ onMounted(() => {
       spanTarget = target
     }
     if (spanTarget) {
-      examStore.saveQuestion(examStore.curQuestionChildren?.question_id, examStore.curQuestionChildren?.choice.map((val: any, i: any) => i == spanTarget?.dataset.index ? 1 : 0))
+      examStore.saveQuestion(examStore.curQuestionChildren?.question_id, examStore.curQuestionChildren?.options_label.map((val: any, i: any) => i == spanTarget?.dataset.index ? 1 : 0))
       contentDiv.value?.querySelectorAll('.fill-item').forEach(item => {
         item.innerHTML = '【 <b></b> 】'
       })

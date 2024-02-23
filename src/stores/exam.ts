@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import { reactive, computed, ref } from 'vue'
 import { request_getAccount_id } from '@/service/user' 
 import type {EXAN_START} from "@/service/exam"
-import {useRoute} from "vue-router"
 import {
   request_getExamResource,
   request_startExam,
@@ -14,9 +13,13 @@ import {
 import { useIndexStore } from '@/stores/index'
 import { getWithExpiry } from "@/utils/storage"
 import type { USERINFO } from "@/service/user"
+type ANSWER_STATUS = {
+  is_answer: boolean;
+  question_id: number;
+  answer: number[];
+}
 export const useExamStore = defineStore('exam', () => {
   const showProcessDialog = ref(false)
-  const route = useRoute()
   const exam_data = reactive<{
     list: any[];
     pageArr: { start: number; end: number; id: number; }[];
@@ -30,16 +33,18 @@ export const useExamStore = defineStore('exam', () => {
     childrenLength: number;
     curIndex: number;
     time_remain: number;
-    sheet_id: number | null;
+    sheet_id: string;
     questions: any[];
+    answerData: ANSWER_STATUS[]
   }>({
     curQuestionIndex: 0,
     curIndex: 0,
     childrenLength: 0,
     curQuestionChildrenIndex: 0,
     time_remain: 0,
-    sheet_id: null,
+    sheet_id: '0',
     questions: [],
+    answerData: []
   })
   const processData = reactive<any[]>([])
   const readId = 22; // 阅读id
@@ -64,6 +69,9 @@ export const useExamStore = defineStore('exam', () => {
     })
     return res
   }
+  /**
+   * [startExam 开始考试 获取sheet_id]
+   */
   const startExam = async (q_type:EXAN_START['q_type'], question_ids: number[]) => {
     const { userId } = getWithExpiry<USERINFO>('userinfo')!
     const {account_id} = await request_getAccount_id(userId, { exam_id: 1 })
@@ -74,14 +82,28 @@ export const useExamStore = defineStore('exam', () => {
     })
     examing_data.sheet_id = res.sheet_id;
   }
+  /**
+   * [getExamData 考试或者练习页面根据 sheet_id 获取试题数据]
+   *
+   */
   const getExamData = async (id: string) => {
-    const res = await request_getExam(id)
+    const [res, answerRes] = await Promise.all([request_getExam(id), request_getExamStutas(id)])
+    examing_data.answerData = answerRes.map(val => ({
+      is_answer: val.is_answer,
+      question_id: val.question_id,
+      answer: val.answer
+    }));
+    examing_data.sheet_id = res.sheet_id;
     examing_data.childrenLength = res.questions.reduce((prev: number, item: any) => prev + item.children.length, 0);
     examing_data.curQuestionIndex = 0;
     examing_data.curQuestionChildrenIndex = 0;
     examing_data.time_remain = res.time_remain;
     examing_data.questions = res.questions;
   }
+  /**
+   * [changeQuestion 点击上一步下一步]
+   *
+   */
   const changeQuestion = (question: number) => {
     let index = examing_data.curIndex + question;
     const childrenLength = examing_data.childrenLength;
@@ -110,11 +132,10 @@ export const useExamStore = defineStore('exam', () => {
   })
   const curQuestion = computed(() => {
     const value = examing_data.questions[examing_data.curQuestionIndex]
-    console.log(value)
     if (value && value.question_content && value.children.length > 0) {
       let i = 0;
       const cur_questions_content = value.question_content?.replace(/\$\$/g, () => {
-        return `<span class="fill-item" data-index="${i++}" data-qid="${value.question_id}">【 <b></b> 】</span>`
+        return `<span class="fill-item" data-index="${i++}">【 <b></b> 】</span>`
       }) 
       return {
         ...value,
@@ -140,8 +161,14 @@ export const useExamStore = defineStore('exam', () => {
   })
 
   const saveQuestion = async (question_id: number, answer: number[]) => {
+    const answerIndex = examing_data.answerData.findIndex((item) => item.question_id === question_id)
+    examing_data.answerData[answerIndex] = {
+      question_id,
+      is_answer: true,
+      answer
+    }
     await request_saveAnswer({
-      sheet_id: route.query.id as string,
+      sheet_id: examing_data.sheet_id!,
       question_id,
       answer,
       duration: 0
