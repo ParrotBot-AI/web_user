@@ -1,8 +1,9 @@
 <template>
   <div class="flex flex-col w-full h-full p-14 overflow-y-auto">
     <h1 class="font-inter text-3xl font-semibold leading-9 mb-10">学习记录</h1>
-    <div class="grid grid-cols-6 gap-2">
-      <a-card class="col-span-2 shadow-lg border-solid">
+    <div class="grid grid-cols-6 gap-2 h-[140px]">
+      <a-card class="col-span-2 shadow-lg border-solid relative">
+        <div class="w-[77px] h-[83px] border-solid absolute top-[-9px] right-6">2200</div>
         <a-card-meta title="7000">
           <template #description>7000</template>
         </a-card-meta>
