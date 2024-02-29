@@ -5,13 +5,9 @@
         <RouterLink class="block w-[150px] h-[45px] p-[5px] ml-4" to="/">
           <img :src="logoBg" alt="login-bg" class="w-full h-auto" />
         </RouterLink>
-        <a-menu
-          class="bg-transparent text-white mt-8 font-misans my-menu-list flex-1 overflow-y-auto"
-          v-model:selectedKeys="indexStore.menuData.current"
-          mode="vertical"
-          :items="indexStore.menuList"
-          @click="onClickMenu"
-        >
+        <a-menu class="bg-transparent text-white mt-8 font-misans my-menu-list flex-1 overflow-y-auto"
+          v-model:selectedKeys="indexStore.menuData.current" mode="vertical" :items="indexStore.menuList"
+          @click="onClickMenu">
         </a-menu>
       </div>
       <div class="flex text-white mb-24 mt-4 px-3 w-full overflow-hidden items-center cursor-pointer" @click="onClickOut">
@@ -22,7 +18,7 @@
           <div class="truncate w-full">{{ indexStore.userInfo.username }}</div>
           <div>{{ indexStore.userInfo.mobile || '136****7890' }}</div>
         </div>
-        <img :src="LayOut" alt="layout" class="w-5 h-5 overflow-hidden"/>
+        <img :src="LayOut" alt="layout" class="w-5 h-5 overflow-hidden" />
       </div>
     </div>
   </div>
@@ -52,21 +48,21 @@ const onClickOut = () => {
   margin-inline: 0;
   border-radius: 0;
 }
+
 .my-menu-list :global(.ant-menu-light .ant-menu-item-selected) {
   background: #167778;
   color: #fff;
 }
-.my-menu-list
-  :global(
-    .ant-menu-light
-      .ant-menu-item:hover:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected)
-  ) {
+
+.my-menu-list :global(.ant-menu-light .ant-menu-item:hover:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected)) {
   color: #fff;
 }
+
 .my-menu-list :global(.ant-menu-light .ant-menu-item:not(.ant-menu-item-disabled):focus-visible) {
   outline: none;
   outline-offset: 0;
 }
+
 .my-menu-list :global(.ant-menu .ant-menu-item .ant-menu-item-icon) {
   opacity: 0.6;
 }

@@ -89,9 +89,10 @@ router.beforeEach(async (to, from, next) => {
   if (isLoggedIn) {
     if (!isRoutesAdded) {
       try {
-        const res:any = await Promise.allSettled([request_menu(), indexStore.requestUserInfo(userInfo?.userId)]);
+        const res: any = await Promise.allSettled([request_menu(), indexStore.requestUserInfo(userInfo?.userId)]);
         const menuData = res[0].value.data || []
         indexStore.getMenuValue(menuData)
+        console.log(menuData, "| menuData");
         addRoutes(menuData)
         next({ ...to, replace: true })
       } catch (error) {
