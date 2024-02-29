@@ -163,7 +163,7 @@
         </div>
         <div
           class="w-[393px] h-[126px] flex px-10 items-center rounded-8 border-l-1 border-Gray-200 bg-gradient-to-r from-blue-1 via-blue-1 to-blue-2 shadow-lg overflow-hidden cursor-pointer"
-          @click="onClickToExamList"
+          @click="onClickToQuestionList"
         >
           <img :src="Clock" alt="clock" class="w-[60px]" />
           <div class="text-black-1 text-[24px] font-semibold flex-1 px-9 truncate">模拟考试</div>
@@ -178,9 +178,10 @@
 import IsolationBg from '@/assets/images/Isolation_Mode.png'
 import Clock from '@/assets/images/Clock.png'
 import Group from '@/assets/images/Group.png'
-import { useRouter } from 'vue-router'
-const $router = useRouter()
-const onClickToExamList = () => {
-  $router.push('/exam/list')
+import { useCommonStore } from "@/stores/common"
+const common = useCommonStore()
+const onClickToQuestionList = () => {
+  common.toQuestionList()
 }
 </script>
+@/stores/common@/stores/common

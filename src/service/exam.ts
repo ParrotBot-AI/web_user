@@ -1,7 +1,7 @@
 import http from "@/utils/http";
 type EXAM_RESOURCE = {
   exam_id: number
-  pattern_id: number
+  pattern_id: string
   whether_zt: boolean
   page?: number
   limit?: number
@@ -38,8 +38,16 @@ export const request_saveAnswer = (data: EXAM_ANSWER) => {
   return http.post(`/api/system/microservice/answer_panel/`, data)
 }
 // 结束考试提交
-export const request_submitExam = (practice_id: string) => {
-  return http.post(`/api/system/microservice/submit_answers/`, {
-    practice_id
-  })
+export const request_submitExam = (sheet_id: string) => {
+  return http.post(`/api/system/microservice/submit_answers/${sheet_id}/`)
+}
+
+// 计算得分
+export const request_computed_score = (sheet_id: string) => {
+  return http.post(`api/system/microservice/scoring/${sheet_id}/`)
+}
+
+// 获取得分
+export const request_get_result = (sheet_id: string) => {
+  return http.get(`api/system/microservice/get_score/${sheet_id}/`)
 }

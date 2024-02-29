@@ -23,21 +23,16 @@ const router = createRouter({
           name: 'setting',
           component: () => import('@/views/Setting/index.vue')
         },
-        {
-          path: '/read',
-          name: 'read',
-          component: () => import('@/views/Read/index.vue')
-        },
       ],
       component: () => import('@/views/Layout/index.vue')
     },
     {
-      path: '/exam/list',
-      name: 'examList',
-      component: () => import('@/views/ExamList/index.vue')
+      path: '/questions/:patternId',
+      name: 'questionList',
+      component: () => import('@/views/QuestionList/index.vue')
     },
     {
-      path: '/result',
+      path: '/result/:sheetId',
       name: 'result',
       component: () => import('@/views/Result/index.vue')
     },
@@ -90,9 +85,8 @@ router.beforeEach(async (to, from, next) => {
     if (!isRoutesAdded) {
       try {
         const res: any = await Promise.allSettled([request_menu(), indexStore.requestUserInfo(userInfo?.userId)]);
-        const menuData = res[0].value.data || []
+        const menuData = res[0].value.data.filter(val => val.icon) || []
         indexStore.getMenuValue(menuData)
-        console.log(menuData, "| menuData");
         addRoutes(menuData)
         next({ ...to, replace: true })
       } catch (error) {

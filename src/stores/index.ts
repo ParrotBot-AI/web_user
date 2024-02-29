@@ -27,7 +27,7 @@ export const useIndexStore = defineStore('menu', () => {
       desc: '目前预测分数',
     },
     {
-      id: 'total_study',
+      id: 'total_study_days',
       icon: Group,
       val: 0,
       desc: '已经学习天数',

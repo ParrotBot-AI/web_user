@@ -2,7 +2,7 @@
   <a-layout class="w-full h-full flex flex-col">
     <header class="bg-green-2 px-6 py-4 flex justify-between items-center">
       <div class="font-normal text-2xl text-gray-900 ">
-        <ArrowLeftOutlined class="pr-2" @click="onClickToRead" />{{ title }}
+        <ArrowLeftOutlined class="pr-2" />{{ title }}
       </div>
       <HeaderBtns />
     </header>
@@ -24,10 +24,12 @@
 </template>
 <script setup lang="ts">
 import { ArrowLeftOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons-vue'
-import { useRouter } from "vue-router"
+import { useRoute } from "vue-router"
 import Card from './components/Card.vue'
-import {ref, reactive} from "vue"
-const $router = useRouter()
+import {ref, reactive, onMounted} from "vue"
+import {useExamStore} from "@/stores/exam"
+const examStore = useExamStore()
+const $route = useRoute()
 const title = ref("模考小结")
 const data = reactive({
   aiComment: '在使用鹦鹉智学时，您可以随时与AI助教交流。我们深知托福学习的困难与沮丧。所以她不仅是一个经验丰富的托福老师，更是一个可以给您情绪价值的好友，帮您排解托福学习的压力。',
@@ -52,9 +54,9 @@ const data = reactive({
   summarySourceTotal: 3,
   summarySource: 2,
 })
-const onClickToRead = () => {
-  $router.push("/exam/list")
-}
+onMounted(() => {
+  examStore.getExamResult($route.params.sheetId)
+})
 </script>
 <style scoped>
   

@@ -1,16 +1,18 @@
 import { defineStore } from 'pinia'
 import { reactive, computed, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { request_getAccount_id } from '@/service/user' 
 import type {EXAN_START} from "@/service/exam"
 import {
   request_getExamResource,
   request_startExam,
+  request_get_result,
   request_getExam,
   request_saveAnswer,
   request_getExamStutas,
-  request_submitExam
+  request_submitExam,
+  request_computed_score
 } from '@/service/exam'
-import { useIndexStore } from '@/stores/index'
 import { getWithExpiry } from "@/utils/storage"
 import type { USERINFO } from "@/service/user"
 type ANSWER_STATUS = {
@@ -20,12 +22,14 @@ type ANSWER_STATUS = {
 }
 export const useExamStore = defineStore('exam', () => {
   const showProcessDialog = ref(false)
+  const $route = useRoute()
+  const $router = useRouter()
   const exam_data = reactive<{
     list: any[];
     pageArr: { start: number; end: number; id: number; }[];
   }>({
     list: [],
-    pageArr: []
+    pageArr: [{start: 1, end: 20, id: 0}]
   })
   const examing_data = reactive<{
     curQuestionIndex: number; // 答题下标
@@ -47,13 +51,11 @@ export const useExamStore = defineStore('exam', () => {
     answerData: []
   })
   const processData = reactive<any[]>([])
-  const readId = 22; // 阅读id
   const limit = 20;
-  const indexStore = useIndexStore()
   const getExamResource = async (page: number) => {
     const res = await request_getExamResource({
       exam_id: 1,
-      pattern_id: indexStore.menuData.list.find((item) => Number(item?.id) === readId)?.pattern_id!,
+      pattern_id: $route.params.patternId as string,
       limit,
       page: page + 1,
       whether_zt: false,
@@ -183,9 +185,32 @@ export const useExamStore = defineStore('exam', () => {
     processData.push(...res)
   }
 
-  const requestSubmitExam = async (practice_id: string) => {
-    await request_submitExam(practice_id)
+  const requestSubmitExam = async (sheet_id: string) => {
+    await request_submitExam(sheet_id)
+    await request_computed_score(sheet_id)
+    $router.push(`/result/${sheet_id}`)
+  }
+  const getExamResult = async (sheet_id: string) => {
+    const res = await request_get_result(sheet_id)
+    console.log(res)
   }
 
-  return { getExamProcess, processData, setShowProcessDialog, showProcessDialog, getExamResource, exam_data, startExam, examing_data, changeQuestion, curQuestion, curQuestionChildren, getExamData, saveQuestion, isExamEnding, requestSubmitExam };
+  return { 
+    getExamProcess, 
+    getExamResult,
+    processData, 
+    setShowProcessDialog, 
+    showProcessDialog, 
+    getExamResource, 
+    exam_data, 
+    startExam, 
+    examing_data, 
+    changeQuestion, 
+    curQuestion, 
+    curQuestionChildren, 
+    getExamData, 
+    saveQuestion, 
+    isExamEnding, 
+    requestSubmitExam 
+  };
 })

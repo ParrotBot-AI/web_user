@@ -2,7 +2,7 @@
   <a-layout class="w-full h-full overflow-hidden">
     <header class="bg-green-2 pt-4 flex flex-col">
       <div class="font-normal text-2xl text-gray-900 px-6 pb-3">
-        <ArrowLeftOutlined class="pr-2" @click="onClickToRead" />题库选择
+        <ArrowLeftOutlined class="pr-2" @click="onClickBack" />题库选择
       </div>
       <!--题目区间-->
       <a-tabs v-model:activeKey="activeKey" @change="onTabChange" class="page-tab">
@@ -10,7 +10,11 @@
       </a-tabs>
     </header>
     <div class="flex content-start flex-wrap flex-1 overflow-y-auto py-5 px-3 bg-green-2">
-      <ExamCard v-for="val in examStore.exam_data.list" :key="val.resource_id" v-bind="val" />
+      <div v-if="loading">loading...</div>
+      <div v-else-if="!examStore.exam_data.list.length">
+          暂无数据
+      </div>
+      <ExamCard v-else v-for="val in examStore.exam_data.list" :key="val.resource_id" v-bind="val" />
     </div>
   </a-layout>
 </template>
@@ -20,18 +24,24 @@ import { onMounted } from 'vue'
 import { ArrowLeftOutlined } from '@ant-design/icons-vue';
 import { useExamStore } from '@/stores/exam'
 import { ref } from 'vue';
-import ExamCard from "./components/ExamCart.vue"
+import ExamCard from "./components/QuestionCard.vue"
 const $router = useRouter()
 const examStore = useExamStore()
 const activeKey = ref(0);
+const loading = ref(false)
 const onTabChange = async (activeKey:number) => {
   await examStore.getExamResource(activeKey)
 }
 onMounted(async () => {
-  await examStore.getExamResource(activeKey.value)
+  try {
+    loading.value = true
+    await examStore.getExamResource(activeKey.value)
+  } finally {
+    loading.value = false
+  }
 })
-const onClickToRead = () => {
-  $router.push("/read")
+const onClickBack = () => {
+  $router.go(-1)
 }
 
 </script>

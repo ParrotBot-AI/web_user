@@ -16,7 +16,7 @@
           </a-button>
         </div>
         <template v-else>
-          <span class="pl-6 pb-4 pt-2">请选择此次模考文章</span>
+          <span class="pl-6 pb-4 pt-2">请选择此次{{ type === 'mock_exam' ? '模考' : '练习' }}文章</span>
           <span class="pl-6 pb-6">{{ `${computedCheckboxId.length}/${2}` }}</span>
         </template>
       </div>
