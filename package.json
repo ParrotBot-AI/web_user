@@ -30,6 +30,7 @@
     "react-dnd-html5-backend": "^16.0.1",
     "react-dnd-touch-backend": "^16.0.1",
     "vue": "^3.3.11",
+    "vue-i18n": "9",
     "vue-router": "^4.2.5",
     "vue3-dnd": "^2.0.4"
   },

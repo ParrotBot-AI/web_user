@@ -2,7 +2,7 @@
   <a-layout class="w-full h-full overflow-hidden">
     <header class="bg-green-2 pt-4 flex flex-col">
       <div class="font-normal text-2xl text-gray-900 px-6 pb-3">
-        <ArrowLeftOutlined class="pr-2" @click="onClickBack" />题库选择
+        <ArrowLeftOutlined class="pr-2" @click="onClickBack" />{{ $t('阅读题库') }}
       </div>
       <!--题目区间-->
       <a-tabs v-model:activeKey="activeKey" @change="onTabChange" class="page-tab">
