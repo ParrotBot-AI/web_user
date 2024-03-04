@@ -21,6 +21,7 @@
     "axios": "^1.6.5",
     "axios-mock-adapter": "^1.22.0",
     "dayjs": "^1.11.10",
+    "echarts-gl": "^2.0.9",
     "lodash": "^4.17.21",
     "pinia": "^2.1.7",
     "postcss-color-mod-function": "^3.0.3",

@@ -28,6 +28,8 @@ const tailwindConfig = {
       'blue-2': 'var(--color-blue-2)',
       'black-1': 'var(--color-black-1)',
       'yellow-1': 'var(--color-yellow-1)',
+      'blue-3': 'var(--color-blue-3)',
+      'blue-4': 'var(--color-blue-4)',
       'transparent': 'var(--color-transparent)'
     },
     extends: {
