@@ -17,14 +17,14 @@
           </p>
         </li>
       </ul>
-      <div class="flex flex-wrap">
+      <div class="flex flex-wrap hidden">
         <span v-for="(val, i) in props.questions" :key="i"
           class="px-4 py-1.5 rounded-full text-gray-600 bg-[#E7EAEE] text-[16px] mx-2">
           {{ val.title }}: {{ val.correct }}/{{ val.total }}
         </span>
       </div>
       <div :style="{ background: 'rgba(208, 240, 230, 0.50)' }"
-        class="rounded-md p-5 pt-6 mt-12 ai-comment relative text-gray-500 text-[16px] leading-6">{{ props.aiComment }}
+        class="rounded-md p-5 pt-6 mt-12 ai-comment relative text-gray-500 text-[16px] leading-6 hidden">{{ props.aiComment }}
       </div>
     </div>
   </div>
@@ -55,18 +55,18 @@ const summaryList: Array<{ title: string, id: keyof IPropsType }> = [
     title: '模考得分',
     id: 'mockScore',
   },
-  {
-    title: '基础题',
-    id: 'basisScore',
-  },
-  {
-    title: '强化题',
-    id: 'intensifyScore',
-  },
-  {
-    title: '文章小结题',
-    id: 'summarySource',
-  }
+  // {
+  //   title: '基础题',
+  //   id: 'basisScore',
+  // },
+  // {
+  //   title: '强化题',
+  //   id: 'intensifyScore',
+  // },
+  // {
+  //   title: '文章小结题',
+  //   id: 'summarySource',
+  // }
 ]
 </script>
 <style scoped>
@@ -86,7 +86,7 @@ const summaryList: Array<{ title: string, id: keyof IPropsType }> = [
   left: -20px;
 }
 
-.list li:first-child {
-  border-right: 1px solid #D0D5DD;
+.list li:nth-child(2) {
+  border-left: 1px solid #D0D5DD;
 }
 </style>

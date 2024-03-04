@@ -17,7 +17,7 @@ import {
 } from 'ant-design-vue';
 import type { App } from 'vue'
 import { createFromIconfontCN } from '@ant-design/icons-vue'
-const customIconFontUrl = '//at.alicdn.com/t/c/font_4417762_bqniza776it.js'
+const customIconFontUrl = '//at.alicdn.com/t/c/font_4417762_na749ljm32.js'
 export const IconFont = createFromIconfontCN({
   scriptUrl: customIconFontUrl
 })

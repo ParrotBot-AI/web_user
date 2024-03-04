@@ -50,6 +50,45 @@ export const useExamStore = defineStore('exam', () => {
     questions: [],
     answerData: []
   })
+
+  const resultData = reactive<{
+    aiComment: string;
+    questions: {
+      title: string;
+      total: number;
+      correct: number;
+    }[];
+    mockScoreTotal: number;
+    mockScore: number;
+    basisScoreTotal: number;
+    basisScore: number;
+    intensifyScoreTotal: number;
+    intensifyScore: number;
+    summarySourceTotal: number;
+    summarySource: number
+  }>({
+    aiComment: '在使用鹦鹉智学时，您可以随时与AI助教交流。我们深知托福学习的困难与沮丧。所以她不仅是一个经验丰富的托福老师，更是一个可以给您情绪价值的好友，帮您排解托福学习的压力。',
+    questions: [
+      {
+        title: '细节题',
+        total: 3,
+        correct: 2,
+      },
+      {
+        title: '排除题',
+        total: 3,
+        correct: 2,
+      }
+    ],
+    mockScoreTotal: 0,
+    mockScore: 0,
+    basisScoreTotal: 0,
+    basisScore: 0,
+    intensifyScoreTotal: 0,
+    intensifyScore: 0,
+    summarySourceTotal: 0,
+    summarySource: 0,
+  })
   const processData = reactive<any[]>([])
   const limit = 20;
   const getExamResource = async (page: number) => {
@@ -192,12 +231,14 @@ export const useExamStore = defineStore('exam', () => {
   }
   const getExamResult = async (sheet_id: string) => {
     const res = await request_get_result(sheet_id)
-    console.log(res)
+    resultData.mockScoreTotal = res.max_score
+    resultData.mockScore = res.score
   }
 
   return { 
     getExamProcess, 
     getExamResult,
+    resultData,
     processData, 
     setShowProcessDialog, 
     showProcessDialog, 
