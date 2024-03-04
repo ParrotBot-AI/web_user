@@ -1,11 +1,11 @@
 <template>
-  <div v-if="isJumpWordTest">
+  <!-- <div v-if="isJumpWordTest">
     <a-modal v-model:open="modal2Visible" title="Vertically centered modal dialog" centered @ok="modal2Visible = false">
       <p>some contents...</p>
       <p>some contents...</p>
       <p>some contents...</p>
     </a-modal>
-  </div>
+  </div> -->
   <div class="flex flex-col w-full h-full p-14 overflow-y-auto">
     <h1 class="font-inter text-3xl font-semibold leading-9 mb-10 ">学习记录</h1>
     <div class="grid grid-cols-6 gap-2 h-[140px] ">
@@ -85,9 +85,10 @@ import down from '@/assets/images/down.svg'
 import WordTest from '@/assets/images/word-1.svg'
 import NewWord from '@/assets/images/word-2.svg'
 import OldWord from '@/assets/images/word-3.svg'
-
+import {useWordStore} from "@/stores/word" 
+const wordStore = useWordStore()
 const $router = useRouter()
-const isJumpWordTest = ref<boolean>(true)
+// const isJumpWordTest = ref<boolean>(true)
 const modal2Visible = ref<boolean>(false);
 type EChartsOption = echarts.EChartsOption;
 var chartDom = document.getElementById('chartDom')!;
@@ -284,5 +285,6 @@ onMounted(() => {
     // ... 其他代码 ...
     myChart.setOption(option);
   }
+  wordStore.get_vocabs_statics()
 })
 </script>
