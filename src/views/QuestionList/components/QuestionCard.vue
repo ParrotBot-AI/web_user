@@ -1,16 +1,16 @@
 <template>
-  <div class="flex h-48 px-3 pb-5 w-1/2">
+  <div class="flex h-48 px-3 pb-5 xl:w-1/3 w-1/2">
     <div class="flex bg-white exam-card w-full">
       <div
         class="left relative overflow-hidden h-full flex flex-col justify-around items-start pt-8 text-white text-center">
         <img class="absolute top-4 right-4" :src="examEdit" alt="examEdit" @click="toResult"/>
         <span class="text-[30px] pl-6">{{ props.resource_name }}</span>
-        <div v-if="isShowBtn" class="flex justify-around items-center w-full">
-          <a-button @click="onSelectQuestion('mock_exam')" class="flex justify-between items-center w-[98px] h-[32px] overflow-hidden">
+        <div v-if="isShowBtn" class="flex justify-around items-center w-full gap-3 px-3">
+          <a-button @click="onSelectQuestion('mock_exam')" class="flex flex-1 justify-between items-center h-8 overflow-hidden">
             <img :src="time" alt="time" />
             模考
           </a-button>
-          <a-button @click="onSelectQuestion('practice')" class="flex justify-between items-center w-[98px] h-[32px] overflow-hidden">
+          <a-button @click="onSelectQuestion('practice')" class="flex flex-1 justify-between items-center h-8 overflow-hidden">
             <img :src="practice" alt="practice" />
             练习
           </a-button>
@@ -146,7 +146,7 @@ const toResult = () => {
 }
 
 .left {
-  width: 259px;
+  width: 50%;
   border-radius: 8px;
   background: linear-gradient(219deg, #B2DAC8 -0.38%, #18898E 77.62%);
   stroke-width: 1px;

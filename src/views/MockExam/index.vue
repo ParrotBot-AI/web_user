@@ -21,6 +21,7 @@
         <div ref="contentDiv" id="content">
           <p 
             class="px-8 text-gray-500 text-[18px] leading-7" 
+            :class="'read-mock-content-' + (i+1)"
             v-for="(val, i) in examStore.curQuestion?.cur_questions_content"
             v-html="val"
             :key="i"
@@ -42,7 +43,7 @@ import { useRouter, useRoute } from "vue-router"
 import WebSocketClient from '@/utils/ws'
 import type { USERINFO } from "@/service/user"
 import HeaderBtns from "./components/HeaderBtns.vue"
-import { onMounted, ref, onUnmounted } from 'vue'
+import { onMounted, ref, onUnmounted, watchEffect } from 'vue'
 import { ArrowLeftOutlined } from '@ant-design/icons-vue';
 import { useExamStore } from '@/stores/exam'
 import { getWithExpiry } from '@/utils/storage'
@@ -71,8 +72,25 @@ const { query } = useRoute()
 const contentDiv = ref<HTMLDivElement | null>(null)
 const examStore = useExamStore()
 
+watchEffect(() => {
+  const keywords_p = examStore.curQuestionChildren?.keywords?.p
+  const keywords_k = examStore.curQuestionChildren?.keywords?.k
+  const p = Array.isArray(keywords_p) ? keywords_p[0] : keywords_p
+  if(p){
+    const paragraphEl = contentDiv.value?.querySelector('.read-mock-content-' + p)
+    if(keywords_k) {
+      paragraphEl.innerHTML = paragraphEl.innerHTML.replaceAll(`<b class="bg-[rgba(253,212,78,0.3)]">`,'').replaceAll('</b>','').replace(keywords_k, `<b class="bg-[rgba(253,212,78,0.3)]">${keywords_k}</b>`)
+    }
+    paragraphEl?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  } else {
+    contentDiv.value?.scrollTo(0, 0)
+  }
+}, {
+  flush: 'post'
+})
+
 const onClickToRead = () => {
-  $router.push("/exam/list")
+  $router.back()
 }
 // 获取模拟考试数据
 const getmockExamData = async () => {
