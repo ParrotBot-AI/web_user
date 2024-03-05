@@ -59,13 +59,53 @@
       </a-card>
       <a-card class="text-gray-500 text-2xl font-bold col-start-6 col-span-2 row-span-3 shadow-lg">
         单词学习进度
-        <a-progress :percent="30" class="mt-[50px]" >
+        <a-progress strokeColor="#1B8B8C" :percent="30" class="mt-[50px]"  >
           <template #format="{ percent }">
             <span class="text-green-1 block mt-[-40px] ml-[-215px]">lv2 进度{{ percent }}%</span>
           </template>
         </a-progress>
+        <div class="flex  mt-4 px-3 w-full  items-center ">
+          <img :src="Tick" alt="layout" class="w-5 h-5" />
+          <div class="mx-5 flex-1">
+            <div class="text-sm">4/6级单词</div>
+            <div class="text-sm font-normal"> 总计323个</div>
+          </div>
+          <div class="text-sm text-green-1 cursor-pointer">重选</div>
+        </div>
+        <div class="flex mt-4 px-3 w-full  items-center ">
+          <img :src="Tick" alt="layout" class="w-5 h-5 " />
+          <div class="mx-5 flex-1">
+            <div class="text-sm">托福核心词</div>
+            <div class="text-sm font-normal"> 总计687个</div>
+          </div>
+          <div class="text-sm text-green-1 cursor-pointer">重选</div>
+        </div>
+        <div class="flex  mt-4 px-3 w-full items-center ">
+          <img :src="RightArrow" alt="layout" class="w-5 h-5 " />
+          <div class="mx-5 flex-1">
+            <div class="text-sm">托福高频词</div>
+            <div class="text-sm font-normal"> 总计1234个</div>
+          </div>
+          <div class="text-sm text-green-1 cursor-pointer">跳过</div>
+        </div>
+        <div class="flex  mt-4 px-3 w-full items-center ">
+          <img :src="Lock" alt="layout" class="w-5 h-5 " />
+          <div class="mx-5 flex-1">
+            <div class="text-sm">托福真题词</div>
+            <div class="text-sm font-normal"> 总计323个</div>
+          </div>
+          <div class="text-sm cursor-pointer">选择</div>
+        </div>
+        <div class="flex mt-4 px-3 w-full  items-center ">
+          <img :src="Lock" alt="layout" class="w-5 h-5 " />
+          <div class="mx-5 flex-1">
+            <div class="text-sm">托福学科词</div>
+            <div class="text-sm font-normal">总计4321个</div>
+          </div>
+          <div class="text-sm cursor-pointer">选择</div>
+        </div>
       </a-card>
-      <a-card class="col-start-8 col-span-2 shadow-lg">
+      <a-card class="col-start-8 col-span-2 shadow-lg  ">
         <a-card-meta>
           <template #description>
             <img :src="NewWord" class=" mt-[2px] w-[140px] h-[93px] absolute top-[-33px] left-16" />
@@ -91,13 +131,15 @@ import { ref, onMounted } from 'vue'
 import * as echarts from 'echarts';
 import up from '@/assets/images/up.svg'
 import down from '@/assets/images/down.svg'
-import WordTest from '@/assets/images/word-1.svg'
-import NewWord from '@/assets/images/word-2.svg'
-import OldWord from '@/assets/images/word-3.svg'
+import WordTest from '@/assets/images/word-test.svg'
+import NewWord from '@/assets/images/word-new.svg'
+import OldWord from '@/assets/images/word-old.svg'
+import Tick from '@/assets/images/word-tick.svg'
+import RightArrow from '@/assets/images/word-right.svg'
+import Lock from '@/assets/images/word-lock.svg'
 import {useWordStore} from "@/stores/word" 
 const wordStore = useWordStore()
 const $router = useRouter()
-// const isJumpWordTest = ref<boolean>(true)
 const modal2Visible = ref<boolean>(false);
 const myChart = ref(null);
 type EChartsOption = echarts.EChartsOption;
