@@ -61,7 +61,7 @@ const resource = computed(() => {
 })
 watch(() => examStore.examing_data.answerData, () => {
   const answerValue = examStore.examing_data.answerData.find((val) => val.question_id === props.question_id);
-  const _answer = answerValue?.answer.reduce((def, val, i) => {
+  const _answer = answerValue?.answer.reduce((def:string[], val, i) => {
     if(val === 1) {
       def.push(props.options_label[i])
     }

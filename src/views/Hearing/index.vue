@@ -1,10 +1,8 @@
 <template>
-  <div>
-    听力
-  </div>
+  <question-list />
 </template>
-<script setup lang="ts">
-
+<script lang="ts" setup>
+import QuestionList from "@/components/QuestionList/index.vue"
 </script>
 <style scoped>
   

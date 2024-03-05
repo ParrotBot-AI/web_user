@@ -13,13 +13,8 @@ import {
   request_submitExam,
   request_computed_score
 } from '@/service/exam'
-import { getWithExpiry } from "@/utils/storage"
-import type { USERINFO } from "@/service/user"
-type ANSWER_STATUS = {
-  is_answer: boolean;
-  question_id: number;
-  answer: number[];
-}
+import type { ANSWER_STATUS } from "@/service/exam"
+
 export const useExamStore = defineStore('exam', () => {
   const showProcessDialog = ref(false)
   const $route = useRoute()
@@ -89,26 +84,38 @@ export const useExamStore = defineStore('exam', () => {
     summarySourceTotal: 0,
     summarySource: 0,
   })
+  const questionTitle = ref('')
   const processData = reactive<any[]>([])
   const indexStore = useIndexStore()
   const limit = 20;
-  const getExamResource = async (page: number) => {
+  const getExamResource = async (page: number, init: boolean) => {
+    const menuData = indexStore.menuData.list
+    const {pattern_id, name} = menuData.find(val => val.key === $route.name)!
+    if(init) {
+      questionTitle.value = name
+      exam_data.pageArr = []
+    }
+    if(!pattern_id) {
+      return new Error('pattern_id is undefined')
+    }
     const res = await request_getExamResource({
       exam_id: 1,
-      pattern_id: $route.params.patternId as string,
+      pattern_id,
       limit,
       page: page + 1,
       whether_zt: false,
     })
     exam_data.list = res.data
     const total = res.total
-    exam_data.pageArr = new Array(Math.ceil(total / limit)).fill(0).map((item, index) => {
-      return {
-        start: index * limit + 1,
-        end: Math.min((index + 1) * limit, total),
-        id: index
-      }
-    })
+    if(init){
+      exam_data.pageArr = new Array(Math.ceil(total / limit)).fill(0).map((item, index) => {
+        return {
+          start: index * limit + 1,
+          end: Math.min((index + 1) * limit, total),
+          id: index
+        }
+      })
+    }
     return res
   }
   /**
@@ -252,6 +259,7 @@ export const useExamStore = defineStore('exam', () => {
     getExamData, 
     saveQuestion, 
     isExamEnding, 
-    requestSubmitExam 
+    requestSubmitExam,
+    questionTitle
   };
 })

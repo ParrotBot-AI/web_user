@@ -57,7 +57,7 @@ export const request_logout = () => {
   return http.post('/api/logout/')
 }
 
-export type MENUITEM = { id: string; name: string, icon: string, key: string, pattern_id?: number }
+export type MENUITEM = { id: string; name: string, icon: string, key: string, pattern_id?: number | string }
 export type MENURES = {
   page: number;
   limit: number;

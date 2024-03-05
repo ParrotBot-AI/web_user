@@ -78,8 +78,9 @@ watchEffect(() => {
   const p = Array.isArray(keywords_p) ? keywords_p[0] : keywords_p
   if(p){
     const paragraphEl = contentDiv.value?.querySelector('.read-mock-content-' + p)
-    if(keywords_k) {
-      paragraphEl.innerHTML = paragraphEl.innerHTML.replaceAll(`<b class="bg-[rgba(253,212,78,0.3)]">`,'').replaceAll('</b>','').replace(keywords_k, `<b class="bg-[rgba(253,212,78,0.3)]">${keywords_k}</b>`)
+    if(keywords_k && paragraphEl) {
+      // @ts-ignore
+      paragraphEl.innerHTML = paragraphEl!.innerHTML.replace(new RegExp(`<b class="bg-[rgba(253,212,78,0.3)]">`, 'g'),'').replace(new RegExp('</b>', 'g'),'').replace(new RegExp(keywords_k, 'g'), `<b class="bg-[rgba(253,212,78,0.3)]">${keywords_k}</b>`)
     }
     paragraphEl?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   } else {

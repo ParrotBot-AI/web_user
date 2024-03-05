@@ -41,7 +41,7 @@ const props = defineProps<{
 }>()
 watch(() => props.question_id, () => {
   const answerValue = examStore.examing_data.answerData.find(val => val.question_id === props.question_id)
-  if(answerValue.is_answer) {
+  if(answerValue!.is_answer) {
     const index = answerValue?.answer.findIndex(val => val === 1) ?? -1
     if(props.keywords.k !== '$$'){
       sc_value.value = index

@@ -26,11 +26,11 @@ const router = createRouter({
       ],
       component: () => import('@/views/Layout/index.vue')
     },
-    {
-      path: '/questions/:patternId',
-      name: 'questionList',
-      component: () => import('@/views/QuestionList/index.vue')
-    },
+    // {
+    //   path: '/questions/:patternId',
+    //   name: 'questionList',
+    //   component: () => import('@/views/QuestionList/index.vue')
+    // },
     {
       path: '/result/:sheetId',
       name: 'result',
@@ -85,7 +85,7 @@ router.beforeEach(async (to, from, next) => {
     if (!isRoutesAdded) {
       try {
         const res: any = await Promise.allSettled([request_menu(), indexStore.requestUserInfo(userInfo?.userId)]);
-        const menuData = res[0].value.data.filter(val => val.icon) || []
+        const menuData = res[0].value.data
         indexStore.getMenuValue(menuData)
         addRoutes(menuData)
         next({ ...to, replace: true })

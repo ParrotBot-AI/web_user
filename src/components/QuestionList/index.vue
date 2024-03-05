@@ -2,7 +2,7 @@
   <a-layout class="w-full h-full overflow-hidden">
     <header class="bg-green-2 pt-4 flex flex-col">
       <div class="font-normal text-2xl text-gray-900 px-6 pb-3">
-        <ArrowLeftOutlined class="pr-2" @click="onClickBack" />{{ $t('阅读题库') }}
+        <ArrowLeftOutlined class="pr-2 hidden" @click="onClickBack" />{{ $t(`${examStore.questionTitle}题库`) }}
       </div>
       <!--题目区间-->
       <a-tabs v-model:activeKey="activeKey" @change="onTabChange" class="page-tab">
@@ -35,7 +35,7 @@ const onTabChange = async (activeKey:number) => {
 onMounted(async () => {
   try {
     loading.value = true
-    await examStore.getExamResource(activeKey.value)
+    await examStore.getExamResource(activeKey.value, true)
   } finally {
     loading.value = false
   }

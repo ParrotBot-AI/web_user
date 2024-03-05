@@ -1,7 +1,7 @@
 import http from "@/utils/http";
 type EXAM_RESOURCE = {
   exam_id: number
-  pattern_id: string
+  pattern_id: string | number
   whether_zt: boolean
   page?: number
   limit?: number
@@ -24,8 +24,13 @@ export const request_getExam = (id: string) => {
   return http.get(`/api/system/microservice/get_mock/${id}`)
 }
 // 查看答题状态 进度
+export type ANSWER_STATUS = {
+  is_answer: boolean;
+  question_id: number;
+  answer: number[];
+}
 export const request_getExamStutas = (id: string) => {
-  return http.get(`/api/system/microservice/answer_status/${id}/`)
+  return http.get<Array<ANSWER_STATUS>>(`/api/system/microservice/answer_status/${id}/`)
 }
 type EXAM_ANSWER = {
   question_id: number
