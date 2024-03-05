@@ -55,21 +55,70 @@
     <div class="flex-1 grid grid-rows-3 grid-cols-9 gap-4 mt-12">
       <a-card class="text-gray-500 text-2xl font-bold col-span-5 row-span-3 shadow-lg"> 
         单词学习曲线
-        <div ref="myChart" style="height: 400px;"></div>
+        <div ref="myChart" class="h-[400px] mt-20px"></div>
       </a-card>
-      
       <a-card class="text-gray-500 text-2xl font-bold col-start-6 col-span-2 row-span-3 shadow-lg">
         单词学习进度
+        <a-progress strokeColor="#1B8B8C" :percent="30" class="mt-[50px]"  >
+          <template #format="{ percent }">
+            <span class="text-green-1 block mt-[-40px] ml-[-215px]">lv2 进度{{ percent }}%</span>
+          </template>
+        </a-progress>
+        <div class="flex  mt-4 px-3 w-full  items-center ">
+          <img :src="Tick" alt="layout" class="w-5 h-5" />
+          <div class="mx-5 flex-1">
+            <div class="text-sm">4/6级单词</div>
+            <div class="text-sm font-normal"> 总计323个</div>
+          </div>
+          <div class="text-sm text-green-1 cursor-pointer">重选</div>
+        </div>
+        <div class="flex mt-4 px-3 w-full  items-center ">
+          <img :src="Tick" alt="layout" class="w-5 h-5 " />
+          <div class="mx-5 flex-1">
+            <div class="text-sm">托福核心词</div>
+            <div class="text-sm font-normal"> 总计687个</div>
+          </div>
+          <div class="text-sm text-green-1 cursor-pointer">重选</div>
+        </div>
+        <div class="flex  mt-4 px-3 w-full items-center ">
+          <img :src="RightArrow" alt="layout" class="w-5 h-5 " />
+          <div class="mx-5 flex-1">
+            <div class="text-sm">托福高频词</div>
+            <div class="text-sm font-normal"> 总计1234个</div>
+          </div>
+          <div class="text-sm text-green-1 cursor-pointer">跳过</div>
+        </div>
+        <div class="flex  mt-4 px-3 w-full items-center ">
+          <img :src="Lock" alt="layout" class="w-5 h-5 " />
+          <div class="mx-5 flex-1">
+            <div class="text-sm">托福真题词</div>
+            <div class="text-sm font-normal"> 总计323个</div>
+          </div>
+          <div class="text-sm cursor-pointer">选择</div>
+        </div>
+        <div class="flex mt-4 px-3 w-full  items-center ">
+          <img :src="Lock" alt="layout" class="w-5 h-5 " />
+          <div class="mx-5 flex-1">
+            <div class="text-sm">托福学科词</div>
+            <div class="text-sm font-normal">总计4321个</div>
+          </div>
+          <div class="text-sm cursor-pointer">选择</div>
+        </div>
       </a-card>
-      <a-card class="col-start-8 col-span-2 shadow-lg">
+      <a-card class="col-start-8 col-span-2 shadow-lg  ">
         <a-card-meta>
-          <template #description><img :src="NewWord" class=" mt-[2px] w-[140px] h-[93px] absolute top-[-33px] left-16" /></template>
-         
+          <template #description>
+            <img :src="NewWord" class=" mt-[2px] w-[140px] h-[93px] absolute top-[-33px] left-16" />
+            <div class="bg-green-1 text-white w-40 h-9 mt-[90px] ml-[35px] p-2.5 px-4 rounded-lg border gap-2 flex items-center justify-center ">学习新单词</div>
+          </template>
         </a-card-meta>
       </a-card>
       <a-card class="col-start-8 col-span-2 shadow-lg">
         <a-card-meta >
-          <template #description><img :src="OldWord" class=" mt-[2px] w-[140px] h-[93px] absolute top-[-33px] left-16" /></template>
+          <template #description>
+          <img :src="OldWord" class=" mt-[2px] w-[140px] h-[93px] absolute top-[-33px] left-16" />
+          <div class="bg-green-1 text-white w-40 h-9 mt-[90px] ml-[35px] p-2.5 px-4 rounded-lg border gap-2 flex items-center justify-center ">复习旧单词</div>
+        </template>
         </a-card-meta>
       </a-card>
     </div>
@@ -82,39 +131,40 @@ import { ref, onMounted } from 'vue'
 import * as echarts from 'echarts';
 import up from '@/assets/images/up.svg'
 import down from '@/assets/images/down.svg'
-import WordTest from '@/assets/images/word-1.svg'
-import NewWord from '@/assets/images/word-2.svg'
-import OldWord from '@/assets/images/word-3.svg'
+import WordTest from '@/assets/images/word-test.svg'
+import NewWord from '@/assets/images/word-new.svg'
+import OldWord from '@/assets/images/word-old.svg'
+import Tick from '@/assets/images/word-tick.svg'
+import RightArrow from '@/assets/images/word-right.svg'
+import Lock from '@/assets/images/word-lock.svg'
 import {useWordStore} from "@/stores/word" 
 const wordStore = useWordStore()
 const $router = useRouter()
-// const isJumpWordTest = ref<boolean>(true)
 const modal2Visible = ref<boolean>(false);
+const myChart = ref(null);
 type EChartsOption = echarts.EChartsOption;
-var chartDom = document.getElementById('chartDom')!;
-
-const myChartRef = ref<HTMLElement | null>(null);
 var option: EChartsOption;
 option = {
-  color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
-  title: {
-    text: 'Gradient Stacked Area Chart'
-  },
+  backgroundColor: '#ffffff',  
+  color: ['#FDD44E', '#B2DAC8'],
   tooltip: {
     trigger: 'axis',
     axisPointer: {
       type: 'cross',
       label: {
-        backgroundColor: '#6a7985'
+        backgroundColor: '#000000'
       }
     }
   },
+
   legend: {
-    data: ['Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5']
+    data: ['学习单词', '遗忘单词']
   },
   toolbox: {
     feature: {
-      saveAsImage: {}
+      saveAsImage: {
+        show: false  
+      }
     }
   },
   grid: {
@@ -137,7 +187,7 @@ option = {
   ],
   series: [
     {
-      name: 'Line 1',
+      name: '学习单词',
       type: 'line',
       stack: 'Total',
       smooth: true,
@@ -150,11 +200,7 @@ option = {
         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
           {
             offset: 0,
-            color: 'rgb(128, 255, 165)'
-          },
-          {
-            offset: 1,
-            color: 'rgb(1, 191, 236)'
+            color: 'rgba(253, 212, 78, 0.5)'
           }
         ])
       },
@@ -164,7 +210,7 @@ option = {
       data: [140, 232, 101, 264, 90, 340, 250]
     },
     {
-      name: 'Line 2',
+      name: '遗忘单词',
       type: 'line',
       stack: 'Total',
       smooth: true,
@@ -177,12 +223,8 @@ option = {
         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
           {
             offset: 0,
-            color: 'rgb(0, 221, 255)'
+            color: 'rgba(178, 218, 200, 1)'
           },
-          {
-            offset: 1,
-            color: 'rgb(77, 119, 255)'
-          }
         ])
       },
       emphasis: {
@@ -190,101 +232,15 @@ option = {
       },
       data: [120, 282, 111, 234, 220, 340, 310]
     },
-    {
-      name: 'Line 3',
-      type: 'line',
-      stack: 'Total',
-      smooth: true,
-      lineStyle: {
-        width: 0
-      },
-      showSymbol: false,
-      areaStyle: {
-        opacity: 0.8,
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          {
-            offset: 0,
-            color: 'rgb(55, 162, 255)'
-          },
-          {
-            offset: 1,
-            color: 'rgb(116, 21, 219)'
-          }
-        ])
-      },
-      emphasis: {
-        focus: 'series'
-      },
-      data: [320, 132, 201, 334, 190, 130, 220]
-    },
-    {
-      name: 'Line 4',
-      type: 'line',
-      stack: 'Total',
-      smooth: true,
-      lineStyle: {
-        width: 0
-      },
-      showSymbol: false,
-      areaStyle: {
-        opacity: 0.8,
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          {
-            offset: 0,
-            color: 'rgb(255, 0, 135)'
-          },
-          {
-            offset: 1,
-            color: 'rgb(135, 0, 157)'
-          }
-        ])
-      },
-      emphasis: {
-        focus: 'series'
-      },
-      data: [220, 402, 231, 134, 190, 230, 120]
-    },
-    {
-      name: 'Line 5',
-      type: 'line',
-      stack: 'Total',
-      smooth: true,
-      lineStyle: {
-        width: 0
-      },
-      showSymbol: false,
-      label: {
-        show: true,
-        position: 'top'
-      },
-      areaStyle: {
-        opacity: 0.8,
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          {
-            offset: 0,
-            color: 'rgb(255, 191, 0)'
-          },
-          {
-            offset: 1,
-            color: 'rgb(224, 62, 76)'
-          }
-        ])
-      },
-      emphasis: {
-        focus: 'series'
-      },
-      data: [220, 302, 181, 234, 210, 290, 150]
-    }
+
   ]
 };
 
 onMounted(() => {
   modal2Visible.value = true
-  if (myChartRef.value) {
-    const myChart = echarts.init(myChartRef.value);
-    // ... 其他代码 ...
-    myChart.setOption(option);
-  }
+
   wordStore.get_vocabs_statics()
+  const chart = echarts.init(myChart.value, "main");
+  chart.setOption(option);
 })
 </script>

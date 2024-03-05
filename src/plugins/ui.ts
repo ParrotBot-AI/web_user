@@ -13,7 +13,8 @@ import {
   Checkbox, 
   Tabs,
   Table,
-  Radio
+  Radio,
+  Progress
 } from 'ant-design-vue';
 import type { App } from 'vue'
 import { createFromIconfontCN } from '@ant-design/icons-vue'
@@ -37,6 +38,7 @@ export function registerUI() {
     app.use(Tabs)
     app.use(Radio)
     app.use(Table)
+    app.use(Progress)
     app.component('IconFont', IconFont)
     app.config.globalProperties.$message = message
   }
