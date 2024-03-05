@@ -8,6 +8,8 @@ import { formatStr } from "@/utils/utils"
 import Union from "@/assets/homeIcon/Union.svg"
 import Hourglass from "@/assets/homeIcon/Hourglass.svg"
 import Group from "@/assets/homeIcon/Group.svg"
+import { request_getAccount_id } from '@/service/user' 
+
 
 export const useIndexStore = defineStore('menu', () => {
   const curRoute = useRoute()
@@ -18,6 +20,7 @@ export const useIndexStore = defineStore('menu', () => {
     "mobile": "",
     "avatar": "",
     "name": "",
+    "account_id": 0
   })
   const userTargets = reactive([
     {
@@ -82,6 +85,7 @@ export const useIndexStore = defineStore('menu', () => {
 
   const requestUserInfo = async (userId: number) => {
     const res = await request_userInfo(userId)
+    const { account_id } = await request_getAccount_id(userId, { exam_id: 1 })
     userTargets.forEach(val => {
       val.val = res[val.id]
     })
@@ -93,6 +97,7 @@ export const useIndexStore = defineStore('menu', () => {
     userInfo.mobile = res.mobile
     userInfo.avatar = res.avatar
     userInfo.name = res.name
+    userInfo.account_id = account_id
   }
 
   return { getMenuValue, menuData, menuList, userTargets, requestUserInfo, userTargetsList, userInfo };

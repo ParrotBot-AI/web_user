@@ -23,6 +23,7 @@ export type USERINFO = {
   refresh: string;
   userId: number;
   user_type: number;
+  account_id: number;
 }
 
 export const request_login = (data: LOGIN_TYPE_SMS | LOGIN_TYPE_PHOME) => {

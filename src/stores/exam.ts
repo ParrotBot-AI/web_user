@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { reactive, computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { request_getAccount_id } from '@/service/user' 
+import { useIndexStore } from './index'
 import type {EXAN_START} from "@/service/exam"
 import {
   request_getExamResource,
@@ -90,6 +90,7 @@ export const useExamStore = defineStore('exam', () => {
     summarySource: 0,
   })
   const processData = reactive<any[]>([])
+  const indexStore = useIndexStore()
   const limit = 20;
   const getExamResource = async (page: number) => {
     const res = await request_getExamResource({
@@ -114,8 +115,7 @@ export const useExamStore = defineStore('exam', () => {
    * [startExam 开始考试 获取sheet_id]
    */
   const startExam = async (q_type:EXAN_START['q_type'], question_ids: number[]) => {
-    const { userId } = getWithExpiry<USERINFO>('userinfo')!
-    const {account_id} = await request_getAccount_id(userId, { exam_id: 1 })
+    const account_id = indexStore.userInfo.account_id
     const res = await request_startExam({
       q_type,
       question_ids,
