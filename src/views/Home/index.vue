@@ -22,7 +22,7 @@
             </dt>
             <dd class="ml-3.5 -mt-1.5 flex-1 truncate">
               <h4 class="text-[34px] text-green-3">{{ val.val }}</h4>
-              <p class="text-gray-500">{{ val.desc }}</p>
+              <p class="text-gray-500">{{ $t(val.desc) }}</p>
             </dd>
           </dl>
         </div>
