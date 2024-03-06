@@ -36,7 +36,7 @@ export const useExamStore = defineStore('exam', () => {
     questions: any[];
     answerData: ANSWER_STATUS[]
   }>({
-    curQuestionIndex: 0,
+    curQuestionIndex: 1,
     curIndex: 0,
     childrenLength: 0,
     curQuestionChildrenIndex: 0,
@@ -105,7 +105,9 @@ export const useExamStore = defineStore('exam', () => {
       page: page + 1,
       whether_zt: false,
     })
+    
     exam_data.list = res.data
+    
     const total = res.total
     if(init){
       exam_data.pageArr = new Array(Math.ceil(total / limit)).fill(0).map((item, index) => {
@@ -116,6 +118,7 @@ export const useExamStore = defineStore('exam', () => {
         }
       })
     }
+    
     return res
   }
   /**
@@ -128,6 +131,7 @@ export const useExamStore = defineStore('exam', () => {
       question_ids,
       account_id,
     })
+    
     examing_data.sheet_id = res.sheet_id;
   }
   /**

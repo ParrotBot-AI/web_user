@@ -22,7 +22,7 @@
       <a-card class="shadow-lg">
         <a-card-meta >
           <template #title>
-            <span class="text-gray-600 text-5xl  leading-30 tracking-normal text-left font-bold" >64</span>
+            <span class="text-gray-600 text-5xl  leading-30 tracking-normal text-left font-bold" >{{wordStore.vocabs_statics_data.today_day_study}}</span>
           </template>
           <template  #description ><span class="text-gray-600 font-seminormal">今日学习</span><img :src="up" class="ml-[20px] mt-[2px]" /></template>
         </a-card-meta>
@@ -30,7 +30,7 @@
       <a-card class="shadow-lg">
         <a-card-meta >
           <template #title>
-          <span class="text-gray-600 text-5xl  leading-30 tracking-normal text-left font-bold">54</span>
+          <span class="text-gray-600 text-5xl  leading-30 tracking-normal text-left font-bold">{{ wordStore.vocabs_statics_data.today_day_review }}</span>
           </template>
           <template  #description ><span class="text-gray-600 font-seminormal">今日复习</span><img :src="down" class="ml-[20px] mt-[2px]" /></template>
         </a-card-meta>
@@ -38,7 +38,7 @@
       <a-card class="shadow-lg">
         <a-card-meta >
           <template #title>
-          <span class="text-gray-600 text-5xl  leading-30 tracking-normal text-left font-bold">1164</span>
+          <span class="text-gray-600 text-5xl  leading-30 tracking-normal text-left font-bold">{{ wordStore.vocabs_statics_data.total_review }}</span>
           </template>
           <template  #description ><span class="text-gray-600 font-seminormal">总计学习</span></template>
         </a-card-meta>
@@ -46,7 +46,7 @@
       <a-card class="shadow-lg">
         <a-card-meta >
           <template #title>
-          <span class="text-gray-600 text-5xl  leading-30 tracking-normal text-left font-bold">690</span>
+          <span class="text-gray-600 text-5xl  leading-30 tracking-normal text-left font-bold">{{ wordStore.vocabs_statics_data.total_study }}</span>
           </template>
           <template  #description ><span class="text-gray-600 font-seminormal">总计复习</span></template>
         </a-card-meta>
@@ -142,6 +142,14 @@ const wordStore = useWordStore()
 const $router = useRouter()
 const modal2Visible = ref<boolean>(false);
 const myChart = ref(null);
+// let wrong_words_number: number[] = [];
+// let date_number: string[] = [];
+// const get_vocabs_static = async () => {
+//   const res = await wordStore.get_vocabs_statics();;
+//   correct_words_number = (wordStore.vocabs_statics_data.series as { correct_words: number }[]).map(item => item.correct_words);
+//   wrong_words_number = (wordStore.vocabs_statics_data.series as { wrong_words: number }[]).map(item => item.wrong_words);
+//   date_number = (wordStore.vocabs_statics_data.series as { day: string }[]).map(item => item.day);
+// }
 type EChartsOption = echarts.EChartsOption;
 var option: EChartsOption;
 option = {
@@ -177,7 +185,7 @@ option = {
     {
       type: 'category',
       boundaryGap: false,
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      data: (wordStore.vocabs_statics_data.series).map(item => item.day)
     }
   ],
   yAxis: [
@@ -207,7 +215,7 @@ option = {
       emphasis: {
         focus: 'series'
       },
-      data: [140, 232, 101, 264, 90, 340, 250]
+      data: (wordStore.vocabs_statics_data.series).map(item => item.correct_words)
     },
     {
       name: '遗忘单词',
@@ -230,16 +238,15 @@ option = {
       emphasis: {
         focus: 'series'
       },
-      data: [120, 282, 111, 234, 220, 340, 310]
+      data: (wordStore.vocabs_statics_data.series).map(item => item.wrong_words)
     },
 
   ]
 };
 
 onMounted(() => {
-  modal2Visible.value = true
-
-  wordStore.get_vocabs_statics()
+  modal2Visible.value = true;
+  wordStore.get_vocabs_statics();
   const chart = echarts.init(myChart.value, "main");
   chart.setOption(option);
 })
