@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-48 px-3 pb-5 xl:w-1/3 w-1/2">
+  <div class="flex px-3 pb-5 xl:w-1/3 w-1/2">
     <div class="flex bg-white exam-card w-full">
       <div
         class="left relative overflow-hidden h-full flex flex-col justify-around items-start pt-8 text-white text-center">
@@ -22,7 +22,7 @@
       </div>
       <div v-if="isShowBtn" class="flex flex-col flex-1 justify-around overflow-hidden">
         <div v-for="v in props.section" :key="v.section_id"
-          class="flex justify-around separator h-1/3 items-center">
+          class="flex justify-around items-center separator py-4">
           <span class="pl-2 text-gray-500">Passage{{ v.questions[0].order }}</span>
           <span class="flex flex-col justify-center text-xs" :style="{ color: showScore(v).color }">
             <span v-if="v.last_record">完成得分</span>
@@ -141,7 +141,6 @@ const toResult = () => {
 <style scoped>
 .exam-card {
   border-radius: 8px;
-  height: 184px;
   box-shadow: 0px 4px 20px 0px rgba(27, 139, 140, 0.20);
 }
 
@@ -161,7 +160,7 @@ const toResult = () => {
 .separator::after {
   position: absolute;
   bottom: 0;
-  top: 60px;
+  bottom: 0;
   right: 10px;
   left: 10px;
   height: 1px;
