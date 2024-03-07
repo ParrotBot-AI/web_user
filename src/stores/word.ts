@@ -55,11 +55,9 @@ export const useWordStore = defineStore('word', () => {
     vocabs_statics_data.today_day_study= res.today_day_study
     vocabs_statics_data.total_review = res.total_review
     vocabs_statics_data.total_study = res.total_study
-    console.log(res)
   }
   const get_vocabs_tasks = async () => {
     const res = await request_get_vocabs_tasks(indexStore.userInfo.account_id)
-    console.log(res)
   } 
   return {
     vocabs_statics_data,

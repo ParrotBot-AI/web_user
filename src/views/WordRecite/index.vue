@@ -202,11 +202,9 @@ import { useWordStore } from '@/stores/word'
 const wordStore = useWordStore()
 const $router = useRouter()
 const modal2Visible = ref<boolean>(false)
-const myChart = ref(null)
+const myChart = ref()
 type EChartsOption = echarts.EChartsOption
 var option: EChartsOption
-// let wrong_words_number: number[] = [];
-// let date_number: string[] = [];
 const get_vocabs_static = async () => {
   await wordStore.get_vocabs_statics() 
   option = {
