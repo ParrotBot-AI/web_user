@@ -202,7 +202,7 @@ import { useWordStore } from '@/stores/word'
 const wordStore = useWordStore()
 const $router = useRouter()
 const modal2Visible = ref<boolean>(false)
-const myChart = ref(null)
+const myChart = ref()
 type EChartsOption = echarts.EChartsOption
 var option: EChartsOption
 // let wrong_words_number: number[] = [];
