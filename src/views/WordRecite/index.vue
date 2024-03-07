@@ -76,17 +76,18 @@
       </a-card>
     </div>
     <div class="flex-1 grid grid-rows-3 grid-cols-9 gap-4 mt-12">
-      <a-card class="text-gray-500 text-2xl font-bold col-span-5 row-span-3 shadow-lg">
+      <a-card class="text-gray-500 text-2xl font-bold col-span-5 row-span-3 shadow-lg" >
         单词学习曲线
-        <div ref="myChart" class="h-[400px] mt-20px"></div>
+        <div ref="myChart" style="height: 400px; width: 100%; margin-top: 30px;"></div>
       </a-card>
       <a-card class="text-gray-500 text-2xl font-bold col-start-6 col-span-2 row-span-3 shadow-lg">
         单词学习进度
-        <a-progress strokeColor="#1B8B8C" :percent="30" class="mt-[50px]">
-          <template #format="{ percent }">
-            <span class="text-green-1 block mt-[-40px] ml-[-215px]">lv2 进度{{ percent }}%</span>
-          </template>
-        </a-progress>
+        <div class="text-green-1 mt-[20px] text-[16px]">lv2 进度26% </div>
+        <a-progress strokeColor="#1B8B8C" :percent="30" :showInfo="false"/>
+        <div class="flex w-full mt-[-10px]" >
+          <div class="text-sm font-normal">500</div>
+          <div class="text-sm font-normal ml-auto" >1000</div>
+        </div>
         <div class="flex mt-4 px-3 w-full items-center">
           <img :src="Tick" alt="layout" class="w-5 h-5" />
           <div class="mx-5 flex-1">
@@ -95,7 +96,8 @@
           </div>
           <div class="text-sm text-green-1 cursor-pointer">重选</div>
         </div>
-        <div class="flex mt-4 px-3 w-full items-center">
+        <div class="border-l  w-[0.5px] h-7 bg-green-1 ml-5"></div>
+        <div class="flex  px-3 w-full items-center">
           <img :src="Tick" alt="layout" class="w-5 h-5" />
           <div class="mx-5 flex-1">
             <div class="text-sm">托福核心词</div>
@@ -103,7 +105,8 @@
           </div>
           <div class="text-sm text-green-1 cursor-pointer">重选</div>
         </div>
-        <div class="flex mt-4 px-3 w-full items-center">
+        <div class="border-l  w-[0.5px] h-7 bg-green-1 ml-5"></div>
+        <div class="flex  px-3 w-full items-center">
           <img :src="RightArrow" alt="layout" class="w-5 h-5" />
           <div class="mx-5 flex-1">
             <div class="text-sm">托福高频词</div>
@@ -111,7 +114,8 @@
           </div>
           <div class="text-sm text-green-1 cursor-pointer">跳过</div>
         </div>
-        <div class="flex mt-4 px-3 w-full items-center">
+        <div class="border-l  w-[0.5px] h-7 bg-green-1 ml-5"></div>
+        <div class="flex  px-3 w-full items-center">
           <img :src="Lock" alt="layout" class="w-5 h-5" />
           <div class="mx-5 flex-1">
             <div class="text-sm">托福真题词</div>
@@ -119,7 +123,8 @@
           </div>
           <div class="text-sm cursor-pointer">选择</div>
         </div>
-        <div class="flex mt-4 px-3 w-full items-center">
+        <div class="border-l  w-[0.5px] h-7 bg-green-1 ml-5"></div>
+        <div class="flex px-3 w-full items-center">
           <img :src="Lock" alt="layout" class="w-5 h-5" />
           <div class="mx-5 flex-1">
             <div class="text-sm">托福学科词</div>
@@ -128,30 +133,54 @@
           <div class="text-sm cursor-pointer">选择</div>
         </div>
       </a-card>
-      <a-card class="col-start-8 col-span-2 shadow-lg">
+      <a-card class="col-start-8 col-span-2 shadow-lg flex items-center justify-center">
         <a-card-meta>
           <template #description>
-            <img :src="NewWord" class="mt-[2px] w-[140px] h-[93px] absolute top-[-33px] left-16" />
+            <img :src="NewWord" class=" w-[110px] h-[82px] top-[-33px] left-16 ml-[20px]" />
             <div
-              class="bg-green-1 text-white w-40 h-9 mt-[90px] ml-[35px] p-2.5 px-4 rounded-lg border gap-2 flex items-center justify-center"
+              class="bg-green-1 text-white w-[159px] h-[40px] rounded-lg border mt-[5px]  flex items-center justify-center"
             >
               学习新单词
             </div>
           </template>
         </a-card-meta>
       </a-card>
-      <a-card class="col-start-8 col-span-2 shadow-lg">
-        <a-card-meta>
-          <template #description>
-            <img :src="OldWord" class="mt-[2px] w-[140px] h-[93px] absolute top-[-33px] left-16" />
+      <a-card class="col-start-8 col-span-2 shadow-lg flex items-center justify-center">
+        <a-card-meta >
+          <template #description class="flex">
+            <img :src="OldWord" class=" w-[110px] h-[82px] top-[-33px] left-16 ml-[20px] " />
             <div
-              class="bg-green-1 text-white w-40 h-9 mt-[90px] ml-[35px] p-2.5 px-4 rounded-lg border gap-2 flex items-center justify-center"
+              class="bg-green-1 text-white w-[159px] h-[40px] mt-[5px] rounded-lg border flex items-center justify-center"
             >
               复习旧单词
             </div>
           </template>
         </a-card-meta>
       </a-card>
+      <a-card class="col-start-8 col-span-2 shadow-lg flex items-center justify-center">
+        <a-card-meta>
+          <template #description >
+            <img :src="Retest" class="w-[110px] h-[82px] top-[-33px] left-16 ml-[20px]" />
+            <div
+              class="border border-solid text-green-1 border-green-1 w-[159px] h-[40px] mt-[5px]  rounded-lg flex items-center justify-center"
+            >
+             重新测量词汇量
+            </div>
+          </template>
+        </a-card-meta>
+      </a-card>
+
+      <!-- <a-card class="col-start-8 col-span-2 shadow-lg flex items-center justify-center">
+  <a-card-meta>
+    <template #description class="flex items-center justify-center">
+      <img :src="Retest" class="w-[140px] h-[93px] top-[-33px] left-16" />
+      <div class="border border-solid text-green-1 border-green-1 w-[159px] h-[36px] rounded-lg flex items-center justify-center">
+        重新测量词汇量
+      </div>
+    </template>
+  </a-card-meta>
+</a-card> -->
+
     </div>
   </div>
 </template>
@@ -168,6 +197,7 @@ import OldWord from '@/assets/images/word-old.svg'
 import Tick from '@/assets/images/word-tick.svg'
 import RightArrow from '@/assets/images/word-right.svg'
 import Lock from '@/assets/images/word-lock.svg'
+import Retest from '@/assets/images/word-retest.svg'
 import { useWordStore } from '@/stores/word'
 const wordStore = useWordStore()
 const $router = useRouter()
@@ -178,7 +208,7 @@ var option: EChartsOption
 // let wrong_words_number: number[] = [];
 // let date_number: string[] = [];
 const get_vocabs_static = async () => {
-  await wordStore.get_vocabs_statics()
+  await wordStore.get_vocabs_statics() 
   option = {
     backgroundColor: '#ffffff',
     color: ['#FDD44E', '#B2DAC8'],
@@ -212,7 +242,7 @@ const get_vocabs_static = async () => {
       {
         type: 'category',
         boundaryGap: false,
-        data: wordStore.vocabs_statics_data.series.map((item) => item.day)
+        data: wordStore.vocabs_statics_data.series.map((item) => item.day).reverse()
       }
     ],
     yAxis: [
@@ -242,7 +272,7 @@ const get_vocabs_static = async () => {
         emphasis: {
           focus: 'series'
         },
-        data: wordStore.vocabs_statics_data.series.map((item) => item.correct_words)
+        data: wordStore.vocabs_statics_data.series.map((item) => item.correct_words).reverse()
       },
       {
         name: '遗忘单词',
@@ -265,17 +295,23 @@ const get_vocabs_static = async () => {
         emphasis: {
           focus: 'series'
         },
-        data: wordStore.vocabs_statics_data.series.map((item) => item.wrong_words)
+        data: wordStore.vocabs_statics_data.series.map((item) => item.wrong_words).reverse()
       }
     ]
   }
-  const chart = echarts.init(myChart.value, 'main')
-  chart.setOption(option)
+  const chart = echarts.init(myChart.value, 'main');
+  chart.setOption(option);
 }
 
 onMounted(() => {
   modal2Visible.value = true
-  // wordStore.get_vocabs_statics()
+  wordStore.get_vocabs_tasks()
   get_vocabs_static()
+  window.addEventListener('resize', () => {
+    const chart = echarts.getInstanceByDom(myChart.value);
+    if (chart) {
+      chart.resize();
+    }
+  });
 })
 </script>
