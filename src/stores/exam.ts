@@ -88,7 +88,31 @@ export const useExamStore = defineStore('exam', () => {
   const processData = reactive<any[]>([])
   const indexStore = useIndexStore()
   const limit = 20;
-  const getExamResource = async (page: number, init: boolean) => {
+  const customData = reactive({
+    'read': {
+      remark: 'Passage',
+      height: 184,
+      promptText: '为适应新版托福形式变更，阅读模考需要从三篇中选择两篇.',
+      maxSelectCount: 2
+    },
+    'hearing': {
+      remark: 'Lecture',
+      height: 326,
+      promptText: '为适应新版托福形式变更，听力模考section1需要选择1篇lecture',
+      maxSelectCount: 1
+    },
+    'spoken': {
+      remark: 'Task',
+      height: 249,
+      maxSelectCount: 1
+    },
+    'writing': {
+      remark: ['Integrated Writing', 'Academic discussion'],
+      height: 184,
+      maxSelectCount: 1
+    }
+  })
+  const getExamResource = async (page: number, init?: boolean) => {
     const menuData = indexStore.menuData.list
     const {pattern_id, name} = menuData.find(val => val.key === $route.name)!
     if(init) {
@@ -264,6 +288,7 @@ export const useExamStore = defineStore('exam', () => {
     saveQuestion, 
     isExamEnding, 
     requestSubmitExam,
-    questionTitle
+    questionTitle,
+    customData
   };
 })

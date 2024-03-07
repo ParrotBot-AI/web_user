@@ -1,6 +1,6 @@
 <template>
   <div class="flex px-3 pb-5 xl:w-1/3 w-1/2">
-    <div class="flex bg-white exam-card w-full">
+    <div class="flex bg-white exam-card w-full" :style="{height: curCustomData.height + 'px' || 'auto'}">
       <div
         class="left relative overflow-hidden h-full flex flex-col justify-around items-start pt-8 text-white text-center">
         <img class="absolute top-4 right-4" :src="examEdit" alt="examEdit" @click="toResult"/>
@@ -16,14 +16,28 @@
           </a-button>
         </div>
         <template v-else>
-          <span class="pl-6 pb-4 pt-2">请选择此次{{ type === 'mock_exam' ? '模考' : '练习' }}文章</span>
+          <span class="pl-6 pb-4 pt-2">
+            请选择此次{{ type === 'mock_exam' ? '模考' : '练习' }}文章
+            <a-tooltip 
+              placement="bottomLeft" 
+              v-if="curCustomData.promptText" 
+              color="#D0F0E6" 
+              :overlayInnerStyle="{color: '#0A3F64',fontSize: '12px',borderRadius: '15px',borderTopLeftRadius: '0',border: '1px solid #0A3F64', marginTop: '-20px', marginLeft: '3px', padding: '10px'}"
+            >
+              <template #title>
+                <span>{{curCustomData.promptText}}</span>
+              </template>
+              <img :src="hint" alt="hint" />
+            </a-tooltip>
+          </span>
           <span class="pl-6 pb-6">{{ `${computedCheckboxId.length}/${2}` }}</span>
         </template>
       </div>
       <div v-if="isShowBtn" class="flex flex-col flex-1 justify-around overflow-hidden">
-        <div v-for="v in props.section" :key="v.section_id"
-          class="flex justify-around items-center separator py-4">
-          <span class="pl-2 text-gray-500">Passage{{ v.questions[0].order }}</span>
+        <div v-for="(v,i) in props.section" :key="v.section_id"
+          class="flex justify-around items-center separator flex-1">
+          <span class="pl-2 text-gray-500 break-word w-24 font-semibold text-base" v-if="Array.isArray(curCustomData.remark)">{{ curCustomData.remark[i] }}</span>
+          <span class="pl-2 text-gray-500" v-else>{{ curCustomData.remark }}{{' '}}{{ v.questions[0].order }}</span>
           <span class="flex flex-col justify-center text-xs" :style="{ color: showScore(v).color }">
             <span v-if="v.last_record">完成得分</span>
             {{ showScore(v).text }}
@@ -31,11 +45,12 @@
           <img :src="edit" alt="edit" />
         </div>
       </div>
-      <div v-else class="flex flex-col flex-1 overflow-hidden pt-3">
+      <div v-else class="flex flex-col flex-1 overflow-hidden py-2.5 justify-between">
         <a-checkbox-group v-model:value="checkboxId" class="w-full pl-2 flex flex-col">
-          <p v-for="v in props.section " :key="v.section_id" class="py-2">
+          <p v-for="(v,i) in props.section " :key="v.section_id" class="py-1.5">
             <a-checkbox class="radius" :value="v.questions[0].question_id">
-              <span class="font-bold pl-2 text-gray-500">Passage{{ v.questions[0].order }}</span>
+              <span class="pl-2 text-gray-500 break-word w-24 font-bold text-base" v-if="Array.isArray(curCustomData.remark)">{{ curCustomData.remark[i] }}</span>
+              <span class="font-bold pl-2 text-gray-500" v-else>{{ curCustomData.remark }}{{' '}}{{ v.questions[0].order }}</span>
             </a-checkbox>
           </p>
         </a-checkbox-group>
@@ -59,8 +74,9 @@ import practice from '@/assets/images/practice.svg'
 import examEdit from '@/assets/images/exam-edit.svg'
 import edit from '@/assets/images/edit.svg'
 import { useExamStore } from '@/stores/exam'
-import { useRouter } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import { message } from "ant-design-vue"
+import hint from "@/assets/images/hint.png"
 
 const emits = defineEmits(["showExamModal"])
 // 显示按钮
@@ -72,12 +88,15 @@ const props = defineProps<{
 }>()
 const examStore = useExamStore()
 const $router = useRouter()
+const $route = useRoute()
 const type = ref<EXAN_START['q_type']>('mock_exam')
 // 存储选中的复选框的id值
 const checkboxId = ref([])
 const startExamLoading = ref<boolean>(false)
 
-
+const curCustomData = computed(() => {
+  return examStore.customData[$route.name]
+})
 // 计算得分状态
 const showScore = computed(() => {
   return (item: any) => {
@@ -112,7 +131,7 @@ const startMockExam = async () => {
     try {
       startExamLoading.value = true
       await examStore.startExam(type.value, checkboxId.value)
-      $router.push({ name: 'mockExam', query: { id: examStore.examing_data.sheet_id } })
+      $router.push({ name: `${$route.name}Exam`, query: { id: examStore.examing_data.sheet_id } })
     } finally {
       startExamLoading.value = false
     }
@@ -123,7 +142,7 @@ const startMockExam = async () => {
 }
 // 计算选中的checkboxId
 const computedCheckboxId = computed(() => {
-  if (checkboxId.value.length > 2) {
+  if (checkboxId.value.length > curCustomData.value.maxSelectCount) {
     checkboxId.value.shift()
   }
   return checkboxId.value
@@ -171,5 +190,8 @@ const toResult = () => {
 
 .separator:last-child:after {
   height: 0;
+}
+:global(.ant-tooltip-arrow) {
+  display: none!important;
 }
 </style>

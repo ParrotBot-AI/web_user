@@ -37,9 +37,36 @@ const router = createRouter({
       component: () => import('@/views/Result/index.vue')
     },
     {
-      path: '/mock-exam',
-      name: 'mockExam',
-      component: () => import('@/views/MockExam/index.vue')
+      path: '/read-exam',
+      name: 'readExam',
+      meta: {
+        parent: 'read'
+      },
+      component: () => import('@/views/ReadExam/index.vue')
+    },
+    {
+      path: '/spoken-exam',
+      name: 'spokenExam',
+      meta: {
+        parent: 'spoken'
+      },
+      component: () => import('@/views/SpokenExam/index.vue')
+    },
+    {
+      path: '/hearing-exam',
+      name: 'hearingExam',
+      meta: {
+        parent: 'hearing'
+      },
+      component: () => import('@/views/HearingExam/index.vue')
+    },
+    {
+      path: '/writing-exam',
+      name: 'writingExam',
+      meta: {
+        parent: 'writing'
+      },
+      component: () => import('@/views/WritingExam/index.vue')
     },
     {
       path: '/login',

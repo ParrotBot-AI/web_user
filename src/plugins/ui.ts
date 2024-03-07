@@ -14,7 +14,8 @@ import {
   Tabs,
   Table,
   Radio,
-  Progress
+  Progress,
+  Tooltip
 } from 'ant-design-vue';
 import type { App } from 'vue'
 import { createFromIconfontCN } from '@ant-design/icons-vue'
@@ -39,6 +40,7 @@ export function registerUI() {
     app.use(Radio)
     app.use(Table)
     app.use(Progress)
+    app.use(Tooltip)
     app.component('IconFont', IconFont)
     app.config.globalProperties.$message = message
   }
