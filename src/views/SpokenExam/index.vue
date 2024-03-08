@@ -33,6 +33,7 @@ import { onMounted, ref, computed, reactive } from 'vue'
 import Timer from "@/views/ReadExam/components/Timer.vue"
 import right from '@/assets/images/right.svg'
 import help from '@/assets/images/help.svg'
+import "@/service/file"
 import { useExamStore } from '@/stores/exam'
 import { useRoute } from "vue-router"
 const step = ref(0)
