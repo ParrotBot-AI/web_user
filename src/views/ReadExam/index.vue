@@ -1,13 +1,12 @@
 <template>
   <ProcessDialog v-if="examStore.showProcessDialog" />
   <a-layout class="w-full h-full flex flex-col">
-    <header class="bg-green-2 px-6 py-4 flex justify-between items-center">
-      <div class="font-normal text-2xl text-gray-900 ">
-        <ArrowLeftOutlined class="pr-2" @click="onClickToRead" />模拟考试
-      </div>
-      <HeaderBtns />
-    </header>
-    <div class="text-center h-16 flex items-center justify-between bg-white px-8">
+    <b-header title="模拟考试">
+      <template #right>
+        <HeaderBtns />
+      </template>
+    </b-header>
+    <div class="text-center h-14 flex items-center justify-between bg-white px-8">
       <h2 class="text-gray-900 text[20px] font-bold">{{ examStore.curQuestion?.question_title }}</h2>
       <span></span>
       <div class="text-[18px] text-green-1 cursor-pointer" v-if="examStore.curQuestionChildren?.isShowViewText"
@@ -44,7 +43,6 @@ import WebSocketClient from '@/utils/ws'
 import type { USERINFO } from "@/service/user"
 import HeaderBtns from "./components/HeaderBtns.vue"
 import { onMounted, ref, onUnmounted, watchEffect } from 'vue'
-import { ArrowLeftOutlined } from '@ant-design/icons-vue';
 import { useExamStore } from '@/stores/exam'
 import { getWithExpiry } from '@/utils/storage'
 import ExamSCItem from './components/ExamSCItem.vue'
@@ -67,7 +65,6 @@ const examItems: IExamItems = {
   Toefl_Reading_mc: ExamLastMcItem,
 }
 
-const $router = useRouter()
 const { query } = useRoute()
 const contentDiv = ref<HTMLDivElement | null>(null)
 const examStore = useExamStore()
@@ -90,9 +87,7 @@ watchEffect(() => {
   flush: 'post'
 })
 
-const onClickToRead = () => {
-  $router.back()
-}
+
 // 获取模拟考试数据
 const getmockExamData = async () => {
   examStore.getExamData(query.id as string)

@@ -13,12 +13,26 @@ import hideEye from '@/assets/images/hide-eye.svg'
 import { useExamStore } from "@/stores/exam"
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 dayjs.extend(duration)
 const examStore = useExamStore()
 const showTimer = ref(true)
+const TIMER = ref(null)
 const showTime = computed(() => {
   return dayjs.duration(examStore.examing_data.time_remain, 'seconds').format('mm:ss')
+})
+onMounted(() => {
+  // 开始倒计时
+  TIMER.value = setInterval(() => {
+    examStore.examing_data.time_remain--
+    if(examStore.examing_data.time_remain <= 0) {
+      clearInterval(TIMER.value)
+    }
+  }, 1000)
+})
+
+onUnmounted(() => {
+  clearInterval(TIMER.value)
 })
 const onClick = () => {
   showTimer.value = !showTimer.value
