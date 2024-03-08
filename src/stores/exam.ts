@@ -93,23 +93,27 @@ export const useExamStore = defineStore('exam', () => {
       remark: 'Passage',
       height: 184,
       promptText: '为适应新版托福形式变更，阅读模考需要从三篇中选择两篇.',
-      maxSelectCount: 2
+      maxSelectCount: 2,
+      minSelectCount: 1,
     },
     'hearing': {
       remark: 'Lecture',
       height: 326,
       promptText: '为适应新版托福形式变更，听力模考section1需要选择1篇lecture',
-      maxSelectCount: 1
+      maxSelectCount: 1,
+      minSelectCount: 1,
     },
     'spoken': {
       remark: 'Task',
       height: 249,
-      maxSelectCount: 1
+      maxSelectCount: 4,
+      minSelectCount: 4
     },
     'writing': {
       remark: ['Integrated Writing', 'Academic discussion'],
       height: 184,
-      maxSelectCount: 1
+      maxSelectCount: 1,
+      minSelectCount: 1,
     }
   })
   const getExamResource = async (page: number, init?: boolean) => {
