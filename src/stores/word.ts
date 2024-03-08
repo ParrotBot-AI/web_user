@@ -58,6 +58,7 @@ export const useWordStore = defineStore('word', () => {
   }
   const get_vocabs_tasks = async () => {
     const res = await request_get_vocabs_tasks(indexStore.userInfo.account_id)
+    console.log(res)
   } 
   return {
     vocabs_statics_data,

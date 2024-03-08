@@ -169,25 +169,13 @@
           </template>
         </a-card-meta>
       </a-card>
-
-      <!-- <a-card class="col-start-8 col-span-2 shadow-lg flex items-center justify-center">
-  <a-card-meta>
-    <template #description class="flex items-center justify-center">
-      <img :src="Retest" class="w-[140px] h-[93px] top-[-33px] left-16" />
-      <div class="border border-solid text-green-1 border-green-1 w-[159px] h-[36px] rounded-lg flex items-center justify-center">
-        重新测量词汇量
-      </div>
-    </template>
-  </a-card-meta>
-</a-card> -->
-
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch, watchEffect} from 'vue'
 import * as echarts from 'echarts'
 import up from '@/assets/images/up.svg'
 import down from '@/assets/images/down.svg'
@@ -203,11 +191,9 @@ const wordStore = useWordStore()
 const $router = useRouter()
 const modal2Visible = ref<boolean>(false)
 const myChart = ref()
-type EChartsOption = echarts.EChartsOption
-var option: EChartsOption
-const get_vocabs_static = async () => {
-  await wordStore.get_vocabs_statics() 
-  option = {
+const chart = ref()
+watchEffect (() => {
+  chart.value?.setOption({
     backgroundColor: '#ffffff',
     color: ['#FDD44E', '#B2DAC8'],
     tooltip: {
@@ -296,15 +282,14 @@ const get_vocabs_static = async () => {
         data: wordStore.vocabs_statics_data.series.map((item) => item.wrong_words).reverse()
       }
     ]
-  }
-  const chart = echarts.init(myChart.value, 'main');
-  chart.setOption(option);
-}
+  });
+})
 
 onMounted(() => {
   modal2Visible.value = true
+  wordStore.get_vocabs_statics() 
   wordStore.get_vocabs_tasks()
-  get_vocabs_static()
+  chart.value = echarts.init(myChart.value, 'main');
   window.addEventListener('resize', () => {
     const chart = echarts.getInstanceByDom(myChart.value);
     if (chart) {
