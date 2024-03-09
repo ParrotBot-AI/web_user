@@ -121,8 +121,15 @@ const showScore = computed(() => {
 
 // 开始模拟考试
 const onSelectQuestion = (v:EXAN_START['q_type']) => {
-  isShowBtn.value = !isShowBtn.value
-  type.value = v
+  if(curCustomData.value.maxSelectCount === curCustomData.value.minSelectCount && props.section.length === curCustomData.value.maxSelectCount) {
+    checkboxId.value = props.section.map(val => val.questions[0].question_id)
+    type.value = v
+    startMockExam()
+  } else {
+    isShowBtn.value = !isShowBtn.value
+    type.value = v
+  }
+  
 }
 
 // 跳转到开始考试
