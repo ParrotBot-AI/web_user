@@ -2,7 +2,7 @@
   <a-layout class="w-full h-full flex flex-col">
     <header class="bg-green-2 px-6 py-4 flex justify-between items-center">
       <div class="font-normal text-2xl text-gray-900 ">
-        <ArrowLeftOutlined class="pr-2" />{{ title }}
+        <ArrowLeftOutlined class="pr-2" />{{ $t(title) }}
       </div>
       <HeaderBtns />
     </header>

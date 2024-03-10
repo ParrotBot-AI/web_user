@@ -1,7 +1,7 @@
 <template>
   <ProcessDialog v-if="examStore.showProcessDialog" />
   <a-layout class="w-full h-full flex flex-col">
-    <b-header title="模拟考试">
+    <b-header :title="$t('模拟考试')">
       <template #right>
         <HeaderBtns />
       </template>

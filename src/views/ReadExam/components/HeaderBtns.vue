@@ -4,7 +4,7 @@
       <a-button type="primary" v-if="val.isShow()" class="pl-1 pr-3 text-[16px] mx-1.5 flex items-center justify-center"
         :class="{ 'flex-row-reverse !pr-1 !pl-3': val.id === 'next' }" @click="val.onClick()">
         <img :src="val.icon" class="px-2" />
-        <span>{{ val.title }} </span>
+        <span>{{ $t(val.title) }} </span>
       </a-button>
     </template>
   </div>

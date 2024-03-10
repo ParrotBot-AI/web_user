@@ -4,13 +4,13 @@
     <div class="w-[190px] h-[137px] result-icon absolute -top-[70px] left-1/2 -translate-x-1/2">
       <span class="absolute right-[52px] top-[9px] text-[24px] text-white">A+</span>
     </div>
-    <span class="absolute right-14 top-6 cursor-pointer text-[#F7A705]">回顾答案
+    <span class="absolute right-14 top-6 cursor-pointer text-[#F7A705]">{{ $t('回顾答案') }}
       <ArrowRightOutlined class="pl-2" />
     </span>
     <div class="w-[56vw]">
       <ul class="flex mb-8 mt-2 list">
         <li v-for="val in summaryList" :key="val.id" class="flex-1 list-none flex items-center justify-center flex-col">
-          <h2 class="text-gray-600 font-normal text-[16px]">{{ val.title }}</h2>
+          <h2 class="text-gray-600 font-normal text-[16px]">{{ $t(val.title) }}</h2>
           <p class="font-bold text-gray-600">
             <span class="text-[36px]">{{ props[val.id] }}</span><span class="text-[24px]"> / {{
               props[`${val.id}Total` as keyof IPropsType] }}</span>
