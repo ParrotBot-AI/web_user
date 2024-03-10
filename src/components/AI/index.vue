@@ -4,7 +4,7 @@
       <span class="w-11 h-11 overflow-hidden">
         <img :src="aiassistant" alt="aiassistant" class="w-full"/>
       </span>
-      <h2 class="flex-1 pl-3 font-normal text-green-3 py-2.5" :style="{borderBottom: `1px solid var(--color-gray-200)`}">鹦鹉AI助教</h2>
+      <h2 class="flex-1 pl-3 font-normal text-green-3 py-2.5" :style="{borderBottom: `1px solid var(--color-gray-200)`}">{{ $t('鹦鹉AI助教') }}</h2>
     </header>
     <section class="flex-1 overflow-auto"></section>
     <footer class="flex px-6 py-4" :style="{borderTop: `1px solid var(--color-gray-300)`}">

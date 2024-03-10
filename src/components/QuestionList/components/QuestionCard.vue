@@ -4,20 +4,20 @@
       <div
         class="left relative overflow-hidden h-full flex flex-col justify-around items-start pt-8 text-white text-center">
         <img class="absolute top-4 right-4" :src="examEdit" alt="examEdit" @click="toResult"/>
-        <span class="text-[30px] pl-6">{{ props.resource_name }}</span>
+        <span class="text-[30px] pl-6">{{ $t(props.resource_name) }}</span>
         <div v-if="isShowBtn" class="flex justify-around items-center w-full gap-3 px-3">
           <a-button @click="onSelectQuestion('mock_exam')" class="flex flex-1 justify-between items-center h-8 overflow-hidden">
             <img :src="time" alt="time" />
-            模考
+            {{ $t('模考') }}
           </a-button>
           <a-button @click="onSelectQuestion('practice')" class="flex flex-1 justify-between items-center h-8 overflow-hidden">
             <img :src="practice" alt="practice" />
-            练习
+            {{ $t('练习') }}
           </a-button>
         </div>
         <template v-else>
           <span class="pl-3.5 pb-4 pt-2">
-            请选择此次{{ type === 'mock_exam' ? '模考' : '练习' }}文章
+            {{ $t('请选择此次'+( type === 'mock_exam' ? '模考' : '练习' )+'文章') }}
             <a-tooltip 
               placement="bottomLeft" 
               v-if="curCustomData.promptText" 
@@ -39,8 +39,8 @@
           <span class="pl-2 text-gray-500 break-word w-24 font-semibold text-base" v-if="Array.isArray(curCustomData.remark)">{{ curCustomData.remark[i] }}</span>
           <span class="pl-2 text-gray-500" v-else>{{ curCustomData.remark }}{{' '}}{{ v.questions[0].order }}</span>
           <span class="flex flex-col justify-center text-xs" :style="{ color: showScore(v).color }">
-            <span v-if="v.last_record">完成得分</span>
-            {{ showScore(v).text }}
+            <span v-if="v.last_record"> {{ $t('完成得分') }}</span>
+            {{ $t(showScore(v).text) }}
           </span>
           <img :src="edit" alt="edit" />
         </div>
@@ -56,10 +56,10 @@
         </a-checkbox-group>
         <div class="flex justify-end">
           <a-button class="mr-4 text-green-1 border-green-1" @click="backExam">
-            取消
+            {{ $t('取消') }}
           </a-button>
           <a-button type="primary" class="mr-4" @click="startMockExam" :loading="startExamLoading">
-            确定
+            {{ $t('确定') }}
           </a-button>
         </div>
       </div>

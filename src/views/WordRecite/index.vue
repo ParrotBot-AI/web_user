@@ -1,13 +1,6 @@
 <template>
-  <!-- <div v-if="isJumpWordTest">
-    <a-modal v-model:open="modal2Visible" title="Vertically centered modal dialog" centered @ok="modal2Visible = false">
-      <p>some contents...</p>
-      <p>some contents...</p>
-      <p>some contents...</p>
-    </a-modal>
-  </div> -->
   <div class="flex flex-col w-full h-full p-14 overflow-y-auto">
-    <h1 class="font-inter text-3xl font-semibold leading-9 mb-10">学习记录</h1>
+    <h1 class="font-inter text-3xl font-semibold leading-9 mb-10">{{ $t('学习记录') }}</h1>
     <div class="grid grid-cols-6 gap-2 h-[140px]">
       <a-card
         class="col-span-2 shadow-lg border-solid relative bg-gradient-to-r from-blue-3 to-blue-4"
@@ -18,10 +11,10 @@
         <a-card-meta>
           <template #title>
             <span class="text-white text-5xl font-normal leading-30 tracking-normal text-left"
-              >未测试</span
+              >{{ $t('未测试') }}</span
             >
           </template>
-          <template #description><span class="text-white">当前词汇量</span></template>
+          <template #description><span class="text-white">{{ $t('当前词汇量') }}</span></template>
         </a-card-meta>
       </a-card>
       <a-card class="shadow-lg">
@@ -32,7 +25,7 @@
             }}</span>
           </template>
           <template #description
-            ><span class="text-gray-600 font-seminormal">今日学习</span
+            ><span class="text-gray-600 font-seminormal">{{ $t('今日学习') }}</span
             ><img :src="up" class="ml-[20px] mt-[2px]"
           /></template>
         </a-card-meta>
@@ -45,7 +38,7 @@
             }}</span>
           </template>
           <template #description
-            ><span class="text-gray-600 font-seminormal">今日复习</span
+            ><span class="text-gray-600 font-seminormal">{{ $t('今日复习') }}</span
             ><img :src="down" class="ml-[20px] mt-[2px]"
           /></template>
         </a-card-meta>
@@ -58,7 +51,7 @@
             }}</span>
           </template>
           <template #description
-            ><span class="text-gray-600 font-seminormal">总计学习</span></template
+            ><span class="text-gray-600 font-seminormal">{{ $t('总计学习') }}</span></template
           >
         </a-card-meta>
       </a-card>
@@ -70,19 +63,19 @@
             }}</span>
           </template>
           <template #description
-            ><span class="text-gray-600 font-seminormal">总计复习</span></template
+            ><span class="text-gray-600 font-seminormal">{{ $t('总计复习') }}</span></template
           >
         </a-card-meta>
       </a-card>
     </div>
     <div class="flex-1 grid grid-rows-3 grid-cols-9 gap-4 mt-12">
       <a-card class="text-gray-500 text-2xl font-bold col-span-5 row-span-3 shadow-lg" >
-        单词学习曲线
+        {{ $t('单词学习曲线') }}
         <div ref="myChart" style="height: 400px; width: 100%; margin-top: 30px;"></div>
       </a-card>
       <a-card class="text-gray-500 text-2xl font-bold col-start-6 col-span-2 row-span-3 shadow-lg">
-        单词学习进度
-        <div class="text-green-1 mt-[20px] text-[16px]">lv2 进度26% </div>
+        {{ $t('单词学习进度') }}
+        <div class="text-green-1 mt-[20px] text-[16px]">lv2 {{  $t('进度') }}26% </div>
         <a-progress strokeColor="#1B8B8C" :percent="30" :showInfo="false"/>
         <div class="flex w-full mt-[-10px]" >
           <div class="text-sm font-normal">500</div>
@@ -91,46 +84,46 @@
         <div class="flex mt-4 px-3 w-full items-center">
           <img :src="Tick" alt="layout" class="w-5 h-5" />
           <div class="mx-5 flex-1">
-            <div class="text-sm">4/6级单词</div>
-            <div class="text-sm font-normal">总计323个</div>
+            <div class="text-sm">{{ $t('4/6级单词') }}</div>
+            <div class="text-sm font-normal">{{ $t('总计')+ 4321 +$t('个') }}</div>
           </div>
-          <div class="text-sm text-green-1 cursor-pointer">重选</div>
+          <div class="text-sm text-green-1 cursor-pointer">{{ $t('重选') }}</div>
         </div>
         <div class="border-l  w-[0.5px] h-7 bg-green-1 ml-5"></div>
         <div class="flex  px-3 w-full items-center">
           <img :src="Tick" alt="layout" class="w-5 h-5" />
           <div class="mx-5 flex-1">
-            <div class="text-sm">托福核心词</div>
-            <div class="text-sm font-normal">总计687个</div>
+            <div class="text-sm">{{ $t('托福核心词') }}</div>
+            <div class="text-sm font-normal">{{ $t('总计')+ 4321 +$t('个') }}</div>
           </div>
-          <div class="text-sm text-green-1 cursor-pointer">重选</div>
+          <div class="text-sm text-green-1 cursor-pointer">{{ $t('重选') }}</div>
         </div>
         <div class="border-l  w-[0.5px] h-7 bg-green-1 ml-5"></div>
         <div class="flex  px-3 w-full items-center">
           <img :src="RightArrow" alt="layout" class="w-5 h-5" />
           <div class="mx-5 flex-1">
-            <div class="text-sm">托福高频词</div>
-            <div class="text-sm font-normal">总计1234个</div>
+            <div class="text-sm">{{ $t('托福高频词') }}</div>
+            <div class="text-sm font-normal">{{ $t('总计')+ 4321 +$t('个') }}</div>
           </div>
-          <div class="text-sm text-green-1 cursor-pointer">跳过</div>
+          <div class="text-sm text-green-1 cursor-pointer">{{ $t('跳过') }}</div>
         </div>
         <div class="border-l  w-[0.5px] h-7 bg-green-1 ml-5"></div>
         <div class="flex  px-3 w-full items-center">
           <img :src="Lock" alt="layout" class="w-5 h-5" />
           <div class="mx-5 flex-1">
-            <div class="text-sm">托福真题词</div>
-            <div class="text-sm font-normal">总计323个</div>
+            <div class="text-sm">{{ $t('托福真题词') }}</div>
+            <div class="text-sm font-normal">{{ $t('总计')+ 4321 +$t('个') }}</div>
           </div>
-          <div class="text-sm cursor-pointer">选择</div>
+          <div class="text-sm cursor-pointer">{{ $t('选择') }}</div>
         </div>
         <div class="border-l  w-[0.5px] h-7 bg-green-1 ml-5"></div>
         <div class="flex px-3 w-full items-center">
           <img :src="Lock" alt="layout" class="w-5 h-5" />
           <div class="mx-5 flex-1">
-            <div class="text-sm">托福学科词</div>
-            <div class="text-sm font-normal">总计4321个</div>
+            <div class="text-sm">{{ $t('托福学科词') }}</div>
+            <div class="text-sm font-normal">{{ $t('总计')+ 4321 +$t('个') }}</div>
           </div>
-          <div class="text-sm cursor-pointer">选择</div>
+          <div class="text-sm cursor-pointer">{{ $t('选择') }}</div>
         </div>
       </a-card>
       <a-card class="col-start-8 col-span-2 shadow-lg flex items-center justify-center">
@@ -140,7 +133,7 @@
             <div
               class="bg-green-1 text-white w-[159px] h-[40px] rounded-lg border mt-[5px]  flex items-center justify-center"
             >
-              学习新单词
+              {{ $t('学习新单词') }}
             </div>
           </template>
         </a-card-meta>
@@ -152,7 +145,7 @@
             <div
               class="bg-green-1 text-white w-[159px] h-[40px] mt-[5px] rounded-lg border flex items-center justify-center"
             >
-              复习旧单词
+             {{ $t('复习旧单词') }}
             </div>
           </template>
         </a-card-meta>
@@ -162,9 +155,9 @@
           <template #description >
             <img :src="Retest" class="w-[110px] h-[82px] top-[-33px] left-16 ml-[20px]" />
             <div
-              class="border border-solid text-green-1 border-green-1 w-[159px] h-[40px] mt-[5px]  rounded-lg flex items-center justify-center"
+              class="border border-solid text-green-1 border-green-1 w-[165px] h-[40px] mt-[5px]  rounded-lg flex items-center justify-center"
             >
-             重新测量词汇量
+             {{ $t('重新测量词汇量') }}
             </div>
           </template>
         </a-card-meta>
