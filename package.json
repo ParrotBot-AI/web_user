@@ -24,6 +24,7 @@
     "echarts": "^5.5.0",
     "echarts-gl": "^2.0.9",
     "esdk-obs-browserjs": "^3.23.5",
+    "js-audio-recorder": "^1.0.7",
     "lodash": "^4.17.21",
     "pinia": "^2.1.7",
     "postcss-color-mod-function": "^3.0.3",
