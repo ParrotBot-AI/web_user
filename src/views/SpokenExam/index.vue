@@ -1,5 +1,5 @@
 <template>
-   <a-layout class="w-full h-full flex flex-col">
+  <a-layout class="w-full h-full flex flex-col">
     <b-header title="模拟考试">
       <template #right>
         <div class="flex">
@@ -24,7 +24,7 @@
           <p v-for="(val,i) in curInfo.question_title" :key="i">{{ val }}</p>
         </div>
         <div class="text-[#475467]">
-          (Select <a-button type="primary" class="mx-2" @click="onclickContinue">CONTINUE <img :src="right" class="pl-2" /></a-button> at any time to dismiss these directions.)
+          (Select <a-button type="primary" class="mx-2">CONTINUE <img :src="right" class="pl-2" /></a-button> at any time to dismiss these directions.)
         </div>
       </div>
       <div v-else-if="curInfo.order === 1" class="px-32 -mt-56">

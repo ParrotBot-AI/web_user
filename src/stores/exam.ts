@@ -19,6 +19,7 @@ export const useExamStore = defineStore('exam', () => {
   const showProcessDialog = ref(false)
   const $route = useRoute()
   const $router = useRouter()
+  // 题库列表
   const exam_data = reactive<{
     list: any[];
     pageArr: { start: number; end: number; id: number; }[];
@@ -26,6 +27,7 @@ export const useExamStore = defineStore('exam', () => {
     list: [],
     pageArr: [{start: 1, end: 20, id: 0}]
   })
+  // 模考练习题
   const examing_data = reactive<{
     curQuestionIndex: number; // 答题下标
     curQuestionChildrenIndex: number;
