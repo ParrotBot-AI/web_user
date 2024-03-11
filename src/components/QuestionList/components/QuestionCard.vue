@@ -1,6 +1,7 @@
 <template>
   <div class="flex px-3 pb-5 xl:w-1/3 w-1/2">
     <div class="flex bg-white exam-card w-full" :style="{height: curCustomData.height + 'px' || 'auto'}">
+      <!-- left -->
       <div
         class="left relative overflow-hidden h-full flex flex-col justify-around items-start pt-8 text-white text-center">
         <img class="absolute top-4 right-4" :src="examEdit" alt="examEdit" @click="toResult"/>
@@ -30,26 +31,49 @@
               <img :src="hint" alt="hint" />
             </a-tooltip>
           </span>
-          <span class="pl-6 pb-6">{{ `${computedCheckboxId.length}/${2}` }}</span>
+          <span class="pl-6 pb-6">{{computedCheckboxId.length}}/{{ curCustomData.maxSelectCount }}</span>
         </template>
       </div>
-      <div v-if="isShowBtn" class="flex flex-col flex-1 justify-around overflow-hidden">
-        <div v-for="(v,i) in props.section" :key="v.section_id"
-          class="flex justify-around items-center separator flex-1">
-          <span class="pl-2 text-gray-500 break-word w-24 font-semibold text-base" v-if="Array.isArray(curCustomData.remark)">{{ curCustomData.remark[i] }}</span>
-          <span class="pl-2 text-gray-500" v-else>{{ curCustomData.remark }}{{' '}}{{ v.questions[0].order }}</span>
-          <span class="flex flex-col justify-center text-xs" :style="{ color: showScore(v).color }">
-            <span v-if="v.last_record"> {{ $t('完成得分') }}</span>
-            {{ $t(showScore(v).text) }}
-          </span>
-          <img :src="edit" alt="edit" />
-        </div>
+      <!-- right 默认展示 -->
+      <div
+        v-if="isShowBtn" 
+        class="flex flex-col flex-1 overflow-hidden"
+      >
+        <template v-for="(v,i) in props.section" :key="v.section_id">
+          <h2 v-if="isHearing && i%3===0" class="pl-2 pt-2 text-[#333] text-base font-medium" :style="{borderTop: i===3 ? '1px solid #D0D5DD' : '1px solid transparent'}">Section {{i === 0 ? 1 : 2}}</h2>
+          <div class="flex justify-between items-center flex-1 px-2" :class="{separator: !isHearing}">
+            <span 
+              class="text-gray-500 break-word w-24 font-semibold text-base" 
+              v-if="Array.isArray(curCustomData.remark)"
+            >
+              {{ curCustomData.remark[i] }}
+            </span>
+            <span 
+              class="text-gray-500 text-base" 
+              v-else
+            >
+              <template v-if="!isHearing">{{ curCustomData.remark }}{{' '}}{{ v.questions[0].order }}</template>
+              <template v-else-if="isHearing && i%3 !== 0">{{ curCustomData.remark }}{{' '}}{{ v.questions[0].order - 1 }}</template>
+              <template v-else-if="isHearing && i%3 === 0">Conversation{{' '}}1</template>
+            </span>
+            <span 
+              class="flex flex-col justify-center text-xs" 
+              :style="{ color: showScore(v).color }"
+            >
+              <span v-if="v.last_record"> {{ $t('完成得分') }}</span>
+              {{ $t(showScore(v).text) }}
+            </span>
+            <img :src="edit" alt="edit" @click="onEditClick(v)" class="cursor-pointer" />
+          </div>
+        </template>
       </div>
+      <!-- right 选择内容 -->
       <div v-else class="flex flex-col flex-1 overflow-hidden py-2.5 justify-between">
         <a-checkbox-group v-model:value="checkboxId" class="w-full pl-2 flex flex-col">
-          <p v-for="(v,i) in props.section " :key="v.section_id" class="py-1.5">
+          <h2 v-if="isHearing" class="pt-2 pb-1 text-[#333] text-base font-medium">Section {{2}}</h2>
+          <p v-for="(v,i) in checkboxVal" :key="v.section_id" class="py-1.5">
             <a-checkbox class="radius" :value="v.questions[0].question_id">
-              <span class="pl-2 text-gray-500 break-word w-24 font-bold text-base" v-if="Array.isArray(curCustomData.remark)">{{ curCustomData.remark[i] }}</span>
+              <span class="text-gray-500 break-word w-24 font-bold text-base" v-if="Array.isArray(curCustomData.remark)">{{ curCustomData.remark[i] }}</span>
               <span class="font-bold pl-2 text-gray-500" v-else>{{ curCustomData.remark }}{{' '}}{{ v.questions[0].order }}</span>
             </a-checkbox>
           </p>
@@ -67,7 +91,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, defineEmits, ref, computed } from "vue"
+import { defineProps, ref, computed } from "vue"
 import type {EXAN_START} from "@/service/exam"
 import time from '@/assets/images/time.svg'
 import practice from '@/assets/images/practice.svg'
@@ -77,8 +101,6 @@ import { useExamStore } from '@/stores/exam'
 import { useRoute, useRouter } from "vue-router"
 import { message } from "ant-design-vue"
 import hint from "@/assets/images/hint.png"
-
-const emits = defineEmits(["showExamModal"])
 // 显示按钮
 const isShowBtn = ref(true)
 const props = defineProps<{
@@ -90,10 +112,15 @@ const examStore = useExamStore()
 const $router = useRouter()
 const $route = useRoute()
 const type = ref<EXAN_START['q_type']>('mock_exam')
+const checkboxVal = computed(() => {
+  return props.section.slice($route.name !== 'hearing' ? 0 : 4)
+})
 // 存储选中的复选框的id值
 const checkboxId = ref<Array<number>>([])
 const startExamLoading = ref<boolean>(false)
-
+const isHearing = computed(() => {
+  return $route.name === 'hearing'
+})
 const curCustomData = computed(() => {
   return examStore.customData[$route.name as keyof typeof examStore.customData]
 })
@@ -137,7 +164,7 @@ const startMockExam = async () => {
   if (checkboxId.value.length !== 0) {
     try {
       startExamLoading.value = true
-      await examStore.startExam(type.value, checkboxId.value)
+      await examStore.startExam(type.value,isHearing.value ? [...props.section.slice(0,4).map(val => val.questions[0].question_id) ,...checkboxId.value] : checkboxId.value)
       $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id } })
     } finally {
       startExamLoading.value = false
@@ -146,6 +173,10 @@ const startMockExam = async () => {
   } else {
     message.info('请选择Passage')
   }
+}
+const onEditClick = async (v:any) => {
+  await examStore.startExam('practice', [v.questions[0].question_id])
+  $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id } })
 }
 // 计算选中的checkboxId
 const computedCheckboxId = computed(() => {
@@ -186,9 +217,8 @@ const toResult = () => {
 .separator::after {
   position: absolute;
   bottom: 0;
-  bottom: 0;
-  right: 10px;
-  left: 10px;
+  right: 0;
+  left: 0;
   height: 1px;
   content: "";
   transform: scaleY(.9);

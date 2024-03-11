@@ -99,7 +99,7 @@ export const useExamStore = defineStore('exam', () => {
     'hearing': {
       remark: 'Lecture',
       height: 326,
-      promptText: '为适应新版托福形式变更，听力模考section1需要选择1篇lecture',
+      promptText: '为适应新版托福形式变更，听力模考section2需要选择1篇lecture',
       maxSelectCount: 1,
       minSelectCount: 1,
     },
