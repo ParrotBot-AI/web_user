@@ -172,6 +172,8 @@ const onclickContinue = async () => {
     } else if(curInfo.value.question_status === 'speak') {
       onSpeakended1()
     }
+  } else {
+    step.value++
   }
 }
 const onPrepareended1 = () => {
