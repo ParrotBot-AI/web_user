@@ -17,8 +17,8 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs'
 import {ref, defineProps, onMounted, onUnmounted, computed} from 'vue'
-const timerCircle = ref<SVGElement | null>(null)
-const timer = ref(null)
+const timerCircle = ref<SVGCircleElement | null>(null)
+const timer = ref<null | ReturnType<typeof setInterval>>(null)
 const currentTime = ref(0)
 const props = defineProps<{
   time: number
@@ -32,23 +32,23 @@ onMounted(() => {
       currentTime.value--;
       updateCircle();
       if (currentTime.value <= 0) {
-        clearInterval(timer.value);
+        clearInterval(timer.value!);
         props.ended()
       }
   }, 1000);
 })
 onUnmounted(() => {
-  clearInterval(timer.value)
+  clearInterval(timer.value!)
   props.ended()
 })
 const timeText = computed(() => {
   return dayjs.duration(currentTime.value, 'seconds').format('mm:ss')
 })
 const updateCircle = () => {
-  const radius = timerCircle.value.r.baseVal.value;
+  const radius = timerCircle.value!.r.baseVal.value;
   const circumference = radius * 2 * Math.PI;
-  timerCircle.value.style.strokeDasharray = `${circumference} ${circumference}`;
-  timerCircle.value.style.strokeDashoffset = circumference - currentTime.value / props.time * circumference;
+  timerCircle.value!.style.strokeDasharray = `${circumference} ${circumference}`;
+  timerCircle.value!.style.strokeDashoffset = `${circumference - currentTime.value / props.time * circumference}`;
 }
 </script>
 <style scoped>

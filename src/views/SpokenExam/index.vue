@@ -21,7 +21,7 @@
           {{ curInfo.info_title }}
         </h2>
         <div class="text-[#475467] text-xl pb-10">
-          <p v-for="(val,i) in curInfo.question_title" :key="i">{{ curInfo.question_title[i] }}</p>
+          <p v-for="(val,i) in curInfo.question_title" :key="i">{{ val }}</p>
         </div>
         <div class="text-[#475467]">
           (Select <a-button type="primary" class="mx-2" @click="onclickContinue">CONTINUE <img :src="right" class="pl-2" /></a-button> at any time to dismiss these directions.)
@@ -32,13 +32,13 @@
           <p v-for="(val,i) in curInfo.question_title" :key="i">{{ val }}</p>
         </div>
         <TimerBlock 
-          v-bind="curInfo.keywords" 
+          v-bind="curInfo.keywords!" 
           v-if="curInfo.question_status === 'prepare'"
           :status="curInfo.question_status"
           :onended="onPrepareended1"
         />
         <TimerBlock 
-          v-bind="curInfo.keywords" 
+          v-bind="curInfo.keywords!" 
           v-else-if="curInfo.question_status === 'speak'"
           :status="curInfo.question_status"
           :onended="onSpeakended1"
@@ -62,7 +62,7 @@
         <template v-else-if="curInfo.question_status === 'listening'">
           <BAudio 
             title="Please listen carefully." 
-            :url="curInfo.voice_link" 
+            :url="curInfo.voice_link!" 
             img="2"
           />
         </template>
@@ -71,13 +71,13 @@
             <p v-for="(val,i) in curInfo.question_title" :key="i">{{ val }}</p>
           </div>
           <TimerBlock 
-            v-bind="curInfo.keywords" 
+            v-bind="curInfo.keywords!" 
             v-if="curInfo.question_status === 'prepare'"
             :status="curInfo.question_status"
             :onended="onPrepareended1"
           />
           <TimerBlock 
-            v-bind="curInfo.keywords" 
+            v-bind="curInfo.keywords!" 
             v-if="curInfo.question_status === 'speak'"
             :status="curInfo.question_status"
             :onended="onPrepareended1"
@@ -88,7 +88,7 @@
         <template v-if="curInfo.question_status === 'init'">
           <BAudio 
             title="Please listen carefully." 
-            :url="curInfo.voice_link" 
+            :url="curInfo.voice_link!" 
             img="2"
           />
         </template>
@@ -97,13 +97,13 @@
             <p v-for="(val,i) in curInfo.question_title" :key="i">{{ val }}</p>
           </div>
           <TimerBlock 
-            v-bind="curInfo.keywords" 
+            v-bind="curInfo.keywords!" 
             v-if="curInfo.question_status === 'prepare'"
             :status="curInfo.question_status"
             :onended="onPrepareended1"
           />
           <TimerBlock 
-            v-bind="curInfo.keywords" 
+            v-bind="curInfo.keywords!" 
             v-if="curInfo.question_status === 'speak'"
             :status="curInfo.question_status"
             :onended="onPrepareended1"
@@ -123,13 +123,29 @@ import "@/service/file"
 import { useExamStore } from '@/stores/exam'
 import { uploadFileToOBS } from "@/service/file"
 import BTimerCircle from "@/components/BaseTimerCircle/index.vue"
-import {destroy, getRecorder, start, stop, blobToFile} from '@/utils/recorder'
+import {destroy, start, stop, blobToFile} from '@/utils/recorder'
 import BAudio from "@/components/BaseAudio/index.vue"
 import { useRoute } from "vue-router"
 const step = ref(0)
 const examStore = useExamStore()
 const { query } = useRoute()
-const speakingInfo = reactive([
+const speakingInfo = reactive<Array<{
+  type?: 'info'
+  title?: string
+  question?: number
+  info_title?: string
+  question_title?: Array<string>
+  question_content?: Array<string>
+  order?: number
+  question_status?: 'init' | 'prepare' | 'speak' | 'listening' | 'end'
+  question_id?: number
+  keywords?: {
+    p: number
+    r: number
+  }
+  voice_link?: string | null
+  voice_content?: string | null
+}>>([
   {
     type: 'info',
     title: 'Speaking',

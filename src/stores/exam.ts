@@ -106,12 +106,14 @@ export const useExamStore = defineStore('exam', () => {
     'spoken': {
       remark: 'Task',
       height: 249,
+      promptText: '',
       maxSelectCount: 4,
       minSelectCount: 4
     },
     'writing': {
       remark: ['Integrated Writing', 'Academic discussion'],
       height: 184,
+      promptText: '',
       maxSelectCount: 2,
       minSelectCount: 2,
     }

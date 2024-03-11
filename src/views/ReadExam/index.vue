@@ -38,7 +38,7 @@
   </a-layout>
 </template>
 <script setup lang="ts">
-import { useRouter, useRoute } from "vue-router"
+import { useRoute } from "vue-router"
 import WebSocketClient from '@/utils/ws'
 import type { USERINFO } from "@/service/user"
 import HeaderBtns from "./components/HeaderBtns.vue"

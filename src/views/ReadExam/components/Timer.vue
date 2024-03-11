@@ -17,7 +17,7 @@ import { computed, ref, onMounted, onUnmounted } from 'vue'
 dayjs.extend(duration)
 const examStore = useExamStore()
 const showTimer = ref(true)
-const TIMER = ref(null)
+const TIMER = ref<null | ReturnType<typeof setTimeout>>(null)
 const showTime = computed(() => {
   return dayjs.duration(examStore.examing_data.time_remain, 'seconds').format('mm:ss')
 })
@@ -26,13 +26,13 @@ onMounted(() => {
   TIMER.value = setInterval(() => {
     examStore.examing_data.time_remain--
     if(examStore.examing_data.time_remain <= 0) {
-      clearInterval(TIMER.value)
+      clearInterval(TIMER.value!)
     }
   }, 1000)
 })
 
 onUnmounted(() => {
-  clearInterval(TIMER.value)
+  clearInterval(TIMER.value!)
 })
 const onClick = () => {
   showTimer.value = !showTimer.value

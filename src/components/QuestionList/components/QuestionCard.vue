@@ -91,11 +91,11 @@ const $router = useRouter()
 const $route = useRoute()
 const type = ref<EXAN_START['q_type']>('mock_exam')
 // 存储选中的复选框的id值
-const checkboxId = ref([])
+const checkboxId = ref<Array<number>>([])
 const startExamLoading = ref<boolean>(false)
 
 const curCustomData = computed(() => {
-  return examStore.customData[$route.name]
+  return examStore.customData[$route.name as keyof typeof examStore.customData]
 })
 // 计算得分状态
 const showScore = computed(() => {
@@ -138,7 +138,7 @@ const startMockExam = async () => {
     try {
       startExamLoading.value = true
       await examStore.startExam(type.value, checkboxId.value)
-      $router.push({ name: `${$route.name}Exam`, query: { id: examStore.examing_data.sheet_id } })
+      $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id } })
     } finally {
       startExamLoading.value = false
     }
@@ -150,7 +150,7 @@ const startMockExam = async () => {
 // 计算选中的checkboxId
 const computedCheckboxId = computed(() => {
   if (checkboxId.value.length > curCustomData.value.maxSelectCount) {
-    checkboxId.value.shift()
+    checkboxId.value!.shift()
   }
   return checkboxId.value
 })
