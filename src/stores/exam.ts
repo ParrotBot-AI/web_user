@@ -112,8 +112,8 @@ export const useExamStore = defineStore('exam', () => {
     'writing': {
       remark: ['Integrated Writing', 'Academic discussion'],
       height: 184,
-      maxSelectCount: 1,
-      minSelectCount: 1,
+      maxSelectCount: 2,
+      minSelectCount: 2,
     }
   })
   const getExamResource = async (page: number, init?: boolean) => {
