@@ -81,7 +81,7 @@ const isShowGuide = ref(true)
 const contentDiv = ref<HTMLDivElement | null>(null)
 const examStore = useExamStore()
 const HeaderBtnsConfig = reactive<{
-  [k in KeyofIcons]: HeaderBtnProps
+  [k in string]: HeaderBtnProps
 }>({
   progress: {
     title: '进度',

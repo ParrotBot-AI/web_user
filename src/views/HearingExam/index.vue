@@ -3,8 +3,11 @@
     <b-header title="模拟考试">
       <template #right>
         <div class="flex">
-          <a-button type="primary" class="mx-2 flex items-center justify-center"><img :src="help" class="pr-2" />HELP</a-button>
-          <a-button type="primary" class="mx-2 flex items-center justify-center" @click="onclickContinue">CONTINUE <img :src="right" class="pl-2" /></a-button>
+          <HeaderBtn 
+            v-for="val in Object.keys(HeaderBtnsConfig)" 
+            v-bind="HeaderBtnsConfig[val]" 
+            :key="val"
+          />
         </div>
       </template>
     </b-header>
@@ -12,13 +15,13 @@
   </a-layout>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, computed, reactive } from 'vue'
+import type {HeaderBtnProps, KeyofIcons} from "@/views/ReadExam/components/HeaderBtn.vue"
+import HeaderBtn from "@/views/ReadExam/components/HeaderBtn.vue"
+import { onMounted, ref, reactive, watchEffect } from 'vue'
 import BaseGuide from '@/components/BaseGuide/index.vue'
 import { useExamStore } from '@/stores/exam'
 import { useRoute } from "vue-router"
-import right from '@/assets/images/right.svg'
-import help from '@/assets/images/help.svg'
-
+const isShowGuide = ref(true)
 const examStore = useExamStore()
 const { query } = useRoute()
 
@@ -35,7 +38,82 @@ const hearingGuide = reactive({
   ]
 })
 
-
+const HeaderBtnsConfig = reactive<{
+  [k in KeyofIcons]: HeaderBtnProps
+}>({
+  horn: {
+    title: 'horn',
+    id: 'horn',
+    disabled: true,
+    isShow: true,
+    onClick: () => {
+      console.log('horn')
+    }
+  },
+  progress: {
+    title: '进度',
+    id: 'progress',
+    disabled: true,
+    isShow: true,
+    onClick: () => {
+      examStore.setShowProcessDialog()
+    }
+  },
+  help: {
+    title: '帮助',
+    id: 'help',
+    disabled: false,
+    isShow: true,
+    onClick: () => {
+      console.log('help')
+    }
+  },
+  prev: {
+    title: '上一步',
+    disabled: true,
+    id: 'prev',
+    isShow: true,
+    onClick: () => {
+      examStore.changeQuestion(-1)
+    }
+  },
+  continue: {
+    title: '跳过',
+    id: 'continue',
+    disabled: false,
+    isShow: true,
+    onClick: () => {
+      isShowGuide.value = false
+    }
+  },
+  next: {
+    title: '下一步',
+    id: 'next',
+    disabled: true,
+    isShow: true,
+    onClick: () => {
+      examStore.changeQuestion(1)
+    }
+  },
+  submit: {
+    title: '提交',
+    id: 'submit',
+    disabled: true,
+    isShow: false,
+    onClick: () => {
+      examStore.requestSubmitExam(query.id as string)
+    }
+  },
+})
+watchEffect(() => {
+  HeaderBtnsConfig.continue.isShow = isShowGuide.value;
+  HeaderBtnsConfig.progress.disabled = isShowGuide.value
+  HeaderBtnsConfig.prev.disabled = isShowGuide.value
+  HeaderBtnsConfig.submit.disabled = isShowGuide.value
+  HeaderBtnsConfig.next.disabled = isShowGuide.value && !examStore.isExamEnding
+  HeaderBtnsConfig.next.isShow = !examStore.isExamEnding
+  HeaderBtnsConfig.submit.isShow = examStore.isExamEnding
+})
 const onclickContinue = () => {
 
 }
