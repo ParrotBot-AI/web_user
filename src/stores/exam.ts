@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { reactive, computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useIndexStore } from './index'
-import type {EXAN_START} from "@/service/exam"
+import type { EXAN_START } from "@/service/exam"
 import {
   request_getExamResource,
   request_startExam,
@@ -17,6 +17,7 @@ import type { ANSWER_STATUS } from "@/service/exam"
 
 export const useExamStore = defineStore('exam', () => {
   const showProcessDialog = ref(false)
+  const showAnswerHistoryDialog = ref(false)
   const $route = useRoute()
   const $router = useRouter()
   // 题库列表
@@ -25,7 +26,7 @@ export const useExamStore = defineStore('exam', () => {
     pageArr: { start: number; end: number; id: number; }[];
   }>({
     list: [],
-    pageArr: [{start: 1, end: 20, id: 0}]
+    pageArr: [{ start: 1, end: 20, id: 0 }]
   })
   // 模考练习题
   const examing_data = reactive<{
@@ -62,7 +63,8 @@ export const useExamStore = defineStore('exam', () => {
     intensifyScoreTotal: number;
     intensifyScore: number;
     summarySourceTotal: number;
-    summarySource: number
+    summarySource: number,
+    questions_r: object
   }>({
     aiComment: '在使用鹦鹉智学时，您可以随时与AI助教交流。我们深知托福学习的困难与沮丧。所以她不仅是一个经验丰富的托福老师，更是一个可以给您情绪价值的好友，帮您排解托福学习的压力。',
     questions: [
@@ -85,6 +87,7 @@ export const useExamStore = defineStore('exam', () => {
     intensifyScore: 0,
     summarySourceTotal: 0,
     summarySource: 0,
+    questions_r: {}
   })
   const questionTitle = ref('')
   const processData = reactive<any[]>([])
@@ -122,12 +125,12 @@ export const useExamStore = defineStore('exam', () => {
   })
   const getExamResource = async (page: number, init?: boolean) => {
     const menuData = indexStore.menuData.list
-    const {pattern_id, name} = menuData.find(val => val.key === $route.name)!
-    if(init) {
+    const { pattern_id, name } = menuData.find(val => val.key === $route.name)!
+    if (init) {
       questionTitle.value = name
       exam_data.pageArr = []
     }
-    if(!pattern_id) {
+    if (!pattern_id) {
       return new Error('pattern_id is undefined')
     }
     const res = await request_getExamResource({
@@ -137,11 +140,11 @@ export const useExamStore = defineStore('exam', () => {
       page: page + 1,
       whether_zt: false,
     })
-    
+
     exam_data.list = res.data
-    
+
     const total = res.total
-    if(init){
+    if (init) {
       exam_data.pageArr = new Array(Math.ceil(total / limit)).fill(0).map((item, index) => {
         return {
           start: index * limit + 1,
@@ -150,20 +153,20 @@ export const useExamStore = defineStore('exam', () => {
         }
       })
     }
-    
+
     return res
   }
   /**
    * [startExam 开始考试 获取sheet_id]
    */
-  const startExam = async (q_type:EXAN_START['q_type'], question_ids: number[]) => {
+  const startExam = async (q_type: EXAN_START['q_type'], question_ids: number[]) => {
     const account_id = indexStore.userInfo.account_id
     const res = await request_startExam({
       q_type,
       question_ids,
       account_id,
     })
-    
+
     examing_data.sheet_id = res.sheet_id;
   }
   /**
@@ -184,8 +187,8 @@ export const useExamStore = defineStore('exam', () => {
       examing_data.curQuestionChildrenIndex = 0;
       examing_data.time_remain = res.time_remain;
       examing_data.questions = res.questions;
-    } catch(error) {
-      if(error?.data?.code === 400){
+    } catch (error) {
+      if (error?.data?.code === 400) {
         $router.push('/home')
       }
     }
@@ -226,7 +229,7 @@ export const useExamStore = defineStore('exam', () => {
       let i = 0;
       const cur_questions_content = value.question_content?.replace(/\$\$/g, () => {
         return `<span class="fill-item" data-index="${i++}">【 <b></b> 】</span>`
-      }) 
+      })
       return {
         ...value,
         cur_questions_content: cur_questions_content.split(/\\n/),
@@ -267,13 +270,16 @@ export const useExamStore = defineStore('exam', () => {
   const setShowProcessDialog = () => {
     showProcessDialog.value = !showProcessDialog.value
   }
+  const setShowAnswerHistoryDialog = () => {
+    showAnswerHistoryDialog.value = !showAnswerHistoryDialog.value
+  }
   const getExamProcess = async (id: string) => {
     try {
       const res = await request_getExamStutas(id)
       console.log(res)
       processData.length = 0
       processData.push(...res)
-    }catch(error) {
+    } catch (error) {
       console.log(error)
     }
   }
@@ -287,25 +293,28 @@ export const useExamStore = defineStore('exam', () => {
     const res = await request_get_result(sheet_id)
     resultData.mockScoreTotal = res.max_score
     resultData.mockScore = res.score
+    resultData.questions_r = res.questions_r
   }
 
-  return { 
-    getExamProcess, 
+  return {
+    getExamProcess,
     getExamResult,
     resultData,
-    processData, 
-    setShowProcessDialog, 
-    showProcessDialog, 
-    getExamResource, 
-    exam_data, 
-    startExam, 
-    examing_data, 
-    changeQuestion, 
-    curQuestion, 
-    curQuestionChildren, 
-    getExamData, 
-    saveQuestion, 
-    isExamEnding, 
+    processData,
+    setShowProcessDialog,
+    setShowAnswerHistoryDialog,
+    showAnswerHistoryDialog,
+    showProcessDialog,
+    getExamResource,
+    exam_data,
+    startExam,
+    examing_data,
+    changeQuestion,
+    curQuestion,
+    curQuestionChildren,
+    getExamData,
+    saveQuestion,
+    isExamEnding,
     requestSubmitExam,
     questionTitle,
     customData
