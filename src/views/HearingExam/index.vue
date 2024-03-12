@@ -13,9 +13,10 @@
     </b-header>
     <BaseGuide v-bind="hearingGuide" v-if="isShowGuide"/>
     <QuestionItem 
-      v-else-if="examStore.examing_data.questions[examStore.examing_data.curQuestionIndex]" 
-      v-bind="examStore.examing_data.questions[examStore.examing_data.curQuestionIndex]"
-      :isPlay="true"
+      v-else-if="questionItem" 
+      v-bind="questionItem"
+      :onAuidoEnded= "onAuidoEnded"
+      title="Listening"
     />
   </a-layout>
 </template>
@@ -23,7 +24,7 @@
 import type {HeaderBtnProps, KeyofIcons} from "@/views/ReadExam/components/HeaderBtn.vue"
 import QuestionItem from "./components/QuestionItem.vue"
 import HeaderBtn from "@/views/ReadExam/components/HeaderBtn.vue"
-import { onMounted, ref, reactive, watchEffect } from 'vue'
+import { onMounted, ref, reactive, computed, watchEffect } from 'vue'
 import BaseGuide from '@/components/BaseGuide/index.vue'
 import { useExamStore } from '@/stores/exam'
 import { useRoute } from "vue-router"
@@ -57,7 +58,7 @@ const HeaderBtnsConfig = reactive<{
     title: '进度',
     id: 'progress',
     disabled: true,
-    isShow: true,
+    isShow: false,
     onClick: () => {
       examStore.setShowProcessDialog()
     }
@@ -66,7 +67,7 @@ const HeaderBtnsConfig = reactive<{
     title: '帮助',
     id: 'help',
     disabled: false,
-    isShow: true,
+    isShow: false,
     onClick: () => {
       console.log('help')
     }
@@ -75,7 +76,7 @@ const HeaderBtnsConfig = reactive<{
     title: '上一步',
     disabled: true,
     id: 'prev',
-    isShow: true,
+    isShow: false,
     onClick: () => {
       examStore.changeQuestion(-1)
     }
@@ -86,16 +87,25 @@ const HeaderBtnsConfig = reactive<{
     disabled: false,
     isShow: true,
     onClick: () => {
-      isShowGuide.value = false
+      if(isShowGuide.value) {
+        isShowGuide.value = false
+      } else {
+        onAuidoEnded()
+      }
     }
   },
   next: {
     title: '下一步',
     id: 'next',
-    disabled: true,
-    isShow: true,
+    disabled: false,
+    isShow: false,
     onClick: () => {
       examStore.changeQuestion(1)
+      if(!questionItem.value.played) {
+        examStore.examing_data.questions[examStore.examing_data.curQuestionIndex].step = -1
+      } else {
+        examStore.examing_data.questions[examStore.examing_data.curQuestionIndex].step += 1
+      }
     }
   },
   submit: {
@@ -108,10 +118,36 @@ const HeaderBtnsConfig = reactive<{
     }
   },
 })
-
-
+const onAuidoEnded = () => {
+  const curquestion = examStore.examing_data.questions[examStore.examing_data.curQuestionIndex]
+  curquestion.played = true
+  curquestion.step = 0
+}
+const questionItem = computed(() => {
+  return examStore.examing_data.questions[examStore.examing_data.curQuestionIndex]
+})
+watchEffect(() => {
+  if(!isShowGuide.value) {
+    HeaderBtnsConfig.horn.isShow = true
+  }
+  if(questionItem.value?.step >= 0){
+    HeaderBtnsConfig.next.isShow = true
+    HeaderBtnsConfig.continue.isShow = false
+    HeaderBtnsConfig.help.isShow = true
+  } else {
+    HeaderBtnsConfig.next.isShow = false
+    HeaderBtnsConfig.continue.isShow = true
+    HeaderBtnsConfig.help.isShow = false
+  }
+}, {
+  flush: 'post'
+})
 onMounted(async () => {
   await examStore.getExamData(query.id as string)
+  examStore.examing_data.questions.map(val => {
+    val.played = false
+    val.step = -1
+  })
 })
 </script>
 <style scoped>

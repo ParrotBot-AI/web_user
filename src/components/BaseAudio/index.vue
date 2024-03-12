@@ -11,6 +11,7 @@
         autoplay
         @timeupdate="timeupdate"
         @loadedmetadata="loadedmetadata" 
+        @ended="ended"
         ref="audioElement"
       >
         <source :src="props.url" type="audio/mpeg">
@@ -43,7 +44,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, onMounted, ref, computed } from 'vue'
+import { defineProps, onUnmounted, ref, computed } from 'vue'
 import { CaretRightOutlined, PauseOutlined } from '@ant-design/icons-vue';
 import dayjs from 'dayjs'
 import v1 from "@/assets/images/v-1.png"
@@ -60,20 +61,23 @@ const props = defineProps<{
   class?: string;
   img: string;
   url: string;
+  ended?: () => void
 }>()
 const loadedmetadata = () => {
   sumDuration.value = audioElement.value!.duration
   paused.value = false
 }
+const ended = () => {
+  paused.value = true
+  props.ended?.()
+}
 const timeupdate = () => {
-  curTime.value = audioElement.value!.currentTime
+  curTime.value = audioElement.value ? audioElement.value.currentTime : 0
 }
 const durationText = computed(() => {
-  console.log(dayjs)
   return dayjs.duration(sumDuration.value || 0, 'seconds').format('mm:ss')
 })
 const curTimeText = computed(() => {
-  console.log(dayjs.duration)
   return dayjs.duration(curTime.value || 0, 'seconds').format('mm:ss')
 })
 const computedWidth = computed(() => {
@@ -87,7 +91,11 @@ const onPlay = () => {
     audioElement.value?.play()
   }
 }
-
+onUnmounted(() => {
+  audioElement.value?.pause()
+  audioElement.value?.remove()
+  audioElement.value = null
+})
 </script>
 <style scoped>
   
