@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-center">
+  <div class="flex flex-col items-center justify-center" :class="class">
     <h2 class="text-[#475467] text-xl pb-8">{{ props.title }}</h2>
     <div class="w-[300px]">
       <img :src="props.img === '1' ? v1 : v2" class="w-full"/>
@@ -57,6 +57,7 @@ const curTime = ref(0)
 
 const props = defineProps<{
   title: string;
+  class?: string;
   img: string;
   url: string;
 }>()

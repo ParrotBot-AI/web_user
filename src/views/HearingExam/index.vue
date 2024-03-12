@@ -15,6 +15,7 @@
     <QuestionItem 
       v-else-if="examStore.examing_data.questions[examStore.examing_data.curQuestionIndex]" 
       v-bind="examStore.examing_data.questions[examStore.examing_data.curQuestionIndex]"
+      :isPlay="true"
     />
   </a-layout>
 </template>
