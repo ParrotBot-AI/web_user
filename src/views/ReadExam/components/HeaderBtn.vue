@@ -42,7 +42,7 @@ export type HeaderBtnProps = {
   id: KeyofIcons;
   disabled: boolean;
   isShow: boolean;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const props = defineProps<HeaderBtnProps>()

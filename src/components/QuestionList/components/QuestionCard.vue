@@ -74,7 +74,7 @@
           <p v-for="(v,i) in checkboxVal" :key="v.section_id" class="py-1.5">
             <a-checkbox class="radius" :value="v.questions[0].question_id">
               <span class="text-gray-500 break-word w-24 font-bold text-base" v-if="Array.isArray(curCustomData.remark)">{{ curCustomData.remark[i] }}</span>
-              <span class="font-bold pl-2 text-gray-500" v-else>{{ curCustomData.remark }}{{' '}}{{ v.questions[0].order }}</span>
+              <span class="font-bold pl-2 text-gray-500" v-else>{{ curCustomData.remark }}{{' '}}{{ i + 1 }}</span>
             </a-checkbox>
           </p>
         </a-checkbox-group>
@@ -164,7 +164,7 @@ const startMockExam = async () => {
   if (checkboxId.value.length !== 0) {
     try {
       startExamLoading.value = true
-      await examStore.startExam(type.value,isHearing.value ? [...props.section.slice(0,4).map(val => val.questions[0].question_id) ,...checkboxId.value] : checkboxId.value)
+      await examStore.startExam(type.value,isHearing.value ? [...props.section.slice(0,3).map(val => val.questions[0].question_id) ,...checkboxId.value] : checkboxId.value)
       $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id } })
     } finally {
       startExamLoading.value = false

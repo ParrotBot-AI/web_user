@@ -11,11 +11,16 @@
         </div>
       </template>
     </b-header>
-    <BaseGuide v-bind="hearingGuide" />
+    <BaseGuide v-bind="hearingGuide" v-if="isShowGuide"/>
+    <QuestionItem 
+      v-else-if="examStore.examing_data.questions[examStore.examing_data.curQuestionIndex]" 
+      v-bind="examStore.examing_data.questions[examStore.examing_data.curQuestionIndex]"
+    />
   </a-layout>
 </template>
 <script setup lang="ts">
 import type {HeaderBtnProps, KeyofIcons} from "@/views/ReadExam/components/HeaderBtn.vue"
+import QuestionItem from "./components/QuestionItem.vue"
 import HeaderBtn from "@/views/ReadExam/components/HeaderBtn.vue"
 import { onMounted, ref, reactive, watchEffect } from 'vue'
 import BaseGuide from '@/components/BaseGuide/index.vue'
@@ -45,10 +50,7 @@ const HeaderBtnsConfig = reactive<{
     title: 'horn',
     id: 'horn',
     disabled: true,
-    isShow: true,
-    onClick: () => {
-      console.log('horn')
-    }
+    isShow: false,
   },
   progress: {
     title: '进度',
@@ -105,18 +107,8 @@ const HeaderBtnsConfig = reactive<{
     }
   },
 })
-watchEffect(() => {
-  HeaderBtnsConfig.continue.isShow = isShowGuide.value;
-  HeaderBtnsConfig.progress.disabled = isShowGuide.value
-  HeaderBtnsConfig.prev.disabled = isShowGuide.value
-  HeaderBtnsConfig.submit.disabled = isShowGuide.value
-  HeaderBtnsConfig.next.disabled = isShowGuide.value && !examStore.isExamEnding
-  HeaderBtnsConfig.next.isShow = !examStore.isExamEnding
-  HeaderBtnsConfig.submit.isShow = examStore.isExamEnding
-})
-const onclickContinue = () => {
 
-}
+
 onMounted(async () => {
   await examStore.getExamData(query.id as string)
 })

@@ -48,9 +48,11 @@ import { CaretRightOutlined, PauseOutlined } from '@ant-design/icons-vue';
 import dayjs from 'dayjs'
 import v1 from "@/assets/images/v-1.png"
 import v2 from "@/assets/images/v-2.png"
+import duration from 'dayjs/plugin/duration'
+dayjs.extend(duration)
 const paused = ref(false)
 const audioElement = ref<HTMLAudioElement | null>(null)
-const duration = ref(0)
+const sumDuration = ref(0)
 const curTime = ref(0)
 
 const props = defineProps<{
@@ -59,20 +61,22 @@ const props = defineProps<{
   url: string;
 }>()
 const loadedmetadata = () => {
-  duration.value = audioElement.value!.duration
+  sumDuration.value = audioElement.value!.duration
   paused.value = false
 }
 const timeupdate = () => {
   curTime.value = audioElement.value!.currentTime
 }
 const durationText = computed(() => {
-  return dayjs.duration(duration.value, 'seconds').format('mm:ss')
+  console.log(dayjs)
+  return dayjs.duration(sumDuration.value || 0, 'seconds').format('mm:ss')
 })
 const curTimeText = computed(() => {
-  return dayjs.duration(curTime.value, 'seconds').format('mm:ss')
+  console.log(dayjs.duration)
+  return dayjs.duration(curTime.value || 0, 'seconds').format('mm:ss')
 })
 const computedWidth = computed(() => {
-  return `${curTime.value / duration.value * 100}%`
+  return `${curTime.value / sumDuration.value * 100}%`
 })
 const onPlay = () => {
   paused.value = !paused.value
