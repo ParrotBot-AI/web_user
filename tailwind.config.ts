@@ -19,6 +19,7 @@ const tailwindConfig = {
       'green-2': 'var(--color-green-2)',
       'white': 'var(--color-white)',
       'gray-900': 'var(--color-gray-900)',
+      'gray-400': 'var(--color-gray-400)',
       'gray-500': 'var(--color-gray-500)',
       'gray-600': 'var(--color-gray-600)',
       'gray-700': 'var(--color-gray-700)',
