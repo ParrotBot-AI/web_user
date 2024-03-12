@@ -3,11 +3,11 @@
     <b-header title="模拟考试">
       <template #right>
         <div class="flex">
-          <!-- <HeaderBtn 
-            v-for="val in Object.keys(WritingBtnsConfig)" 
-            v-bind="WritingBtnsConfig[val]" 
+          <HeaderBtn 
+            v-for="val in Object.keys(HeaderBtnsConfig)" 
+            v-bind="HeaderBtnsConfig[val]" 
             :key="val"
-          /> -->
+          />
           <a-button type="primary" class="mx-2 flex items-center justify-center"><img :src="help" class="pr-2" />HELP</a-button>
           <a-button type="primary" class="mx-2 flex items-center justify-center" @click="onclickContinue" >CONTINUE <img :src="right" class="pl-2" /></a-button>
         </div>
@@ -56,8 +56,26 @@
             </div>
             <div class="flex text-[#475467] text-xl pb-10">
               <div class=" flex-1 justify-center items-center ml-[30px] pr-[20px]" v-for="(val,i) in curInfo.question_content" :style="{ borderRight: `1px solid #D0D5DD` }" :key="i">{{ val }}</div>
-              <div class="flex flex-1 justify-end items-end" ><img :src="YelloBird" class="flex w-[70px] mr-12" /></div>
+              <div class="flex flex-col flex-1 " >
+                <div class="w-full flex flex-1">
+                  <WtitingBtn             
+                  v-for="val in Object.keys(WritingBtnsConfig)" 
+                  v-bind="WritingBtnsConfig[val]" 
+                  :key="val" />
+                </div>
+                <div class="flex  justify-end items-end">
+                  <img :src="YelloBird" class="flex w-[70px] mr-12" /></div>
+                </div>
             </div>  
+          </div>
+        </template>
+      </div>
+      <div v-else-if="curInfo.order === 2"  >
+        <template class="" v-if="curInfo.question_status === 'init'">
+          <div :style="{ borderTop: `1px solid #D0D5DD` } "></div>
+          <div class="flex  text-[#475467] text-xl pb-10">
+            <div class="flex-1 h-full  ml-[30px] pr-[20px]" v-for="(val,i) in curInfo.question_content" :key="i">{{ val }}</div>
+            <div class="flex flex-1 justify-end items-end" :style="{ borderLeft: `1px solid #D0D5DD`}" ><img :src="YelloBird" class="w-[70px] mr-12" /></div>
           </div>
         </template>
       </div>
@@ -70,7 +88,9 @@ import Timer from "@/views/ReadExam/components/Timer.vue"
 import BAudio from "@/components/BaseAudio/index.vue"
 import BaseGuide from '@/components/BaseGuide/index.vue'
 import HeaderBtn from "@/views/ReadExam/components/HeaderBtn.vue"
-import type {HeaderBtnProps, KeyofIcons} from "@/views/ReadExam/components/HeaderBtn.vue"
+import WtitingBtn from "./components/WtitingBtn.vue"
+import type {WritingBtnProps} from "./components/WtitingBtn.vue"
+import type {HeaderBtnProps} from "@/views/ReadExam/components/HeaderBtn.vue"
 import right from '@/assets/images/right.svg'
 import help from '@/assets/images/help.svg'
 import YelloBird from '@/assets/images/yellobird.svg'
@@ -117,16 +137,16 @@ const onclickContinue = async () => {
     if(curInfo.value.question_status === 'init'){
       writingInfo[step.value].question_status = 'listening'
     }else if (writingInfo[step.value].question_status === 'listening'){
-
       curInfo.value.question_status = 'writing'
-    }}else{
+    }}
+    else{
     step.value++
   }
   console.log(curInfo.value.question_status)
   
 }
-const WritingBtnsConfig = reactive<{
-  [k in KeyofIcons]: HeaderBtnProps
+const HeaderBtnsConfig = reactive<{
+  [k in string]: HeaderBtnProps
 }>({
   horn: {
     title: 'horn',
@@ -134,59 +154,13 @@ const WritingBtnsConfig = reactive<{
     disabled: true,
     isShow: true,
   },
-  progress: {
-    title: '进度',
-    id: 'progress',
-    disabled: true,
-    isShow: false,
-    onClick: () => {
-      examStore.setShowProcessDialog()
-    }
-  },
-  help: {
-    title: '帮助',
-    id: 'help',
-    disabled: false,
-    isShow: false,
-    onClick: () => {
-      console.log('help')
-    }
-  },
-  prev: {
-    title: '上一步',
-    disabled: true,
-    id: 'prev',
-    isShow: false,
-    onClick: () => {
-      examStore.changeQuestion(-1)
-    }
-  },
-  continue: {
-    title: '跳过',
-    id: 'continue',
-    disabled: false,
-    isShow: false,
-    onClick: () => {
-      isShowGuide.value = false
-    }
-  },
-  next: {
-    title: '下一步',
-    id: 'next',
-    disabled: true,
-    isShow: false,
-    onClick: () => {
-      examStore.changeQuestion(1)
-    }
-  },
-  submit: {
-    title: '提交',
-    id: 'submit',
-    disabled: true,
-    isShow: false,
-    onClick: () => {
-      examStore.requestSubmitExam(query.id as string)
-    }
+})
+const WritingBtnsConfig = reactive<{
+  [k in string]: WritingBtnProps
+}>({
+  cut: {
+    bt_name: ['Cut', 'Paste', 'Undo', 'Redo' ],
+    word_number: 0,
   },
 })
 
@@ -210,14 +184,16 @@ onMounted(async () => {
         direction: 'Directions: You have 20 minutes to plan and write your response. Yourespanse wil be judged on the basis of the qualty of your writing and on how wellyouresponse presents the points in the lecture and their relationship to the reading passage. Typically, an effective response wilbe 150 to 225 words.' ,
         question_read: 'Question: Summarize the points made in the lecture, being sure to explain how they cast doubt on the speciic points made in the reading passage'
       })
-    } else if(value.order === 2 || value.order === 3) {
+    } else if(value.order === 2 ) {
       def.push({
         type: 'info',
         title: 'Writing',
         question: value.order,
-        info_title: `Question ${value.order} Directions`,
+        info_title: `Writing for an Academic Discussion`,
         question_title: [
-            `Now you will read a passage about a campus situation and then listen to a conversation about the same topic. You will then answer a question, using information from both the reading passage and the conversation. You will have 30 seconds to prepare and 60 seconds to speak.`,
+            `For this task, you will read an online discussion. A professor has posted a question about a topic, and someclassmates have responded with their ideas.
+            You will write a response that contributes to the discussion. in the actual test and in Timed Mode in thispractice test, you will have 10 minutes to write your response.
+            If you finish your response before time is up, you may select <button class="nextbtn">Next</button> to end this section.`,
           ]
       })
     } 
