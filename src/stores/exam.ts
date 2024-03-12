@@ -171,18 +171,24 @@ export const useExamStore = defineStore('exam', () => {
    *
    */
   const getExamData = async (id: string) => {
-    const [res, answerRes] = await Promise.all([request_getExam(id), request_getExamStutas(id)])
-    examing_data.answerData = answerRes.map(val => ({
-      is_answer: val.is_answer,
-      question_id: val.question_id,
-      answer: val.answer
-    }));
-    examing_data.sheet_id = res.sheet_id;
-    examing_data.childrenLength = res.questions.reduce((prev: number, item: any) => prev + item.children.length, 0);
-    examing_data.curQuestionIndex = 0;
-    examing_data.curQuestionChildrenIndex = 0;
-    examing_data.time_remain = res.time_remain;
-    examing_data.questions = res.questions;
+    try {
+      const [res, answerRes] = await Promise.all([request_getExam(id), request_getExamStutas(id)])
+      examing_data.answerData = answerRes.map(val => ({
+        is_answer: val.is_answer,
+        question_id: val.question_id,
+        answer: val.answer
+      }));
+      examing_data.sheet_id = res.sheet_id;
+      examing_data.childrenLength = res.questions.reduce((prev: number, item: any) => prev + item.children.length, 0);
+      examing_data.curQuestionIndex = 0;
+      examing_data.curQuestionChildrenIndex = 0;
+      examing_data.time_remain = res.time_remain;
+      examing_data.questions = res.questions;
+    } catch(error) {
+      if(error?.data?.code === 400){
+        $router.push('/home')
+      }
+    }
   }
   /**
    * [changeQuestion 点击上一步下一步]
@@ -262,9 +268,14 @@ export const useExamStore = defineStore('exam', () => {
     showProcessDialog.value = !showProcessDialog.value
   }
   const getExamProcess = async (id: string) => {
-    const res = await request_getExamStutas(id)
-    processData.length = 0
-    processData.push(...res)
+    try {
+      const res = await request_getExamStutas(id)
+      console.log(res)
+      processData.length = 0
+      processData.push(...res)
+    }catch(error) {
+      console.log(error)
+    }
   }
 
   const requestSubmitExam = async (sheet_id: string) => {
