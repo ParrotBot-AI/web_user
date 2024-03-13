@@ -17,7 +17,7 @@ import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
 const examStore = useExamStore()
 const showTimer = ref(true)
 const props = defineProps<{
-  paused: boolean;
+  paused?: boolean;
 }>()
 const TIMER = ref<null | ReturnType<typeof setTimeout>>(null)
 const showTime = computed(() => {

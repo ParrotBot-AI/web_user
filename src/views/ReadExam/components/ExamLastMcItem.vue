@@ -76,7 +76,6 @@ watch(() => examStore.examing_data.answerData, () => {
 })
 const onDrop = ({ type, index }: { type: string, index: number }) => {
   res.value[index] = type
-  console.log(res.value)
   const count = res.value.reduce((val, item) => item !== undefined ? val + 1 : val, 0)
   if(count === props.restriction.rc) {
     examStore.saveQuestion(props.question_id, props.options_label.map(val => res.value.includes(val) ? 1 : 0))

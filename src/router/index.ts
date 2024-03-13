@@ -69,6 +69,14 @@ const router = createRouter({
       component: () => import('@/views/WritingExam/index.vue')
     },
     {
+      path: '/word-task',
+      name: 'wordTask',
+      meta: {
+        parent: 'word'
+      },
+      component: () => import('@/views/WordTask/index.vue')
+    },
+    {
       path: '/login',
       name: 'login',
       component: () => import('@/views/Login/index.vue')

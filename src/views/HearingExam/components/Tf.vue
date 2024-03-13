@@ -1,35 +1,22 @@
 <template>
   <div class="px-32">
-    <h2 class="pt-32 pb-20">{{ curQuestion.question_title }}</h2>
-    <a-radio-group v-model:value="sc_value">
-      <a-radio 
-        v-for="(val,i) in curQuestion.detail" 
-        :key="i" 
-        :value="i" 
-        class="flex pb-7 text-gray-500 myraido"
-      >
-        {{curQuestion.options_label[i]}}. {{ val }}
-      </a-radio>
-    </a-radio-group>
+    <h2 class="pt-16 pb-14 text-[#475467] text-xl">{{ props.question_content }}</h2>
+    <a-table />
   </div>
 </template>
 <script lang="ts" setup>
-const sc_value = ref<number>(-1)
+import { ref, defineProps } from 'vue'
+import { useExamStore } from "@/stores/exam"
+const examStore = useExamStore()
+const props = defineProps<{
+  question_title: string;
+  detail: string[];
+  question_id: number;
+  options_label: string[];
+  question_content: string;
+}>()
 
 </script>
 <style scoped>
-.myraido:global(.ant-radio-wrapper .ant-radio-checked .ant-radio-inner) {
-  background-color: transparent;
-}
 
-.myraido :global(.ant-radio-checked .ant-radio-inner::after) {
-  background-color: var(--color-green-1);
-}
-
-.mycheckbox:global(.ant-checkbox+span),
-.myraido:global(.ant-radio-wrapper span.ant-radio+*) {
-  flex: 1;
-  overflow: hidden;
-  display: flex;
-}
 </style>

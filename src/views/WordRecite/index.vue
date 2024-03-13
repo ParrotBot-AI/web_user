@@ -131,7 +131,8 @@
           <template #description>
             <img :src="NewWord" class=" w-[110px] h-[82px] top-[-33px] left-16 ml-[20px]" />
             <div
-              class="bg-green-1 text-white w-[159px] h-[40px] rounded-lg border mt-[5px]  flex items-center justify-center"
+              class="bg-green-1 text-white w-[159px] h-[40px] rounded-lg border mt-[5px]  flex items-center justify-center cursor-pointer"
+              @click="onClick('new')"
             >
               {{ $t('学习新单词') }}
             </div>
@@ -143,7 +144,8 @@
           <template #description class="flex">
             <img :src="OldWord" class=" w-[110px] h-[82px] top-[-33px] left-16 ml-[20px] " />
             <div
-              class="bg-green-1 text-white w-[159px] h-[40px] mt-[5px] rounded-lg border flex items-center justify-center"
+              class="bg-green-1 text-white w-[159px] h-[40px] mt-[5px] rounded-lg border flex items-center justify-center cursor-pointer"
+              @click="onClick('old')"
             >
              {{ $t('复习旧单词') }}
             </div>
@@ -167,8 +169,7 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import { ref, onMounted, watch, watchEffect} from 'vue'
+import { ref, onMounted, watchEffect} from 'vue'
 import * as echarts from 'echarts'
 import up from '@/assets/images/up.svg'
 import down from '@/assets/images/down.svg'
@@ -181,7 +182,6 @@ import Lock from '@/assets/images/word-lock.svg'
 import Retest from '@/assets/images/word-retest.svg'
 import { useWordStore } from '@/stores/word'
 const wordStore = useWordStore()
-const $router = useRouter()
 const modal2Visible = ref<boolean>(false)
 const myChart = ref()
 const chart = ref()
@@ -290,4 +290,8 @@ onMounted(() => {
     }
   });
 })
+
+const onClick = (type: 'new' | 'old') => {
+  wordStore.to_task(type)
+}
 </script>

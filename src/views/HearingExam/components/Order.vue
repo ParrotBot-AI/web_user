@@ -32,7 +32,6 @@ import { useExamStore } from "@/stores/exam"
 import DropBox from '@/views/ReadExam/components/DropBox.vue'
 import DragBox from '@/views/ReadExam/components/DragBox.vue'
 const examStore = useExamStore()
-const sc_value = ref<number>(-1)
 const res = ref<any[]>([])
 const props = defineProps<{
   question_title: string;
@@ -50,8 +49,9 @@ const resource = computed(() => {
 })
 const onDrop = ({ type, index }: { type: string, index: number }) => {
   res.value[index] = type
-  console.log(res.value)
-  
+  if(res.value.length === props.answer.length) {
+    examStore.saveQuestion(props.question_id, res.value)
+  }
 }
 const onDel = ({ index }: { index: number }) => {
   res.value[index] = ''
