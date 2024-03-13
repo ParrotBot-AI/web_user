@@ -5,7 +5,7 @@
     </h1>
     <!--单选-->
     <a-radio-group v-model:value="sc_value"
-      v-if="props.restriction.rc === 1 && props.keywords.k !== '$$' && props.answer?.length === 0">
+      v-if="props.restriction.rc === 1 && props.keywords.k !== '$$' && !isShowAnserHistory">
       <a-radio v-for="(item, index) in props.detail" :key="index" :value="index"
         class="flex pb-7 text-gray-500 myraido">
         <span class="pl-3 pr-2">{{ props.options_label[index] }}.</span>
@@ -17,18 +17,12 @@
       {{ props.keywords.s || 'keywords.s is not defined' }}
     </h2>
     <!-- 单选回顾 -->
-    <template v-if="props.answer?.length !== 0">
+    <template v-if="isShowAnserHistory">
       <div v-for="( item, index ) in  props.detail " :key="index" :value="index"
         class="flex pb-7 text-gray-500 myraido">
-        <span class="w-[18px] h-[18px] rounded-[50%] border-solid cursor-pointer border-[#d9d9d9] border-[1px] mr-2"
-          :style="{ backgroundColor: answerHistorylist[index] ? '#1B8B8C' : '' }">
-          <svg t="1710335175938" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-            p-id="1451" width="200" height="200">
-            <path
-              d="M468.52096 682.9568c-13.00992 0-25.2928-5.05856-34.688-14.45376-0.72192-0.72192-0.72192-1.44384-1.44384-1.44384L256.78336 450.98496c-7.94624-9.3952-6.5024-23.84896 3.61472-31.7952 9.39008-7.94624 23.84896-6.5024 31.7952 3.61472l174.16192 214.6304c1.44384 1.43872 2.88768 1.43872 5.05856-0.72704l307.57376-306.57024a22.05696 22.05696 0 0 1 31.80032-0.72192 22.05184 22.05184 0 0 1 0.72192 31.7952l-308.29568 307.29216c-9.40032 9.39008-21.68832 14.45376-34.69312 14.45376z"
-              p-id="1452" fill="#d81e06" v-if="answerHistorylist[index] === 2"></path>
-          </svg>
-        </span>
+        <img :src="check" alt="check" class="cursor-pointer" v-if="answerHistorylist[index] === 0" />
+        <img :src="correntCheck" alt="correntCheck" class="cursor-pointer" v-else-if="answerHistorylist[index] === 2" />
+        <img :src="mistakeCheck" alt="mistakeCheck" class="cursor-pointer" v-else />
         <span class="pl-3 pr-2">{{ props.options_label[index] }}.</span>
         <p class="flex-1">{{ item }}</p>
       </div>
@@ -38,6 +32,10 @@
 <script setup lang="ts">
 import { defineProps, ref, watch, computed } from 'vue'
 import { useExamStore } from "@/stores/exam"
+import check from '@/assets/homeIcon/check.svg'
+import correntCheck from '@/assets/homeIcon/correntCheck.svg'
+import mistakeCheck from '@/assets/homeIcon/mistakeCheck.svg'
+
 const examStore = useExamStore()
 const sc_value = ref<number>(-1)
 const props = defineProps<{
@@ -57,8 +55,15 @@ const props = defineProps<{
   answer?: number[],
   answer_weight?: number[]
 }>()
+
+const isShowAnserHistory = computed(() => {
+  return props.answer?.some((item) => item !== 0)
+})
 const answerHistorylist = computed(() => {
   const { answer_weight, answer } = props
+  console.log(answer_weight, "| answer_weight");
+  console.log(answer, "| answer");
+
   const newW = (answer_weight as number[])?.reduce((prev, next) => {
     if (next) {
       next = 2
@@ -88,6 +93,9 @@ const answerHistorylist = computed(() => {
   }
   return result
 })
+console.log(answerHistorylist, "| answerHistorylist");
+
+
 watch(() => props.question_id, () => {
   const answerValue = examStore.examing_data.answerData.find(val => val.question_id === props.question_id)
   if (answerValue?.is_answer) {
