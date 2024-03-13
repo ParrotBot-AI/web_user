@@ -33,7 +33,7 @@
           (Select <a-button type="primary" class="mx-2" >CONTINUE <img :src="right" class="pl-2" /></a-button> at any time to dismiss these directions.)
         </div>
       </div>
-      <div v-else-if="curInfo.order === 1"  >
+      <!-- <div v-else-if="curInfo.order === 1"  >
         <template class="" v-if="curInfo.question_status === 'init'">
           <div :style="{ borderTop: `1px solid #D0D5DD` } "></div>
           <div class="flex  text-[#475467] text-xl pb-10">
@@ -69,13 +69,35 @@
             </div>  
           </div>
         </template>
-      </div>
-      <div v-else-if="curInfo.order === 2"  >
+      </div> -->
+      <div v-else-if="curInfo.order === 1"  >
         <template class="" v-if="curInfo.question_status === 'init'">
-          <div :style="{ borderTop: `1px solid #D0D5DD` } "></div>
-          <div class="flex  text-[#475467] text-xl pb-10">
-            <div class="flex-1 h-full  ml-[30px] pr-[20px]" v-for="(val,i) in curInfo.question_content" :key="i">{{ val }}</div>
-            <div class="flex flex-1 justify-end items-end" :style="{ borderLeft: `1px solid #D0D5DD`}" ><img :src="YelloBird" class="w-[70px] mr-12" /></div>
+          <div class="flex text-[#475467] text-xl pb-10">
+            <div class="flex flex-1 flex-col items-center justify-center" >
+              <div class="ml-[30px] pr-[20px]" v-for="(val,i) in curInfo.question_title" :key="i">
+                {{ val }}
+              </div>
+              <img :src="Man" class="w-[100px] mr-12" />
+              <div class="text-[#000000] font-bold">Doctor Achebe</div> 
+              <div class="ml-[30px] pr-[20px]">Next, we'll be discussing the future of higher education,focusing on proposals for making postsecondaryeducation (education after high school) more efhcientand more accessible. One such proposal is to makeclass attendance</div>
+            </div>
+            <div class="flex flex-1 w-full flex-1 flex-col" :style="{ borderLeft: `1px solid #D0D5DD`}" >
+              <div class="flex ">
+                <img :src="Man" class="w-[70px] mr-12" />
+                <span>I like the idea of optional attendance. University students have a lot going on, and sometimesit's difhcult to make it to class.
+                      As long as students are held accountable for the information they're supposed to learn, l don'tsee why they should have to attend every class session, especially for classes that meetmultiple times a week.</span>
+              </div>
+              <div class="flex ">
+                <img :src="Man" class="w-[70px] mr-12" />
+                <span>I like the idea of optional attendance. University students have a lot going on, and sometimesit's difhcult to make it to class.
+                      As long as students are held accountable for the information they're supposed to learn, l don'tsee why they should have to attend every class session, especially for classes that meetmultiple times a week.</span>
+              </div>
+              <WtitingBtn             
+                  v-for="val in Object.keys(WritingBtnsConfig)" 
+                  v-bind="WritingBtnsConfig[val]" 
+                  :key="val" />
+              <img :src="YelloBird" class="w-[70px] mr-12" />
+            </div>
           </div>
         </template>
       </div>
@@ -84,6 +106,7 @@
 </template>
 <script setup lang="ts">
 import { onMounted, ref, computed, reactive } from 'vue'
+
 import Timer from "@/views/ReadExam/components/Timer.vue"
 import BAudio from "@/components/BaseAudio/index.vue"
 import BaseGuide from '@/components/BaseGuide/index.vue'
@@ -94,6 +117,7 @@ import type {HeaderBtnProps} from "@/views/ReadExam/components/HeaderBtn.vue"
 import right from '@/assets/images/right.svg'
 import help from '@/assets/images/help.svg'
 import YelloBird from '@/assets/images/yellobird.svg'
+import Man from '@/assets/images/man.svg'
 import { useExamStore } from '@/stores/exam'
 import { useRoute } from "vue-router"
 const step = ref(0)
@@ -138,11 +162,15 @@ const onclickContinue = async () => {
       writingInfo[step.value].question_status = 'listening'
     }else if (writingInfo[step.value].question_status === 'listening'){
       curInfo.value.question_status = 'writing'
-    }}
+    }else if (writingInfo[step.value].question_status === 'writing'){
+      step.value++
+    }
+  }
     else{
     step.value++
   }
   console.log(curInfo.value.question_status)
+  console.log(step.value)
   
 }
 const HeaderBtnsConfig = reactive<{
@@ -178,7 +206,7 @@ onMounted(async () => {
             `You wil have 20 minutes to write. In your response, provide a detailed summary of the lecture and explain howthe lecture relates to the reading passage. `,
             `While you write, you will be able to see the reading passage.`,
             `In Untimed Mode in this practice test, you may listen to the lecture again by selecting Replay Talk. Thisjunction is not available in the actual test. `,
-            `Note that returning to the lecture could result in a section scorenigher than the score you would receive if encountering the lecture only one time.`,
+            `Note that returning to the lecture could result  in a section scorenigher than the score you would receive if encountering the lecture only one time.`,
             `If you finish your response before time is up, you may select <button class="nextbtn">Next</button> to go on to the second writing task. Now you will see the reading passage. it will be followed by a lecture.`,
           ],
         direction: 'Directions: You have 20 minutes to plan and write your response. Yourespanse wil be judged on the basis of the qualty of your writing and on how wellyouresponse presents the points in the lecture and their relationship to the reading passage. Typically, an effective response wilbe 150 to 225 words.' ,

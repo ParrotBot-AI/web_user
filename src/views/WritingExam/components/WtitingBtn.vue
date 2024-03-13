@@ -12,7 +12,7 @@
     </div>
     <div class="flex w-1/3 justify-center items-center cursor-pointer " @click="onClick">
       <img :src="showTimer ? hideEye : openEye" alt="hide-eye" class="w-[20px] h-full" />
-      <span class="text-[#1B8B8C] text-[12px] pl-1">Hide Word Count <span class="text-[#000000] text-[16px] pl-1">{{ props.word_number }}</span></span>
+      <span class="text-[#1B8B8C] text-[12px] font-bold pl-1">Hide Word Count <span class="text-[#000000] text-[16px] pl-1 font-normal">{{ props.word_number }}</span></span>
     </div>
 </div>
 </template>
