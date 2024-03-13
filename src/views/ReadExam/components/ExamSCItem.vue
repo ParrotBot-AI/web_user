@@ -15,11 +15,16 @@
     <h2 v-else-if="props.keywords.k === '$$'" class="text-green-1 text-[18px]">
       {{ props.keywords.s || 'keywords.s is not defined' }}
     </h2>
+    <!-- 单选回顾 -->
+    <a-checkbox-group v-model:value="state.value1" :options="answerHistorylist"></a-checkbox-group>
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, ref, watch, computed } from 'vue'
+import { defineProps, ref, watch, computed, reactive } from 'vue'
 import { useExamStore } from "@/stores/exam"
+const state = reactive({
+  value1: [2, 3],
+});
 const examStore = useExamStore()
 const sc_value = ref<number>(-1)
 const props = defineProps<{
@@ -35,8 +40,41 @@ const props = defineProps<{
     p: string;
     k: string;
     s?: string
-  }
+  },
+  answer?: number[],
+  answer_weight?: number[]
 }>()
+const answerHistorylist = computed(() => {
+  const { answer_weight, answer } = props
+  const newW = (answer_weight as number[])?.reduce((prev, next) => {
+    if (next) {
+      next = 2
+    }
+    (prev as number[]).push(next)
+    return prev
+  }, [])
+  if (answer?.join('') === answer_weight?.join('')) {
+    return newW
+  }
+  const newA = (answer as number[])?.reduce((prev, next) => {
+    if (next) {
+      next = 3
+    }
+    (prev as number[]).push(next)
+    return prev
+  }, [])
+  const result: number[] = []
+  for (let i = 0; i < newW.length; i++) {
+    if (newW[i]) {
+      result.push(newW[i])
+    } else if (newA[i]) {
+      result.push(newA[i])
+    } else {
+      result.push(newW[i])
+    }
+  }
+  return result
+})
 watch(() => props.question_id, () => {
   const answerValue = examStore.examing_data.answerData.find(val => val.question_id === props.question_id)
   if (answerValue?.is_answer) {

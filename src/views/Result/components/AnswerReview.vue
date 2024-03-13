@@ -47,6 +47,8 @@ const examItems: IExamItems = {
 }
 
 questionsData = examStore.resultData.questions_r?.questions
+console.log(questionsData[0], "| questionsData");
+
 
 </script>
 
