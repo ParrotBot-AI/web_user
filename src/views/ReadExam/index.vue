@@ -50,7 +50,7 @@
 import { useRoute } from "vue-router"
 import WebSocketClient from '@/utils/ws'
 import type { USERINFO } from "@/service/user"
-import type {HeaderBtnProps, KeyofIcons} from "./components/HeaderBtn.vue"
+import type {HeaderBtnProps} from "./components/HeaderBtn.vue"
 import HeaderBtn from "./components/HeaderBtn.vue"
 import { onMounted, ref, onUnmounted, watchEffect, reactive } from 'vue'
 import { useExamStore } from '@/stores/exam'

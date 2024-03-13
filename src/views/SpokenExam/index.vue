@@ -13,7 +13,7 @@
       <span v-show="curInfo.question">
         Question {{ curInfo.question }} of 4
       </span>
-      <Timer />
+      <div></div>
     </div>
     <div class="flex flex-1 justify-center items-center overflow-hidden bg-white" :style="{ borderTop: `1px solid #D0D5DD` }">
       <div class="px-32 -mt-40" v-if="curInfo.type === 'info'">
@@ -116,7 +116,6 @@
 <script setup lang="ts">
 import { onMounted, ref, computed, reactive } from 'vue'
 import TimerBlock from "./components/timeBlock.vue"
-import Timer from "@/views/ReadExam/components/Timer.vue"
 import right from '@/assets/images/right.svg'
 import help from '@/assets/images/help.svg'
 import "@/service/file"
@@ -203,12 +202,11 @@ const onSpeakended1 = async () => {
     const fileName = `${curInfo.value.question_id}-answer.wav`
     const FileAudio = blobToFile(BlobAudio, fileName)
     const res = await uploadFileToOBS(FileAudio)
+    console.log('onSpeakended1:', res)
     destroy()
+    step.value++
   } catch (error) {
     console.log(error)
-  } finally {
-    console.log('++++++++')
-    step.value++
   }
 }
 const onPrepareended2 = () => {

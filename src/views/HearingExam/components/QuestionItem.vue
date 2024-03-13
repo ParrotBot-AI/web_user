@@ -15,19 +15,7 @@
         :url="props.voice_link" 
       />
       <template v-else-if="curQuestion">
-        <div class="px-32" v-if="curQuestion.question_type === 'Toefl_Listening_sc'">
-          <h2 class="pt-32 pb-20">{{ curQuestion.question_title }}</h2>
-          <a-radio-group v-model:value="sc_value">
-            <a-radio 
-              v-for="(val,i) in curQuestion.detail" 
-              :key="i" 
-              :value="i" 
-              class="flex pb-7 text-gray-500 myraido"
-            >
-              {{curQuestion.options_label[i]}}. {{ val }}
-            </a-radio>
-          </a-radio-group>
-        </div>
+        <component :is="quesetionType[curQuestion.question_type]" v-bind="curQuestion"/>
       </template>
     </div>
   </div>
@@ -35,10 +23,21 @@
 <script lang="ts" setup>
 import BAudio from "@/components/BaseAudio/index.vue";
 import Timer  from "@/views/ReadExam/components/Timer.vue"
-import { defineProps, computed, ref} from "vue"
+import Sc from "./Sc.vue"
+import Mc from "./Mc.vue"
+import Tf from "./Tf.vue"
+import Order from "./Order.vue"
+import { defineProps, computed} from "vue"
 import { useExamStore } from '@/stores/exam'
 const examStore = useExamStore()
-const sc_value = ref<number>(-1)
+const quesetionType = {
+  'Toefl_Listening_sc': Sc,
+  'Toefl_Listening_mc_2': Mc,
+  'Toefl_Listening_mc_3': Mc,
+  'Toefl_Listening_orde': Order,
+  'Toefl_Listening_mc_tf': Tf,
+}
+
 const props = defineProps<{
   title: string;
   voice_link: string;
@@ -50,7 +49,7 @@ const props = defineProps<{
   onAuidoEnded: (question_id: number, order: number) => void;
   children: Array<{
     question_id: number;
-    question_type: string;
+    question_type: keyof typeof quesetionType;
     question_content: string;
     detail: string[];
     options_label: string[];
@@ -64,19 +63,6 @@ const onEnded = () => {
 }
 </script>
 <style scoped>
-.myraido:global(.ant-radio-wrapper .ant-radio-checked .ant-radio-inner) {
-  background-color: transparent;
-}
 
-.myraido :global(.ant-radio-checked .ant-radio-inner::after) {
-  background-color: var(--color-green-1);
-}
 
-.mycheckbox:global(.ant-checkbox+span),
-.myraido:global(.ant-radio-wrapper span.ant-radio+*) {
-  flex: 1;
-  overflow: hidden;
-  display: flex;
-}
-
-</style>
+</style>./QuestionItem.vue./QuestionItem.vue
