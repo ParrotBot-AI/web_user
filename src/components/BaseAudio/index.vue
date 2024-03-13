@@ -46,11 +46,9 @@
 <script setup lang="ts">
 import { defineProps, onUnmounted, ref, computed } from 'vue'
 import { CaretRightOutlined, PauseOutlined } from '@ant-design/icons-vue';
-import dayjs from 'dayjs'
+import {formatTime} from "@/utils/dayjs"
 import v1 from "@/assets/images/v-1.png"
 import v2 from "@/assets/images/v-2.png"
-import duration from 'dayjs/plugin/duration'
-dayjs.extend(duration)
 const paused = ref(false)
 const audioElement = ref<HTMLAudioElement | null>(null)
 const sumDuration = ref(0)
@@ -75,10 +73,10 @@ const timeupdate = () => {
   curTime.value = audioElement.value ? audioElement.value.currentTime : 0
 }
 const durationText = computed(() => {
-  return dayjs.duration(sumDuration.value || 0, 'seconds').format('mm:ss')
+  return formatTime(sumDuration.value || 0)
 })
 const curTimeText = computed(() => {
-  return dayjs.duration(curTime.value || 0, 'seconds').format('mm:ss')
+  return formatTime(curTime.value || 0)
 })
 const computedWidth = computed(() => {
   return `${curTime.value / sumDuration.value * 100}%`

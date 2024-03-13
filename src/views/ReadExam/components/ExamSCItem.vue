@@ -83,9 +83,8 @@ watch(() => props.question_id, () => {
       sc_value.value = index
     } else {
       document.getElementById('content')?.querySelectorAll('span').forEach((val) => {
-        const { index: i } = val.dataset
-        // TODO 一个文章只能有一道题是点左边的
-        if (index === Number(i)) {
+        const {index: i} = val.dataset
+        if(index === Number(i)) {
           val.innerHTML = `【 <em>${props.keywords.s}</em> 】`
         }
       })

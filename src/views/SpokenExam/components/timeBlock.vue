@@ -19,7 +19,7 @@
 </template>
 <script lang="ts" setup>
 import { defineProps, onMounted, ref, computed, onUnmounted } from 'vue'
-import dayjs from 'dayjs'
+import {formatTime} from "@/utils/dayjs"
 const timer = ref<null | ReturnType<typeof setTimeout>>(null)
 const props = defineProps<{
   p: number
@@ -29,7 +29,7 @@ const props = defineProps<{
 }>()
 const time = ref(0)
 const showTime = computed(() => {
-  return dayjs.duration(time.value!, 'seconds').format('HH:mm:ss')
+  return formatTime(time.value!, 'seconds', 'HH:mm:ss')
 })
 const end = () => {
   clearInterval(timer.value!)

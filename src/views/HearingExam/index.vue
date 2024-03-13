@@ -101,17 +101,18 @@ const HeaderBtnsConfig = reactive<{
     isShow: false,
     onClick: () => {
       examStore.changeQuestion(1)
+      const curQuestionItem = examStore.examing_data.questions[examStore.examing_data.curQuestionIndex]
       if(!questionItem.value.played) {
-        examStore.examing_data.questions[examStore.examing_data.curQuestionIndex].step = -1
+        curQuestionItem.step = -1
       } else {
-        examStore.examing_data.questions[examStore.examing_data.curQuestionIndex].step += 1
+        curQuestionItem.step += 1
       }
     }
   },
   submit: {
     title: '提交',
     id: 'submit',
-    disabled: true,
+    disabled: false,
     isShow: false,
     onClick: () => {
       examStore.requestSubmitExam(query.id as string)
@@ -139,6 +140,10 @@ watchEffect(() => {
     HeaderBtnsConfig.continue.isShow = true
     HeaderBtnsConfig.help.isShow = false
   }
+  if(examStore.examing_data.curIndex === examStore.examing_data.childrenLength - 1) {
+    HeaderBtnsConfig.submit.isShow = true
+    HeaderBtnsConfig.next.isShow = false
+  }
 }, {
   flush: 'post'
 })
@@ -152,4 +157,4 @@ onMounted(async () => {
 </script>
 <style scoped>
   
-</style>
+</style>./components/Tf.vue./components/Tf.vue

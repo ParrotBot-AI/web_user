@@ -19,6 +19,7 @@ const props = defineProps<{
   index: number;
   resource: {[key:string]: string};
   checked: string[];
+  accept?: string[];
 }>()
 
 const typevalue = computed(() => {
@@ -28,7 +29,7 @@ const typevalue = computed(() => {
   return ''
 })
 const [collect, drop] = useDrop(() => ({
-  accept: ['A', 'B', 'C', 'D', 'E', 'F'],
+  accept: props.accept || ['A', 'B', 'C', 'D', 'E', 'F'],
   drop(_item, monitor) {
     props.onDrop({
       type: monitor.getItemType(),

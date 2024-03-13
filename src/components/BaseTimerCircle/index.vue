@@ -15,8 +15,8 @@
   </div>
 </template>
 <script lang="ts" setup>
-import dayjs from 'dayjs'
 import {ref, defineProps, onMounted, onUnmounted, computed} from 'vue'
+import { formatTime } from "@/utils/dayjs"
 const timerCircle = ref<SVGCircleElement | null>(null)
 const timer = ref<null | ReturnType<typeof setInterval>>(null)
 const currentTime = ref(0)
@@ -42,7 +42,7 @@ onUnmounted(() => {
   props.ended()
 })
 const timeText = computed(() => {
-  return dayjs.duration(currentTime.value, 'seconds').format('mm:ss')
+  return formatTime(currentTime.value)
 })
 const updateCircle = () => {
   const radius = timerCircle.value!.r.baseVal.value;
