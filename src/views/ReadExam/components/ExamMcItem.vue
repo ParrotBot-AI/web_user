@@ -37,6 +37,9 @@ const question_contents = computed(() => {
   return props.question_content.split(/\\n/)
 })
 watch(() => mc_value.value, () => {
+  if(mc_value.value.length > props.restriction.rc) {
+    mc_value.value.shift()
+  }
   const value = props.options_label.map((val, i) => Number((Object.values(mc_value.value) as number[]).includes(i)))
   examStore.saveQuestion(props.question_id, value)
 })

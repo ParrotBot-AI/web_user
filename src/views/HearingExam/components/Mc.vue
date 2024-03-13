@@ -15,7 +15,6 @@
 import { ref, defineProps, watch } from 'vue'
 import { useExamStore } from "@/stores/exam"
 const examStore = useExamStore()
-const sc_value = ref<number>(-1)
 const mc_value = ref([])
 const props = defineProps<{
   question_title: string;
@@ -23,24 +22,17 @@ const props = defineProps<{
   question_id: number;
   options_label: string[];
   question_content: string;
+  restriction: {
+    rc: number;
+    r: number;
+  }
 }>()
-watch(() => props.question_id, () => {
-  const answerValue = examStore.examing_data.answerData.find(val => val.question_id === props.question_id)
-  if(answerValue!.is_answer) {
-    const index = answerValue?.answer.findIndex(val => val === 1) ?? -1
-    sc_value.value = index
-  } else {
-    sc_value.value = -1
+watch(() => mc_value.value, () => {
+  if(mc_value.value.length > props.restriction.rc) {
+    mc_value.value.shift()
   }
-}, {
-  immediate: true
-})
-watch(() => sc_value.value, () => {
-  const value = props.options_label.map((val, i) => i === sc_value.value ? 1 : 0)
-  const answerValue = examStore.examing_data.answerData.find(val => val.question_id === props.question_id)?.answer
-  if(sc_value.value > -1 && value.toString() !== answerValue?.toString()) {
-    examStore.saveQuestion(props.question_id, value)
-  }
+  const value = props.options_label.map((val, i) => Number((Object.values(mc_value.value) as number[]).includes(i)))
+  examStore.saveQuestion(props.question_id, value)
 })
 </script>
 <style scoped>

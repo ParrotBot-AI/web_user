@@ -11,22 +11,39 @@
 import openEye from '@/assets/images/open-eye.svg'
 import hideEye from '@/assets/images/hide-eye.svg'
 import { useExamStore } from "@/stores/exam"
+import { defineProps } from "vue"
 import {formatTime} from "@/utils/dayjs"
-import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
 const examStore = useExamStore()
 const showTimer = ref(true)
+const props = defineProps<{
+  paused: boolean;
+}>()
 const TIMER = ref<null | ReturnType<typeof setTimeout>>(null)
 const showTime = computed(() => {
   return formatTime(examStore.examing_data.time_remain)
 })
-onMounted(() => {
-  // 开始倒计时
+const start = () => {
   TIMER.value = setInterval(() => {
     examStore.examing_data.time_remain--
     if(examStore.examing_data.time_remain <= 0) {
       clearInterval(TIMER.value!)
     }
   }, 1000)
+}
+watch(() => {
+  return props.paused
+}, (newVal) => {
+  if(newVal) {
+    clearInterval(TIMER.value!)
+  } else {
+    start()
+  }
+})
+
+onMounted(() => {
+  // 开始倒计时
+  start()
 })
 
 onUnmounted(() => {
