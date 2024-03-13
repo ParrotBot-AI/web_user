@@ -4,7 +4,7 @@
     <div class="w-[190px] h-[137px] result-icon absolute -top-[70px] left-1/2 -translate-x-1/2">
       <span class="absolute right-[52px] top-[9px] text-[24px] text-white">A+</span>
     </div>
-    <span class="absolute right-14 top-6 cursor-pointer text-[#F7A705]">{{ $t('回顾答案') }}
+    <span class="absolute right-14 top-6 cursor-pointer text-[#F7A705]" @click="reviewAnswer">{{ $t('回顾答案') }}
       <ArrowRightOutlined class="pl-2" />
     </span>
     <div class="w-[56vw]">
@@ -13,7 +13,7 @@
           <h2 class="text-gray-600 font-normal text-[16px]">{{ $t(val.title) }}</h2>
           <p class="font-bold text-gray-600">
             <span class="text-[36px]">{{ props[val.id] }}</span><span class="text-[24px]"> / {{
-              props[`${val.id}Total` as keyof IPropsType] }}</span>
+      props[`${val.id}Total` as keyof IPropsType] }}</span>
           </p>
         </li>
       </ul>
@@ -24,14 +24,17 @@
         </span>
       </div>
       <div :style="{ background: 'rgba(208, 240, 230, 0.50)' }"
-        class="rounded-md p-5 pt-6 mt-12 ai-comment relative text-gray-500 text-[16px] leading-6 hidden">{{ props.aiComment }}
+        class="rounded-md p-5 pt-6 mt-12 ai-comment relative text-gray-500 text-[16px] leading-6 hidden">{{
+      props.aiComment }}
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import { ArrowRightOutlined } from '@ant-design/icons-vue'
-import { defineProps } from 'vue';
+import { defineProps, ref } from 'vue';
+import { useExamStore } from "@/stores/exam"
+const examStore = useExamStore()
 type IPropsType = {
   aiComment: string,
   questions: {
@@ -48,7 +51,6 @@ type IPropsType = {
   summarySourceTotal: number,
   summarySource: number,
 }
-
 const props = defineProps<IPropsType>()
 const summaryList: Array<{ title: string, id: keyof IPropsType }> = [
   {
@@ -68,6 +70,11 @@ const summaryList: Array<{ title: string, id: keyof IPropsType }> = [
   //   id: 'summarySource',
   // }
 ]
+
+const reviewAnswer = () => {
+  examStore.setShowAnswerHistoryDialog()
+}
+
 </script>
 <style scoped>
 .result-icon {

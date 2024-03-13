@@ -1,20 +1,18 @@
 <template>
   <div>
     <h1 class="text-gray-500 text-[18px] pb-10 font-bold">
-      <p v-for="(val,i) in question_contents" :key="i">{{ val.replace(/\$\$/, '【 】') }}</p>
+      <p v-for="(val, i) in question_contents" :key="i">{{ val.replace(/\$\$/, '【 】') }}</p>
     </h1>
     <!--单选-->
-    <a-radio-group 
-      v-model:value="sc_value"
-      v-if="props.restriction.rc === 1 && props.keywords.k !== '$$'">
-      <a-radio v-for="(item, index) in props.detail" :key="index" :value="index" class="flex pb-7 text-gray-500 myraido">
+    <a-radio-group v-model:value="sc_value" v-if="props.restriction.rc === 1 && props.keywords.k !== '$$'">
+      <a-radio v-for="(item, index) in props.detail" :key="index" :value="index"
+        class="flex pb-7 text-gray-500 myraido">
         <span class="pl-3 pr-2">{{ props.options_label[index] }}.</span>
         <p class="flex-1">{{ item }}</p>
       </a-radio>
     </a-radio-group>
     <!--文章段落反选-->
-    <h2 v-else-if="props.keywords.k === '$$'"
-      class="text-green-1 text-[18px]">
+    <h2 v-else-if="props.keywords.k === '$$'" class="text-green-1 text-[18px]">
       {{ props.keywords.s || 'keywords.s is not defined' }}
     </h2>
   </div>
@@ -41,9 +39,9 @@ const props = defineProps<{
 }>()
 watch(() => props.question_id, () => {
   const answerValue = examStore.examing_data.answerData.find(val => val.question_id === props.question_id)
-  if(answerValue!.is_answer) {
+  if (answerValue?.is_answer) {
     const index = answerValue?.answer.findIndex(val => val === 1) ?? -1
-    if(props.keywords.k !== '$$'){
+    if (props.keywords.k !== '$$') {
       sc_value.value = index
     } else {
       document.getElementById('content')?.querySelectorAll('span').forEach((val) => {
@@ -65,7 +63,7 @@ const question_contents = computed(() => {
 watch(() => sc_value.value, () => {
   const value = props.options_label.map((val, i) => i === sc_value.value ? 1 : 0)
   const answerValue = examStore.examing_data.answerData.find(val => val.question_id === props.question_id)?.answer
-  if(sc_value.value > -1 && value.toString() !== answerValue?.toString()) {
+  if (sc_value.value > -1 && value.toString() !== answerValue?.toString()) {
     examStore.saveQuestion(props.question_id, value)
   }
 })

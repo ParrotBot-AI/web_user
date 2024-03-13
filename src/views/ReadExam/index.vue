@@ -4,11 +4,7 @@
     <b-header :title="$t('模拟考试')">
       <template #right>
         <div class="flex">
-          <HeaderBtn 
-            v-for="val in Object.keys(HeaderBtnsConfig)" 
-            v-bind="HeaderBtnsConfig[val]" 
-            :key="val"
-          />
+          <HeaderBtn v-for="val in Object.keys(HeaderBtnsConfig)" v-bind="HeaderBtnsConfig[val]" :key="val" />
         </div>
       </template>
     </b-header>
@@ -19,20 +15,15 @@
         <span></span>
         <div class="text-[18px] text-green-1 cursor-pointer" v-show="examStore.curQuestionChildren?.isShowViewText"
           @click="onClickViewText">VIEW TEXT</div>
-        <Timer v-show="!examStore.curQuestionChildren?.isShowViewText"/>
+        <Timer v-show="!examStore.curQuestionChildren?.isShowViewText" />
       </div>
       <div class="flex flex-1 overflow-hidden bg-white" :style="{ borderTop: `1px solid #D0D5DD` }">
         <div class="flex-1 h-full overflow-h-auto overflow-x-hidden" :style="{ borderRight: `1px solid #D0D5DD` }"
           v-show="isViewText || !examStore.curQuestionChildren?.isShowViewText">
           <h1 class="text-center text-[20px] text-gray-900 py-5">{{ examStore.curQuestion?.question_title }}</h1>
           <div ref="contentDiv" id="content">
-            <p 
-              class="px-8 text-gray-500 text-[18px] leading-7" 
-              :class="'read-mock-content-' + (i+1)"
-              v-for="(val, i) in examStore.curQuestion?.cur_questions_content"
-              v-html="val"
-              :key="i"
-            ></p>
+            <p class="px-8 text-gray-500 text-[18px] leading-7" :class="'read-mock-content-' + (i + 1)"
+              v-for="(val, i) in examStore.curQuestion?.cur_questions_content" v-html="val" :key="i"></p>
           </div>
         </div>
         <div class="flex-1 h-full overflow-h-auto overflow-x-hidden px-12 py-7">
@@ -43,14 +34,14 @@
           </div>
         </div>
       </div>
-  </template>
+    </template>
   </a-layout>
 </template>
 <script setup lang="ts">
 import { useRoute } from "vue-router"
 import WebSocketClient from '@/utils/ws'
 import type { USERINFO } from "@/service/user"
-import type {HeaderBtnProps} from "./components/HeaderBtn.vue"
+import type { HeaderBtnProps } from "./components/HeaderBtn.vue"
 import HeaderBtn from "./components/HeaderBtn.vue"
 import { onMounted, ref, onUnmounted, watchEffect, reactive } from 'vue'
 import { useExamStore } from '@/stores/exam'
@@ -166,11 +157,11 @@ watchEffect(() => {
   const keywords_p = examStore.curQuestionChildren?.keywords?.p
   const keywords_k = examStore.curQuestionChildren?.keywords?.k
   const p = Array.isArray(keywords_p) ? keywords_p[0] : keywords_p
-  if(p){
+  if (p) {
     const paragraphEl = contentDiv.value?.querySelector('.read-mock-content-' + p)
-    if(keywords_k && paragraphEl) {
+    if (keywords_k && paragraphEl) {
       // @ts-ignore
-      paragraphEl.innerHTML = paragraphEl!.innerHTML.replace(new RegExp(`<b class="bg-[rgba(253,212,78,0.3)]">`, 'g'),'').replace(new RegExp('</b>', 'g'),'').replace(new RegExp(keywords_k, 'g'), `<b class="bg-[rgba(253,212,78,0.3)]">${keywords_k}</b>`)
+      paragraphEl.innerHTML = paragraphEl!.innerHTML.replace(new RegExp(`<b class="bg-[rgba(253,212,78,0.3)]">`, 'g'), '').replace(new RegExp('</b>', 'g'), '').replace(new RegExp(keywords_k, 'g'), `<b class="bg-[rgba(253,212,78,0.3)]">${keywords_k}</b>`)
     }
     paragraphEl?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   } else {
