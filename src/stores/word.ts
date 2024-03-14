@@ -69,11 +69,12 @@ export const useWordStore = defineStore('word', () => {
       stem:string[]
       study: boolean
       target: string[]
-      unknown: false
+      unknown: boolean
       word:string
       word_id: number
       word_ids: number[]
-    }
+    },
+    is_answer: boolean
   }>({})
   const get_vocabs_statics = async () => {
     const res = await request_get_vocabs_statics(indexStore.userInfo.account_id)
@@ -103,15 +104,26 @@ export const useWordStore = defineStore('word', () => {
   const start_task = async () => {
     const task_account_id = Number($route.query.id)
     const { payload } = await request_start_vocabs_tasks(task_account_id!)
-    wordTaskData.payload = {...payload}
+    wordTaskData.payload = {
+      ...payload,
+    }
+    wordTaskData.is_answer = false
   }
 
   const submit_task = async (i: number) => {
     wordTaskData.payload.answer[i] = 1
-    await request_learn_vocabs_tasks({
+    wordTaskData.is_answer = true
+    const data = {
       task_account_id: Number($route.query.id),
-      payload: wordTaskData.payload
-    })
+      payload: {
+        payload:wordTaskData.payload
+      }
+    }
+    const { payload } = await request_learn_vocabs_tasks(data)
+    wordTaskData.payload = {
+      ...payload,
+    }
+    wordTaskData.is_answer = false
   }
   return {
     vocabs_statics_data,
