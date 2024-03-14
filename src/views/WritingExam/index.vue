@@ -33,6 +33,8 @@
           (Select <a-button type="primary" class="mx-2" >CONTINUE <img :src="right" class="pl-2" /></a-button> at any time to dismiss these directions.)
         </div>
       </div>
+
+      <!-- 第一篇阅读 -->
       <div v-else-if="curInfo.order === 1"  >
         <template class="" v-if="curInfo.question_status === 'init'">
           <div :style="{ borderTop: `1px solid #D0D5DD` } "></div>
@@ -70,7 +72,7 @@
           </div>
         </template>
       </div>
-      
+
       <!-- 第二篇阅读 -->
       <div v-else-if="curInfo.order === 1"  >
         <template class="" v-if="curInfo.question_status === 'init'">
