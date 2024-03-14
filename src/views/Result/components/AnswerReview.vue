@@ -23,17 +23,21 @@
       </div>
     </div>
   </a-layout>
-  <div ref="modalTitleRef"
-    class="absolute w-[472px] h-[212px] top-5 z-50 cursor-move flex flex-col divide-y divide-solid divide-[#B2DAC8]"
+  <div ref="modalTitleRef" class="absolute w-1/4 right-40 bottom-20 z-50 cursor-move flex flex-col bg-white shadow-2xl"
     :style="transformStyle">
     <header class="h-10 flex justify-between items-center pl-4 pr-2">
       <span class="text-[#475467]">快速导航</span>
       <img :src="minification" alt="minification" class="w-6 h-6">
     </header>
-    <main class="flex-1 flex flex-col">
-      <section class="flex justify-between items-center px-6 my-4">
+    <main class="flex-1 flex flex-col before:content-[''] border-solid border-[#B2DAC8] border-x-0 border-[1px]">
+      <section class="flex justify-between items-center pl-6 pr-2 my-4">
         <span>Passage</span>
-        <span>1</span>
+        <section class="flex">
+          <span v-for="(val, i) in isAnswerMistake.length" :key="i"
+            class="flex w-[20px] h-[20px] border-solid border-[1px] rounded-xl mr-1 justify-center items-center text-xs"
+            :style="{ backgroundColor: val ? '#C33473' : '', borderColor: val ? '#C33473' : '', color: val ? 'white' : 'black' }">{{
+        i }}</span>
+        </section>
       </section>
     </main>
     <footer class="h-10 flex justify-between items-center px-2">
@@ -56,8 +60,8 @@ const { x, y, isDragging } = useDraggable(modalTitleRef);
 const startX = ref<number>(0);
 const startY = ref<number>(0);
 const startedDrag = ref(false);
-const transformX = ref(692);
-const transformY = ref(692);
+const transformX = ref(0);
+const transformY = ref(0);
 const preTransformX = ref(0);
 const preTransformY = ref(0);
 const dragRect = ref({ left: 0, right: 0, top: 0, bottom: 0 });
@@ -97,6 +101,15 @@ const transformStyle = computed(() => {
   };
 });
 
+const isAnswerMistake = computed(() => {
+  return questionsData[0].children.map((item: { score: number }) => {
+    if (item.score) {
+      return true
+    } else {
+      return false
+    }
+  })
+})
 
 const isViewText = ref<boolean>(false)
 const contentDiv = ref<HTMLDivElement | null>(null)
