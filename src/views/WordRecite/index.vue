@@ -185,6 +185,13 @@ const wordStore = useWordStore()
 const modal2Visible = ref<boolean>(false)
 const myChart = ref()
 const chart = ref()
+const formatData = (key: string) => {
+  const series = wordStore.vocabs_statics_data?.series
+  if(key === 'day') {
+    return Object.keys(series)
+  }
+  return series ? Object.keys(series).map((item) => series[item][key]) : []
+}
 watchEffect (() => {
   chart.value?.setOption({
     backgroundColor: '#ffffff',
@@ -219,7 +226,7 @@ watchEffect (() => {
       {
         type: 'category',
         boundaryGap: false,
-        data: wordStore.vocabs_statics_data.series.map((item) => item.day).reverse()
+        data: formatData('day')
       }
     ],
     yAxis: [
@@ -249,7 +256,7 @@ watchEffect (() => {
         emphasis: {
           focus: 'series'
         },
-        data: wordStore.vocabs_statics_data.series.map((item) => item.correct_words).reverse()
+        data: formatData('correct_words')
       },
       {
         name: '遗忘单词',
@@ -272,7 +279,7 @@ watchEffect (() => {
         emphasis: {
           focus: 'series'
         },
-        data: wordStore.vocabs_statics_data.series.map((item) => item.wrong_words).reverse()
+        data: formatData('wrong_words')
       }
     ]
   });

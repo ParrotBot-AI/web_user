@@ -17,5 +17,5 @@ export const request_start_vocabs_tasks = (id:number) => {
 }
 // 学习进行任务
 export const request_learn_vocabs_tasks = (data) => {
-  return http.post(`api/system/microservice/learn_task/`, data)
+  return http.post(`api/system/microservice/learning_task/`, data)
 }
