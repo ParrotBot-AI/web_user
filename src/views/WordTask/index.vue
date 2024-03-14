@@ -24,6 +24,7 @@
           {{val}}
         </div>
       </div>
+      <a-button type="primary" class="mt-10 px-24 h-11" @click="wordStore.submit_unknown()">不认识该词</a-button>
     </div>
   </div>
 </template>

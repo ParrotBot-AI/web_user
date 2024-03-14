@@ -110,21 +110,34 @@ export const useWordStore = defineStore('word', () => {
     wordTaskData.is_answer = false
   }
 
+  const next = async (data:any) => {
+    const { payload } = await request_learn_vocabs_tasks({
+      task_account_id: Number($route.query.id),
+      payload: data
+    })
+    if(payload.endpoint && payload.api_key) {
+      console.log('gpt')
+    } else {
+      wordTaskData.payload = {
+        ...payload,
+      }
+      wordTaskData.is_answer = false
+    }
+    
+  }
+
   const submit_task = async (i: number) => {
     wordTaskData.payload.answer[i] = 1
     wordTaskData.is_answer = true
-    const data = {
-      task_account_id: Number($route.query.id),
-      payload: {
-        payload:wordTaskData.payload
-      }
-    }
-    const { payload } = await request_learn_vocabs_tasks(data)
-    wordTaskData.payload = {
-      ...payload,
-    }
-    wordTaskData.is_answer = false
+    next({payload:wordTaskData.payload})
   }
+
+  const submit_unknown = () => {
+    wordTaskData.payload.unknown = true
+    wordTaskData.is_answer = true
+    next({payload:wordTaskData.payload})
+  }
+
   return {
     vocabs_statics_data,
     get_vocabs_statics,
@@ -132,7 +145,8 @@ export const useWordStore = defineStore('word', () => {
     start_task,
     to_task,
     wordTaskData,
-    submit_task
+    submit_task,
+    submit_unknown
   }
   
 })
