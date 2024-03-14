@@ -14,7 +14,7 @@
       <div class="grid grid-cols-2 gap-4">
         <div 
           v-for="(val, i) in curTask?.payload?.stem" :key="i" 
-          class="w-[200px] wordBlock"
+          class="w-[220px] wordBlock p-2"
           :class="{
             success: curTask.is_answer && curTask?.payload?.correct_answer[i] === 1,
             error: curTask.is_answer && curTask?.payload?.answer[i] === 1 && curTask?.payload?.correct_answer[i] === 0
@@ -48,7 +48,7 @@ onMounted(() => {
     background: #fff;
     border-radius: 8px;
     border: 1px solid #D0D5DD;
-    height: 60px;
+    min-height: 60px;
     text-align: center;
     display: flex;
     justify-content: center;
