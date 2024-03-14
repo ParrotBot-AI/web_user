@@ -14,7 +14,7 @@
         <h1 class="text-center text-[20px] text-gray-900 py-5">{{ examStore.curQuestion?.question_title }}</h1>
         <div ref="contentDiv" id="content">
           <p class="px-8 text-gray-500 text-[18px] leading-7" :class="'read-mock-content-' + (i + 1)"
-            v-for="(val, i) in questionsData[0].children" v-html="val.question_content" :key="i"></p>
+            v-for="(val, i) in questionsData[0].children" v-html="questionsData[0].question_content" :key="i"></p>
         </div>
       </div>
       <div class="flex-1 h-full overflow-h-auto overflow-x-hidden px-12 py-7">
@@ -23,14 +23,81 @@
       </div>
     </div>
   </a-layout>
+  <div ref="modalTitleRef"
+    class="absolute w-[472px] h-[212px] top-5 z-50 cursor-move flex flex-col divide-y divide-solid divide-[#B2DAC8]"
+    :style="transformStyle">
+    <header class="h-10 flex justify-between items-center pl-4 pr-2">
+      <span class="text-[#475467]">快速导航</span>
+      <img :src="minification" alt="minification" class="w-6 h-6">
+    </header>
+    <main class="flex-1 flex flex-col">
+      <section class="flex justify-between items-center px-6 my-4">
+        <span>Passage</span>
+        <span>1</span>
+      </section>
+    </main>
+    <footer class="h-10 flex justify-between items-center px-2">
+      <span class="before:content-['<'] before:mr-2 block text-[#1B8B8C]">上一题</span>
+      <span class="after:content-['>'] after:ml-2 block text-[#1B8B8C]">下一题</span>
+    </footer>
+  </div>
 </template>
 <script setup lang="ts">
 import { ArrowLeftOutlined } from '@ant-design/icons-vue';
-import { ref, reactive } from 'vue'
+import minification from '@/assets/homeIcon/minification.svg'
+import { ref, reactive, computed, watch, watchEffect } from 'vue'
 import { useExamStore } from '@/stores/exam'
 import ExamSCItem from '@/views/ReadExam/components/ExamSCItem.vue'
 import ExamMCItem from '@/views/ReadExam/components/ExamMcItem.vue'
 import ExamLastMcItem from '@/views/ReadExam/components/ExamLastMcItem.vue'
+import { useDraggable } from '@vueuse/core';
+const modalTitleRef = ref<HTMLElement>();
+const { x, y, isDragging } = useDraggable(modalTitleRef);
+const startX = ref<number>(0);
+const startY = ref<number>(0);
+const startedDrag = ref(false);
+const transformX = ref(692);
+const transformY = ref(692);
+const preTransformX = ref(0);
+const preTransformY = ref(0);
+const dragRect = ref({ left: 0, right: 0, top: 0, bottom: 0 });
+watch([x, y], () => {
+  if (!startedDrag.value) {
+    startX.value = x.value;
+    startY.value = y.value;
+    const bodyRect = document.body.getBoundingClientRect();
+    const titleRect = (modalTitleRef.value as HTMLElement).getBoundingClientRect();
+    dragRect.value.right = bodyRect.width - titleRect.width;
+    dragRect.value.bottom = bodyRect.height - titleRect.height;
+    preTransformX.value = transformX.value;
+    preTransformY.value = transformY.value;
+  }
+  startedDrag.value = true;
+});
+watch(isDragging, () => {
+  if (!isDragging) {
+    startedDrag.value = false;
+  }
+});
+watchEffect(() => {
+  if (startedDrag.value) {
+    transformX.value =
+      preTransformX.value +
+      Math.min(Math.max(dragRect.value.left, x.value), dragRect.value.right) -
+      startX.value;
+    transformY.value =
+      preTransformY.value +
+      Math.min(Math.max(dragRect.value.top, y.value), dragRect.value.bottom) -
+      startY.value;
+  }
+});
+const transformStyle = computed(() => {
+  return {
+    transform: `translate(${transformX.value}px, ${transformY.value}px)`,
+  };
+});
+
+
 const isViewText = ref<boolean>(false)
 const contentDiv = ref<HTMLDivElement | null>(null)
 let questionsData = reactive<any>(null)
@@ -48,8 +115,6 @@ const examItems: IExamItems = {
 
 questionsData = examStore.resultData.questions_r?.questions
 console.log(questionsData[0], "| questionsData");
-
-
 </script>
 
 
