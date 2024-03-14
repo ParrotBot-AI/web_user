@@ -35,7 +35,7 @@
       </div>
 
       <!-- 第一篇阅读 -->
-      <div v-else-if="curInfo.order === 1"  >
+      <div v-else-if="curInfo?.keywords?.r === 1200"  >
         <template class="" v-if="curInfo.question_status === 'init'">
           <div :style="{ borderTop: `1px solid #D0D5DD` } "></div>
           <div class="flex  text-[#475467] text-xl pb-10">
@@ -74,7 +74,7 @@
       </div>
 
       <!-- 第二篇阅读 -->
-      <div v-else-if="curInfo.order === 1"  >
+      <div v-else-if="curInfo?.keywords?.r === 600"  >
         <template class="" v-if="curInfo.question_status === 'init'">
           <div class="flex text-[#475467] text-xl pb-10">
             <div class="flex flex-1 flex-col items-center justify-center" >
@@ -110,10 +110,8 @@
 </template>
 <script setup lang="ts">
 import { onMounted, ref, computed, reactive } from 'vue'
-
 import Timer from "@/views/ReadExam/components/Timer.vue"
 import BAudio from "@/components/BaseAudio/index.vue"
-import BaseGuide from '@/components/BaseGuide/index.vue'
 import HeaderBtn from "@/views/ReadExam/components/HeaderBtn.vue"
 import WtitingBtn from "./components/WtitingBtn.vue"
 import type {WritingBtnProps} from "./components/WtitingBtn.vue"
@@ -199,10 +197,11 @@ const WritingBtnsConfig = reactive<{
 onMounted(async () => {
   await examStore.getExamData(query.id as string)
   examStore.examing_data.questions.reduce((def, value) => {
-    if(value.order === 1) {
+    if(value.keywords.r === 1200) {
       def.push({
         type: 'info',
         title: 'Writing',
+        question: 1,
         info_title: 'Writing Based on Reading and Listening',
         question_title: [
             `For this task, you will have 3 minutes to read a passage about an academic topic. `,
@@ -216,11 +215,11 @@ onMounted(async () => {
         direction: 'Directions: You have 20 minutes to plan and write your response. Yourespanse wil be judged on the basis of the qualty of your writing and on how wellyouresponse presents the points in the lecture and their relationship to the reading passage. Typically, an effective response wilbe 150 to 225 words.' ,
         question_read: 'Question: Summarize the points made in the lecture, being sure to explain how they cast doubt on the speciic points made in the reading passage'
       })
-    } else if(value.order === 2 ) {
+    } else if(value.keywords.r  === 600 ) {
       def.push({
         type: 'info',
         title: 'Writing',
-        question: value.order,
+        question: 2,
         info_title: `Writing for an Academic Discussion`,
         question_title: [
             `For this task, you will read an online discussion. A professor has posted a question about a topic, and someclassmates have responded with their ideas.
