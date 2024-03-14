@@ -46,16 +46,22 @@
       <div class="grid grid-cols-5 grid-rows-5 gap-4 h-full">
         <div class="col-span-3 row-span-5 bg-white rounded-md border border-border-1 border-solid flex-1 px-9 overflow-hidden pb-3">
           <div class="overflow-y-auto h-full relative">
-            <BaseCard :title="`${$t('今日任务')} (${indexStore.userTargetsList.today.length})`" :list="indexStore.userTargetsList.today">
-            </BaseCard>
-            <div class="flex items-center flex-col text-gray-500 pt-20" v-if="!indexStore.userTargetsList.tomorrow.length">
-              <p>{{ $t('暂无当日任务，请先完成模拟考试获取定制任务') }}</p>
-              <a-button type="primary" class="mt-5 w-[220px] h-10">{{ $t('开始模考 ') }}</a-button>
+            <a-tabs v-model:activeKey="activeKey">
+              <a-tab-pane key="1" tab="我的任务">
+
+                <BaseCard :title="`${$t('今日任务')} (${indexStore.userTargetsList.today.length})`" :list="indexStore.userTargetsList.today">
+                </BaseCard>
+                <div class="flex items-center flex-col text-gray-500 pt-20" v-if="!indexStore.userTargetsList.tomorrow.length">
+                  <p>{{ $t('暂无当日任务，请先完成模拟考试获取定制任务') }}</p>
+                  <a-button type="primary" class="mt-5 w-[220px] h-10">{{ $t('开始模考 ') }}</a-button>
+                </div>
+                <BaseCard v-if="indexStore.userTargetsList.tomorrow.length"
+                  :title="`${$t('明日任务')} (${indexStore.userTargetsList.tomorrow.length})`" :list="indexStore.userTargetsList.today">
+                </BaseCard>
+              </a-tab-pane>
+              <a-tab-pane key="2" tab="个人学习诊断" force-render></a-tab-pane>
+            </a-tabs>
             </div>
-            <BaseCard v-if="indexStore.userTargetsList.tomorrow.length"
-              :title="`${$t('明日任务')} (${indexStore.userTargetsList.tomorrow.length})`" :list="indexStore.userTargetsList.today">
-            </BaseCard>
-          </div>
         </div>
         <div class="bg-white rounded-md border-l col-start-4 col-span-2 row-span-2 shadow-lg flex flex-col items-center justify-center">
           <div class="flex mb-[20px]">
@@ -63,9 +69,10 @@
               <span class="font-bold flex flex-col items-center ">您的当前词汇量为<span class="flex text-[60px]">0</span></span>
           </div>
           <div
-              class="bg-green-1 text-white w-2/3 h-[40px] rounded-lg border mt-[5px]  flex items-center justify-center cursor-pointer"
+              class="bg-green-1 text-white w-2/3 h-[40px] rounded-lg border mt-[5px]  flex items-center justify-center cursor-pointer"  @click="onClick('new')"
             >
               {{ $t('学习新单词') }}
+              
             </div>
         </div>
         <a-card class="col-start-4 col-span-2 row-span-3 shadow-lg">
@@ -87,14 +94,16 @@ import Signed from '@/assets/images/signed.svg'
 import Signing from '@/assets/images/signing.svg'
 import Unsign from '@/assets/images/unsign.svg'
 import Lock from '@/assets/images/word-lock.svg'
+import { useWordStore } from '@/stores/word'
+const wordStore = useWordStore()
 import * as echarts from 'echarts';
 import { ref, onMounted, watchEffect} from 'vue'
-
+const activeKey = ref('1');
 const indexStore = useIndexStore()
 const myChart = ref()
 const myEcharts = () => {
   const option = {
-    color: [ '#f1c11f'],
+    color: [ '#f1b01f'],
     legend: {
       data:['时长']
     },
@@ -119,7 +128,12 @@ const style_bg = [
   'background: linear-gradient(250.75deg, #59DEA2 37.06%, #39C0A8 127.79%)',
   'background: linear-gradient(254.37deg, #27B170 -16.85%, #49BD86 96.58%)'
 ]
+
+const onClick = (type: 'new' ) => {
+  wordStore.to_task(type)
+}
 onMounted(() => {
+  wordStore.get_vocabs_tasks()
   myChart.value = echarts.init(document.getElementById('main'));
   myEcharts()
 })
