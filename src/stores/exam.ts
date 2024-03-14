@@ -28,6 +28,16 @@ export const useExamStore = defineStore('exam', () => {
     list: [],
     pageArr: [{ start: 1, end: 20, id: 0 }]
   })
+  const examing_data_init = {
+    curQuestionIndex: 1,
+    curIndex: 0,
+    childrenLength: 0,
+    curQuestionChildrenIndex: 0,
+    time_remain: 0,
+    sheet_id: '0',
+    questions: [],
+    answerData: []
+  }
   // 模考练习题
   const examing_data = reactive<{
     curQuestionIndex: number; // 答题下标
@@ -38,16 +48,7 @@ export const useExamStore = defineStore('exam', () => {
     sheet_id: string;
     questions: any[];
     answerData: ANSWER_STATUS[]
-  }>({
-    curQuestionIndex: 1,
-    curIndex: 0,
-    childrenLength: 0,
-    curQuestionChildrenIndex: 0,
-    time_remain: 0,
-    sheet_id: '0',
-    questions: [],
-    answerData: []
-  })
+  }>(examing_data_init)
 
   const resultData = reactive<{
     aiComment: string;
@@ -175,6 +176,13 @@ export const useExamStore = defineStore('exam', () => {
    */
   const getExamData = async (id: string) => {
     try {
+      examing_data.curIndex = 0;
+      examing_data.curQuestionIndex = 0;
+      examing_data.curQuestionChildrenIndex = 0;
+      examing_data.time_remain = 0;
+      examing_data.sheet_id = '';
+      examing_data.questions = [];
+      examing_data.answerData = [];
       const [res, answerRes] = await Promise.all([request_getExam(id), request_getExamStutas(id)])
       examing_data.answerData = answerRes.map(val => ({
         is_answer: val.is_answer,

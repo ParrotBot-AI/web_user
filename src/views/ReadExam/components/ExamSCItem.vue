@@ -20,9 +20,9 @@
     <template v-if="isShowAnserHistory">
       <div v-for="( item, index ) in  props.detail " :key="index" :value="index"
         class="flex pb-7 text-gray-500 myraido">
-        <img :src="check" alt="check" class="cursor-pointer" v-if="answerHistorylist[index] === 0" />
-        <img :src="correntCheck" alt="correntCheck" class="cursor-pointer" v-else-if="answerHistorylist[index] === 2" />
-        <img :src="mistakeCheck" alt="mistakeCheck" class="cursor-pointer" v-else />
+          <img :src="check" alt="check" class="cursor-pointer" v-if="answerHistorylist[index] === 0" />
+          <img :src="correntCheck" alt="correntCheck" class="cursor-pointer" v-else-if="answerHistorylist[index] === 2" />
+          <img :src="mistakeCheck" alt="mistakeCheck" class="cursor-pointer" v-else />
         <span class="pl-3 pr-2">{{ props.options_label[index] }}.</span>
         <p class="flex-1">{{ item }}</p>
       </div>
@@ -31,11 +31,12 @@
 </template>
 <script setup lang="ts">
 import { defineProps, ref, watch, computed } from 'vue'
+import { useRoute } from "vue-router"
 import { useExamStore } from "@/stores/exam"
 import check from '@/assets/homeIcon/check.svg'
 import correntCheck from '@/assets/homeIcon/correntCheck.svg'
 import mistakeCheck from '@/assets/homeIcon/mistakeCheck.svg'
-
+const $route = useRoute()
 const examStore = useExamStore()
 const sc_value = ref<number>(-1)
 const props = defineProps<{
@@ -57,13 +58,13 @@ const props = defineProps<{
 }>()
 
 const isShowAnserHistory = computed(() => {
+  if($route.name !== 'result') {
+    return false
+  }
   return props.answer?.some((item) => item !== 0)
 })
 const answerHistorylist = computed(() => {
   const { answer_weight, answer } = props
-  console.log(answer_weight, "| answer_weight");
-  console.log(answer, "| answer");
-
   const newW = (answer_weight as number[])?.reduce((prev, next) => {
     if (next) {
       next = 2
@@ -93,8 +94,6 @@ const answerHistorylist = computed(() => {
   }
   return result
 })
-console.log(answerHistorylist, "| answerHistorylist");
-
 
 watch(() => props.question_id, () => {
   const answerValue = examStore.examing_data.answerData.find(val => val.question_id === props.question_id)

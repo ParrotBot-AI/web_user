@@ -140,6 +140,7 @@ watchEffect(() => {
     HeaderBtnsConfig.continue.isShow = true
     HeaderBtnsConfig.help.isShow = false
   }
+  console.log(examStore.examing_data)
   if(examStore.examing_data.curIndex === examStore.examing_data.childrenLength - 1) {
     HeaderBtnsConfig.submit.isShow = true
     HeaderBtnsConfig.next.isShow = false

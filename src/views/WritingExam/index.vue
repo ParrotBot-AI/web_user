@@ -8,74 +8,80 @@
             v-bind="HeaderBtnsConfig[val]" 
             :key="val"
           />
-          <a-button type="primary" class="mx-2 flex items-center justify-center"><img :src="help" class="pr-2" />HELP</a-button>
-          <a-button type="primary" class="mx-2 flex items-center justify-center" @click="onclickContinue" >CONTINUE <img :src="right" class="pl-2" /></a-button>
         </div>
       </template>
     </b-header>
-    
-    <div class="text-center h-14 flex items-center justify-between bg-white px-8">
-      <h2 class="text-gray-900 text[20px] font-bold">{{curInfo.title}}</h2>
-      <span v-show="curInfo.question">
-          Question {{ curInfo.question }} of 2
-        </span>
-      <Timer />
-    </div>
-    <div class="flex flex-1 justify-center items-center overflow-hidden bg-white h-100%" :style="{ borderTop: `1px solid #D0D5DD` }">
-      <div class="px-32 -mt-40" v-if="curInfo.type === 'info'">
-        <h2 class="text-[#21272A] pb-10"  v-show="curInfo.info_title">
-          {{ curInfo.info_title}}
-        </h2>
-        <div class="text-[#475467] text-xl pb-10"> 
-          <p v-for="(val,i) in curInfo.question_title" :key="i" v-html="val"></p>
+    <div class="flex flex-1 bg-white flex-col" :style="{ borderTop: `1px solid #D0D5DD` }">
+      <BGuide 
+        v-if="curInfo?.type === 'info'"
+        :title="curInfo.title!"
+        :info_title="curInfo.info_title"
+        :question_title="curInfo.question_title"
+        :is_show_footer="true"
+      />
+      <BGuide 
+        v-else-if="curInfo?.type === 'question' && curInfo?.step === 0"
+        :title="curInfo.guide?.title!"
+        :info_title="curInfo.guide?.info_title"
+        :question_title="curInfo.guide?.question_title"
+        :is_show_footer="true"
+      />
+      <div v-else-if="curInfo?.type === 'question' && curInfo?.step > 0" class="flex flex-col flex-1">
+        <div 
+          class="text-center h-14 flex items-center justify-between bg-white px-8" 
+          :style="{ borderBottom: `1px solid #D0D5DD` } "
+        >
+          <h2 class="text-gray-900 text[20px] font-bold">{{curInfo.title}}</h2>
+          <span>
+              Question {{ step + 1 }} of {{ questions.length - 1}}
+            </span>
+          <Timer />
         </div>
-        <div class="text-[#475467]">
-          (Select <a-button type="primary" class="mx-2" >CONTINUE <img :src="right" class="pl-2" /></a-button> at any time to dismiss these directions.)
-        </div>
-      </div>
-
-      <!-- 第一篇阅读 -->
-      <div v-else-if="curInfo?.keywords?.r === 1200"  >
-        <template class="" v-if="curInfo.question_status === 'init'">
-          <div :style="{ borderTop: `1px solid #D0D5DD` } "></div>
-          <div class="flex  text-[#475467] text-xl pb-10">
-            <div class="flex-1 h-full  ml-[30px] pr-[20px]" v-for="(val,i) in curInfo.question_content" :key="i">{{ val }}</div>
-            <div class="flex flex-1 justify-end items-end" :style="{ borderLeft: `1px solid #D0D5DD`}" ><img :src="YelloBird" class="w-[70px] mr-12" /></div>
-          </div>
-        </template>
-        <template v-else-if="curInfo.question_status === 'listening'">
-          <BAudio 
-              title="Please listen carefully." 
-              :url="curInfo.voice_link!" 
-              img="1"
-            />
-        </template>
-        <template v-else-if="curInfo.question_status === 'writing'">
-          <div class="flex flex-col justify-start items-start h-full">
-            <div :style="{ borderBottom: `1px solid #D0D5DD` } ">
-              <div class="bg-gray-400 " >{{ writingInfo[1].direction }}</div>
-              <div >{{ writingInfo[1].question_read }}</div>
+        <template v-if="curInfo?.keywords?.r === 1200">
+          <template v-if="curInfo.step === 1">
+            <div class="h-[100px]"></div>
+            <div class="flex flex-1" :style="{borderTop: '1px solid #D0D5DD'}">
+              <div class="w-1/2 text-base h-full overflow-y-auto px-10 pt-10" :style="{borderRight: '1px solid #D0D5DD'}">
+                <p class="text-[#475467]" v-for="(val,i) in curInfo.question_content.split(/\/n/)" :key="i">{{ val }}</p>
+              </div>
             </div>
-            <div class="flex text-[#475467] text-xl pb-10">
-              <div class=" flex-1 justify-center items-center ml-[30px] pr-[20px]" v-for="(val,i) in curInfo.question_content" :style="{ borderRight: `1px solid #D0D5DD` }" :key="i">{{ val }}</div>
-              <div class="flex flex-col flex-1 " >
-                <div class="w-full flex flex-1">
-                  <WtitingBtn             
-                  v-for="val in Object.keys(WritingBtnsConfig)" 
-                  v-bind="WritingBtnsConfig[val]" 
-                  :key="val" />
+          </template>
+          <template v-if="curInfo.step === 2">
+            <BAudio 
+              title="Please listen carefully."
+              :url="curInfo.voice_link!"
+              img="1"
+              class="mt-20"
+            />
+          </template>
+          <template v-if="curInfo.step === 3">
+            <div class="h-[100px]">
+              <div class="text-base">
+                <p class="bg-[#F6F6F6] px-10 py-2">
+                  <b>Directions:</b>
+                  You have 20 minutes to plan and write your response. Your response will be judged on the basis of the quality of your writing and on how well your response presents the points in the lecture and their relationship to the reading passage. Typically, an effective response will be 150 to 225 words.
+                </p>
+                <p class="px-10 py-1">
+                  <b>Question: </b>Summarize the points made in the lecture, being sure to explain how they cast doubt on the specific points made in the reading passage.
+                </p>
+              </div>
+            </div>
+            <div class="flex flex-1" :style="{borderTop: '1px solid #D0D5DD'}">
+              <div class="w-1/2 text-base h-full overflow-y-auto px-10 pt-10" :style="{borderRight: '1px solid #D0D5DD'}">
+                <p class="text-[#475467]" v-for="(val,i) in curInfo.question_content.split(/\/n/)" :key="i">{{ val }}</p>
+              </div>
+              <div class="w-1/2">
+                <div class="bg-[#F0F7F7] p-2 w-full grid grid-cols-4 gap-3">
+                  <a-button type="primary">Cut</a-button>
+                  <a-button type="primary" class="bg-[#B2DAC8]">Paste</a-button>
+                  <a-button type="primary" class="bg-[#B2DAC8]">Undo</a-button>
+                  <a-button type="primary" class="bg-[#B2DAC8]">Redo</a-button>
                 </div>
-                <div class="flex  justify-end items-end">
-                  <img :src="YelloBird" class="flex w-[70px] mr-12" /></div>
-                </div>
-            </div>  
-          </div>
+              </div>
+            </div>
+          </template>
         </template>
-      </div>
-
-      <!-- 第二篇阅读 -->
-      <div v-else-if="curInfo?.keywords?.r === 600"  >
-        <template class="" v-if="curInfo.question_status === 'init'">
+        <template v-if="curInfo.keywords?.r === 600">
           <div class="flex text-[#475467] text-xl pb-10">
             <div class="flex flex-1 flex-col items-center justify-center" >
               <div class="ml-[30px] pr-[20px]" v-for="(val,i) in curInfo.question_title" :key="i">
@@ -104,77 +110,79 @@
             </div>
           </div>
         </template>
+        <!-- <template v-else-if="curInfo.question_status === 'listening'">
+          <BAudio 
+              title="Please listen carefully." 
+              :url="curInfo.voice_link!" 
+              img="1"
+            />
+        </template>
+        <template v-else-if="curInfo.question_status === 'writing'">
+          <div class="flex flex-col justify-start items-start h-full">
+            <div :style="{ borderBottom: `1px solid #D0D5DD` } ">
+              <div class="bg-gray-400 " >{{ writingInfo[1].direction }}</div>
+              <div >{{ writingInfo[1].question_read }}</div>
+            </div>
+            <div class="flex text-[#475467] text-xl pb-10">
+              <div class=" flex-1 justify-center items-center ml-[30px] pr-[20px]" v-for="(val,i) in curInfo.question_content" :style="{ borderRight: `1px solid #D0D5DD` }" :key="i">{{ val }}</div>
+              <div class="flex flex-col flex-1 " >
+                <div class="w-full flex flex-1">
+                  <WtitingBtn             
+                  v-for="val in Object.keys(WritingBtnsConfig)" 
+                  v-bind="WritingBtnsConfig[val]" 
+                  :key="val" />
+                </div>
+                <div class="flex  justify-end items-end">
+                  <img :src="YelloBird" class="flex w-[70px] mr-12" /></div>
+                </div>
+            </div>  
+          </div>
+        </template> -->
       </div>
     </div>
  </a-layout>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, computed, reactive } from 'vue'
+import { onMounted, ref, computed, reactive, watchEffect } from 'vue'
 import Timer from "@/views/ReadExam/components/Timer.vue"
 import BAudio from "@/components/BaseAudio/index.vue"
 import HeaderBtn from "@/views/ReadExam/components/HeaderBtn.vue"
+import BGuide from "@/components/BaseGuide/index.vue"
 import WtitingBtn from "./components/WtitingBtn.vue"
 import type {WritingBtnProps} from "./components/WtitingBtn.vue"
 import type {HeaderBtnProps} from "@/views/ReadExam/components/HeaderBtn.vue"
-import right from '@/assets/images/right.svg'
-import help from '@/assets/images/help.svg'
 import YelloBird from '@/assets/images/yellobird.svg'
 import Man from '@/assets/images/man.svg'
 import { useExamStore } from '@/stores/exam'
 import { useRoute } from "vue-router"
-const step = ref(0)
 const examStore = useExamStore()
 const { query } = useRoute()
-const writingInfo = reactive<Array<{
-  type?: 'info'
-  title?: string
-  question?: number
-  info_title?: string
-  question_title?: Array<string>
-  question_content?: Array<string>
-  order?: number
-  question_status?: 'init' | 'prepare' | 'listening' | 'writing' | 'end'
-  question_id?: number
-  keywords?: {
-    p: number
-    r: number
-  }
-  voice_link?: string | null
-  voice_content?: string | null
-  direction?: string | null
-  question_read?: string | null
-}>>([
- {
-   type: 'info',
-   title: 'Writing',
-   info_title: 'Writing Section Directions',
-   question_title: [
-     `In this section, you will be able to demonstrate your ability to use writing to communicate in anacademic environment. `,
-     `There will be two writing tasks.`,
-     `Now listen to the directions for the frst writing task.`
- ]
- }
-])
+const step = ref(0)
+const questions = reactive<Array<{
+    type?: 'info'
+    title?: string
+    question?: number
+    info_title: string
+    question_title: Array<string>
+ }>>(
+    [
+      {
+        type: 'info',
+        title: 'Writing',
+        info_title: 'Writing Section Directions',
+        question_title: [
+          `In this section, you will be able to demonstrate your ability to use writing to communicate in anacademic environment. `,
+          `There will be two writing tasks.`,
+          `Now listen to the directions for the frst writing task.`
+        ]
+      }
+    ]
+  )
 const curInfo = computed(() => {
- return writingInfo[step.value]
+  console.log(questions[step.value])
+  return questions[step.value] 
 })
-const onclickContinue = async () => {
-  if(curInfo.value.order === 1){
-    if(curInfo.value.question_status === 'init'){
-      writingInfo[step.value].question_status = 'listening'
-    }else if (writingInfo[step.value].question_status === 'listening'){
-      curInfo.value.question_status = 'writing'
-    }else if (writingInfo[step.value].question_status === 'writing'){
-      step.value++
-    }
-  }
-    else{
-    step.value++
-  }
-  console.log(curInfo.value.question_status)
-  console.log(step.value)
-  
-}
+
 const HeaderBtnsConfig = reactive<{
   [k in string]: HeaderBtnProps
 }>({
@@ -182,9 +190,43 @@ const HeaderBtnsConfig = reactive<{
     title: 'horn',
     id: 'horn',
     disabled: true,
+    isShow: false,
+  },
+  continue: {
+    title: '跳过',
+    id: 'continue',
+    disabled: false,
     isShow: true,
+    onClick: () => {
+      if(step.value === 0) { // 0 1 2
+        step.value = 1
+      } else {
+        // console.log(questions)
+        questions[step.value].step++
+      }
+    }
+  },
+  next: {
+    title: '下一步',
+    id: 'next',
+    disabled: false,
+    isShow: false,
+    onClick: () => {
+      questions[step.value].step++
+    }
   },
 })
+
+watchEffect(() => {
+  if(curInfo.value?.type === 'info') {
+    HeaderBtnsConfig.horn.isShow = false
+  }
+  if(curInfo.value?.step > 0) {
+    HeaderBtnsConfig.continue.isShow = false
+    HeaderBtnsConfig.next.isShow = true
+  }
+})
+
 const WritingBtnsConfig = reactive<{
   [k in string]: WritingBtnProps
 }>({
@@ -196,50 +238,42 @@ const WritingBtnsConfig = reactive<{
 
 onMounted(async () => {
   await examStore.getExamData(query.id as string)
-  examStore.examing_data.questions.reduce((def, value) => {
-    if(value.keywords.r === 1200) {
-      def.push({
+  examStore.examing_data.questions.map(val => {
+    if(val.keywords.r === 1200) {
+      val.type = 'question'
+      val.step = 0
+      val.title = 'Integrated wirting'
+      val.guide = {
         type: 'info',
         title: 'Writing',
-        question: 1,
         info_title: 'Writing Based on Reading and Listening',
         question_title: [
-            `For this task, you will have 3 minutes to read a passage about an academic topic. `,
-            `Then you will listen to a lecture about the same topic.`,
-            `You wil have 20 minutes to write. In your response, provide a detailed summary of the lecture and explain howthe lecture relates to the reading passage. `,
-            `While you write, you will be able to see the reading passage.`,
-            `In Untimed Mode in this practice test, you may listen to the lecture again by selecting Replay Talk. Thisjunction is not available in the actual test. `,
-            `Note that returning to the lecture could result  in a section scorenigher than the score you would receive if encountering the lecture only one time.`,
-            `If you finish your response before time is up, you may select <button class="nextbtn">Next</button> to go on to the second writing task. Now you will see the reading passage. it will be followed by a lecture.`,
-          ],
-        direction: 'Directions: You have 20 minutes to plan and write your response. Yourespanse wil be judged on the basis of the qualty of your writing and on how wellyouresponse presents the points in the lecture and their relationship to the reading passage. Typically, an effective response wilbe 150 to 225 words.' ,
-        question_read: 'Question: Summarize the points made in the lecture, being sure to explain how they cast doubt on the speciic points made in the reading passage'
-      })
-    } else if(value.keywords.r  === 600 ) {
-      def.push({
+          `For this task, you will have 3 minutes to read a passage about an academic topic. `,
+          `Then you will listen to a lecture about the same topic.`,
+          `You will have 20 minutes to write. In your response, provide a detailed summary of the lecture and explain how the lecture relates to the reading passage. While you write, you will be able to see the reading passage.`,
+          `In <b>Untimed Mode</b> in this practice test, you may listen to the lecture again by selecting <b>Replay Talk</b>. This function is not available in the actual test. Note that returning to the lecture could result in a section score higher than the score you would receive if encountering the lecture only one time.`,
+          `If you finish your response before time is up, you may select <button class="nextbtn">next</button>to go on to the second writing task.`,
+          `Now you will see the reading passage. It will be followed by a lecture.`
+        ]
+      }
+    } else if (val.keywords.r === 600) {
+      val.type = 'question'
+      val.step = 0
+      val.title = 'Academic discussion'
+      val.guide = {
         type: 'info',
         title: 'Writing',
         question: 2,
         info_title: `Writing for an Academic Discussion`,
         question_title: [
-            `For this task, you will read an online discussion. A professor has posted a question about a topic, and someclassmates have responded with their ideas.
-            You will write a response that contributes to the discussion. in the actual test and in Timed Mode in thispractice test, you will have 10 minutes to write your response.
-            If you finish your response before time is up, you may select <button class="nextbtn">Next</button> to end this section.`,
-          ]
-      })
-    } 
-    def.push({
-      ...value,
-      title: 'Integrated Writing',
-      question_status: 'init',
-      question: value.order,
-      question_content: value.question_content?.split(/\\n/),
-      question_title: value.question_title?.split(/\\n/),
-      // voice_content: voice_content
-    })
-    return def
-  }, writingInfo)
-  console.log(examStore.examing_data.questions)
+          `For this task, you will read an online discussion. A professor has posted a question about a topic, and someclassmates have responded with their ideas.
+          You will write a response that contributes to the discussion. in the actual test and in Timed Mode in thispractice test, you will have 10 minutes to write your response.
+          If you finish your response before time is up, you may select <button class="nextbtn">Next</button> to end this section.`,
+        ]
+      }
+    }
+  })
+  questions.push(...examStore.examing_data.questions)
 })
 
 </script>
