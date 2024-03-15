@@ -34,28 +34,48 @@
           <a-card class="h-[116px] flex items-center justify-center"  v-for="(val, id) in indexStore.userTargets" :key="val.id" :style="style_bg[id]" >
             <a-card-meta >
               <template #title>
-                <span class="flex items-center justify-center text-[34px] text-white">{{ val.val }}</span>
+                <span class="flex items-center justify-center text-[34px] text-white">{{ 
+                  // val.val 
+                  0
+                  }}</span>
               </template>
               <template #description>
-                <span class="text-white">{{ $t(val.desc) }}</span>
+                <span class="text-white">{{ 
+                  $t(val.desc) 
+                  }}</span>
               </template>
             </a-card-meta>
           </a-card>
+          <a-card class="h-[116px] flex items-center justify-center"   :style="style_bg[3]" >
+            <a-card-meta >
+              <template #title>
+                <span class="flex items-center justify-center text-[34px] text-white">{{ 
+                  // val.val 
+                  0
+                  }}</span>
+              </template>
+              <template #description>
+                <span class="text-white">
+                  VIP到期天数
+                  </span>
+              </template>
+            </a-card-meta>
+          </a-card>
+          
         </div>
       </div>
       <div class="grid grid-cols-5 grid-rows-5 gap-4 h-full">
         <div class="col-span-3 row-span-5 bg-white rounded-md border border-border-1 border-solid flex-1 px-9 overflow-hidden pb-3">
           <div class="overflow-y-auto h-full relative">
-            <a-tabs v-model:activeKey="activeKey">
-              <a-tab-pane key="1" tab="我的任务">
-
-                <BaseCard :title="`${$t('今日任务')} (${indexStore.userTargetsList.today.length})`" :list="indexStore.userTargetsList.today">
+            <a-tabs class="mt-3" v-model:activeKey="activeKey">
+              <a-tab-pane key="1"  tab="我的任务">
+                <BaseCard  :title="`${$t('今日任务')} (${indexStore.userTargetsList.today.length})`" :list="indexStore.userTargetsList.today">
                 </BaseCard>
                 <div class="flex items-center flex-col text-gray-500 pt-20" v-if="!indexStore.userTargetsList.tomorrow.length">
                   <p>{{ $t('暂无当日任务，请先完成模拟考试获取定制任务') }}</p>
                   <a-button type="primary" class="mt-5 w-[220px] h-10">{{ $t('开始模考 ') }}</a-button>
                 </div>
-                <BaseCard v-if="indexStore.userTargetsList.tomorrow.length"
+                <BaseCard  v-if="indexStore.userTargetsList.tomorrow.length"
                   :title="`${$t('明日任务')} (${indexStore.userTargetsList.tomorrow.length})`" :list="indexStore.userTargetsList.today">
                 </BaseCard>
               </a-tab-pane>
