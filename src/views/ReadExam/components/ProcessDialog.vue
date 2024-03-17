@@ -66,6 +66,7 @@ const columns = [
   },
   {
     title: 'Description',
+    
     dataIndex: 'question_content'
   },
   {
@@ -115,11 +116,13 @@ onMounted(async () => {
   display: none;
 }
 :global(.ant-table-wrapper .ant-table:not(.ant-table-bordered) .ant-table-tbody >tr>td:first-child),
+
 :global(.ant-table-wrapper .ant-table:not(.ant-table-bordered) .ant-table-tbody >tr>td:last-child) {
   text-align: center;
   font-weight: 700;
   color: #667085;
 }
+
 :global(.ant-table-wrapper .ant-table:not(.ant-table-bordered) .ant-table-tbody >tr >td) {
   border-top: 1px solid #1B8B8C;
 }
