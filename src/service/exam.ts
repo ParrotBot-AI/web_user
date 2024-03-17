@@ -36,6 +36,7 @@ type EXAM_ANSWER = {
   question_id: number
   answer: number[]
   duration: number
+  answer_voice_link?: string
   sheet_id: number | string
 }
 // 保存答案

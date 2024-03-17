@@ -4,6 +4,7 @@ import type { MENUITEM, USERINFO } from "@/service/user"
 import { formatStr } from "@/utils/utils"
 import { request_menu } from "@/service/user"
 import { useIndexStore } from "@/stores/index"
+import NProgress from 'nprogress';
 let isRoutesAdded: boolean = false
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -109,6 +110,7 @@ function addRoutes(data: MENUITEM[]) {
 
 const whiteList = ['login', 'welcome']
 router.beforeEach(async (to, from, next) => {
+  NProgress.start();
   if (whiteList.includes(to.name as string)) {
     next()
     return
@@ -135,6 +137,10 @@ router.beforeEach(async (to, from, next) => {
   } else {
     next('/login')
   }
+});
+
+router.afterEach(() => {
+  NProgress.done();
 });
 
 

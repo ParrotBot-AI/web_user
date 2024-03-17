@@ -21,6 +21,8 @@
     class="w-full h-full border-none resize-none outline-[#edf6f6]" 
     @copy="$event.preventDefault()" 
     @paste="$event.preventDefault()"
+    v-model="textValue"
+    @input="props.onChange(textValue)"
   />
 </div>  
 </template>
@@ -30,9 +32,11 @@ import { ref } from 'vue'
 import copy from "copy-to-clipboard"
 const showTimer = ref(true)
 const textAreaEl= ref<null | HTMLTextAreaElement>(null)
+const textValue = ref('')
 export type WritingBtnProps = {
   bt_name: string[]
   word_number: number;
+  onChange: (content:string) => void
 }
 function insertAtCursor(myField:HTMLTextAreaElement , myValue:string) {
   if (myField.selectionStart || myField.selectionStart === 0) {

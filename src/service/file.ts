@@ -12,5 +12,9 @@ export const uploadFileToOBS = async (file: File) => {
     Key: objectKey,
     SourceFile: file
   });
-  return res;
+  return {
+    ...res,
+    // http://obs-parrotcore.obs.cn-east-3.myhuaweicloud.com/1223-answer.wav
+    url: `https://${bucketName}.obs.cn-east-3.myhuaweicloud.com/${objectKey}`
+  };
 }

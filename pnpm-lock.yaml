@@ -8,6 +8,7 @@ specifiers:
   '@types/axios': ^0.14.0
   '@types/lodash': ^4.14.202
   '@types/node': ^18.19.3
+  '@types/nprogress': ^0.2.3
   '@types/postcss-import': ^14.0.3
   '@vitejs/plugin-vue': ^4.5.2
   '@vitejs/plugin-vue-jsx': ^3.1.0
@@ -29,6 +30,7 @@ specifiers:
   js-audio-recorder: ^1.0.7
   lodash: ^4.17.21
   npm-run-all2: ^6.1.1
+  nprogress: ^0.2.0
   pinia: ^2.1.7
   postcss: ^8.4.33
   postcss-color-mod-function: ^3.0.3
@@ -51,6 +53,7 @@ dependencies:
   '@ant-design/icons-vue': 7.0.1_vue@3.4.14
   '@types/axios': 0.14.0
   '@types/lodash': 4.14.202
+  '@types/nprogress': 0.2.3
   '@types/postcss-import': 14.0.3
   ant-design-vue: 4.1.1_vue@3.4.14
   axios: 1.6.5
@@ -62,6 +65,7 @@ dependencies:
   esdk-obs-browserjs: 3.23.5
   js-audio-recorder: 1.0.7
   lodash: 4.17.21
+  nprogress: 0.2.0
   pinia: 2.1.7_c6kdu3cnxanaw6oplplps2g35u
   postcss-color-mod-function: 3.0.3
   postcss-import: 16.0.0_postcss@8.4.33
@@ -990,6 +994,10 @@ packages:
   /@types/normalize-package-data/2.4.4:
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
     dev: true
+
+  /@types/nprogress/0.2.3:
+    resolution: {integrity: sha512-k7kRA033QNtC+gLc4VPlfnue58CM1iQLgn1IMAU8VPHGOj7oIHPp9UlhedEnD/Gl8evoCjwkZjlBORtZ3JByUA==}
+    dev: false
 
   /@types/postcss-import/14.0.3:
     resolution: {integrity: sha512-raZhRVTf6Vw5+QbmQ7LOHSDML71A5rj4+EqDzAbrZPfxfoGzFxMHRCq16VlddGIZpHELw0BG4G0YE2ANkdZiIQ==}
@@ -2656,6 +2664,10 @@ packages:
       read-pkg: 8.1.0
       shell-quote: 1.8.1
     dev: true
+
+  /nprogress/0.2.0:
+    resolution: {integrity: sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA==}
+    dev: false
 
   /nth-check/2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}

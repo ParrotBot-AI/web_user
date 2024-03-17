@@ -1,5 +1,6 @@
 <template>
-  <a-layout class="w-full h-full flex flex-col">
+<a-spin v-if="loading" size="large" tip="试题加载中..." class="fixed top-1/2 left-1/2 -translate-1/2 z-50"/>
+<a-layout class="w-full h-full flex flex-col" v-else>
     <b-header title="模拟考试">
       <template #right>
         <div class="flex">
@@ -52,6 +53,7 @@
               :url="curInfo.voice_link!"
               img="1"
               class="mt-20"
+              :ended="onAudioEnded"
             />
           </template>
           <template v-if="curInfo.step === 3">
@@ -74,7 +76,9 @@
                 <WtitingBtn             
                   v-for="val in Object.keys(WritingBtnsConfig)" 
                   v-bind="WritingBtnsConfig[val]" 
-                  :key="val" />
+                  :onChange="onChange"
+                  :key="val" 
+                />
               </div>
             </div>
           </template>
@@ -105,6 +109,7 @@
                 v-for="val in Object.keys(WritingBtnsConfig)" 
                 v-bind="WritingBtnsConfig[val]" 
                 :key="val" 
+                :onChange="onChange"
               />
             </div>
           </div>
@@ -114,7 +119,7 @@
  </a-layout>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, computed, reactive, watchEffect, watch } from 'vue'
+import { onMounted, ref, computed, reactive, watchEffect } from 'vue'
 import Timer from "@/views/ReadExam/components/Timer.vue"
 import BAudio from "@/components/BaseAudio/index.vue"
 import HeaderBtn from "@/views/ReadExam/components/HeaderBtn.vue"
@@ -126,6 +131,8 @@ import Avatar from "./components/Avatar.vue"
 import Man from '@/assets/images/man.svg'
 import { useExamStore } from '@/stores/exam'
 import { useRoute, useRouter } from "vue-router"
+import { request_saveAnswer } from '@/service/exam'
+const loading = ref(true)
 const examStore = useExamStore()
 const $router = useRouter()
 const { query } = useRoute()
@@ -154,6 +161,22 @@ const curInfo = computed(() => {
   return questions[step.value] 
 })
 
+const onChange = (content:string) => {
+  questions[step.value].answer = content
+}
+const onAudioEnded = () => {
+  questions[step.value].step++
+  changeQueryQuestion()
+}
+const saveSingleAnswer = async () => {
+  // TODO 计算单个题目的分数
+  await request_saveAnswer({
+    question_id: curInfo.value?.question_id!,
+    answer: curInfo.value?.answer!,
+    duration: 0,
+    sheet_id: query.id as string
+  })
+}
 const HeaderBtnsConfig = reactive<{
   [k in string]: HeaderBtnProps
 }>({
@@ -182,13 +205,14 @@ const HeaderBtnsConfig = reactive<{
     id: 'next',
     disabled: false,
     isShow: false,
-    onClick: () => {
+    onClick: async () => {
       const cur = questions[step.value]
       if(step.value > 0) { // 0 1 2
         if(questions[step.value].step < cur.maxStep){
           questions[step.value].step++
         } else {
           if(step.value < questions.length - 1) {
+            await saveSingleAnswer()
             step.value++
             cur.step = 0
           }
@@ -197,6 +221,16 @@ const HeaderBtnsConfig = reactive<{
       changeQueryQuestion()
     }
   },
+  submit: {
+    title: '提交',
+    id: 'submit',
+    disabled: false,
+    isShow: false,
+    onClick: async () => {
+      console.log('submit')
+      await saveSingleAnswer()
+    }
+  }
 })
 
 
@@ -207,6 +241,12 @@ watchEffect(() => {
   if(curInfo.value?.step > 0) {
     HeaderBtnsConfig.continue.isShow = false
     HeaderBtnsConfig.next.isShow = true
+  }
+  if(step.value === questions.length - 1 && curInfo.value?.step === curInfo.value?.maxStep) {
+    HeaderBtnsConfig.next.isShow = false
+    HeaderBtnsConfig.submit.isShow = true
+  } else {
+    HeaderBtnsConfig.submit.isShow = false
   }
 })
 
@@ -220,7 +260,7 @@ const WritingBtnsConfig = reactive<{
 })
 
 const changeQueryQuestion = () => {
-  $router.push({
+  $router.replace({
     query: {
       ...query,
       step: step.value,
@@ -235,6 +275,7 @@ onMounted(async () => {
       val.type = 'question'
       val.step = 0
       val.maxStep = 3
+      val.answer = ''
       val.title = 'Integrated wirting'
       val.question_content = val.question_content.split(/\n/g)
       val.question_title = val.question_title.split(/\n/g)
@@ -254,10 +295,10 @@ onMounted(async () => {
     } else if (val.keywords.r === 600) {
       const name_reg = /\n?[a-zA-z\s]+:/g
       const names = val.question_content.match(name_reg)
-      console.log(names)
       val.type = 'question'
       val.step = 0
       val.maxStep = 1
+      val.answer = ''
       val.title = 'Academic discussion'
       val.question_content = val.question_content.split(name_reg).slice(1).map((val:string, i:number) => ({
         name: names[i].replace(/:/g, '').replace(/\n/g, ''),
@@ -279,8 +320,8 @@ onMounted(async () => {
   })
   questions.push(...examStore.examing_data.questions)
   questions[step.value].step = Number(query.questionStep) || 0
-  console.log(questions)
   changeQueryQuestion()
+  loading.value = false
 })
 
 </script>

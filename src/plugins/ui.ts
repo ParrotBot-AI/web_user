@@ -16,7 +16,8 @@ import {
   Radio,
   Progress,
   Tooltip,
-  Slider
+  Slider,
+  Spin,
 } from 'ant-design-vue';
 import type { App } from 'vue'
 import { createFromIconfontCN } from '@ant-design/icons-vue'
@@ -26,6 +27,7 @@ export const IconFont = createFromIconfontCN({
 })
 export function registerUI() {
   return (app: App) => {
+    app.use(Spin)
     app.use(Slider)
     app.use(Button)
     app.use(ConfigProvider)

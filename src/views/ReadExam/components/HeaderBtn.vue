@@ -3,10 +3,10 @@
       type="primary" 
       v-show="props.isShow && props.id !== 'horn'" 
       class="pl-3 pr-5 text-[16px] mx-1.5 flex items-center justify-center"
-      :class="{ 'flex-row-reverse !pr-3 !pl-5': props.id === 'next' || props.id === 'continue' }" @click="onClick"
+      :class="{ 'flex-row-reverse !pr-3 !pl-5': props.id === 'next' || props.id === 'continue', '!pl-5': props.id === 'submit'}" @click="onClick"
       :disabled="props.disabled"
     >
-      <img :src="icons[props.id]!" class="px-2" v-if="icons[props.id] !== 'submit'"/>
+      <img :src="icons[props.id]!" class="px-2" v-if="props.id !== 'submit'"/>
       <span>{{ $t(props.title) }} </span>
     </a-button>
     <div v-show="props.isShow && props.id === 'horn'" class="mx-1.5 w-8 cursor-pointer flex flex-col relative voclume">

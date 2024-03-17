@@ -19,6 +19,7 @@
 </template>
 <script lang="ts" setup>
 import { defineProps, onMounted, ref, computed, onUnmounted } from 'vue'
+import { start, destroy } from '@/utils/recorder'
 import {formatTime} from "@/utils/dayjs"
 const timer = ref<null | ReturnType<typeof setTimeout>>(null)
 const props = defineProps<{
@@ -31,16 +32,17 @@ const time = ref(0)
 const showTime = computed(() => {
   return formatTime(time.value!, 'seconds', 'HH:mm:ss')
 })
-const end = () => {
+const end = async () => {
   clearInterval(timer.value!)
-  props.onended?.()
+  await props.onended?.()
+  destroy()
 }
 const endRecording = () => {
   end()
 }
 onMounted(() => {
-  console.log(props.status, props.p, props.r)
   time.value = props.status === 'prepare' ? props.p : props.r
+  props.status === 'speak' && start()
   timer.value = setInterval(() => {
     time.value--
     if(time.value <= 0) {
@@ -49,7 +51,8 @@ onMounted(() => {
   }, 1000)
 })
 onUnmounted(() => {
-  end()
+  clearInterval(timer.value!)
+  timer.value = null
 })
 </script>
 <style scoped>

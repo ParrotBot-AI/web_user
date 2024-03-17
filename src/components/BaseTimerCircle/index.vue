@@ -39,7 +39,7 @@ onMounted(() => {
 })
 onUnmounted(() => {
   clearInterval(timer.value!)
-  props.ended()
+  timer.value = null
 })
 const timeText = computed(() => {
   return formatTime(currentTime.value)

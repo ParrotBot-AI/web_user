@@ -62,7 +62,7 @@ const props = defineProps<{
   ended?: () => void
 }>()
 const loadedmetadata = () => {
-  sumDuration.value = audioElement.value!.duration
+  sumDuration.value = audioElement.value?.duration || 0
   paused.value = false
 }
 const ended = () => {
@@ -70,7 +70,7 @@ const ended = () => {
   props.ended?.()
 }
 const timeupdate = () => {
-  curTime.value = audioElement.value ? audioElement.value.currentTime : 0
+  curTime.value = audioElement.value ? audioElement.value?.currentTime : 0
 }
 const durationText = computed(() => {
   return formatTime(sumDuration.value || 0)

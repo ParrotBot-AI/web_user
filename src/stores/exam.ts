@@ -37,7 +37,7 @@ export const useExamStore = defineStore('exam', () => {
     sheet_id: '0',
     questions: [],
     answerData: [],
-    type: 0 // 模考还是练习类型 1是模考 2是练习
+    type: 0 // 模考还是练习类型 1是模考
   }
   // 模考练习题
   const examing_data = reactive<{
@@ -200,9 +200,7 @@ export const useExamStore = defineStore('exam', () => {
       examing_data.questions = res.questions;
       examing_data.type = res.type;
     } catch (error) {
-      if (error?.data?.code === 400) {
-        $router.push('/home')
-      }
+      $router.back()
     }
   }
   /**

@@ -27,3 +27,30 @@ body, html {
 .ant-btn-primary, .ant-btn-primary {
   box-shadow: none!important;
 }
+
+/* 修改进度条高度 */
+#nprogress .bar {
+  height: 4px !important; /* 设置你希望的高度 */
+}
+
+/* 如果使用了旋转器，可能还需要调整其位置 */
+#nprogress .spinner-icon {
+  top: 10px; /* 根据新的进度条高度进行调整 */
+}
+/* 修改进度条颜色 */
+#nprogress .bar {
+  background: rgb(29, 143, 140); /* 改为你喜欢的颜色 */
+}
+
+/* 如果使用了旋转器，也可以修改其颜色 */
+#nprogress .spinner-icon {
+  border-top-color: #29d; /* 顶部颜色 */
+  border-left-color: #29d; /* 左侧颜色 */
+}
+
+/* 修改旋转器和进度条的颜色 */
+.nprogress-custom-parent #nprogress .spinner,
+.nprogress-custom-parent #nprogress .bar {
+  background: rgb(29, 143, 140); /* 改为你喜欢的颜色 */
+}
+
