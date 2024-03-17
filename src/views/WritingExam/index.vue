@@ -92,8 +92,8 @@
                 :size="100"
               />
             </div>
-            <div class="flex flex-1 flex-col" :style="{ borderLeft: `1px solid #D0D5DD`}" >
-              <div v-for="(val,i) in curInfo.question_content" :key="i" class="text-[#475467] text-base flex mt-4 items-start">
+            <div class="flex flex-1 flex-col pb-4" :style="{ borderLeft: `1px solid #D0D5DD`}" >
+              <div v-for="(val,i) in curInfo.question_content" :key="i" class="text-[#475467] text-base flex mb-4 items-start">
                 <Avatar 
                   :src="Man"
                   class="mx-10"
