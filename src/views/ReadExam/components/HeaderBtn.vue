@@ -2,8 +2,8 @@
     <a-button 
       type="primary" 
       v-show="props.isShow && props.id !== 'horn'" 
-      class="pl-1 pr-3 text-[16px] mx-1.5 flex items-center justify-center"
-      :class="{ 'flex-row-reverse !pr-1 !pl-3': props.id === 'next' || props.id === 'continue' }" @click="onClick"
+      class="pl-3 pr-5 text-[16px] mx-1.5 flex items-center justify-center"
+      :class="{ 'flex-row-reverse !pr-3 !pl-5': props.id === 'next' || props.id === 'continue' }" @click="onClick"
       :disabled="props.disabled"
     >
       <img :src="icons[props.id]!" class="px-2" v-if="icons[props.id] !== 'submit'"/>

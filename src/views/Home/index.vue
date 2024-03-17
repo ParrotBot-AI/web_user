@@ -6,12 +6,12 @@
       <div class="pb-7">
         <div class="flex">
           <a-avatar class="bg-green-1 absolute shadow-lg" style="font-size: 40px;" shape="square" :size="100"
-            :src="indexStore.userInfo.avatar" :alt="indexStore.userInfo.username">
-            {{ indexStore.userInfo.username[0] || '' }}
+            :src="indexStore.userInfo.avatar" :alt="indexStore.userInfo.name">
+            {{ indexStore.userInfo.name[0] || '' }}
           </a-avatar>
           <div class="flex items-center justify-center bg-white w-full ml-12 mt-4 shadow-lg rounded-md border border-border-1 border-solid overflow-hidden pb-9 pr-10">
             <div class=" overflow-hidden pl-9 ">
-              <h1 class="text-[30px] text-gray-900 pt-6">{{ $t(getCurrentTimeOfDay()+'好') }}，{{ indexStore.userInfo.username }}
+              <h1 class="text-[30px] text-gray-900 pt-6">{{ $t(getCurrentTimeOfDay()+'好') }}，{{ indexStore.userInfo.name }}
               </h1>
               <p class="text-gray-600 pt-2">Cease to struggle and you cease to live.</p>
             </div>

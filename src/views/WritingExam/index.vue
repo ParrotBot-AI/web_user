@@ -33,7 +33,7 @@
         >
           <h2 class="text-gray-900 text[20px] font-bold">{{curInfo.title}}</h2>
           <span>
-              Question {{ step + 1 }} of {{ questions.length - 1}}
+              Question {{ step }} of {{ questions.length - 1}}
             </span>
           <Timer />
         </div>
@@ -42,7 +42,7 @@
             <div class="h-[100px]"></div>
             <div class="flex flex-1" :style="{borderTop: '1px solid #D0D5DD'}">
               <div class="w-1/2 text-base h-full overflow-y-auto px-10 pt-10" :style="{borderRight: '1px solid #D0D5DD'}">
-                <p class="text-[#475467]" v-for="(val,i) in curInfo.question_content.split(/\/n/)" :key="i">{{ val }}</p>
+                <p class="text-[#475467] text-base" v-for="(val,i) in curInfo.question_content" :key="i">{{ val }}</p>
               </div>
             </div>
           </template>
@@ -68,82 +68,53 @@
             </div>
             <div class="flex flex-1" :style="{borderTop: '1px solid #D0D5DD'}">
               <div class="w-1/2 text-base h-full overflow-y-auto px-10 pt-10" :style="{borderRight: '1px solid #D0D5DD'}">
-                <p class="text-[#475467]" v-for="(val,i) in curInfo.question_content.split(/\/n/)" :key="i">{{ val }}</p>
+                <p class="text-[#475467] text-base" v-for="(val,i) in curInfo.question_content" :key="i">{{ val }}</p>
               </div>
-              <div class="w-1/2">
-                <div class="bg-[#F0F7F7] p-2 w-full grid grid-cols-4 gap-3">
-                  <a-button type="primary">Cut</a-button>
-                  <a-button type="primary" class="bg-[#B2DAC8]">Paste</a-button>
-                  <a-button type="primary" class="bg-[#B2DAC8]">Undo</a-button>
-                  <a-button type="primary" class="bg-[#B2DAC8]">Redo</a-button>
-                </div>
+              <div class="w-1/2 flex flex-col overflow-hidden">
+                <WtitingBtn             
+                  v-for="val in Object.keys(WritingBtnsConfig)" 
+                  v-bind="WritingBtnsConfig[val]" 
+                  :key="val" />
               </div>
             </div>
           </template>
         </template>
         <template v-if="curInfo.keywords?.r === 600">
-          <div class="flex text-[#475467] text-xl pb-10">
-            <div class="flex flex-1 flex-col items-center justify-center" >
-              <div class="ml-[30px] pr-[20px]" v-for="(val,i) in curInfo.question_title" :key="i">
+          <div class="flex text-xl flex-1">
+            <div class="flex flex-1 flex-col py-10">
+              <div class="ml-[30px] pr-[20px] text-[#475467] pb-2 text-base" v-for="(val,i) in curInfo.question_title" :key="i">
                 {{ val }}
               </div>
-              <img :src="Man" class="w-[100px] mr-12" />
-              <div class="text-[#000000] font-bold">Doctor Achebe</div> 
-              <div class="ml-[30px] pr-[20px]">Next, we'll be discussing the future of higher education,focusing on proposals for making postsecondaryeducation (education after high school) more efhcientand more accessible. One such proposal is to makeclass attendance</div>
+              <Avatar 
+                :src="Man"
+                class="mt-10"
+                :name="'Doctor Achebe'"
+                :size="100"
+              />
             </div>
-            <div class="flex flex-1 w-full flex-1 flex-col" :style="{ borderLeft: `1px solid #D0D5DD`}" >
-              <div class="flex ">
-                <img :src="Man" class="w-[70px] mr-12" />
-                <span>I like the idea of optional attendance. University students have a lot going on, and sometimesit's difhcult to make it to class.
-                      As long as students are held accountable for the information they're supposed to learn, l don'tsee why they should have to attend every class session, especially for classes that meetmultiple times a week.</span>
-              </div>
-              <div class="flex ">
-                <img :src="Man" class="w-[70px] mr-12" />
-                <span>I like the idea of optional attendance. University students have a lot going on, and sometimesit's difhcult to make it to class.
-                      As long as students are held accountable for the information they're supposed to learn, l don'tsee why they should have to attend every class session, especially for classes that meetmultiple times a week.</span>
+            <div class="flex flex-1 flex-col" :style="{ borderLeft: `1px solid #D0D5DD`}" >
+              <div v-for="(val,i) in curInfo.question_content" :key="i" class="text-[#475467] text-base flex mt-4 items-start">
+                <Avatar 
+                  :src="Man"
+                  class="mx-10"
+                  :name="val.name"
+                  :size="80"
+                /><div><p v-for="(v,i) in val.content" :key="i">{{ v }}</p></div>
               </div>
               <WtitingBtn             
-                  v-for="val in Object.keys(WritingBtnsConfig)" 
-                  v-bind="WritingBtnsConfig[val]" 
-                  :key="val" />
-              <img :src="YelloBird" class="w-[70px] mr-12" />
+                v-for="val in Object.keys(WritingBtnsConfig)" 
+                v-bind="WritingBtnsConfig[val]" 
+                :key="val" 
+              />
             </div>
           </div>
         </template>
-        <!-- <template v-else-if="curInfo.question_status === 'listening'">
-          <BAudio 
-              title="Please listen carefully." 
-              :url="curInfo.voice_link!" 
-              img="1"
-            />
-        </template>
-        <template v-else-if="curInfo.question_status === 'writing'">
-          <div class="flex flex-col justify-start items-start h-full">
-            <div :style="{ borderBottom: `1px solid #D0D5DD` } ">
-              <div class="bg-gray-400 " >{{ writingInfo[1].direction }}</div>
-              <div >{{ writingInfo[1].question_read }}</div>
-            </div>
-            <div class="flex text-[#475467] text-xl pb-10">
-              <div class=" flex-1 justify-center items-center ml-[30px] pr-[20px]" v-for="(val,i) in curInfo.question_content" :style="{ borderRight: `1px solid #D0D5DD` }" :key="i">{{ val }}</div>
-              <div class="flex flex-col flex-1 " >
-                <div class="w-full flex flex-1">
-                  <WtitingBtn             
-                  v-for="val in Object.keys(WritingBtnsConfig)" 
-                  v-bind="WritingBtnsConfig[val]" 
-                  :key="val" />
-                </div>
-                <div class="flex  justify-end items-end">
-                  <img :src="YelloBird" class="flex w-[70px] mr-12" /></div>
-                </div>
-            </div>  
-          </div>
-        </template> -->
       </div>
     </div>
  </a-layout>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, computed, reactive, watchEffect } from 'vue'
+import { onMounted, ref, computed, reactive, watchEffect, watch } from 'vue'
 import Timer from "@/views/ReadExam/components/Timer.vue"
 import BAudio from "@/components/BaseAudio/index.vue"
 import HeaderBtn from "@/views/ReadExam/components/HeaderBtn.vue"
@@ -151,13 +122,14 @@ import BGuide from "@/components/BaseGuide/index.vue"
 import WtitingBtn from "./components/WtitingBtn.vue"
 import type {WritingBtnProps} from "./components/WtitingBtn.vue"
 import type {HeaderBtnProps} from "@/views/ReadExam/components/HeaderBtn.vue"
-import YelloBird from '@/assets/images/yellobird.svg'
+import Avatar from "./components/Avatar.vue"
 import Man from '@/assets/images/man.svg'
 import { useExamStore } from '@/stores/exam'
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 const examStore = useExamStore()
+const $router = useRouter()
 const { query } = useRoute()
-const step = ref(0)
+const step = ref(query.step ? Number(query.step) : 0)
 const questions = reactive<Array<{
     type?: 'info'
     title?: string
@@ -179,7 +151,6 @@ const questions = reactive<Array<{
     ]
   )
 const curInfo = computed(() => {
-  console.log(questions[step.value])
   return questions[step.value] 
 })
 
@@ -201,9 +172,9 @@ const HeaderBtnsConfig = reactive<{
       if(step.value === 0) { // 0 1 2
         step.value = 1
       } else {
-        // console.log(questions)
         questions[step.value].step++
       }
+      changeQueryQuestion()
     }
   },
   next: {
@@ -212,10 +183,22 @@ const HeaderBtnsConfig = reactive<{
     disabled: false,
     isShow: false,
     onClick: () => {
-      questions[step.value].step++
+      const cur = questions[step.value]
+      if(step.value > 0) { // 0 1 2
+        if(questions[step.value].step < cur.maxStep){
+          questions[step.value].step++
+        } else {
+          if(step.value < questions.length - 1) {
+            step.value++
+            cur.step = 0
+          }
+        }
+      } 
+      changeQueryQuestion()
     }
   },
 })
+
 
 watchEffect(() => {
   if(curInfo.value?.type === 'info') {
@@ -231,18 +214,30 @@ const WritingBtnsConfig = reactive<{
   [k in string]: WritingBtnProps
 }>({
   cut: {
-    bt_name: ['Cut', 'Paste', 'Undo', 'Redo' ],
+    bt_name: ['Copy', 'Cut', 'Paste'],
     word_number: 0,
   },
 })
 
+const changeQueryQuestion = () => {
+  $router.push({
+    query: {
+      ...query,
+      step: step.value,
+      questionStep: questions[step.value].step
+    }
+  })
+}
 onMounted(async () => {
   await examStore.getExamData(query.id as string)
   examStore.examing_data.questions.map(val => {
     if(val.keywords.r === 1200) {
       val.type = 'question'
       val.step = 0
+      val.maxStep = 3
       val.title = 'Integrated wirting'
+      val.question_content = val.question_content.split(/\n/g)
+      val.question_title = val.question_title.split(/\n/g)
       val.guide = {
         type: 'info',
         title: 'Writing',
@@ -257,9 +252,18 @@ onMounted(async () => {
         ]
       }
     } else if (val.keywords.r === 600) {
+      const name_reg = /\n?[a-zA-z\s]+:/g
+      const names = val.question_content.match(name_reg)
+      console.log(names)
       val.type = 'question'
       val.step = 0
+      val.maxStep = 1
       val.title = 'Academic discussion'
+      val.question_content = val.question_content.split(name_reg).slice(1).map((val:string, i:number) => ({
+        name: names[i].replace(/:/g, '').replace(/\n/g, ''),
+        content: val.split(/\n/g)
+      }))
+      val.question_title = val.question_title.split(/\n/g)
       val.guide = {
         type: 'info',
         title: 'Writing',
@@ -274,6 +278,9 @@ onMounted(async () => {
     }
   })
   questions.push(...examStore.examing_data.questions)
+  questions[step.value].step = Number(query.questionStep) || 0
+  console.log(questions)
+  changeQueryQuestion()
 })
 
 </script>

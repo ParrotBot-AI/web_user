@@ -11,11 +11,11 @@
         </a-menu>
       </div>
       <div class="flex text-white mb-24 mt-4 px-3 w-full overflow-hidden items-center cursor-pointer" @click="onClickOut">
-        <a-avatar :src="indexStore.userInfo.avatar" :alt="indexStore.userInfo.username" :size="40">
-          {{ indexStore.userInfo.username[0] || '' }}
+        <a-avatar :src="indexStore.userInfo.avatar" :alt="indexStore.userInfo.name" :size="40">
+          {{ indexStore.userInfo.name[0] || '' }}
         </a-avatar>
         <div class="mx-1.5 flex-1 overflow-hidden">
-          <div class="truncate w-full">{{ indexStore.userInfo.username }}</div>
+          <div class="truncate w-full">{{ indexStore.userInfo.name }}</div>
           <div>{{ indexStore.userInfo.mobile || '136****7890' }}</div>
         </div>
         <img :src="LayOut" alt="layout" class="w-5 h-5 overflow-hidden" />

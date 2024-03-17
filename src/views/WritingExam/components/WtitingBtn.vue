@@ -1,37 +1,70 @@
 <template>
-<div class="flex justify-center items-center bg-green-2 w-full h-[74px]">
-    <div class="w-2/3 flex justify-center items-center ">
-     <a-button 
+<div class="flex justify-between items-center bg-green-2 w-full h-[50px]">
+  <div class="w-2/3 flex">
+    <a-button 
         type="primary" 
-        class="w-[100px] h-[40px] mx-1.5 text-[16px] flex items-center justify-center"
+        :key="i"
+        class="w-[80px] h-[34px] mx-1.5 text-[16px] flex items-center justify-center"
         v-for="(val,i) in props.bt_name"
-        @click="onClick"
-     >
-         <span>{{ $t(val) }} </span>
-     </a-button>
-    </div>
-    <div class="flex w-1/3 justify-center items-center cursor-pointer " @click="onClick">
-      <img :src="showTimer ? hideEye : openEye" alt="hide-eye" class="w-[20px] h-full" />
-      <span class="text-[#1B8B8C] text-[12px] font-bold pl-1">Hide Word Count <span class="text-[#000000] text-[16px] pl-1 font-normal">{{ props.word_number }}</span></span>
-    </div>
+        @click="onClick(val)"
+    >
+        <span>{{ $t(val) }} </span>
+    </a-button>
+  </div>
+  <div class="flex w-1/3 justify-center items-center cursor-pointer " @click="onShowWordClick">
+    <span class="text-[#1B8B8C] text-[12px] font-bold pl-1">{{showTimer ? 'Show' : 'Hide'}} Word Count <span class="text-[#000000] text-[16px] pl-1 font-normal" :class="{hidden:showTimer}">{{ props.word_number }}</span></span>
+  </div>
 </div>
+<div class="flex-1 overflow-hidden pb-3 py-1 px-1">
+  <textarea 
+    ref="textAreaEl"
+    class="w-full h-full border-none resize-none outline-[#edf6f6]" 
+    @copy="$event.preventDefault()" 
+    @paste="$event.preventDefault()"
+  />
+</div>  
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import openEye from '@/assets/images/open-eye.svg'
-import hideEye from '@/assets/images/hide-eye.svg'
+import copy from "copy-to-clipboard"
 const showTimer = ref(true)
+const textAreaEl= ref<null | HTMLTextAreaElement>(null)
 export type WritingBtnProps = {
   bt_name: string[]
   word_number: number;
-  onClick?: () => void;
 }
-
+function insertAtCursor(myField:HTMLTextAreaElement , myValue:string) {
+  if (myField.selectionStart || myField.selectionStart === 0) {
+    var startPos = myField.selectionStart;
+    var endPos = myField.selectionEnd;
+    myField.value = myField.value.substring(0, startPos)
+      + myValue
+      + myField.value.substring(endPos, myField.value.length);
+  } else {
+    myField.value += myValue;
+  }
+}
+const onClick = async (val:string) => {
+  const startPos = textAreaEl.value!.selectionStart
+  const endPos = textAreaEl.value!.selectionEnd
+  const selectedText = textAreaEl.value!.value.substring(startPos, endPos)
+  if(val === 'Copy'){
+    copy(selectedText)
+  } else if(val === 'Cut'){
+    copy(selectedText)
+    textAreaEl.value!.value = textAreaEl.value!.value.substring(0, startPos) + textAreaEl.value!.value.substring(endPos)
+  } else if(val === 'Paste'){
+    const selectedText =  await navigator.clipboard.readText()
+    insertAtCursor(textAreaEl.value!, selectedText)
+  }
+  textAreaEl.value?.focus()
+}
 const props = defineProps<WritingBtnProps>()
-const onClick = () => {
+const onShowWordClick = () => {
   showTimer.value = !showTimer.value
 }
+
 </script>
 
 <style>

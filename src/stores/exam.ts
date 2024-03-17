@@ -36,7 +36,8 @@ export const useExamStore = defineStore('exam', () => {
     time_remain: 0,
     sheet_id: '0',
     questions: [],
-    answerData: []
+    answerData: [],
+    type: 0 // 模考还是练习类型 1是模考 2是练习
   }
   // 模考练习题
   const examing_data = reactive<{
@@ -48,6 +49,7 @@ export const useExamStore = defineStore('exam', () => {
     sheet_id: string;
     questions: any[];
     answerData: ANSWER_STATUS[]
+    type: number
   }>(examing_data_init)
 
   const resultData = reactive<{
@@ -183,6 +185,7 @@ export const useExamStore = defineStore('exam', () => {
       examing_data.sheet_id = '';
       examing_data.questions = [];
       examing_data.answerData = [];
+      examing_data.type = 0;
       const [res, answerRes] = await Promise.all([request_getExam(id), request_getExamStutas(id)])
       examing_data.answerData = answerRes.map(val => ({
         is_answer: val.is_answer,
@@ -195,6 +198,7 @@ export const useExamStore = defineStore('exam', () => {
       examing_data.curQuestionChildrenIndex = 0;
       examing_data.time_remain = res.time_remain;
       examing_data.questions = res.questions;
+      examing_data.type = res.type;
     } catch (error) {
       if (error?.data?.code === 400) {
         $router.push('/home')

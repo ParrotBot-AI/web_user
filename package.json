@@ -20,6 +20,7 @@
     "ant-design-vue": "4.x",
     "axios": "^1.6.5",
     "axios-mock-adapter": "^1.22.0",
+    "copy-to-clipboard": "^3.3.3",
     "dayjs": "^1.11.10",
     "echarts": "^5.5.0",
     "echarts-gl": "^2.0.9",

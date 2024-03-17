@@ -57,9 +57,8 @@ const loading = ref(false)
 const onFinish = async () => {
   try {
     loading.value = true
-    // console.log("onFinish");
     const { userId } = getWithExpiry<USERINFO>('userinfo')!
-    userStore.api_setUserInfo(userId, {
+    await userStore.api_setUserInfo(userId, {
       name: formState.username
     })
     router.push('/home')
