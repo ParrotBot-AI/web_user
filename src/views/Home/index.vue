@@ -64,18 +64,18 @@
           
         </div>
       </div>
-      <div class="grid grid-cols-5 grid-rows-5 gap-4 h-full">
-        <div class="col-span-3 row-span-5 bg-white rounded-md border border-border-1 border-solid flex-1 px-9 overflow-hidden pb-3">
-          <div class="overflow-y-auto h-full relative">
-            <a-tabs class="mt-3" v-model:activeKey="activeKey">
-              <a-tab-pane key="1"  tab="我的任务">
-                <BaseCard  :title="`${$t('今日任务')} (${indexStore.userTargetsList.today.length})`" :list="indexStore.userTargetsList.today">
+      <div class="grid grid-cols-5 grid-rows-5 gap-4 flex-1 overflow-hidden">
+        <div class="col-span-3 overflow-hidden row-span-5 bg-white rounded-md border border-border-1 border-solid flex-1 px-9 pb-3">
+          <div class="h-full relative pt-3">
+            <a-tabs class="h-full" v-model:activeKey="activeKey">
+              <a-tab-pane key="1" tab="我的任务">
+                <BaseCard :title="`${$t('今日任务')} (${indexStore.userTargetsList.today.length})`" :list="indexStore.userTargetsList.today">
                 </BaseCard>
                 <div class="flex items-center flex-col text-gray-500 pt-20" v-if="!indexStore.userTargetsList.tomorrow.length">
                   <p>{{ $t('暂无当日任务，请先完成模拟考试获取定制任务') }}</p>
                   <a-button type="primary" class="mt-5 w-[220px] h-10">{{ $t('开始模考 ') }}</a-button>
                 </div>
-                <BaseCard  v-if="indexStore.userTargetsList.tomorrow.length"
+                <BaseCard v-if="indexStore.userTargetsList.tomorrow.length"
                   :title="`${$t('明日任务')} (${indexStore.userTargetsList.tomorrow.length})`" :list="indexStore.userTargetsList.today">
                 </BaseCard>
               </a-tab-pane>
@@ -158,6 +158,11 @@ onMounted(() => {
   myEcharts()
 })
 </script>
+<style scoped>
+:global(.ant-tabs-content-holder) {
+  overflow-y: auto;
+}
+</style>
 
 
 
