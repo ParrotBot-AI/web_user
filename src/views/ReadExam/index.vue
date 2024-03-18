@@ -195,9 +195,7 @@ onMounted(async () => {
   await nextTick()
   contentDiv.value?.addEventListener('click', (e) => {
     const target = e.target as HTMLElement
-    console.log('click', target)
     setTimeout(() => {
-      console.log('settime click', target)
       let spanTarget: HTMLElement | null = null;
       if (target.parentElement?.classList.contains('fill-item')) {
         spanTarget = target.parentElement

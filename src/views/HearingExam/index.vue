@@ -144,7 +144,6 @@ watchEffect(() => {
     HeaderBtnsConfig.continue.isShow = true
     HeaderBtnsConfig.help.isShow = false
   }
-  console.log(examStore.examing_data)
   if(examStore.examing_data.curIndex === examStore.examing_data.childrenLength - 1) {
     HeaderBtnsConfig.submit.isShow = true
     HeaderBtnsConfig.next.isShow = false
@@ -154,6 +153,9 @@ watchEffect(() => {
 })
 onMounted(async () => {
   await examStore.getExamData(query.id as string, 'hearing')
+  if(query.sectionIndex && query.quesIndex) {
+    isShowGuide.value = false
+  }
   examStore.examing_data.questions.map(val => {
     val.played = false
     val.step = -1
