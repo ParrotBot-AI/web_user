@@ -96,6 +96,7 @@ export const useExamStore = defineStore('exam', () => {
   const processData = reactive<any[]>([])
   const indexStore = useIndexStore()
   const limit = 20;
+  // 考试列表区分不同类型
   const customData = reactive({
     'read': {
       remark: 'Passage',
@@ -126,6 +127,7 @@ export const useExamStore = defineStore('exam', () => {
       minSelectCount: 2,
     }
   })
+  // 考试列表
   const getExamResource = async (page: number, init?: boolean) => {
     const menuData = indexStore.menuData.list
     const { pattern_id, name } = menuData.find(val => val.key === $route.name)!
@@ -176,7 +178,7 @@ export const useExamStore = defineStore('exam', () => {
    * [getExamData 考试或者练习页面根据 sheet_id 获取试题数据]
    *
    */
-  const getExamData = async (id: string) => {
+  const getExamData = async (id: string, type: string) => {
     try {
       examing_data.curIndex = 0;
       examing_data.curQuestionIndex = 0;
@@ -192,10 +194,18 @@ export const useExamStore = defineStore('exam', () => {
         question_id: val.question_id,
         answer: val.answer
       }));
+      
       examing_data.sheet_id = res.sheet_id;
       examing_data.childrenLength = res.questions.reduce((prev: number, item: any) => prev + item.children.length, 0);
-      examing_data.curQuestionIndex = 0;
-      examing_data.curQuestionChildrenIndex = 0;
+      if(type){
+        examing_data.curQuestionIndex  = Number($route.query.sectionIndex) || 0
+        examing_data.curQuestionChildrenIndex =  Number($route.query.quesIndex) || 0
+        examing_data.curIndex = res.questions.slice(0, examing_data.curQuestionIndex).reduce((prev:number, item:number) => prev + item?.children.length || 0, 0) + examing_data.curQuestionChildrenIndex
+      } else {
+        examing_data.curQuestionIndex = 0
+        examing_data.curQuestionChildrenIndex = 0;
+        examing_data.curIndex = 0;
+      }
       examing_data.time_remain = res.time_remain;
       examing_data.questions = res.questions;
       examing_data.type = res.type;
@@ -229,6 +239,13 @@ export const useExamStore = defineStore('exam', () => {
     examing_data.curIndex = index;
     examing_data.curQuestionIndex = questionIndexRes;
     examing_data.curQuestionChildrenIndex = questionIndexRes > 0 ? index - examing_data.questions.slice(0, questionIndexRes).reduce((prev, item) => prev + item.children.length, 0) : index;
+    $router.replace({
+      query: {
+        ...$route.query,
+        sectionIndex: examing_data.curQuestionIndex,
+        quesIndex: examing_data.curQuestionChildrenIndex
+      }
+    })
   }
   const isExamEnding = computed(() => {
     return examing_data.curIndex === (examing_data.childrenLength - 1)
@@ -286,7 +303,6 @@ export const useExamStore = defineStore('exam', () => {
   const getExamProcess = async (id: string) => {
     try {
       const res = await request_getExamStutas(id)
-      console.log(res)
       processData.length = 0
       processData.push(...res)
     } catch (error) {

@@ -1,49 +1,52 @@
 <template>
-  <ProcessDialog v-if="examStore.showProcessDialog" />
-  <a-layout class="w-full h-full flex flex-col">
-    <b-header :title="$t('模拟考试')">
-      <template #right>
-        <div class="flex">
-          <HeaderBtn v-for="val in Object.keys(HeaderBtnsConfig)" v-bind="HeaderBtnsConfig[val]" :key="val" />
+  <a-spin v-if="loading" size="large" tip="试题加载中..." class="fixed top-1/2 left-1/2 -translate-1/2 z-50"/>
+  <template v-else>
+    <ProcessDialog v-if="examStore.showProcessDialog" />
+    <a-layout class="w-full h-full flex flex-col">
+      <b-header :title="$t('模拟考试')">
+        <template #right>
+          <div class="flex">
+            <HeaderBtn v-for="val in Object.keys(HeaderBtnsConfig)" v-bind="HeaderBtnsConfig[val]" :key="val" />
+          </div>
+        </template>
+      </b-header>
+      <BaseGuide v-bind="readGuide" v-if="isShowGuide" />
+      <template v-else>
+        <div class="text-center h-14 flex items-center justify-between bg-white px-8">
+          <h2 class="text-gray-900 text[20px] font-bold">{{ examStore.curQuestion?.question_title }}</h2>
+          <span></span>
+          <div class="text-[18px] text-green-1 cursor-pointer" v-show="examStore.curQuestionChildren?.isShowViewText"
+            @click="onClickViewText">VIEW TEXT</div>
+          <Timer v-show="!examStore.curQuestionChildren?.isShowViewText" />
+        </div>
+        <div class="flex flex-1 overflow-hidden bg-white" :style="{ borderTop: `1px solid #D0D5DD` }">
+          <div class="flex-1 h-full overflow-h-auto overflow-x-hidden" :style="{ borderRight: `1px solid #D0D5DD` }"
+            v-show="isViewText || !examStore.curQuestionChildren?.isShowViewText">
+            <h1 class="text-center text-[20px] text-gray-900 py-5">{{ examStore.curQuestion?.question_title }}</h1>
+            <div ref="contentDiv" id="content">
+              <p class="px-8 text-gray-500 text-[18px] leading-7" :class="'read-mock-content-' + (i + 1)"
+                v-for="(val, i) in examStore.curQuestion?.cur_questions_content" v-html="val" :key="i"></p>
+            </div>
+          </div>
+          <div class="flex-1 h-full overflow-h-auto overflow-x-hidden px-12 py-7">
+            <div v-show="!(examStore.curQuestionChildren?.isShowViewText && isViewText)">
+              <component v-if="examStore.curQuestionChildren"
+                :is="examItems[examStore.curQuestionChildren?.question_type as keyof IExamItems]"
+                v-bind="examStore.curQuestionChildren" />
+            </div>
+          </div>
         </div>
       </template>
-    </b-header>
-    <BaseGuide v-bind="readGuide" v-if="isShowGuide" />
-    <template v-else>
-      <div class="text-center h-14 flex items-center justify-between bg-white px-8">
-        <h2 class="text-gray-900 text[20px] font-bold">{{ examStore.curQuestion?.question_title }}</h2>
-        <span></span>
-        <div class="text-[18px] text-green-1 cursor-pointer" v-show="examStore.curQuestionChildren?.isShowViewText"
-          @click="onClickViewText">VIEW TEXT</div>
-        <Timer v-show="!examStore.curQuestionChildren?.isShowViewText" />
-      </div>
-      <div class="flex flex-1 overflow-hidden bg-white" :style="{ borderTop: `1px solid #D0D5DD` }">
-        <div class="flex-1 h-full overflow-h-auto overflow-x-hidden" :style="{ borderRight: `1px solid #D0D5DD` }"
-          v-show="isViewText || !examStore.curQuestionChildren?.isShowViewText">
-          <h1 class="text-center text-[20px] text-gray-900 py-5">{{ examStore.curQuestion?.question_title }}</h1>
-          <div ref="contentDiv" id="content">
-            <p class="px-8 text-gray-500 text-[18px] leading-7" :class="'read-mock-content-' + (i + 1)"
-              v-for="(val, i) in examStore.curQuestion?.cur_questions_content" v-html="val" :key="i"></p>
-          </div>
-        </div>
-        <div class="flex-1 h-full overflow-h-auto overflow-x-hidden px-12 py-7">
-          <div v-show="!(examStore.curQuestionChildren?.isShowViewText && isViewText)">
-            <component v-if="examStore.curQuestionChildren"
-              :is="examItems[examStore.curQuestionChildren?.question_type as keyof IExamItems]"
-              v-bind="examStore.curQuestionChildren" />
-          </div>
-        </div>
-      </div>
-    </template>
-  </a-layout>
+    </a-layout>
+  </template>
 </template>
 <script setup lang="ts">
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import WebSocketClient from '@/utils/ws'
 import type { USERINFO } from "@/service/user"
 import type { HeaderBtnProps } from "./components/HeaderBtn.vue"
 import HeaderBtn from "./components/HeaderBtn.vue"
-import { onMounted, ref, onUnmounted, watchEffect, reactive } from 'vue'
+import { onMounted, ref, onUnmounted, watchEffect, reactive, nextTick } from 'vue'
 import { useExamStore } from '@/stores/exam'
 import { getWithExpiry } from '@/utils/storage'
 import ExamSCItem from './components/ExamSCItem.vue'
@@ -52,10 +55,15 @@ import ExamLastMcItem from './components/ExamLastMcItem.vue'
 import ProcessDialog from './components/ProcessDialog.vue'
 import BaseGuide from '@/components/BaseGuide/index.vue'
 import Timer from "./components/Timer.vue"
-
+const $router = useRouter()
 const { access } = getWithExpiry<USERINFO>('userinfo')!
 const socket = ref<WebSocketClient | null>(null)
 const isViewText = ref<boolean>(false)
+const loading = ref(true)
+const { query } = useRoute()
+const isShowGuide = ref(true)
+const contentDiv = ref<HTMLDivElement | null>(null)
+const examStore = useExamStore()
 type IExamItems = {
   Toefl_Reading_sc: typeof ExamSCItem  // 单选题和填充题
   Toefl_Reading_mc2: typeof ExamMCItem,  // 4选2多选题
@@ -66,19 +74,14 @@ const examItems: IExamItems = {
   Toefl_Reading_mc2: ExamMCItem,
   Toefl_Reading_mc: ExamLastMcItem,
 }
-
-const { query } = useRoute()
-const isShowGuide = ref(true)
-const contentDiv = ref<HTMLDivElement | null>(null)
-const examStore = useExamStore()
 const HeaderBtnsConfig = reactive<{
   [k in string]: HeaderBtnProps
 }>({
   progress: {
     title: '进度',
     id: 'progress',
-    disabled: true,
-    isShow: true,
+    disabled: false,
+    isShow: false,
     onClick: () => {
       examStore.setShowProcessDialog()
     }
@@ -87,16 +90,16 @@ const HeaderBtnsConfig = reactive<{
     title: '帮助',
     id: 'help',
     disabled: false,
-    isShow: true,
+    isShow: false,
     onClick: () => {
       console.log('help')
     }
   },
   prev: {
     title: '上一步',
-    disabled: true,
+    disabled: false,
     id: 'prev',
-    isShow: true,
+    isShow: false,
     onClick: () => {
       examStore.changeQuestion(-1)
     }
@@ -108,13 +111,20 @@ const HeaderBtnsConfig = reactive<{
     isShow: true,
     onClick: () => {
       isShowGuide.value = false
+      $router.replace({
+        query: {
+          ...query,
+          sectionIndex: 0,
+          quesIndex: 0
+        }
+      })
     }
   },
   next: {
     title: '下一步',
     id: 'next',
-    disabled: true,
-    isShow: true,
+    disabled: false,
+    isShow: false,
     onClick: () => {
       examStore.changeQuestion(1)
     }
@@ -122,7 +132,7 @@ const HeaderBtnsConfig = reactive<{
   submit: {
     title: '提交',
     id: 'submit',
-    disabled: true,
+    disabled: false,
     isShow: false,
     onClick: () => {
       examStore.requestSubmitExam(query.id as string)
@@ -131,11 +141,10 @@ const HeaderBtnsConfig = reactive<{
 })
 watchEffect(() => {
   HeaderBtnsConfig.continue.isShow = isShowGuide.value;
-  HeaderBtnsConfig.progress.disabled = isShowGuide.value
-  HeaderBtnsConfig.prev.disabled = isShowGuide.value
-  HeaderBtnsConfig.submit.disabled = isShowGuide.value
-  HeaderBtnsConfig.next.disabled = isShowGuide.value && !examStore.isExamEnding
-  HeaderBtnsConfig.next.isShow = !examStore.isExamEnding
+  HeaderBtnsConfig.progress.isShow = !isShowGuide.value
+  HeaderBtnsConfig.prev.isShow = !isShowGuide.value
+  HeaderBtnsConfig.help.isShow = !isShowGuide.value
+  HeaderBtnsConfig.next.isShow = !isShowGuide.value && !examStore.isExamEnding
   HeaderBtnsConfig.submit.isShow = examStore.isExamEnding
 })
 
@@ -177,12 +186,18 @@ const onClickViewText = () => {
   isViewText.value = !isViewText.value
 }
 onMounted(async () => {
-  console.log('read exam onMounted')
-  await examStore.getExamData(query.id as string)
+  await examStore.getExamData(query.id as string, 'reading')
+  if(query.sectionIndex && query.quesIndex) {
+    isShowGuide.value = false
+  }
+  socket.value = new WebSocketClient('ws://' + import.meta.env.VITE_WS_BASEURL + 'ws/question/' + access + '/');
+  loading.value = false
+  await nextTick()
   contentDiv.value?.addEventListener('click', (e) => {
     const target = e.target as HTMLElement
+    console.log('click', target)
     setTimeout(() => {
-      console.log('click', target)
+      console.log('settime click', target)
       let spanTarget: HTMLElement | null = null;
       if (target.parentElement?.classList.contains('fill-item')) {
         spanTarget = target.parentElement
@@ -199,7 +214,6 @@ onMounted(async () => {
       }
     })
   })
-  socket.value = new WebSocketClient('ws://' + import.meta.env.VITE_WS_BASEURL + 'ws/question/' + access + '/');
 })
 
 onUnmounted(() => {

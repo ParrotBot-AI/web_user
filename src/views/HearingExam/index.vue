@@ -1,24 +1,27 @@
 <template>
-  <a-layout class="w-full h-full flex flex-col">
-    <b-header title="模拟考试">
-      <template #right>
-        <div class="flex">
-          <HeaderBtn 
-            v-for="val in Object.keys(HeaderBtnsConfig)" 
-            v-bind="HeaderBtnsConfig[val]" 
-            :key="val"
-          />
-        </div>
-      </template>
-    </b-header>
-    <BaseGuide v-bind="hearingGuide" v-if="isShowGuide"/>
-    <QuestionItem 
-      v-else-if="questionItem" 
-      v-bind="questionItem"
-      :onAuidoEnded= "onAuidoEnded"
-      title="Listening"
-    />
-  </a-layout>
+  <a-spin v-if="loading" size="large" tip="试题加载中..." class="fixed top-1/2 left-1/2 -translate-1/2 z-50"/>
+  <template v-else>
+    <a-layout class="w-full h-full flex flex-col">
+      <b-header title="模拟考试">
+        <template #right>
+          <div class="flex">
+            <HeaderBtn 
+              v-for="val in Object.keys(HeaderBtnsConfig)" 
+              v-bind="HeaderBtnsConfig[val]" 
+              :key="val"
+            />
+          </div>
+        </template>
+      </b-header>
+      <BaseGuide v-bind="hearingGuide" v-if="isShowGuide"/>
+      <QuestionItem 
+        v-else-if="questionItem" 
+        v-bind="questionItem"
+        :onAuidoEnded= "onAuidoEnded"
+        title="Listening"
+      />
+    </a-layout>
+  </template>
 </template>
 <script setup lang="ts">
 import type {HeaderBtnProps, KeyofIcons} from "@/views/ReadExam/components/HeaderBtn.vue"
@@ -31,6 +34,7 @@ import { useRoute } from "vue-router"
 const isShowGuide = ref(true)
 const examStore = useExamStore()
 const { query } = useRoute()
+const loading = ref(true)
 
 const hearingGuide = reactive({
   type: 'info',
@@ -149,11 +153,12 @@ watchEffect(() => {
   flush: 'post'
 })
 onMounted(async () => {
-  await examStore.getExamData(query.id as string)
+  await examStore.getExamData(query.id as string, 'hearing')
   examStore.examing_data.questions.map(val => {
     val.played = false
     val.step = -1
   })
+  loading.value = false
 })
 </script>
 <style scoped>
