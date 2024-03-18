@@ -10,7 +10,7 @@
       </a-tabs>
     </header>
     <div class="flex content-start flex-wrap flex-1 overflow-y-auto py-5 px-3 bg-green-2">
-      <div v-if="loading">loading...</div>
+      <a-spin v-if="loading" size="large" tip="题库加载中..." class="fixed top-1/2 left-1/2 -translate-1/2 z-50"/>
       <div v-else-if="!examStore.exam_data.list.length">
           暂无数据
       </div>
