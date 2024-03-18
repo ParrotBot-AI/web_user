@@ -1,17 +1,17 @@
 <template>
-  <div class="flex flex-col h-full w-full  ">
+  <div class="flex flex-col h-full w-full overflow-y-auto">
     <div class="w-full flex items-center justify-center" style="background: rgba(253, 212, 78, 1);">
       <img :src="Horn"/>
       <div class="pl-[20px]">即日起至5月1日支付9.9元即可获得鹦鹉智学APP三个月会员+超值礼包！</div>
       <div class="font-bold pl-[40px] ">查看详情<div class="h-[1px] bg-black-1 w-16"></div></div>
     </div>
-    <div class="flex h-full w-full items-center justify-center">
+    <div class="flex flex-1 w-full overflow-auto pt-16 pb-10 justify-center">
       <a-table 
         :columns="columns"
         :data-source="data"
         :pagination="false"
         :show-header="false"
-        style="width: auto; height: auto; margin-left: 90px;" 
+        style="width: auto; height: auto;" 
       >
         <template #column1 = "{ text, index }">
           <div class="px-[10px]">
@@ -56,7 +56,10 @@
           </div>
         </template>
       </a-table>
-      <div class=" flex ml-[40px] mt-[80px] h-1/2 items-end w-[380px]">如需购买或更多问题请扫描微信联系客服</div>
+      <div class="fixed flex right-4 bottom-8 flex-col">
+        <div class="bg-white h-24 w-24 p-2 mb-2">二维码</div>
+        <p class="text-[#3B3205]">扫码联系客服</p>
+      </div>
     </div>
   </div>
 </template>
