@@ -33,10 +33,11 @@
                   <a-modal
                   v-model:open="revise_password"
                   closable: false
-                  class="w-[200px] mt-[100px] my-modal flex "
+                  class="mt-[100px] my-modal"
                   >
                   <div class="text-[26px] py-[30px] text-black-1">修改密码</div>
-                  <a-form-item :label="$t('手机号')" name="mobile" >
+                  <a-form-item name="mobile" >
+                    <div class="pb-[15px]">手机号</div>
                     <a-input
                       type="tel"
                       class="py-2 px-3.5"
@@ -50,7 +51,8 @@
                       </template>
                     </a-input>
                   </a-form-item>
-                  <a-form-item :label="$t('验证码')" name="mobile" >
+                  <a-form-item name="mobile" >
+                    <div class="pb-[15px]">验证码</div>
                     <a-input
                       type="tel"
                       class="py-2 px-3.5"
@@ -65,7 +67,8 @@
                     </template>
                     </a-input>
                   </a-form-item>
-                  <a-form-item :label="$t('设置新密码')" name="mobile" >
+                  <a-form-item  name="mobile" >
+                    <div class="pb-[15px]">设置新密码</div>
                     <a-input
                       type="tel"
                       class="py-2 px-3.5"
@@ -100,10 +103,11 @@
                 <a-modal
                   v-model:open="revise_number"
                   closable: false
-                  class="w-[200px] mt-[100px] my-modal flex "
+                  class="w-[250px] mt-[100px] my-modal "
                   >
                   <div class="text-[26px] py-[30px] text-black-1">修改手机号</div>
-                  <a-form-item :label="$t('手机号')" name="mobile" >
+                  <a-form-item  name="mobile" >
+                    <div class="pb-[15px]">原手机号</div>
                     <a-input
                       type="tel"
                       class="py-2 px-3.5"
@@ -117,7 +121,8 @@
                       </template>
                     </a-input>
                   </a-form-item>
-                  <a-form-item :label="$t('验证码')" name="mobile" >
+                  <a-form-item  name="mobile" >
+                    <div class="pb-[15px]">验证码</div>
                     <a-input
                       type="tel"
                       class="py-2 px-3.5"
@@ -132,7 +137,8 @@
                     </template>
                     </a-input>
                   </a-form-item>
-                  <a-form-item :label="$t('设置新手机号')" name="mobile" >
+                  <a-form-item  name="mobile" >
+                    <div class="pb-[15px]">设置新手机号</div>
                     <a-input
                       type="tel"
                       class="py-2 px-3.5"
