@@ -1,142 +1,263 @@
 <template>
-  <div class="flex flex-col h-full w-full overflow-y-auto">
-    <div class="w-full flex items-center justify-center" style="background: rgba(253, 212, 78, 1);">
-      <img :src="Horn"/>
-      <div class="pl-[20px]">即日起至5月1日支付9.9元即可获得鹦鹉智学APP三个月会员+超值礼包！</div>
-      <div class="font-bold pl-[40px] ">查看详情<div class="h-[1px] bg-black-1 w-16"></div></div>
-    </div>
-    <div class="flex flex-1 w-full overflow-auto pt-16 pb-10 justify-center">
-      <a-table 
-        :columns="columns"
-        :data-source="data"
-        :pagination="false"
-        :show-header="false"
-        style="width: auto; height: auto;" 
-      >
-        <template #column1 = "{ text, index }">
-          <div class="px-[10px]">
-            <div class="text-[15px]">{{ text }}</div>
-            <div v-if="index === 7" class="text-[12px] font-normal">无限接近真实考试题，有几率在真实考试中复现。</div>
+  <div class="flex w-full h-full ">
+  <!-- <ComBo/> -->
+    <a-tabs class="w-full h-full page-tab-setting " >
+      <a-tab-pane key="1" tab="个人账号" class="flex  ">
+        <div class="bg-white w-[225px] h-[202px] flex flex-col  items-center justify-center border border-border-1 border-solid rounded-md ml-[100px]" >
+          <img :src="Ellipse" class="w-[103px] mb-[10px]"/>
+          <div class=" text-green-1">编辑头像<div class="h-[1px] bg-green-1 w-16"></div></div>
+        </div>
+        <div class="bg-white w-[740px] h-full flex flex-col border border-border-1 border-solid rounded-md p-[80px] ml-[50px]">
+          <h1 class="text-[26px]">账户信息</h1>
+          <a-form
+          ref="formRef"    
+          layout="vertical"
+          name="login"
+          autocomplete="off"        
+          class="mt-8"
+           >
+           <a-form-item :label="$t('用户名')" name="code" >
+              <a-input  class="px-3.5 py-2.5" :placeholder="$t('您的用户名')">
+
+              </a-input>
+            </a-form-item>
+
+           <a-form-item :label="$t('密码')" name="code" >
+              <a-input  class="px-3.5 py-0" :placeholder="$t('输入验证码')">
+                <template #suffix>
+                  <span
+                    class="text h-full py-2.5 px-2 cursor-pointer text-green-1 " @click="onClickpassword()"
+                  >
+                修改密码
+                  </span>
+                  <a-modal
+                  v-model:open="revise_password"
+                  closable: false
+                  class="w-[200px] mt-[100px] my-modal flex "
+                  >
+                  <div class="text-[26px] py-[30px] text-black-1">修改密码</div>
+                  <a-form-item :label="$t('手机号')" name="mobile" >
+                    <a-input
+                      type="tel"
+                      class="py-2 px-3.5"
+                      :placeholder= "$t('您的手机号')"
+                    >
+                      <template #prefix>
+                        <span
+                          class="text-gray-500 pr-2 relative after:content-[''] after:w-[1px] after:h-5 after:bg-gray-500 after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2"
+                          >+86</span
+                        >
+                      </template>
+                    </a-input>
+                  </a-form-item>
+                  <a-form-item :label="$t('验证码')" name="mobile" >
+                    <a-input
+                      type="tel"
+                      class="py-2 px-3.5"
+                      :placeholder= "$t('请输入验证码')"
+                    >
+                    <template #suffix>
+                      <span
+                        class="text px-2 cursor-pointer  text-green-1"
+                      >
+                    获取验证码
+                      </span>
+                    </template>
+                    </a-input>
+                  </a-form-item>
+                  <a-form-item :label="$t('设置新密码')" name="mobile" >
+                    <a-input
+                      type="tel"
+                      class="py-2 px-3.5"
+                      :placeholder= "$t('请输入新密码')"
+                    >
+                    </a-input>
+                  </a-form-item>
+                  <a-button type="primary" html-type="submit" class="shadow-none w-full px-4 py-2.5 h-auto"
+                  >{{ $t('确认') }}</a-button
+                >
+                  </a-modal>
+                </template>
+              </a-input>
+            </a-form-item>
+            <a-form-item :label="$t('手机号')" name="mobile" >
+              <a-input
+                type="tel"
+                class="py-2.5 px-3.5"
+                :placeholder= "$t('您的手机号')"
+              >
+                <template #prefix>
+                  <span
+                    class="text-gray-500 pr-2 relative after:content-[''] after:w-[1px] after:h-5 after:bg-gray-500 after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2"
+                    >+86</span
+                  >
+                </template>
+                <template #suffix>
+                  <span
+                    class="text px-2 cursor-pointer  text-green-1" @click="onClicknumber()"
+                  >
+                修改手机号
+                <a-modal
+                  v-model:open="revise_number"
+                  closable: false
+                  class="w-[200px] mt-[100px] my-modal flex "
+                  >
+                  <div class="text-[26px] py-[30px] text-black-1">修改手机号</div>
+                  <a-form-item :label="$t('手机号')" name="mobile" >
+                    <a-input
+                      type="tel"
+                      class="py-2 px-3.5"
+                      :placeholder= "$t('您的手机号')"
+                    >
+                      <template #prefix>
+                        <span
+                          class="text-gray-500 pr-2 relative after:content-[''] after:w-[1px] after:h-5 after:bg-gray-500 after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2"
+                          >+86</span
+                        >
+                      </template>
+                    </a-input>
+                  </a-form-item>
+                  <a-form-item :label="$t('验证码')" name="mobile" >
+                    <a-input
+                      type="tel"
+                      class="py-2 px-3.5"
+                      :placeholder= "$t('请输入验证码')"
+                    >
+                    <template #suffix>
+                      <span
+                        class="text px-2 cursor-pointer  text-green-1"
+                      >
+                    获取验证码
+                      </span>
+                    </template>
+                    </a-input>
+                  </a-form-item>
+                  <a-form-item :label="$t('设置新手机号')" name="mobile" >
+                    <a-input
+                      type="tel"
+                      class="py-2 px-3.5"
+                      :placeholder= "$t('请输入新手机号')"
+                    >
+                    </a-input>
+                  </a-form-item>
+                  <a-button type="primary" html-type="submit" class="shadow-none w-full px-4 py-2.5 h-auto"
+                  >{{ $t('确认') }}</a-button
+                >
+                  </a-modal>
+                  </span>
+                </template>
+              </a-input>
+            </a-form-item>
+            <h1 class="text-[26px]">通知提醒管理</h1>
+            <a-form-item  name="code" >
+              <a-input  class="px-3.5 py-2.5 mt-8" :placeholder="$t('打开网站提醒')">
+                <a-switch v-model:checked="isopen_web" />
+              </a-input>
+              <a-input  class="px-3.5 py-2.5 mt-8" :placeholder="$t('打开短信提醒')">
+              </a-input>
+            </a-form-item>
+            <a-form-item >
+              <a-switch v-model:checked="isopen_web" />
+            </a-form-item>
+            
+          </a-form>
+
+          <a-form-item class="mb-0">
+          <a-button type="primary" html-type="submit" class="shadow-none w-full px-4 py-2.5 h-auto"
+            >{{ $t('更新账户信息') }}</a-button
+          >
+        </a-form-item>
+        </div>
+
+
+      </a-tab-pane>
+      <a-tab-pane key="2" tab="关于鹦鹉智学" class="w-full h-full flex items-center justify-center " >
+        <div class="bg-white w-[740px] h-[818px] flex border border-border-1 border-solid rounded-md flex-col p-[80px]"> 
+          <div class="flex flex-col w-full items-center justify-center">
+            <img :src="About" alt="about">
+            <span class="text-[20px] pt-3">Version 1.0.0</span>
           </div>
-        </template>
-        <template #column2 = "{ text, index }">
-          <div class="px-[10px]">
-            <img v-if="text === 'Contain'" :src="Contain" class="w-[25px]"  alt="Contain" />
-            <span v-else >{{ text }}</span>
-            <div v-if="index === 0" class="text-[17px] font-bold text-green-1">免费版<div class="text-black-1 text-[30px] pt-[20px]">0元/月<div class="text-[12px] font-normal text-gray-500 pt-[20px]">免费使用我们所有模考，练习系统以及预测题，并获得个人问题诊断。
-  免费提供每日一次口语写作批改功能辅助您的学习。<div class="pt-[35px]">5月前注册赠送1年留学顾问。扫描企业微信领取</div></div></div></div>
-          </div>
-        </template>
-        <template #column3 = "{ text, index }">
-          <div>
-            <img v-if="text === 'Contain' && index !== 7" :src="Contain" class="w-[25px]"  alt="Contain" />
-            <img v-else-if="index === 7" :src="Contain" class="w-[25px] pt-[16px] "  alt="Contain" />
-            <span v-else >{{ text }}</span>
-            <div v-if="index === 0" class="text-[17px] font-bold text-green-1" style="color: rgba(47, 223, 181, 1);">
-            <div class="absolute top-0 left-0 w-full" style="background: rgba(47, 223, 181, 1); height: 10px;"><div class="absolute left-0 w-full top-[-25px] text-[12px]">最受欢迎</div></div>练习版会员 
-            <div class="text-black-1 text-[30px] pt-[20px]">49元/月
-              <div class="text-[12px] font-normal text-gray-500 pt-[20px]">您可使用我们软件的全部功能：包括每日30题批改，实时答疑，单词无痛背诵，全能版心理支持等功能。
-                <div class="pt-[35px]">赠送：三年留学顾问</div>
+          <h1 class="text-[26px] flex w-1/2 items-start justify-start pt-10">隐私条款</h1>
+            <a-form-item  name="code" >
+              <a-input  class="px-3.5 py-2.5 mt-8" :placeholder="$t('《鹦鹉智学协议》')">
+                <template #suffix>
+                  <span
+                    class="text px-2 cursor-pointer font-bold text-green-1"
+                  >
+                查看
+                  </span>
+                </template>
+              </a-input>
+              <a-input  class="px-3.5 py-2.5 mt-8" :placeholder="$t('《隐私保护指引》')">
+                <template #suffix>
+                  <span
+                    class="text px-2 cursor-pointer font-bold text-green-1"
+                  >
+                查看
+                  </span>
+                </template>
+              </a-input>
+              <h1 class="text-[26px] flex w-1/2 items-start justify-start pt-10">反馈意见</h1>
+              <div class="flex items-center justify-center">
+                <div>添加企业微信</div>
+                <div class="flex pl-10">客服邮箱<div class="text-green-1 pl-2">support@parrotbot.com</div></div>
               </div>
-            </div>
-          </div>
-          </div>
-        </template>
-        <template #column4 = "{ text, index }">
-          <div>
-            <img v-if="text === 'Contain' && index !== 7" :src="Contain" class="w-[25px] "  alt="Contain" />
-            <img v-else-if="index === 7" :src="Contain" class="w-[25px] pt-[16px] "  alt="Contain" />
-            <span v-else >{{ text }}</span>
-            <div v-if="index === 0" class="text-[17px] font-bold text-green-1" style="color:  rgba(36, 135, 189, 1);">网课保分版会员
-              <div class="text-black-1 text-[30px] pt-[20px]">1288/套
-                <div class="text-[12px] font-normal text-gray-500 pt-[20px]">在练习版会员的基础上，您将获得网课及每日智能任务功能。我们将附赠您12个月会员及终身留学顾问我们承诺：每日平均学习30分钟，3个月不达100分全额退款。1年内托福出分110+ 获得全额奖学金。
-                </div>
-              </div>
-            </div>
-          </div>
-        </template>
-      </a-table>
-      <div class="fixed flex right-4 bottom-8 flex-col">
-        <div class="bg-white h-24 w-24 p-2 mb-2">二维码</div>
-        <p class="text-[#3B3205]">扫码联系客服</p>
-      </div>
-    </div>
+            </a-form-item>
+        </div>
+        
+      </a-tab-pane>
+    </a-tabs>
   </div>
 </template>
 
 <script setup lang="ts">
-import Contain from '@/assets/images/contain.svg'
-import Horn from '@/assets/images/horn.svg'
+import ComBo from './components/ComBo.vue'
+import  Ellipse  from  '@/assets/images/Ellipse.png';
+import  About  from  '@/assets/images/about.svg';
+import { ref } from 'vue'
+const isopen_web = ref(false)
+const revise_password = ref(false)
+const revise_number = ref(false)
 
-const columns = [
-  { 
-    dataIndex: 'col1' ,
-    width: 228,
-    key: 'column1',
-    slots: { customRender: 'column1' },
-  }, 
-  { 
-    dataIndex: 'col2',
-    key: 'column2',
-    width: 238,
-    slots: { customRender: 'column2' },
-  },
-  { 
-    dataIndex: 'col3' ,
-    key: 'column3',
-    width: 238,
-    slots: { customRender: 'column3', },
-  },
-  { 
-    dataIndex: 'col4' ,
-    key: 'column4',
-    width: 238,
-    slots: { customRender: 'column4' },
-  },
-];
+const onClickpassword = () => {
+  revise_password.value = true
+}
 
-const data = [
-  { col1: '套餐选择', col2: '', col3: '' , col4:''},
-  { col1: '每日智能任务', col2: '无', col3: '简易版', col4: '保分版' },
-  { col1: '口语、写作实时批改', col2: '每日1题', col3: '每日30题', col4: '每日30题' },
-  { col1: '7*24实时答疑', col2: '无', col3: 'Contain', col4: 'Contain' },
-  { col1: '单词无痛背诵', col2: '无', col3: 'Contain', col4: 'Contain' },
-  { col1: '心理支持', col2: '简易版', col3: '全能版', col4: '全能版' },
-  { col1: '托福模考、练习系统', col2: 'Contain', col3: 'Contain', col4: 'Contain' },
-  { col1: '小啾预测题',  col2: 'Contain', col3: 'Contain', col4: 'Contain' },
-  { col1: '问题诊断', col2: 'Contain', col3: 'Contain', col4: 'Contain' },
-];
+const onClicknumber = () => {
+  revise_number.value = true
+}
+
 </script>
 
 <style>
 
-.ant-table-wrapper .ant-table:not(.ant-table-bordered) .ant-table-tbody >tr>td:first-child{
-  vertical-align: top;
-  background-color: rgba(198, 224, 215, 0.5);
-  font-weight: 700;
-  color: #565e6e;
+.page-tab-setting .ant-tabs-nav .ant-tabs-tab {
+  margin-right: 40px; /* 标签之间的水平间距 */
 }
 
-.ant-table-wrapper .ant-table:not(.ant-table-bordered) .ant-table-tbody >tr>td:nth-child(2){
-  background-color: rgb(253, 253, 253);
-  text-align: center;
+.page-tab-setting .ant-tabs-nav {
+  padding-left: 5.5rem;
+  padding-top: 2.5rem;
+  padding-right: 1.5rem;
 }
 
-.ant-table-wrapper .ant-table:not(.ant-table-bordered) .ant-table-tbody >tr>td:nth-child(3){
-  vertical-align: top;
-  background-color: rgb(253, 253, 253);
-  text-align: center;
-}
-
-.ant-table-wrapper .ant-table:not(.ant-table-bordered) .ant-table-tbody >tr>td:nth-child(4){
-  vertical-align: top;
-  background-color: rgb(253, 253, 253);
-  text-align: center;
+.page-tab-setting .ant-tabs-tab {
+  font-size: 18px;
+  color: #667085; 
 }
 
 
-.ant-table-wrapper .ant-table:not(.ant-table-bordered) .ant-table-tbody >tr >td {
-  border-top: 1px solid #caced6;
+
+.page-tab-setting .ant-tabs-tab:hover {
+  color: black; 
 }
+.page-tab-setting .ant-tabs-tab-selected {
+  color: black; /* 点击后颜色 */
+}
+
+.my-modal .ant-modal {
+  height: 500px; /* Or whatever height you want */
+}
+
 </style>
 

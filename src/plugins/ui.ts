@@ -18,6 +18,7 @@ import {
   Tooltip,
   Slider,
   Spin,
+  Switch,
 } from 'ant-design-vue';
 import type { App } from 'vue'
 import { createFromIconfontCN } from '@ant-design/icons-vue'
@@ -45,6 +46,8 @@ export function registerUI() {
     app.use(Table)
     app.use(Progress)
     app.use(Tooltip)
+    app.use(Switch)
+    app.use(Modal)
     app.component('IconFont', IconFont)
     app.config.globalProperties.$message = message
   }
