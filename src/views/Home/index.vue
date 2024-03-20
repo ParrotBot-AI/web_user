@@ -5,7 +5,7 @@
       <!--用户信息-->
       <div class="pb-7">
         <div class="flex">
-          <div class="flex  bg-white w-full h-[160px] ml-12 mt-4 shadow-lg rounded-md border border-border-1 border-solid overflow-hidde">
+          <div class="flex  bg-white w-full h-[150px] ml-12 mt-4 shadow-lg rounded-md border border-border-1 border-solid overflow-hidde">
             <a-avatar class="bg-green-1  top-[-10px] left-[-50px] shadow-lg  rounded-md border border-border-1 border-solid" style="font-size: 40px;" shape="square" :size="100"
               :src="indexStore.userInfo.avatar" :alt="indexStore.userInfo.name">
               {{ indexStore.userInfo.name[0] || '' }}
@@ -87,20 +87,24 @@
             </div>
         </div>
         <div class="bg-white rounded-md border-l col-start-4 col-span-2 row-span-2 shadow-lg flex flex-col items-center justify-center">
-          <div class="flex mb-[20px]">
-            <img :src="NewWord" class=" max-w-full max-h-full " style="width: 50%;"/>
-              <span class="font-bold flex flex-col items-center" style="width: 50%;">您的当前词汇量为<span class="flex text-[50px]">0</span></span>
+          <div class="flex mb-3">
+            <div class="flex  " style="width: 40%;">
+                <img :src="NewWord"  style="width: 100%;"/>
+            </div>
+            <div style="width: 60%;">
+              <span class=" flex flex-col items-center text-[1vw]" style="width: 100%;">您的当前词汇量为<span class="text-[4vw]">0</span></span>
+            </div>
           </div>
           <div
-              class="bg-green-1 text-white w-2/3 h-[40px] rounded-lg border  flex items-center justify-center cursor-pointer max-w-full"  @click="onClick('new')"
-            >
-              {{ $t('学习新单词') }}
-              
-            </div>
+            class="bg-green-1 text-white w-2/3 h-[35px] rounded-lg border  flex items-center justify-center cursor-pointer max-w-full"  @click="onClick('new')"
+          >
+            {{ $t('学习新单词') }}
+            
+          </div>
         </div>
-        <a-card class="col-start-4 col-span-2 row-span-3 shadow-lg">
+        <a-card class="col-start-4 col-span-2 row-span-3 shadow-lg overflow-y-auto">
           <div class="font-bold text-[20px]">近七日学习时长</div>
-          <div id="main" style="height: 250px; width: 100%;"></div>
+          <div ref="HomeChart" style="height: 300px; width: 100%;"></div>
         </a-card>
       </div>
     </div>
@@ -123,9 +127,10 @@ import * as echarts from 'echarts';
 import { ref, onMounted, watchEffect} from 'vue'
 const activeKey = ref('1');
 const indexStore = useIndexStore()
-const myChart = ref()
-const myEcharts = () => {
-  const option = {
+const HomeChart = ref()
+const chart = ref()
+watchEffect (() => {
+  chart.value?.setOption({
     color: [ '#f1b01f'],
     legend: {
       data:['时长']
@@ -139,11 +144,28 @@ const myEcharts = () => {
       type: 'bar',
       data: [5, 20, 36, 10, 10, 20,10]
     }]
-  };
+  });
+})
+// const myEcharts = () => {
+//   const option = {
+//     color: [ '#f1b01f'],
+//     legend: {
+//       data:['时长']
+//     },
+//     xAxis: {
+//       data: ["M","T","W","T","F","S","S"]
+//     },
+//     yAxis: {},
+//     series: [{
+
+//       type: 'bar',
+//       data: [5, 20, 36, 10, 10, 20,10]
+//     }]
+//   };
+//   myChart.value.setOption(option);
+// };
 
 
-  myChart.value.setOption(option);
-};
 
 const style_bg = [
   'background: linear-gradient(256.27deg, #3E8AB3 -8.38%, #166195 128.6%)',
@@ -157,8 +179,15 @@ const onClick = (type: 'new' ) => {
 }
 onMounted(() => {
   wordStore.get_vocabs_tasks()
-  myChart.value = echarts.init(document.getElementById('main'));
-  myEcharts()
+  // HomeChart.value = echarts.init(document.getElementById('main'));
+  // myEcharts()
+  chart.value = echarts.init(HomeChart.value, 'main');
+  window.addEventListener('resize', () => {
+    const chart = echarts.getInstanceByDom(HomeChart.value);
+    if (chart) {
+      chart.resize();
+    }
+  });
 })
 </script>
 <style scoped>
