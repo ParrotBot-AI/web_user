@@ -15,8 +15,6 @@ const allPassage = computed(() => {
   return props.data.slice(0, startPassageIndex.value)
 })
 const onended = () => {
-  if(startPassageIndex.value >= props.data.length) return
-  console.log('onended')
   startPassageIndex.value++
 }
 </script>

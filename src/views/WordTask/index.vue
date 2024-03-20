@@ -30,8 +30,8 @@
           <a-button type="primary" class="mt-10 px-24 h-11" @click="wordStore.submit_unknown()">不认识该词</a-button>
         </div>
         <div class="flex w-full h-full items-center flex-col bg-[#edf6f6] md:px-40 px-12 py-14 " v-else>
-          <div class="bg-white w-full h-full rounded-md max-w-[1000px]" :style="{boxShadow: '0 4px 20px rgba(27, 139, 140, 0.2)'}">
-            <h3 class="inline-block bg-[rgba(243,184,78,0.2)] rounded-tr-xl rounded-br-xl text-[#C79741] px-4 py-1 text-base mt-3 font-normal">Genrated by AI</h3>
+          <div class="bg-white w-full h-full rounded-md max-w-[1000px] relative pt-20 pb-4" :style="{boxShadow: '0 4px 20px rgba(27, 139, 140, 0.2)'}">
+            <h3 class="inline-block bg-[rgba(243,184,78,0.2)] rounded-tr-xl rounded-br-xl text-[#C79741] px-4 py-1 text-base font-normal absolute left-0 top-3">Genrated by AI</h3>
             <BAutoWord 
               :data="curTask?.payload?.response!"
             />
