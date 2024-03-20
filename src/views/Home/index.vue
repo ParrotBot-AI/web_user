@@ -5,19 +5,21 @@
       <!--用户信息-->
       <div class="pb-7">
         <div class="flex">
-          <a-avatar class="bg-green-1 absolute shadow-lg" style="font-size: 40px;" shape="square" :size="100"
-            :src="indexStore.userInfo.avatar" :alt="indexStore.userInfo.name">
-            {{ indexStore.userInfo.name[0] || '' }}
-          </a-avatar>
-          <div class="flex items-center justify-center bg-white w-full ml-12 mt-4 shadow-lg rounded-md border border-border-1 border-solid overflow-hidden pb-9 pr-10">
-            <div class=" overflow-hidden pl-9 ">
-              <h1 class="text-[30px] text-gray-900 pt-6">{{ $t(getCurrentTimeOfDay()+'好') }}，{{ indexStore.userInfo.name }}
+          <div class="flex  bg-white w-full h-[160px] ml-12 mt-4 shadow-lg rounded-md border border-border-1 border-solid overflow-hidde">
+            <a-avatar class="bg-green-1  top-[-10px] left-[-50px] shadow-lg  rounded-md border border-border-1 border-solid" style="font-size: 40px;" shape="square" :size="100"
+              :src="indexStore.userInfo.avatar" :alt="indexStore.userInfo.name">
+              {{ indexStore.userInfo.name[0] || '' }}
+            </a-avatar>
+            <div class=" overflow-hidden h-full flex flex-col items-start" style="width: 40%;">
+              <h1 class="text-[25px] text-gray-900 pt-6">{{ $t(getCurrentTimeOfDay()+'好') }}，{{ indexStore.userInfo.name }}
               </h1>
-              <p class="text-gray-600 pt-2">Cease to struggle and you cease to live.</p>
+              <p class="text-gray-600 pt-4">Cease to struggle and you cease to live.</p>
             </div>
-            <div class="border-l w-[0.5px] h-full bg-gray-500 ml-[60px] mt-10"></div>
-            <div class="flex flex-col ml-[60px] pt-8">
-              <div class="font-bold text-[20px]">每日打卡</div>
+            <div class="flex h-full items-center justify-start"> 
+              <div class="border-l w-[0.5px] h-1/2 bg-gray-500  "></div>
+            </div>
+            <div class="flex flex-col ml-[20px] pt-8">
+              <div class="font-bold text-[18px]">每日打卡</div>
               <div class="flex text-[12px] font-normal pt-3 ml-[-8px]">
                 <div class="flex px-[10px] flex-col items-center"><img :src="Signed" class=" w-4/5 " />M</div>
                 <div class="flex px-[10px] flex-col items-center"><img :src="Signed" class=" w-4/5 " />T</div>
@@ -86,11 +88,11 @@
         </div>
         <div class="bg-white rounded-md border-l col-start-4 col-span-2 row-span-2 shadow-lg flex flex-col items-center justify-center">
           <div class="flex mb-[20px]">
-            <img :src="NewWord" class=" w-1/2 " />
-              <span class="font-bold flex flex-col items-center ">您的当前词汇量为<span class="flex text-[60px]">0</span></span>
+            <img :src="NewWord" class=" max-w-full max-h-full " style="width: 50%;"/>
+              <span class="font-bold flex flex-col items-center" style="width: 50%;">您的当前词汇量为<span class="flex text-[50px]">0</span></span>
           </div>
           <div
-              class="bg-green-1 text-white w-2/3 h-[40px] rounded-lg border mt-[5px]  flex items-center justify-center cursor-pointer"  @click="onClick('new')"
+              class="bg-green-1 text-white w-2/3 h-[40px] rounded-lg border  flex items-center justify-center cursor-pointer max-w-full"  @click="onClick('new')"
             >
               {{ $t('学习新单词') }}
               
@@ -98,7 +100,7 @@
         </div>
         <a-card class="col-start-4 col-span-2 row-span-3 shadow-lg">
           <div class="font-bold text-[20px]">近七日学习时长</div>
-          <div id="main" style="height: 300px; width: 100%;"></div>
+          <div id="main" style="height: 250px; width: 100%;"></div>
         </a-card>
       </div>
     </div>
