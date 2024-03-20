@@ -51,6 +51,7 @@
               <template #title>
                 <span class="flex items-center justify-center text-[34px] text-white">{{ 
                   // val.val 
+                  
                   0
                   }}</span>
               </template>

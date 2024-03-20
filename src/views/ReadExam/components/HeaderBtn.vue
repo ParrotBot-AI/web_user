@@ -2,7 +2,7 @@
     <a-button 
       type="primary" 
       v-show="props.isShow && props.id !== 'horn'" 
-      class="pl-3 pr-5 text-[16px] mx-1.5 flex items-center justify-center"
+      class="pl-3 pr-5 text-[16px] mx-1.5 py-[18px] flex items-center justify-center"
       :class="{ 'flex-row-reverse !pr-3 !pl-5': props.id === 'next' || props.id === 'continue', '!pl-5': props.id === 'submit'}" @click="onClick"
       :disabled="props.disabled"
     >
@@ -10,7 +10,7 @@
       <span>{{ $t(props.title) }} </span>
     </a-button>
     <div v-show="props.isShow && props.id === 'horn'" class="mx-1.5 w-8 cursor-pointer flex flex-col relative voclume">
-      <span class="flex justify-center items-center h-8 rounded-md bg-[#B2DAC8]" @click="onVolumeClick">
+      <span class="flex justify-center items-center py-[18px] h-8 rounded-md bg-[#B2DAC8]" @click="onVolumeClick">
         <img :src="volume" />
       </span>
       <div class="w-full h-36 bg-[#B2DAC8] pb-5 pt-1.5 absolute top-full left-0 rounded-br-md rounded-bl-md -mt-1.5" v-show="isVolumeShow">
