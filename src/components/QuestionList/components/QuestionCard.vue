@@ -5,7 +5,7 @@
       <div
         class="left relative overflow-hidden h-full flex flex-col justify-around items-start pt-8 text-white text-center">
         <img class="absolute top-4 right-4" :src="examEdit" alt="examEdit" @click="toResult"/>
-        <span class="text-[30px] pl-6">{{ $t(props.resource_name) }}</span>
+        <span class="text-[30px] pl-6">{{ $t(props.resource_name.split('-')[0]) }}</span>
         <div v-if="isShowBtn" class="flex justify-around items-center w-full gap-3 px-3">
           <a-button @click="onSelectQuestion('mock_exam')" class="flex flex-1 justify-between items-center h-8 overflow-hidden">
             <img :src="time" alt="time" />

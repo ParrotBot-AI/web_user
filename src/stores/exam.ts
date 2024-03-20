@@ -22,10 +22,14 @@ export const useExamStore = defineStore('exam', () => {
   const $router = useRouter()
   // 题库列表
   const exam_data = reactive<{
+    allList: any[];
     list: any[];
+    total: number;
     pageArr: { start: number; end: number; id: number; }[];
   }>({
+    allList: [],
     list: [],
+    total: 0,
     pageArr: [{ start: 1, end: 20, id: 0 }]
   })
   const examing_data_init = {
@@ -129,37 +133,33 @@ export const useExamStore = defineStore('exam', () => {
   })
   // 考试列表
   const getExamResource = async (page: number, init?: boolean) => {
+    console.log('page:::', page)
     const menuData = indexStore.menuData.list
     const { pattern_id, name } = menuData.find(val => val.key === $route.name)!
-    if (init) {
-      questionTitle.value = name
-      exam_data.pageArr = []
-    }
     if (!pattern_id) {
       return new Error('pattern_id is undefined')
     }
-    const res = await request_getExamResource({
-      exam_id: 1,
-      pattern_id,
-      limit,
-      page: page + 1,
-      whether_zt: false,
-    })
-
-    exam_data.list = res.data
-
-    const total = res.total
     if (init) {
-      exam_data.pageArr = new Array(Math.ceil(total / limit)).fill(0).map((item, index) => {
+      questionTitle.value = name
+      exam_data.pageArr = []
+      const res = await request_getExamResource({
+        exam_id: 1,
+        pattern_id,
+        limit,
+        page: page + 1,
+        whether_zt: false,
+      })
+      exam_data.allList = res.data
+      exam_data.total = res.total
+      exam_data.pageArr = new Array(Math.ceil(res.total / limit)).fill(0).map((item, index) => {
         return {
           start: index * limit + 1,
-          end: Math.min((index + 1) * limit, total),
+          end: Math.min((index + 1) * limit, res.total),
           id: index
         }
       })
     }
-
-    return res
+    exam_data.list = exam_data.allList.slice(page * limit, (page + 1) * limit)
   }
   /**
    * [startExam 开始考试 获取sheet_id]
@@ -200,7 +200,7 @@ export const useExamStore = defineStore('exam', () => {
       if(type){
         examing_data.curQuestionIndex  = Number($route.query.sectionIndex) || 0
         examing_data.curQuestionChildrenIndex =  Number($route.query.quesIndex) || 0
-        examing_data.curIndex = res.questions.slice(0, examing_data.curQuestionIndex).reduce((prev:number, item:number) => prev + item?.children.length || 0, 0) + examing_data.curQuestionChildrenIndex
+        examing_data.curIndex = res.questions.slice(0, examing_data.curQuestionIndex).reduce((prev:number, item: any) => prev + item?.children?.length || 0, 0) + examing_data.curQuestionChildrenIndex
       } else {
         examing_data.curQuestionIndex = 0
         examing_data.curQuestionChildrenIndex = 0;

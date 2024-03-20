@@ -15,7 +15,7 @@
         :url="props.voice_link" 
       />
       <template v-else-if="curQuestion">
-        <component :is="quesetionType[curQuestion.question_type]" v-bind="curQuestion"/>
+        <component :is="quesetionType[curQuestion.question_type as keyof typeof quesetionType]" v-bind="curQuestion as any"/>
       </template>
     </div>
   </div>
