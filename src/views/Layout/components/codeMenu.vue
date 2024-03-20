@@ -5,10 +5,18 @@
         <RouterLink class="block w-[150px] h-[45px] p-[5px] ml-4" to="/">
           <img :src="logoBg" alt="login-bg" class="w-full h-auto" />
         </RouterLink>
-        <a-menu class="bg-transparent text-white mt-8 font-misans my-menu-list flex-1 overflow-y-auto"
-          v-model:selectedKeys="indexStore.menuData.current" mode="vertical" :items="indexStore.menuList"
-          @click="onClickMenu">
-        </a-menu>
+        <div class="my-4">
+          <a-menu class="bg-transparent text-white font-misans my-menu-list"
+            v-model:selectedKeys="indexStore.menuData.current" mode="vertical" :items="indexStore.menuList"
+            @click="onClickMenu">
+          </a-menu>
+        </div>
+        <div class="bottomlist pt-5">
+          <a-menu class="bg-transparent text-white font-misans my-menu-list"
+            v-model:selectedKeys="indexStore.menuData.current" mode="vertical" :items="indexStore.menuBottomList"
+            @click="onClickMenu">
+          </a-menu>
+        </div>
       </div>
       <div class="flex text-white mb-24 mt-4 px-3 w-full overflow-hidden items-center cursor-pointer" @click="onClickOut">
         <a-avatar :src="indexStore.userInfo.avatar" :alt="indexStore.userInfo.name" :size="40">
@@ -65,5 +73,17 @@ const onClickOut = () => {
 
 .my-menu-list :global(.ant-menu .ant-menu-item .ant-menu-item-icon) {
   opacity: 0.6;
+}
+.bottomlist {
+  position: relative;
+}
+.bottomlist:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 15px;
+  left: 15px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.5);
 }
 </style>

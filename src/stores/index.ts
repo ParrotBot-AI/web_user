@@ -48,9 +48,11 @@ export const useIndexStore = defineStore('menu', () => {
   })
   const menuData = reactive<{
     list: MENUITEM[];
+    bottomList: MENUITEM[];
     current: Array<string | number>;
   }>({
     list: [],
+    bottomList: [],
     current: ['home']
   });
 
@@ -66,7 +68,10 @@ export const useIndexStore = defineStore('menu', () => {
           icon: item.icon,
           pattern_id: item.pattern_id
         }
-      }),
+      })
+    ]
+    menuData.bottomList = [
+      { "id": "price", "name": "价格", icon: 'price', 'key': 'price' },
       { "id": "setting", "name": "设置", icon: 'setting', 'key': 'setting' }
     ]
   }
@@ -75,6 +80,15 @@ export const useIndexStore = defineStore('menu', () => {
   })
   const menuList = computed(() => {
     return menuData.list.map(item => {
+      return {
+        key: item.key,
+        label: item.name,
+        icon: () => h(IconFont, { type: `icon-${item.icon}` })
+      }
+    })
+  })
+  const menuBottomList = computed(() => {
+    return menuData.bottomList.map(item => {
       return {
         key: item.key,
         label: item.name,
@@ -100,6 +114,6 @@ export const useIndexStore = defineStore('menu', () => {
     userInfo.account_id = account_id
   }
 
-  return { getMenuValue, menuData, menuList, userTargets, requestUserInfo, userTargetsList, userInfo };
+  return { getMenuValue, menuData, menuList, userTargets, requestUserInfo, userTargetsList, userInfo, menuBottomList };
 })
 

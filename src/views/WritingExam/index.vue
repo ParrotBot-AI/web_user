@@ -12,7 +12,7 @@
         </div>
       </template>
     </b-header>
-    <div class="flex flex-1 bg-white flex-col" :style="{ borderTop: `1px solid #D0D5DD` }">
+    <div class="flex flex-1 bg-white flex-col overflow-hidden" :style="{ borderTop: `1px solid #D0D5DD` }">
       <BGuide 
         v-if="curInfo?.type === 'info'"
         :title="curInfo.title!"
@@ -27,7 +27,7 @@
         :question_title="curInfo.guide?.question_title"
         :is_show_footer="true"
       />
-      <div v-else-if="curInfo?.type === 'question' && curInfo?.step > 0" class="flex flex-col flex-1">
+      <div v-else-if="curInfo?.type === 'question' && curInfo?.step > 0" class="flex flex-col flex-1 overflow-hidden">
         <div 
           class="text-center h-14 flex items-center justify-between bg-white px-8" 
           :style="{ borderBottom: `1px solid #D0D5DD` } "
@@ -41,9 +41,9 @@
         <template v-if="curInfo?.keywords?.r === 1200">
           <template v-if="curInfo.step === 1">
             <div class="h-[100px]"></div>
-            <div class="flex flex-1" :style="{borderTop: '1px solid #D0D5DD'}">
+            <div class="flex flex-1 overflow-hidden" :style="{borderTop: '1px solid #D0D5DD'}">
               <div class="w-1/2 text-base h-full overflow-y-auto px-10 pt-10" :style="{borderRight: '1px solid #D0D5DD'}">
-                <p class="text-[#475467] text-base" v-for="(val,i) in curInfo.question_content" :key="i">{{ val }}</p>
+                <p class="text-[#475467] text-base pb-4 indent-8" v-for="(val,i) in curInfo.question_content" :key="i">{{ val }}</p>
               </div>
             </div>
           </template>
@@ -68,9 +68,9 @@
                 </p>
               </div>
             </div>
-            <div class="flex flex-1" :style="{borderTop: '1px solid #D0D5DD'}">
+            <div class="flex flex-1 overflow-hidden" :style="{borderTop: '1px solid #D0D5DD'}">
               <div class="w-1/2 text-base h-full overflow-y-auto px-10 pt-10" :style="{borderRight: '1px solid #D0D5DD'}">
-                <p class="text-[#475467] text-base" v-for="(val,i) in curInfo.question_content" :key="i">{{ val }}</p>
+                <p class="text-[#475467] text-base pb-4 indent-8" v-for="(val,i) in curInfo.question_content" :key="i">{{ val }}</p>
               </div>
               <div class="w-1/2 flex flex-col overflow-hidden">
                 <WtitingBtn             
@@ -84,22 +84,25 @@
           </template>
         </template>
         <template v-if="curInfo.keywords?.r === 600">
-          <div class="flex text-xl flex-1">
-            <div class="flex flex-1 flex-col py-10">
-              <div class="ml-[30px] pr-[20px] text-[#475467] pb-2 text-base" v-for="(val,i) in curInfo.question_title" :key="i">
+          <div class="flex text-base flex-1">
+            <div class="flex flex-1 flex-col py-10 px-10 text-[#475467]">
+              <div v-for="(val,i) in curInfo.question_title" :key="i">
                 {{ val }}
               </div>
               <Avatar 
                 :src="Man"
-                class="mt-10"
-                :name="'Doctor Achebe'"
-                :size="100"
+                class="my-10"
+                :name="curInfo?.question_content[0]?.name"
+                :size="80"
               />
+              <div>
+                <p v-for="(v,i) in curInfo?.question_content[0]?.content" :key="i">{{ v }}</p>
+              </div>
             </div>
-            <div class="flex flex-1 flex-col pb-4" :style="{ borderLeft: `1px solid #D0D5DD`}" >
-              <div v-for="(val,i) in curInfo.question_content" :key="i" class="text-[#475467] text-base flex mb-4 items-start">
+            <div class="flex flex-1 flex-col py-4" :style="{ borderLeft: `1px solid #D0D5DD`}" >
+              <div v-for="(val,i) in curInfo?.question_content?.slice(1)" :key="i" class="text-[#475467] text-base flex mb-4 items-start">
                 <Avatar 
-                  :src="Man"
+                  :src="i == 0 ? Man1 : Man2"
                   class="mx-10"
                   :name="val.name"
                   :size="80"
@@ -128,7 +131,9 @@ import WtitingBtn from "./components/WtitingBtn.vue"
 import type {WritingBtnProps} from "./components/WtitingBtn.vue"
 import type {HeaderBtnProps} from "@/views/ReadExam/components/HeaderBtn.vue"
 import Avatar from "./components/Avatar.vue"
-import Man from '@/assets/images/man.svg'
+import Man from '@/assets/images/man.jpg'
+import Man1 from '@/assets/images/man-1.jpg'
+import Man2 from '@/assets/images/man-2.jpg'
 import { useExamStore } from '@/stores/exam'
 import { useRoute, useRouter } from "vue-router"
 import { request_saveAnswer } from '@/service/exam'
@@ -254,8 +259,7 @@ const WritingBtnsConfig = reactive<{
   [k in string]: WritingBtnProps
 }>({
   cut: {
-    bt_name: ['Copy', 'Cut', 'Paste'],
-    word_number: 0,
+    bt_name: ['Copy', 'Cut', 'Paste']
   },
 })
 

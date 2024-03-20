@@ -24,6 +24,11 @@ const router = createRouter({
           name: 'setting',
           component: () => import('@/views/Setting/index.vue')
         },
+        {
+          path: '/price',
+          name: 'price',
+          component: () => import('@/views/Price/index.vue')
+        },
       ],
       component: () => import('@/views/Layout/index.vue')
     },

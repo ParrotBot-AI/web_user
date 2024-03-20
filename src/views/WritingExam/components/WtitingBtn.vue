@@ -12,13 +12,13 @@
     </a-button>
   </div>
   <div class="flex w-1/3 justify-center items-center cursor-pointer " @click="onShowWordClick">
-    <span class="text-[#1B8B8C] text-[12px] font-bold pl-1">{{showTimer ? 'Show' : 'Hide'}} Word Count <span class="text-[#000000] text-[16px] pl-1 font-normal" :class="{hidden:showTimer}">{{ props.word_number }}</span></span>
+    <span class="text-[#1B8B8C] text-[12px] font-bold pl-1">{{showTimer ? 'Hide' : 'Show'}} Word Count <span class="text-[#000000] text-[16px] pl-1 font-normal" :class="{hidden:!showTimer}">{{ textValue.split(/\s/g).filter(val => val).length }}</span></span>
   </div>
 </div>
 <div class="flex-1 overflow-hidden pb-3 py-1 px-1">
   <textarea 
     ref="textAreaEl"
-    class="w-full h-full border-none resize-none outline-[#edf6f6]" 
+    class="w-full h-full border-none resize-none outline-[#edf6f6] text-base" 
     @copy="$event.preventDefault()" 
     @paste="$event.preventDefault()"
     v-model="textValue"
@@ -35,7 +35,6 @@ const textAreaEl= ref<null | HTMLTextAreaElement>(null)
 const textValue = ref('')
 export type WritingBtnProps = {
   bt_name: string[]
-  word_number: number;
   onChange: (content:string) => void
 }
 function insertAtCursor(myField:HTMLTextAreaElement , myValue:string) {
