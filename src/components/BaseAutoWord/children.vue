@@ -1,6 +1,5 @@
 <template>
-  <div class="indent-8 pb-4">
-    {{ curContent }}
+  <div class="indent-8 pb-4" v-html="curContent">
   </div>
 </template>
 <script setup lang="ts">
@@ -14,15 +13,12 @@ const curContent = ref<string>('')
 const start = ref(0)
 const timer = ref<ReturnType<typeof setInterval> | null>(null)
 onMounted(() => {
-  console.log('children:::', props.word)
   content.value = props.word.split(/\n/)
   timer.value = setInterval(() => {
     if(start.value >= content.value.length) {
       clearTimeout(timer.value!)
       props?.onended()
       start.value = 0
-      content.value = []
-      curContent.value = ''
       return
     }
     start.value++
