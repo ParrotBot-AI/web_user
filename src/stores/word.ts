@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import http from "@/utils/http";
 import { reactive } from 'vue'
 import { useIndexStore } from "./index"
 import { useRouter, useRoute } from 'vue-router'
@@ -73,6 +74,7 @@ export const useWordStore = defineStore('word', () => {
       word:string
       word_id: number
       word_ids: number[]
+      response?: string[]
     },
     is_answer: boolean
   }>({})
@@ -109,21 +111,48 @@ export const useWordStore = defineStore('word', () => {
     }
     wordTaskData.is_answer = false
   }
+  const connectSSE = (url:string) => {
+    const eventSource = new EventSource(url);
+
+    eventSource.onmessage = function(event) {
+      wordTaskData.payload.response?.push(event.data)
+    };
+
+    eventSource.onerror = function(error) {
+        console.error("SSE error:", error);
+        eventSource.close();
+    };
+  }
 
   const next = async (data:any) => {
-    const { payload } = await request_learn_vocabs_tasks({
-      task_account_id: Number($route.query.id),
-      payload: data
-    })
-    if(payload.endpoint && payload.api_key) {
-      console.log('gpt')
-    } else {
-      wordTaskData.payload = {
-        ...payload,
+    try {
+      const { payload } = await request_learn_vocabs_tasks({
+        task_account_id: Number($route.query.id),
+        payload: data
+      })
+      // console.log(payload)
+      if(payload.endpoints) {
+        const {
+          input,
+          method,
+          url
+        } = payload.endpoints.init
+        const streaming = payload.endpoints.streaming
+        const { clientId } = await http[method](url, input)
+        wordTaskData.payload = {
+          ...payload,
+          response: [],
+        }
+        connectSSE(streaming.url.replace('{ClientID}', clientId));
+      } else {
+        wordTaskData.payload = {
+          ...payload,
+        }
+        wordTaskData.is_answer = false
       }
-      wordTaskData.is_answer = false
+    } catch (error) {
+      console.log(error)
     }
-    
   }
 
   const submit_task = async (i: number) => {

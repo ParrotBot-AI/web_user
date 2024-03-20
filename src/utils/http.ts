@@ -1,4 +1,4 @@
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
+import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import axios from 'axios'
 import { message } from 'ant-design-vue';
 import { getWithExpiry } from "@/utils/storage"
@@ -28,7 +28,7 @@ class Axios {
 
   constructor() {
     this.instance = axios.create({
-      timeout: 10000,
+      timeout: 20000,
       // withCredentials: true,
       baseURL: import.meta.env.VITE_APP_BASEURL as string,
     })
@@ -66,6 +66,7 @@ class Axios {
     // 成功请求
     if (
       response?.data?.code === SUCCESS_CODE ||
+      response?.data?.code === 10000 ||
       response.status === 304 ||
       response.status === 204 ||
       (response.config.responseType === 'arraybuffer' &&
