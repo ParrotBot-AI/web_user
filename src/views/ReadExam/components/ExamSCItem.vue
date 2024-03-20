@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="text-gray-500 text-[18px] pb-10 font-bold">
-      <p v-for="(val, i) in question_contents" :key="i">{{ val.replace(/\$\$/, '【 】') }}</p>
+      <p v-for="(val, i) in question_contents" :key="i" v-html="val.replace(/\[▇\]/g, `<span class='fill-item'>【<b></b>】</span>`)"></p>
     </h1>
     <!--单选-->
     <a-radio-group v-model:value="sc_value"

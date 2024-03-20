@@ -14,22 +14,24 @@
       <template v-else>
         <div class="text-center h-14 flex items-center justify-between bg-white px-8">
           <h2 class="text-gray-900 text[20px] font-bold">{{ examStore.curQuestion?.question_title }}</h2>
-          <span></span>
+          <span>
+              Question {{ examStore.examing_data.curIndex + 1 }} of {{ examStore.examing_data?.childrenLength}}
+            </span>
           <div class="text-[18px] text-green-1 cursor-pointer" v-show="examStore.curQuestionChildren?.isShowViewText"
             @click="onClickViewText">VIEW TEXT</div>
           <Timer v-show="!examStore.curQuestionChildren?.isShowViewText" />
         </div>
         <div class="flex flex-1 overflow-hidden bg-white" :style="{ borderTop: `1px solid #D0D5DD` }">
-          <div class="flex-1 h-full overflow-h-auto overflow-x-hidden" :style="{ borderRight: `1px solid #D0D5DD` }"
+          <div class="flex-1 h-full overflow-h-auto overflow-x-hidden pt-2" :style="{ borderRight: `1px solid #D0D5DD` }"
             v-show="isViewText || !examStore.curQuestionChildren?.isShowViewText">
-            <h1 class="text-center text-[20px] text-gray-900 py-5">{{ examStore.curQuestion?.question_title }}</h1>
-            <div ref="contentDiv" id="content">
-              <p class="px-8 text-gray-500 text-[18px] leading-7" :class="'read-mock-content-' + (i + 1)"
+            <!-- <h1 class="text-center text-[20px] text-gray-900 py-5">{{ examStore.curQuestion?.question_title }}</h1> -->
+            <div ref="contentDiv" id="content" class="content-box">
+              <p class="px-8 text-gray-500 text-[18px] leading-7 pb-4 indent-8" :class="'read-mock-content-' + (i + 1)"
                 v-for="(val, i) in examStore.curQuestion?.cur_questions_content" v-html="val" :key="i"></p>
             </div>
           </div>
           <div class="flex-1 h-full overflow-h-auto overflow-x-hidden px-12 py-7">
-            <div v-show="!(examStore.curQuestionChildren?.isShowViewText && isViewText)">
+            <div v-show="!(examStore.curQuestionChildren?.isShowViewText && isViewText) && examStore.curQuestion.viewPassage">
               <component v-if="examStore.curQuestionChildren"
                 :is="examItems[examStore.curQuestionChildren?.question_type as keyof IExamItems]"
                 v-bind="examStore.curQuestionChildren" />
@@ -110,14 +112,18 @@ const HeaderBtnsConfig = reactive<{
     disabled: false,
     isShow: true,
     onClick: () => {
-      isShowGuide.value = false
-      $router.replace({
-        query: {
-          ...query,
-          sectionIndex: 0,
-          quesIndex: 0
-        }
-      })
+      if(isShowGuide.value) {
+        isShowGuide.value = false
+        $router.replace({
+          query: {
+            ...query,
+            sectionIndex: 0,
+            quesIndex: 0
+          }
+        })
+      } else {
+        examStore.examing_data.questions[examStore.examing_data.curQuestionIndex].viewPassage = true
+      }
     }
   },
   next: {
@@ -140,12 +146,12 @@ const HeaderBtnsConfig = reactive<{
   },
 })
 watchEffect(() => {
-  HeaderBtnsConfig.continue.isShow = isShowGuide.value;
-  HeaderBtnsConfig.progress.isShow = !isShowGuide.value
-  HeaderBtnsConfig.prev.isShow = !isShowGuide.value
-  HeaderBtnsConfig.help.isShow = !isShowGuide.value
-  HeaderBtnsConfig.next.isShow = !isShowGuide.value && !examStore.isExamEnding
-  HeaderBtnsConfig.submit.isShow = examStore.isExamEnding
+  HeaderBtnsConfig.continue.isShow = !examStore.curQuestion.viewPassage || isShowGuide.value
+  HeaderBtnsConfig.progress.isShow = examStore.curQuestion.viewPassage && !isShowGuide.value
+  HeaderBtnsConfig.prev.isShow = examStore.curQuestion.viewPassage && !isShowGuide.value
+  HeaderBtnsConfig.help.isShow = examStore.curQuestion.viewPassage && !isShowGuide.value
+  HeaderBtnsConfig.next.isShow = !isShowGuide.value && !examStore.isExamEnding && examStore.curQuestion.viewPassage
+  HeaderBtnsConfig.submit.isShow = examStore.isExamEnding 
 })
 
 
@@ -176,6 +182,10 @@ watchEffect(() => {
   } else {
     contentDiv.value?.scrollTo(0, 0)
   }
+  // console.log('examStore.curQuestion?.viewPassage:::',examStore.curQuestion?.viewPassage)
+  if(!examStore.curQuestion?.viewPassage) {
+    contentDiv.value?.scrollTo(0, 0)
+  }
 }, {
   flush: 'post'
 })
@@ -190,6 +200,9 @@ onMounted(async () => {
   if(query.sectionIndex && query.quesIndex) {
     isShowGuide.value = false
   }
+  examStore.examing_data.questions.forEach(val => {
+    val.viewPassage = query.quesIndex > 0 
+  })
   socket.value = new WebSocketClient('ws://' + import.meta.env.VITE_WS_BASEURL + 'ws/question/' + access + '/');
   loading.value = false
   await nextTick()
@@ -239,5 +252,18 @@ onUnmounted(() => {
 
 :global(.fill-item em) {
   font-style: normal;
+}
+
+.content-box {
+  position: relative;
+}
+.content-box:before {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 2rem;
+  width: 16px;
+  height: 16px;
+  background: #1B8B8C;
 }
 </style>
