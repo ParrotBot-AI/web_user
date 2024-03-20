@@ -115,7 +115,8 @@ export const useWordStore = defineStore('word', () => {
     const eventSource = new EventSource(url);
 
     eventSource.onmessage = function(event) {
-      wordTaskData.payload.response?.push(event.data)
+      wordTaskData.payload.response = [...wordTaskData.payload.response, event.data]
+      console.log(wordTaskData.payload.response)
     };
 
     eventSource.onerror = function(error) {

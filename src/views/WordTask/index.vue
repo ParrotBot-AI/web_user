@@ -9,7 +9,7 @@
         </div>
       </template>
     </b-header>
-    <div class="bg-[#edf6f6] flex flex-1">
+    <div class="bg-[#edf6f6] flex flex-1 overflow-hidden">
       <a-spin v-if="loading" size="large" tip="试题加载中..." class="fixed top-1/2 left-1/2 -translate-1/2 z-50"/>
       <template v-else>
         <div class="flex w-full items-center flex-col bg-[#edf6f6]" v-if="curTask?.payload?.word">
@@ -32,7 +32,6 @@
         <div class="flex w-full h-full items-center flex-col bg-[#edf6f6] md:px-40 px-12 py-14 " v-else>
           <div class="bg-white w-full h-full rounded-md max-w-[1000px]" :style="{boxShadow: '0 4px 20px rgba(27, 139, 140, 0.2)'}">
             <h3 class="inline-block bg-[rgba(243,184,78,0.2)] rounded-tr-xl rounded-br-xl text-[#C79741] px-4 py-1 text-base mt-3 font-normal">Genrated by AI</h3>
-            {{console.log(curTask?.payload?.response)}}
             <BAutoWord 
               :data="curTask?.payload?.response!"
             />
