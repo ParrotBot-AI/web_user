@@ -48,7 +48,7 @@ import WebSocketClient from '@/utils/ws'
 import type { USERINFO } from "@/service/user"
 import type { HeaderBtnProps } from "./components/HeaderBtn.vue"
 import HeaderBtn from "./components/HeaderBtn.vue"
-import { onMounted, ref, onUnmounted, watchEffect, reactive, nextTick } from 'vue'
+import { onMounted, ref, onUnmounted, watchEffect, reactive } from 'vue'
 import { useExamStore } from '@/stores/exam'
 import { getWithExpiry } from '@/utils/storage'
 import ExamSCItem from './components/ExamSCItem.vue'
@@ -169,14 +169,21 @@ const readGuide = reactive({
 })
 
 watchEffect(() => {
+  if(!examStore.curQuestion?.viewPassage) {
+    return
+  }
   const keywords_p = examStore.curQuestionChildren?.keywords?.p
   const keywords_k = examStore.curQuestionChildren?.keywords?.k
   const p = Array.isArray(keywords_p) ? keywords_p[0] : keywords_p
   if (p) {
+    const originText = examStore.curQuestion?.cur_questions_content[p - 1]
+    const paragraphEls = contentDiv.value?.querySelectorAll('p')
     const paragraphEl = contentDiv.value?.querySelector('.read-mock-content-' + p)
     if (keywords_k && keywords_k !== '$$' && paragraphEl) {
-      // @ts-ignore
-      paragraphEl.innerHTML = paragraphEl!.innerHTML.replace(new RegExp(`<b class="bg-[rgba(253,212,78,0.3)]">`, 'g'), '').replace(new RegExp('</b>', 'g'), '').replace(new RegExp(keywords_k, 'g'), `<b class="bg-[rgba(253,212,78,0.3)]">${keywords_k}</b>`)
+      paragraphEls?.forEach((val,i) => {
+        val.innerHTML = examStore.curQuestion?.cur_questions_content[i]
+      })
+      paragraphEl.innerHTML = originText.replace(new RegExp(keywords_k, 'g'), `<b class="bg-[rgba(253,212,78,0.3)]">${keywords_k}</b>`)
     }
     paragraphEl?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   } else {
@@ -190,6 +197,32 @@ watchEffect(() => {
   flush: 'post'
 })
 
+watchEffect(async () => {
+  if(!isShowGuide.value) {
+    contentDiv.value?.addEventListener('click', (e) => {
+      console.log('click:::contentDiv')
+      const target = e.target as HTMLElement
+      setTimeout(() => {
+        let spanTarget: HTMLElement | null = null;
+        if (target.parentElement?.classList.contains('fill-item')) {
+          spanTarget = target.parentElement
+        } else if (target.classList.contains('fill-item')) {
+          spanTarget = target
+        }
+        if (spanTarget) {
+          examStore.saveQuestion(examStore.curQuestionChildren?.question_id, examStore.curQuestionChildren?.options_label.map((val: any, i: any) => i == spanTarget?.dataset.index ? 1 : 0))
+          contentDiv.value?.querySelectorAll('.fill-item').forEach(item => {
+            item.innerHTML = '【 <b></b> 】'
+          })
+          const text = examStore.curQuestionChildren.keywords
+          spanTarget.innerHTML = `【 <em>${typeof text === 'string' ? text : text?.s}</em> 】`
+        }
+      })
+    })
+  }
+}, {
+  flush: 'post'
+})
 
 // 查看原文
 const onClickViewText = () => {
@@ -205,26 +238,6 @@ onMounted(async () => {
   })
   socket.value = new WebSocketClient('ws://' + import.meta.env.VITE_WS_BASEURL + 'ws/question/' + access + '/');
   loading.value = false
-  await nextTick()
-  contentDiv.value?.addEventListener('click', (e) => {
-    const target = e.target as HTMLElement
-    setTimeout(() => {
-      let spanTarget: HTMLElement | null = null;
-      if (target.parentElement?.classList.contains('fill-item')) {
-        spanTarget = target.parentElement
-      } else if (target.classList.contains('fill-item')) {
-        spanTarget = target
-      }
-      if (spanTarget) {
-        examStore.saveQuestion(examStore.curQuestionChildren?.question_id, examStore.curQuestionChildren?.options_label.map((val: any, i: any) => i == spanTarget?.dataset.index ? 1 : 0))
-        contentDiv.value?.querySelectorAll('.fill-item').forEach(item => {
-          item.innerHTML = '【 <b></b> 】'
-        })
-        const text = examStore.curQuestionChildren.keywords
-        spanTarget.innerHTML = `【 <em>${typeof text === 'string' ? text : text?.s}</em> 】`
-      }
-    })
-  })
 })
 
 onUnmounted(() => {

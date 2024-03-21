@@ -132,9 +132,9 @@ const chart = ref()
 watchEffect (() => {
   chart.value?.setOption({
     color: [ '#f1b01f'],
-    legend: {
-      data:['时长']
-    },
+    // legend: {
+    //   data:['时长']
+    // },
     xAxis: {
       data: ["M","T","W","T","F","S","S"]
     },
@@ -145,6 +145,8 @@ watchEffect (() => {
       data: [5, 20, 36, 10, 10, 20,10]
     }]
   });
+}, {
+  flush: 'post'
 })
 // const myEcharts = () => {
 //   const option = {

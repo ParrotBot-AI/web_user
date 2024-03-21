@@ -53,6 +53,8 @@
               v-else
             >
               <template v-if="!isHearing">{{ curCustomData.remark }}{{' '}}{{ v.questions[0].order }}</template>
+              <template v-else-if="isHearing && i === 4">{{ curCustomData.remark }}{{' '}}3</template>
+              <template v-else-if="isHearing && i === 5">{{ curCustomData.remark }}{{' '}}4</template>
               <template v-else-if="isHearing && i%3 !== 0">{{ curCustomData.remark }}{{' '}}{{ v.questions[0].order - 1 }}</template>
               <template v-else-if="isHearing && i%3 === 0">Conversation{{' '}}1</template>
             </span>
@@ -74,7 +76,7 @@
           <p v-for="(v,i) in checkboxVal" :key="v.section_id" class="py-1.5">
             <a-checkbox class="radius" :value="v.questions[0].question_id">
               <span class="text-gray-500 break-word w-24 font-bold text-base" v-if="Array.isArray(curCustomData.remark)">{{ curCustomData.remark[i] }}</span>
-              <span class="font-bold pl-2 text-gray-500" v-else>{{ curCustomData.remark }}{{' '}}{{ i + 1 }}</span>
+              <span class="font-bold pl-2 text-gray-500" v-else>{{ curCustomData.remark }}{{' '}}{{ isHearing ? i + 3 : i + 1 }}</span>
             </a-checkbox>
           </p>
         </a-checkbox-group>

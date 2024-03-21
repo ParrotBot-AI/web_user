@@ -1,10 +1,11 @@
 import { reactive, computed, h, watchEffect } from 'vue'
 import { defineStore } from 'pinia'
-import { request_userInfo } from '@/service/user'
+import { request_userInfo, request_menu } from '@/service/user'
 import type { MENUITEM } from "@/service/user"
 import { IconFont } from "@/plugins/ui"
 import { useRoute } from "vue-router"
 import { formatStr } from "@/utils/utils"
+import { setWithExpiry, getWithExpiry } from "@/utils/storage"
 import Union from "@/assets/homeIcon/Union.svg"
 import Hourglass from "@/assets/homeIcon/Hourglass.svg"
 import Group from "@/assets/homeIcon/Group.svg"
@@ -57,6 +58,7 @@ export const useIndexStore = defineStore('menu', () => {
   });
 
   async function getMenuValue(data: MENUITEM[]) {
+
     menuData.list = [
       { "id": "home", "name": "看板", icon: 'home', key: 'home' },
       ...data.map(item => {
@@ -96,8 +98,27 @@ export const useIndexStore = defineStore('menu', () => {
       }
     })
   })
-
+  const requestMenu = async () => {
+    const _usermenu = getWithExpiry('usermenu')!
+    if(_usermenu) {
+      return Promise.resolve(_usermenu)
+    }
+    const res = await request_menu()
+    setWithExpiry('usermenu', res, 1000 * 60 * 60 * 24)
+    return res
+  }
   const requestUserInfo = async (userId: number) => {
+    const _userInfo = getWithExpiry<any>('userdata')!;
+    if(_userInfo) {
+      userInfo.userId = userId
+      userInfo.username = _userInfo.username
+      userInfo.email = _userInfo.email
+      userInfo.mobile = _userInfo.mobile
+      userInfo.avatar = _userInfo.avatar
+      userInfo.name = _userInfo.name
+      userInfo.account_id = _userInfo.account_id
+      return Promise.resolve(userInfo)
+    }
     const res = await request_userInfo(userId)
     const { account_id } = await request_getAccount_id(userId, { exam_id: 1 })
     userTargets.forEach(val => {
@@ -112,8 +133,9 @@ export const useIndexStore = defineStore('menu', () => {
     userInfo.avatar = res.avatar
     userInfo.name = res.name
     userInfo.account_id = account_id
+    setWithExpiry('userdata', userInfo, 1000 * 60 * 60 * 24)
   }
 
-  return { getMenuValue, menuData, menuList, userTargets, requestUserInfo, userTargetsList, userInfo, menuBottomList };
+  return { requestMenu, getMenuValue, menuData, menuList, userTargets, requestUserInfo, userTargetsList, userInfo, menuBottomList };
 })
 

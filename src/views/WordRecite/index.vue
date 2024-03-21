@@ -209,9 +209,9 @@ watchEffect (() => {
       }
     },
 
-    legend: {
-      data: ['学习单词', '遗忘单词']
-    },
+    // legend: {
+    //   data: ['学习单词', '遗忘单词']
+    // },
     toolbox: {
       feature: {
         saveAsImage: {
@@ -286,6 +286,8 @@ watchEffect (() => {
       }
     ]
   });
+}, {
+  flush: 'post'
 })
 
 onMounted(() => {

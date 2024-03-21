@@ -78,7 +78,7 @@ const HeaderBtnsConfig = reactive<{
   },
   prev: {
     title: '上一步',
-    disabled: true,
+    disabled: false,
     id: 'prev',
     isShow: false,
     onClick: () => {
@@ -137,6 +137,7 @@ watchEffect(() => {
   }
   if(questionItem.value?.step >= 0){
     HeaderBtnsConfig.next.isShow = true
+    HeaderBtnsConfig.prev.isShow = true
     HeaderBtnsConfig.continue.isShow = false
     HeaderBtnsConfig.help.isShow = true
   } else {
@@ -148,8 +149,6 @@ watchEffect(() => {
     HeaderBtnsConfig.submit.isShow = true
     HeaderBtnsConfig.next.isShow = false
   }
-}, {
-  flush: 'post'
 })
 onMounted(async () => {
   await examStore.getExamData(query.id as string, 'hearing')
