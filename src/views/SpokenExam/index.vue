@@ -152,6 +152,7 @@ const { query } = useRoute()
 const loading = ref(true)
 const examStore = useExamStore()
 const step = ref()
+const isend = ref(false)
 const HeaderBtnsConfig = reactive<{
   [k in string]: HeaderBtnProps
 }>({
@@ -183,15 +184,6 @@ const HeaderBtnsConfig = reactive<{
         }
       }
       changeQueryQuestion()
-    }
-  },
-  submit: {
-    title: '提交',
-    id: 'submit',
-    disabled: false,
-    isShow: false,
-    onClick: async () => {
-      
     }
   }
 })
@@ -255,6 +247,10 @@ const onSpeakended = async () => {
       speakingInfo[step.value].step = 0
       changeQueryQuestion()
     }
+    if(isend.value){
+      // 提交
+      examStore.requestSubmitExam(query.id as string)
+    }
   } catch (error) {
     console.log(error)
   }
@@ -271,10 +267,10 @@ const changeQueryQuestion = () => {
 }
 watchEffect(() => {
   if(step.value === speakingInfo.length - 1 && speakingInfo[step.value].step === speakingInfo[step.value].maxStep) {
-    HeaderBtnsConfig.submit.isShow = true
+    isend.value = true
     HeaderBtnsConfig.continue.isShow = false
   } else {
-    HeaderBtnsConfig.submit.isShow = false
+    isend.value = false
     HeaderBtnsConfig.continue.isShow = true
   } 
 })

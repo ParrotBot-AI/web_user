@@ -232,8 +232,8 @@ const HeaderBtnsConfig = reactive<{
     disabled: false,
     isShow: false,
     onClick: async () => {
-      console.log('submit')
       await saveSingleAnswer()
+      examStore.requestSubmitExam(query.id as string)
     }
   }
 })
