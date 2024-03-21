@@ -7,7 +7,7 @@
     <a-checkbox-group v-model:value="mc_value" v-if="props.restriction.rc > 1 && props.question_type === 'Toefl_Reading_mc2'" class="flex flex-col">
       <a-checkbox v-for="(item, index) in props.detail" :key="index" :value="index"
         class="flex pb-7 text-gray-500 mycheckbox flex-row">
-        <span class="pl-3 pr-2">{{ props.options_label[index] }}.</span>
+        <!-- <span class="pl-3 pr-2">{{ props.options_label[index] }}.</span> -->
         <p class="flex-1 overflow-hidden text-wrap">{{ item }}</p>
       </a-checkbox>
     </a-checkbox-group>

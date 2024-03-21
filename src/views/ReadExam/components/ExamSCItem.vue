@@ -8,7 +8,7 @@
       v-if="props.restriction.rc === 1 && props.keywords.k !== '$$' && !isShowAnserHistory">
       <a-radio v-for="(item, index) in props.detail" :key="index" :value="index"
         class="flex pb-7 text-gray-500 myraido">
-        <span class="pl-3 pr-2">{{ props.options_label[index] }}.</span>
+        <!-- <span class="pl-3 pr-2">{{ props.options_label[index] }}.</span> -->
         <p class="flex-1">{{ item }}</p>
       </a-radio>
     </a-radio-group>
@@ -16,26 +16,12 @@
     <h2 v-else-if="props.keywords.k === '$$'" class="text-green-1 text-[18px]">
       {{ props.keywords.s || 'keywords.s is not defined' }}
     </h2>
-    <!-- 单选回顾 -->
-    <template v-if="isShowAnserHistory">
-      <div v-for="( item, index ) in  props.detail " :key="index" :value="index"
-        class="flex pb-7 text-gray-500 myraido">
-          <img :src="check" alt="check" class="cursor-pointer" v-if="answerHistorylist[index] === 0" />
-          <img :src="correntCheck" alt="correntCheck" class="cursor-pointer" v-else-if="answerHistorylist[index] === 2" />
-          <img :src="mistakeCheck" alt="mistakeCheck" class="cursor-pointer" v-else />
-        <span class="pl-3 pr-2">{{ props.options_label[index] }}.</span>
-        <p class="flex-1">{{ item }}</p>
-      </div>
-    </template>
   </div>
 </template>
 <script setup lang="ts">
 import { defineProps, ref, watch, computed } from 'vue'
 import { useRoute } from "vue-router"
 import { useExamStore } from "@/stores/exam"
-import check from '@/assets/homeIcon/check.svg'
-import correntCheck from '@/assets/homeIcon/correntCheck.svg'
-import mistakeCheck from '@/assets/homeIcon/mistakeCheck.svg'
 const $route = useRoute()
 const examStore = useExamStore()
 const sc_value = ref<number>(-1)
@@ -63,37 +49,7 @@ const isShowAnserHistory = computed(() => {
   }
   return props.answer?.some((item) => item !== 0)
 })
-const answerHistorylist = computed(() => {
-  const { answer_weight, answer } = props
-  const newW = (answer_weight as number[])?.reduce((prev, next) => {
-    if (next) {
-      next = 2
-    }
-    (prev as number[]).push(next)
-    return prev
-  }, [])
-  if (answer?.join('') === answer_weight?.join('')) {
-    return newW
-  }
-  const newA = (answer as number[])?.reduce((prev, next) => {
-    if (next) {
-      next = 3
-    }
-    (prev as number[]).push(next)
-    return prev
-  }, [])
-  const result: number[] = []
-  for (let i = 0; i < newW.length; i++) {
-    if (newW[i]) {
-      result.push(newW[i])
-    } else if (newA[i]) {
-      result.push(newA[i])
-    } else {
-      result.push(newW[i])
-    }
-  }
-  return result
-})
+
 
 watch(() => props.question_id, () => {
   const answerValue = examStore.examing_data.answerData.find(val => val.question_id === props.question_id)

@@ -136,7 +136,7 @@ import Man1 from '@/assets/images/man-1.jpg'
 import Man2 from '@/assets/images/man-2.jpg'
 import { useExamStore } from '@/stores/exam'
 import { useRoute, useRouter } from "vue-router"
-import { request_saveAnswer } from '@/service/exam'
+import { request_saveAnswer, request_computed_single_score } from '@/service/exam'
 const loading = ref(true)
 const examStore = useExamStore()
 const $router = useRouter()
@@ -174,13 +174,13 @@ const onAudioEnded = () => {
   changeQueryQuestion()
 }
 const saveSingleAnswer = async () => {
-  // TODO 计算单个题目的分数
   await request_saveAnswer({
     question_id: curInfo.value?.question_id!,
     answer: curInfo.value?.answer!,
     duration: 0,
     sheet_id: query.id as string
   })
+  await request_computed_single_score(query.id as string, curInfo.value?.question_id!)
 }
 const HeaderBtnsConfig = reactive<{
   [k in string]: HeaderBtnProps

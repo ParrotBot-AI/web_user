@@ -70,8 +70,9 @@ export const useExamStore = defineStore('exam', () => {
     intensifyScoreTotal: number;
     intensifyScore: number;
     summarySourceTotal: number;
-    summarySource: number,
-    questions_r: object
+    summarySource: number;
+    questions_r: object;
+    format_question: Array<any>
   }>({
     aiComment: '在使用鹦鹉智学时，您可以随时与AI助教交流。我们深知托福学习的困难与沮丧。所以她不仅是一个经验丰富的托福老师，更是一个可以给您情绪价值的好友，帮您排解托福学习的压力。',
     questions: [
@@ -94,7 +95,8 @@ export const useExamStore = defineStore('exam', () => {
     intensifyScore: 0,
     summarySourceTotal: 0,
     summarySource: 0,
-    questions_r: {}
+    questions_r: {},
+    format_question: []
   })
   const questionTitle = ref('')
   const processData = reactive<any[]>([])
@@ -300,6 +302,10 @@ export const useExamStore = defineStore('exam', () => {
   const setShowAnswerHistoryDialog = () => {
     showAnswerHistoryDialog.value = !showAnswerHistoryDialog.value
   }
+  /**
+   * [getExamProcess 获取考试进度]
+   *
+   */
   const getExamProcess = async (id: string) => {
     try {
       const res = await request_getExamStutas(id)
@@ -309,17 +315,35 @@ export const useExamStore = defineStore('exam', () => {
       console.log(error)
     }
   }
-
+  /**
+   * [requestSubmitExam 计算分数，跳转到result页面]
+   *
+   */
   const requestSubmitExam = async (sheet_id: string) => {
     await request_submitExam(sheet_id)
     await request_computed_score(sheet_id)
-    $router.push(`/result/${sheet_id}`)
+    $router.push(`/result/${sheet_id}?type=${$route?.meta?.parent}` )
   }
+  /**
+   * [getExamResult 获取考试结果]
+   *
+   */
   const getExamResult = async (sheet_id: string) => {
     const res = await request_get_result(sheet_id)
     resultData.mockScoreTotal = res.max_score
     resultData.mockScore = res.score
     resultData.questions_r = res.questions_r
+    resultData.format_question = res.questions_r.questions.reduce((def, item) => {
+      def.push(...item.children.map(val => ({
+        ...val,
+        question_parent: {
+          ...item,
+          question_content: item.question_content.split(/\\n/),
+          children: null
+        }
+      })))
+      return def;
+    }, [])
   }
 
   return {

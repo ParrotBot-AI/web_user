@@ -143,7 +143,7 @@ import { useExamStore } from '@/stores/exam'
 import { uploadFileToOBS } from "@/service/file"
 import BTimerCircle from "@/components/BaseTimerCircle/index.vue"
 import { stop, blobToFile} from '@/utils/recorder'
-import { request_saveAnswer } from '@/service/exam'
+import { request_saveAnswer, request_computed_single_score } from '@/service/exam'
 
 import BAudio from "@/components/BaseAudio/index.vue"
 import { useRoute, useRouter } from "vue-router"
@@ -235,14 +235,13 @@ const onPrepareended = () => {
   }
 }
 const saveSingleAnswer = async (link:string) => {
-  // TODO 计算单个题目的分数
   await request_saveAnswer({
     question_id: curInfo.value?.question_id!,
-    answer: [],
     answer_voice_link: link,
     duration: 0,
     sheet_id: query.id as string
   })
+  await request_computed_single_score(query.id as string, curInfo.value?.question_id!)
 }
 const onSpeakended = async () => {
   try {

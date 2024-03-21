@@ -4,9 +4,6 @@
     <div class="w-[190px] h-[137px] result-icon absolute -top-[70px] left-1/2 -translate-x-1/2">
       <span class="absolute right-[52px] top-[9px] text-[24px] text-white">A+</span>
     </div>
-    <span class="absolute right-14 top-6 cursor-pointer text-[#F7A705]" @click="reviewAnswer">{{ $t('回顾答案') }}
-      <ArrowRightOutlined class="pl-2" />
-    </span>
     <div class="w-[56vw]">
       <ul class="flex mb-8 mt-2 list">
         <li v-for="val in summaryList" :key="val.id" class="flex-1 list-none flex items-center justify-center flex-col">
@@ -71,9 +68,6 @@ const summaryList: Array<{ title: string, id: keyof IPropsType }> = [
   // }
 ]
 
-const reviewAnswer = () => {
-  examStore.setShowAnswerHistoryDialog()
-}
 
 </script>
 <style scoped>

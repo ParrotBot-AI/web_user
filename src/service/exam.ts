@@ -34,7 +34,7 @@ export const request_getExamStutas = (id: string) => {
 }
 type EXAM_ANSWER = {
   question_id: number
-  answer: number[]
+  answer?: number[] | string
   duration: number
   answer_voice_link?: string
   sheet_id: number | string
@@ -56,4 +56,12 @@ export const request_computed_score = (sheet_id: string) => {
 // 获取得分
 export const request_get_result = (sheet_id: string) => {
   return http.get(`api/system/microservice/get_score/${sheet_id}/`)
+}
+
+// 单题记分
+export const request_computed_single_score = (sheet_id: string, question_id: string) => {
+  return http.post(`api/system/microservice/grade_answer/`, {
+    sheet_id,
+    question_id
+  })
 }
