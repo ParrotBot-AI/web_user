@@ -12,6 +12,7 @@ export const useWordStore = defineStore('word', () => {
     last_day_review: number; 
     last_day_study: number;
     series: any[];
+    status_book: any[];
     today_day_review: number;
     today_day_study: number;
     total_review: number;
@@ -46,6 +47,34 @@ export const useWordStore = defineStore('word', () => {
       "wrong_words": 0 
       }
     ], 
+    status_book: [
+      {       
+        "current_level": 1,
+        "level_book": [
+          {
+              "counts": 5262,
+              "id": 1,
+              "name": "4/6级单词",
+              "order": 1
+          },
+          {
+              "counts": 1905,
+              "id": 2,
+              "name": "托福核心词汇",
+              "order": 100
+          },
+          {
+              "counts": 335,
+              "id": 3,
+              "name": "托福学科词汇",
+              "order": 101
+          }
+        ],
+        "level_status": 7502,
+        "level_total": 5262
+      }
+    ],
+    
     today_day_review: 0,
     today_day_study: 0,
     total_review: 0,

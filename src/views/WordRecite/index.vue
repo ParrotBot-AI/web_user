@@ -75,7 +75,7 @@
       </a-card>
       <a-card class="text-gray-500 text-2xl font-bold col-start-6 col-span-2 row-span-3 shadow-lg">
         {{ $t('单词学习进度') }}
-        <div class="text-green-1 mt-[20px] text-[16px]">lv2 {{  $t('进度') }}26% </div>
+        <div class="text-green-1 mt-[20px] text-[16px]">{{ 'lv' + wordStore.vocabs_statics_data.status_book[0].current_level + ' 26%' }} </div>
         <a-progress strokeColor="#1B8B8C" :percent="30" :showInfo="false"/>
         <div class="flex w-full mt-[-10px]" >
           <div class="text-sm font-normal">500</div>
@@ -84,8 +84,8 @@
         <div class="flex mt-4 px-3 w-full items-center">
           <img :src="Tick" alt="layout" class="w-5 h-5" />
           <div class="mx-5 flex-1">
-            <div class="text-sm">{{ $t('4/6级单词') }}</div>
-            <div class="text-sm font-normal">{{ $t('总计')+ 4321 +$t('个') }}</div>
+            <div class="text-sm">{{ $t(wordStore.vocabs_statics_data.status_book[0].level_book[0].name) }}</div>
+            <div class="text-sm font-normal">{{ $t('总计')+ wordStore.vocabs_statics_data.status_book[0].level_book[0].counts +$t('个') }}</div>
           </div>
           <div class="text-sm text-green-1 cursor-pointer">{{ $t('重选') }}</div>
         </div>
@@ -93,8 +93,8 @@
         <div class="flex  px-3 w-full items-center">
           <img :src="Tick" alt="layout" class="w-5 h-5" />
           <div class="mx-5 flex-1">
-            <div class="text-sm">{{ $t('托福核心词') }}</div>
-            <div class="text-sm font-normal">{{ $t('总计')+ 4321 +$t('个') }}</div>
+            <div class="text-sm">{{ $t(wordStore.vocabs_statics_data.status_book[0].level_book[1].name) }}</div>
+            <div class="text-sm font-normal">{{ $t('总计')+ wordStore.vocabs_statics_data.status_book[0].level_book[1].counts +$t('个') }}</div>
           </div>
           <div class="text-sm text-green-1 cursor-pointer">{{ $t('重选') }}</div>
         </div>
@@ -120,8 +120,8 @@
         <div class="flex px-3 w-full items-center">
           <img :src="Lock" alt="layout" class="w-5 h-5" />
           <div class="mx-5 flex-1">
-            <div class="text-sm">{{ $t('托福学科词') }}</div>
-            <div class="text-sm font-normal">{{ $t('总计')+ 4321 +$t('个') }}</div>
+            <div class="text-sm">{{ $t(wordStore.vocabs_statics_data.status_book[0].level_book[2].name) }}</div>
+            <div class="text-sm font-normal">{{ $t('总计')+ wordStore.vocabs_statics_data.status_book[0].level_book[2].counts +$t('个') }}</div>
           </div>
           <div class="text-sm cursor-pointer">{{ $t('选择') }}</div>
         </div>
@@ -192,6 +192,9 @@ const formatData = (key: string) => {
   }
   return series ? Object.keys(series).map((item) => series[item][key]) : []
 }
+
+
+
 watchEffect (() => {
   chart.value?.setOption({
     backgroundColor: '#ffffff',
@@ -289,6 +292,7 @@ onMounted(() => {
   modal2Visible.value = true
   wordStore.get_vocabs_statics() 
   wordStore.get_vocabs_tasks()
+  console.log(Array.isArray(wordStore.vocabs_statics_data?.series))
   chart.value = echarts.init(myChart.value, 'main');
   window.addEventListener('resize', () => {
     const chart = echarts.getInstanceByDom(myChart.value);
