@@ -14,7 +14,30 @@ import {
   request_computed_score
 } from '@/service/exam'
 import type { ANSWER_STATUS } from "@/service/exam"
-
+const exam_range = {
+  27: 'A+',
+  25: 'A',
+  23: 'A-',
+  21: 'B+',
+  19: 'B',
+  17: 'B-',
+  15: 'C+',
+  13: 'C',
+  10: 'C-',
+  0: 'F'
+}
+const practice_range = {
+  10: 'A+',
+  9: 'A',
+  8: 'A-',
+  '7.5': 'B+',
+  7: 'B',
+  6: 'B-',
+  '5.5':'C+',
+  5: 'C',
+  4: 'C-',
+  0: 'F'
+}
 export const useExamStore = defineStore('exam', () => {
   const showProcessDialog = ref(false)
   const showAnswerHistoryDialog = ref(false)
@@ -73,6 +96,7 @@ export const useExamStore = defineStore('exam', () => {
     summarySource: number;
     questions_r: object;
     format_question: Array<any>
+    score_d: Array<any>
   }>({
     aiComment: '在使用鹦鹉智学时，您可以随时与AI助教交流。我们深知托福学习的困难与沮丧。所以她不仅是一个经验丰富的托福老师，更是一个可以给您情绪价值的好友，帮您排解托福学习的压力。',
     questions: [
@@ -96,7 +120,8 @@ export const useExamStore = defineStore('exam', () => {
     summarySourceTotal: 0,
     summarySource: 0,
     questions_r: {},
-    format_question: []
+    format_question: [],
+    score_d: []
   })
   const questionTitle = ref('')
   const processData = reactive<any[]>([])
@@ -333,6 +358,7 @@ export const useExamStore = defineStore('exam', () => {
     resultData.mockScoreTotal = res.max_score
     resultData.mockScore = res.score
     resultData.questions_r = res.questions_r
+    resultData.score_d = Array.isArray(res.score_d) ? res.score_d : Object.values(res.score_d)
     resultData.format_question = res.questions_r.questions.reduce((def, item) => {
       def.push(...item.children.map(val => ({
         ...val,

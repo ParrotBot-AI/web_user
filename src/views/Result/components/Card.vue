@@ -13,6 +13,12 @@
       props[`${val.id}Total` as keyof IPropsType] }}</span>
           </p>
         </li>
+        <li v-for="(val, i) in examStore.resultData.score_d" :key="i" class="flex-1 list-none flex items-center justify-center flex-col">
+          <h2 class="text-gray-600 font-normal text-[16px]">{{ $t(val[0].name) }}</h2>
+          <p class="font-bold text-gray-600">
+            <span class="text-[36px]">{{ val[0].count }}</span><span class="text-[24px]"> / {{ val[0].total }}</span>
+          </p>
+        </li>
       </ul>
       <div class="flex flex-wrap hidden">
         <span v-for="(val, i) in props.questions" :key="i"
@@ -29,7 +35,7 @@
 </template>
 <script setup lang="ts">
 import { ArrowRightOutlined } from '@ant-design/icons-vue'
-import { defineProps, ref } from 'vue';
+import { defineProps } from 'vue';
 import { useExamStore } from "@/stores/exam"
 const examStore = useExamStore()
 type IPropsType = {
@@ -53,19 +59,7 @@ const summaryList: Array<{ title: string, id: keyof IPropsType }> = [
   {
     title: '模考得分',
     id: 'mockScore',
-  },
-  // {
-  //   title: '基础题',
-  //   id: 'basisScore',
-  // },
-  // {
-  //   title: '强化题',
-  //   id: 'intensifyScore',
-  // },
-  // {
-  //   title: '文章小结题',
-  //   id: 'summarySource',
-  // }
+  }
 ]
 
 

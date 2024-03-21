@@ -48,7 +48,7 @@ import { ref, onMounted } from "vue"
 import { useExamStore } from "@/stores/exam"
 const examStore = useExamStore()
 const $route = useRoute()
-const title = ref("模考小结")
+const title = ref("成绩单")
 const $router = useRouter()
 onMounted(async () => {
   await examStore.getExamResult($route.params.sheetId as string)

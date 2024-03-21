@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute w-1/4 right-40 bottom-20 z-50 flex flex-col bg-white shadow-2xl"
+  <div class="absolute right-40 bottom-20 z-50 flex flex-col bg-white shadow-[0px_2px_20px_10px_rgba(0,0,0,0.1)] min-w-52 rounded-xl"
     :style="transformStyle">
     <header class="h-10 flex justify-between items-center pl-4 pr-2 cursor-move border-solid border-[#B2DAC8] border-x-0 border-t-0 border-[1px]" ref="modalTitleRef">
       <span class="text-[#475467]">快速导航</span>
@@ -11,26 +11,38 @@
     <main class="flex-1 flex flex-col before:content-[''] border-solid border-[#B2DAC8] border-x-0 border-t-0 border-[1px]" :class="{
       hidden: isMax
     }">
-      <section class="flex justify-between items-center pl-6 pr-2 my-4">
-        <span>Passage</span>
-        <section class="flex">
-          <span v-for="(val, i) in isAnswerMistake.length" :key="i"
-            class="flex w-[20px] h-[20px] border-solid border-[1px] rounded-xl mr-1 justify-center items-center text-xs"
-            :style="{ backgroundColor: val ? '#C33473' : '', borderColor: val ? '#C33473' : '', color: val ? 'white' : 'black' }">{{
-        i }}</span>
-        </section>
+      <section class="flex flex-col p-2">
+        <div v-for="(val,index) in examStore.resultData.questions_r?.questions" :key="i" class="p-2 flex items-center">
+          <h4 class="text-[#667085] text-base font-normal">{{typeData.title}} {{val?.order}}</h4>
+          <div class="flex pl-3">
+            <span 
+              v-for="(v,i) in val.children" :key="v.question_id" 
+              @click="props.onChangeQues(2,index,i)"
+              class="w-5 h-5 mx-1 rounded-full shrink-0 text-[11px] flex justify-center items-center text-[#475467] cursor-pointer border border-solid border-[#475467]" 
+              :class="{
+                'bg-[#c22c66] text-[#fff] border-[#c22c66]': !(v.score > 0),
+              }"
+            >{{i+1}}</span>
+          </div>
+        </div>
       </section>
     </main>
     <footer class="h-10 flex justify-between items-center px-2">
-      <span class="before:content-['<'] before:mr-2 block text-[#1B8B8C] cursor-pointer">上一题</span>
-      <span class="after:content-['>'] after:ml-2 block text-[#1B8B8C] cursor-pointer">下一题</span>
+      <span class="before:content-['<'] before:mr-2 block text-[#1B8B8C] cursor-pointer" @click="props.onChangeQues(-1)">上一题</span>
+      <span class="after:content-['>'] after:ml-2 block text-[#1B8B8C] cursor-pointer" @click="props.onChangeQues(1)">下一题</span>
     </footer>
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed, watch, watchEffect } from 'vue'
-import { useExamStore } from '@/stores/exam'
+import { ref, computed, watch, watchEffect, defineProps } from 'vue'
+import { useRoute } from "vue-router"
 import { useDraggable } from '@vueuse/core';
+import { useExamStore } from "@/stores/exam"
+const props = defineProps<{
+  onChangeQues: (type: 1 | -1 | 2, parentIndex?:number, curIndex?: number) => void
+}>()
+const {query} = useRoute()
+const examStore = useExamStore()
 const modalTitleRef = ref<HTMLElement>();
 const { x, y, isDragging } = useDraggable(modalTitleRef);
 const startX = ref<number>(0);
@@ -72,14 +84,29 @@ watchEffect(() => {
       startY.value;
   }
 });
-const isAnswerMistake = computed(() => {
-  return true
-})
+
 const transformStyle = computed(() => {
   return {
     transform: `translate(${transformX.value}px, ${transformY.value}px)`,
   };
 });
+
+const typeData = computed(() => {
+  if(query.type === 'read') {
+    return {
+      title: 'Passage'
+    }
+  } else if(query.type === 'spoken'){
+    return {
+      title: 'Section'
+    }
+  } else {
+    return {
+      title: ''
+    }
+  }
+})
+
 </script>
 <style scoped>
   .size-icon {

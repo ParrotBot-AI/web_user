@@ -4,6 +4,13 @@
       <div class="font-normal text-2xl text-gray-900 ">
         <ArrowLeftOutlined class="pr-2" @click="onReviewAnswer"/> 返回
       </div>
+      <a-button 
+        type="primary" 
+        class="px-4 text-[16px] mx-1.5 py-[18px] flex items-center justify-center"
+        @click="onReviewAnswer"
+      >
+        <span><AuditOutlined />{{ ' ' }}{{ ' ' }}查看报告</span>
+      </a-button>
     </header>
     <div class="flex-1 overflow-hidden flex flex-col">
       <div class="text-center h-14 flex items-center justify-between bg-white px-8" :style="{borderBottom: '1px solid #D6DAE1'}">
@@ -15,12 +22,14 @@
       </div>
       <component :is="reviewComponent" :answerData="answerData" />
     </div>
-    <QuestionNav />
+    <QuestionNav 
+      :onChangeQues="onChangeQues"
+    />
   </a-layout>
   
 </template>
 <script setup lang="ts">
-import { ArrowLeftOutlined } from '@ant-design/icons-vue';
+import { ArrowLeftOutlined, AuditOutlined } from '@ant-design/icons-vue';
 import QuestionNav from "./QuestionNav.vue"
 import { computed, ref } from 'vue'
 import { useRoute } from "vue-router"
@@ -43,6 +52,20 @@ const reviewComponent = computed(() => {
 
 const onReviewAnswer = () => {
   examStore.setShowAnswerHistoryDialog()
+}
+
+const onChangeQues = (type, parentIndex, curIndex) => {
+  if(type === 1 || type === -1) {
+    step.value += type
+    if (step.value < 0) {
+      step.value = 0
+    }
+    if (step.value >= examStore.resultData.format_question.length) {
+      step.value = examStore.resultData.format_question.length - 1
+    }
+  } else {
+    step.value = examStore.resultData.questions_r.questions[parentIndex].children.length * parentIndex + curIndex
+  }
 }
 </script>
 
