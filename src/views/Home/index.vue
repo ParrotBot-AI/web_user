@@ -10,7 +10,7 @@
               :src="indexStore.userInfo.avatar" :alt="indexStore.userInfo.name">
               {{ indexStore.userInfo.name[0] || '' }}
             </a-avatar>
-            <div class=" overflow-hidden h-full flex flex-col items-start" style="width: 40%;">
+            <div class="overflow-hidden h-full flex flex-col items-start" style="width: 40%;">
               <h1 class="text-[25px] text-gray-900 pt-6">{{ $t(getCurrentTimeOfDay()+'好') }}，{{ indexStore.userInfo.name }}
               </h1>
               <p class="text-gray-600 pt-4">Cease to struggle and you cease to live.</p>

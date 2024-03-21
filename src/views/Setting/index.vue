@@ -1,11 +1,20 @@
 <template>
   <div class="flex w-full h-full ">
-  <!-- <ComBo/> -->
     <a-tabs class="w-full h-full page-tab-setting " >
       <a-tab-pane key="1" tab="个人账号" class="flex  ">
         <div class="bg-white w-[225px] h-[202px] flex flex-col  items-center justify-center border border-border-1 border-solid rounded-md ml-[100px]" >
-          <img :src="Ellipse" class="w-[103px] mb-[10px]"/>
-          <div class=" text-green-1">编辑头像<div class="h-[1px] bg-green-1 w-16"></div></div>
+          <a-avatar class="bg-green-1 top-[-10px] shadow-lg border border-border-1 border-solid" style="font-size: 40px;" 
+          :size="100" :src="indexStore.userInfo.avatar" :alt="indexStore.userInfo.name">
+            {{ indexStore.userInfo.name[0] || '' }}
+          </a-avatar>
+
+          <div v-if="rev" class=" text-green-1 cursor-pointer " @click="click_rev">编辑头像<div class="h-[1px] bg-green-1 w-16"></div></div>
+          <div v-else class="w-full flex flex-col justify-center items-center mb-[-10px]">
+            <a-button type="primary" html-type="submit" class="shadow-none w-2/3 px-4 py-1.5 h-auto"
+            >{{ $t('更新') }}</a-button
+          >
+          <div class="text-green-1 py-1">删除</div>
+          </div>
         </div>
         <div class="bg-white w-[740px] h-full flex flex-col border border-border-1 border-solid rounded-md p-[80px] ml-[50px]">
           <h1 class="text-[26px]">账户信息</h1>
@@ -17,8 +26,7 @@
           class="mt-8"
            >
            <a-form-item :label="$t('用户名')" name="code" >
-              <a-input  class="px-3.5 py-2.5" :placeholder="$t('您的用户名')">
-
+              <a-input  class="px-3.5 py-2.5" v-model:value=indexStore.userInfo.userId disabled="true">
               </a-input>
             </a-form-item>
 
@@ -32,7 +40,8 @@
                   </span>
                   <a-modal
                   v-model:open="revise_password"
-                  closable: false
+                  closable=false
+                  footer= ''
                   class="mt-[100px] my-modal"
                   >
                   <div class="text-[26px] py-[30px] text-black-1">修改密码</div>
@@ -41,7 +50,8 @@
                     <a-input
                       type="tel"
                       class="py-2 px-3.5"
-                      :placeholder= "$t('您的手机号')"
+                      v-model:value=indexStore.userInfo.mobile
+                      disabled="true"
                     >
                       <template #prefix>
                         <span
@@ -88,6 +98,8 @@
                 type="tel"
                 class="py-2.5 px-3.5"
                 :placeholder= "$t('您的手机号')"
+                v-model:value=indexStore.userInfo.mobile
+                disabled="true"
               >
                 <template #prefix>
                   <span
@@ -102,8 +114,9 @@
                 修改手机号
                 <a-modal
                   v-model:open="revise_number"
-                  closable: false
+                  closable = false
                   class="w-[250px] mt-[100px] my-modal "
+                  footer= ''
                   >
                   <div class="text-[26px] py-[30px] text-black-1">修改手机号</div>
                   <a-form-item  name="mobile" >
@@ -112,6 +125,8 @@
                       type="tel"
                       class="py-2 px-3.5"
                       :placeholder= "$t('您的手机号')"
+                      v-model:value=indexStore.userInfo.mobile
+                      disabled="true"
                     >
                       <template #prefix>
                         <span
@@ -157,15 +172,16 @@
             <h1 class="text-[26px]">通知提醒管理</h1>
             <a-form-item  name="code" >
               <a-input  class="px-3.5 py-2.5 mt-8" :placeholder="$t('打开网站提醒')">
-                <a-switch v-model:checked="isopen_web" />
+                <template #addonAfter>
+                  <a-switch v-model:checked="isopen_web" />
+                </template>
               </a-input>
-              <a-input  class="px-3.5 py-2.5 mt-8" :placeholder="$t('打开短信提醒')">
+              <a-input class="px-3.5 py-2.5 mt-8 ant-input-wrapper" :placeholder="$t('打开短信提醒')" >
+                <template #addonAfter>
+                  <a-switch v-model:checked="isopen_messages" />
+                </template>
               </a-input>
             </a-form-item>
-            <a-form-item >
-              <a-switch v-model:checked="isopen_web" />
-            </a-form-item>
-            
           </a-form>
 
           <a-form-item class="mb-0">
@@ -174,8 +190,6 @@
           >
         </a-form-item>
         </div>
-
-
       </a-tab-pane>
       <a-tab-pane key="2" tab="关于鹦鹉智学" class="w-full h-full flex items-center justify-center " >
         <div class="bg-white w-[740px] h-[818px] flex border border-border-1 border-solid rounded-md flex-col p-[80px]"> 
@@ -185,7 +199,7 @@
           </div>
           <h1 class="text-[26px] flex w-1/2 items-start justify-start pt-10">隐私条款</h1>
             <a-form-item  name="code" >
-              <a-input  class="px-3.5 py-2.5 mt-8" :placeholder="$t('《鹦鹉智学协议》')">
+              <a-input  class="px-3.5 py-2.5 mt-8" :placeholder="$t('《鹦鹉智学协议')" disabled="true">
                 <template #suffix>
                   <span
                     class="text px-2 cursor-pointer font-bold text-green-1"
@@ -194,7 +208,7 @@
                   </span>
                 </template>
               </a-input>
-              <a-input  class="px-3.5 py-2.5 mt-8" :placeholder="$t('《隐私保护指引》')">
+              <a-input  class="px-3.5 py-2.5 mt-8" :placeholder="$t('《隐私保护指引')" disabled="true">
                 <template #suffix>
                   <span
                     class="text px-2 cursor-pointer font-bold text-green-1"
@@ -217,13 +231,20 @@
 </template>
 
 <script setup lang="ts">
-import ComBo from './components/ComBo.vue'
+
+import { useIndexStore } from '@/stores/index'
 import  Ellipse  from  '@/assets/images/Ellipse.png';
 import  About  from  '@/assets/images/about.svg';
 import { ref } from 'vue'
+
+const indexStore = useIndexStore()
 const isopen_web = ref(false)
+const isopen_messages = ref(false)
 const revise_password = ref(false)
 const revise_number = ref(false)
+const rev = ref(true)
+
+
 
 const onClickpassword = () => {
   revise_password.value = true
@@ -231,6 +252,10 @@ const onClickpassword = () => {
 
 const onClicknumber = () => {
   revise_number.value = true
+}
+
+const click_rev = () => {
+  rev.value = false
 }
 
 </script>
@@ -263,6 +288,10 @@ const onClicknumber = () => {
 
 .my-modal .ant-modal {
   height: 500px; /* Or whatever height you want */
+}
+
+.ant-input-wrapper .ant-input-group-addon{
+  background-color:white;
 }
 
 </style>
