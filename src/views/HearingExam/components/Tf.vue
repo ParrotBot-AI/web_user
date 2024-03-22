@@ -10,8 +10,8 @@
         <span>
           {{ val[columns[0].dataIndex] }}
         </span>
-        <a-radio-group v-model:value="val.checkVal">
-          <a-radio v-for="(val, i) in columns.slice(1)" :key="i" :value="i"></a-radio>
+        <a-radio-group v-model:value="val.checkVal" @change="onchange">
+          <a-radio v-for="(val, i) in columns.slice(1)" :key="i" :value="i+1"></a-radio>
         </a-radio-group>
       </div>
     </div>
@@ -19,6 +19,8 @@
 </template>
 <script lang="ts" setup>
 import { defineProps, computed, watchEffect, reactive } from 'vue'
+import { useExamStore } from "@/stores/exam"
+const examStore = useExamStore()
 const resource = reactive([])
 const columns = computed(() => {
   return [
@@ -43,11 +45,18 @@ const props = defineProps<{
   question_content: string;
 }>()
 watchEffect(() => {
+  const answerValue = examStore.examing_data.answerData.find(val => val.question_id === props.question_id)
+  resource.length = 0
   resource.push(...props.detail.map((val, i) => ({
     val,
-    checkVal: -1
+    checkVal: answerValue?.is_answer ? answerValue.answer[i] : -1
   })))
 })
+const onchange = () => {
+  if(resource.every((val) => val.checkVal > -1)) {
+    examStore.saveQuestion(props.question_id, resource.map((val) => val.checkVal))
+  }
+}
 </script>
 <style scoped>
 .my-table {
