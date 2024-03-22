@@ -2,7 +2,7 @@
   <a-layout class="w-full h-full flex flex-col absolute top-0 left-0 -translate-x-full -translate-y-full bg-green-2 z-50"
     :class="{ 'translate-x-0 translate-y-0': examStore.showProcessDialog }">
     <header class="bg-green-2 px-6 py-4 flex justify-between items-center">
-      <div class="font-normal text-2xl text-gray-900 ">
+      <div class="font-normal text-xl text-gray-900 ">
         <ArrowLeftOutlined class="pr-2" @click="onClickBack" />模拟考试
       </div>
       <div class="flex">

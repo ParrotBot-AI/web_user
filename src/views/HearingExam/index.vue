@@ -17,7 +17,7 @@
       <QuestionItem 
         v-else-if="questionItem" 
         v-bind="questionItem"
-        :onAuidoEnded= "onAuidoEnded"
+        :onAuidoEnded="onAuidoEnded"
         title="Listening"
       />
     </a-layout>
@@ -148,6 +148,7 @@ watchEffect(() => {
     HeaderBtnsConfig.help.isShow = true
   } else {
     HeaderBtnsConfig.next.isShow = false
+    HeaderBtnsConfig.prev.isShow = false
     HeaderBtnsConfig.continue.isShow = true
     HeaderBtnsConfig.help.isShow = false
   }
@@ -170,4 +171,4 @@ onMounted(async () => {
 </script>
 <style scoped>
   
-</style>./components/Tf.vue./components/Tf.vue
+</style>

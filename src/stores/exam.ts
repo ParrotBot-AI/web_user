@@ -365,6 +365,7 @@ export const useExamStore = defineStore('exam', () => {
         question_parent: {
           ...item,
           question_content: item.question_content?.split(/\\n/),
+          question_title: item.question_title ? item.question_title : '听力原文',
           children: null
         }
       })))

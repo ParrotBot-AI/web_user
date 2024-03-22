@@ -1,6 +1,6 @@
 <template>
    <header class="bg-green-2 px-6 py-4 flex justify-between items-center">
-    <div class="font-normal text-2xl text-gray-900 ">
+    <div class="font-normal text-xl text-gray-900 ">
       <ArrowLeftOutlined class="pr-2" @click="onClickBack" />{{ props.title }}
     </div>
     <slot name="right" />

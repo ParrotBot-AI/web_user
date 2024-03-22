@@ -32,7 +32,7 @@
           class="text-center h-14 flex items-center justify-between bg-white px-8" 
           :style="{ borderBottom: `1px solid #D0D5DD` } "
         >
-          <h2 class="text-gray-900 text[20px] font-bold">{{curInfo.title}}</h2>
+          <h2 class="text-gray-900 text-[20px] font-bold">{{curInfo.title}}</h2>
           <span>
               Question {{ step }} of {{ questions.length - 1}}
             </span>

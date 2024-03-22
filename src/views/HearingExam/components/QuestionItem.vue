@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white w-full h-full">
     <div class="text-center h-14 flex items-center justify-between bg-white px-8">
-      <h2 class="text-gray-900 text[20px] font-bold">{{props.title}}</h2>
+      <h2 class="text-gray-900 text-[20px] font-bold">{{props.title}}</h2>
       <p>Question {{ examStore.examing_data.curIndex + 1 }} of {{ examStore.examing_data.childrenLength }}</p>
       <Timer />
     </div>
@@ -15,7 +15,7 @@
         :url="props.voice_link" 
       />
       <template v-else-if="curQuestion">
-        <component :is="quesetionType[curQuestion.question_type as keyof typeof quesetionType]" v-bind="curQuestion as any"/>
+        <component :is="quesetionType[curQuestion.question_type as keyof typeof quesetionType]" v-bind="curQuestion as any" />
       </template>
     </div>
   </div>
@@ -35,7 +35,7 @@ const quesetionType = {
   'Toefl_Listening_mc_2': Mc,
   'Toefl_Listening_mc_3': Mc,
   'Toefl_Listening_orde': Order,
-  'Toefl_Listening_mc_tf': Tf,
+  'Toefl_Listening_tf': Tf,
 }
 
 const props = defineProps<{
@@ -56,6 +56,7 @@ const props = defineProps<{
   }>
 }>()
 const curQuestion = computed(() => {
+  console.log(props.children[props.step])
   return props.children[props.step]
 })
 const onEnded = () => {
@@ -65,4 +66,4 @@ const onEnded = () => {
 <style scoped>
 
 
-</style>./QuestionItem.vue./QuestionItem.vue
+</style>

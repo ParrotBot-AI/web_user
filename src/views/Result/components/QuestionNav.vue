@@ -11,20 +11,42 @@
     <main class="flex-1 flex flex-col before:content-[''] border-solid border-[#B2DAC8] border-x-0 border-t-0 border-[1px]" :class="{
       hidden: isMax
     }">
-      <section class="flex flex-col p-2">
+      <section class="flex flex-col">
+        <template v-if="query.type === 'read'">
         <div v-for="(val,index) in examStore.resultData.questions_r?.questions" :key="i" class="p-2 flex items-center">
-          <h4 class="text-[#667085] text-base font-normal">{{typeData.title}} {{val?.order}}</h4>
-          <div class="flex pl-3">
-            <span 
-              v-for="(v,i) in val.children" :key="v.question_id" 
-              @click="props.onChangeQues(2,index,i)"
-              class="w-5 h-5 mx-1 rounded-full shrink-0 text-[11px] flex justify-center items-center text-[#475467] cursor-pointer border border-solid border-[#475467]" 
-              :class="{
-                'bg-[#c22c66] text-[#fff] border-[#c22c66]': !(v.score > 0),
-              }"
-            >{{i+1}}</span>
+            <h4 class="text-[#667085] text-base font-normal">Passage {{val?.order}}</h4>
+            <div class="flex pl-3">
+              <span 
+                v-for="(v,i) in val.children" :key="v.question_id" 
+                @click="props.onChangeQues(2,index,i)"
+                class="w-5 h-5 mx-1 rounded-full shrink-0 text-[11px] flex justify-center items-center text-[#475467] cursor-pointer border border-solid border-[#475467]" 
+                :class="{
+                  'bg-[#c22c66] text-[#fff] border-[#c22c66]': !(v.score > 0),
+                }"
+              >{{i+1}}</span>
+            </div>
           </div>
-        </div>
+        </template>
+        <template v-if="query.type === 'hearing'">
+          <div class="b-b-1 pl-[100px] relative" v-for="(sectionNum, sectionIndex) in 2" :key="sectionIndex">
+            <h3 class="text-[#333333] font-normal text-base h-full absolute left-0 w-[100px] flex justify-center items-center" :style="{borderRight: '1px solid #B2DAC8'}">Section {{sectionNum}}</h3>
+            <div>
+              <div v-for="(val,index) in examStore.resultData.questions_r?.questions.slice(sectionIndex*3, sectionIndex*3+3)" :key="index" class="p-2 flex items-center">
+                <h4 class="text-[#667085] text-base font-normal w-[120px]">{{ index === 0 ? 'Conversation' : 'Lecture'}} {{index === 0 ? sectionNum : sectionNum === 1 ? val?.order - 1 : val?.order + 2}}</h4>
+                <div class="flex pl-3">
+                  <span 
+                    v-for="(v,i) in val.children" :key="v.question_id" 
+                    @click="props.onChangeQues(2,index,i)"
+                    class="w-5 h-5 mx-1 rounded-full shrink-0 text-[11px] flex justify-center items-center text-[#475467] cursor-pointer border border-solid border-[#475467]" 
+                    :class="{
+                      'bg-[#c22c66] text-[#fff] border-[#c22c66]': !(v.score > 0),
+                    }"
+                  >{{i+1}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
       </section>
     </main>
     <footer class="h-10 flex justify-between items-center px-2">
@@ -91,21 +113,6 @@ const transformStyle = computed(() => {
   };
 });
 
-const typeData = computed(() => {
-  if(query.type === 'read') {
-    return {
-      title: 'Passage'
-    }
-  } else if(query.type === 'spoken'){
-    return {
-      title: 'Section'
-    }
-  } else {
-    return {
-      title: ''
-    }
-  }
-})
 
 </script>
 <style scoped>
@@ -120,5 +127,11 @@ const typeData = computed(() => {
   }
   .size-icon.max {
     background-image: url('@/assets/homeIcon/max.svg');
+  }
+  .b-b-1 {
+    border-bottom: 1px solid #B2DAC8;
+  }
+  .b-b-1:last-child {
+    border-bottom: none;
   }
 </style>

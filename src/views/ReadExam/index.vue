@@ -13,7 +13,7 @@
       <BaseGuide v-bind="readGuide" v-if="isShowGuide" />
       <template v-else>
         <div class="text-center h-14 flex items-center justify-between bg-white px-8">
-          <h2 class="text-gray-900 text[20px] font-bold">{{ examStore.curQuestion?.question_title }}</h2>
+          <h2 class="text-gray-900 text-[20px] font-bold">{{ examStore.curQuestion?.question_title }}</h2>
           <span>
               Question {{ examStore.examing_data.curIndex + 1 }} of {{ examStore.examing_data?.childrenLength}}
             </span>
