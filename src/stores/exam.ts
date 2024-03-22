@@ -11,9 +11,11 @@ import {
   request_saveAnswer,
   request_getExamStutas,
   request_submitExam,
-  request_computed_score
+  request_computed_score,
+  request_get_past_result
 } from '@/service/exam'
 import type { ANSWER_STATUS } from "@/service/exam"
+import { number } from 'echarts'
 const exam_range = {
   27: 'A+',
   25: 'A',
@@ -157,6 +159,17 @@ export const useExamStore = defineStore('exam', () => {
       maxSelectCount: 2,
       minSelectCount: 2,
     }
+  })
+  const pastScores = reactive<{
+    'writing': number,
+    'spoken' : number,
+    'hear' : number,
+    'read' : number,
+  }>({
+    'writing': 1,
+    'spoken': 2,
+    'hear': 3,
+    'read': 4,
   })
   // 考试列表
   const getExamResource = async (page: number, init?: boolean) => {
@@ -372,9 +385,20 @@ export const useExamStore = defineStore('exam', () => {
     }, [])
   }
 
+  const getPastResult = async () => {
+    const account_id = indexStore.userInfo.account_id
+    const res = await request_get_past_result(account_id)
+    pastScores.hear = res["听力"]
+    pastScores.writing = res["写作"]
+    pastScores.spoken = res["口语"]
+    pastScores.read = res["阅读"]
+  }
+
   return {
     getExamProcess,
     getExamResult,
+    getPastResult,
+    pastScores,
     resultData,
     processData,
     setShowProcessDialog,

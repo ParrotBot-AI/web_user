@@ -5,7 +5,7 @@
       <!--用户信息-->
       <div class="pb-7">
         <div class="flex">
-          <div class="flex  bg-white w-full h-[150px] ml-12 mt-4 shadow-lg rounded-md border border-border-1 border-solid overflow-hidde">
+          <div class="flex  bg-white w-full h-[150px] ml-12 mt-4 shadow-lg rounded-md border border-border-1 border-solid">
             <a-avatar class="bg-green-1  top-[-10px] left-[-50px] shadow-lg  rounded-md border border-border-1 border-solid" style="font-size: 40px;" shape="square" :size="100"
               :src="indexStore.userInfo.avatar" :alt="indexStore.userInfo.name">
               {{ indexStore.userInfo.name[0] || '' }}
@@ -82,7 +82,89 @@
                   :title="`${$t('明日任务')} (${indexStore.userTargetsList.tomorrow.length})`" :list="indexStore.userTargetsList.today">
                 </BaseCard>
               </a-tab-pane>
-              <a-tab-pane key="2" tab="个人学习诊断" force-render></a-tab-pane>
+              <a-tab-pane key="2" tab="个人学习诊断" >
+                <div class="flex w-full items-center justify-center overflow-hidden">
+                  <div class="mt-5" style="width: 20%;">
+                    <img :src="PersionRead" />
+                  </div>
+                  <div class="flex flex-col mb-2" style="width: 20%">
+                    <div class="text-[4vw]">{{ examStore.pastScores.read }}</div>
+                    <div class="text-[0.8vw] text-gray-500">近7日平均分</div>
+                  </div>
+                  <div class="border-l  w-[0.5px] h-20 bg-green-1 ml-3"></div>
+                  <div class="flex flex-col p-6 overflow-auto" style="width: 60%;">
+                    <div class="text-gray-500 font-bold mb-4 text-[1vw]">错误率最高的题型</div>
+                    <div class="flex "> 
+                      <div v-for="(val, id) in question_list">
+                        <div class=" text-[0.8vw] ml-2 justify-center text-gray-500 bg-white border-border-1 px-[12px] py-1" style=" border: 1px solid rgba(102, 112, 133, 1);  border-radius: 18px; width: auto; white-space: nowrap;">
+                          {{ val }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex w-full items-center justify-center overflow-hidden">
+                  <div class="mt-5" style="width: 20%;">
+                    <img :src="PersionHear" />
+                  </div>
+                  <div class="flex flex-col mb-2" style="width: 20%">
+                    <div class="text-[4vw]">{{ examStore.pastScores.hear }}</div>
+                    <div class="text-[0.8vw] text-gray-500">近7日平均分</div>
+                  </div>
+                  <div class="border-l  w-[0.5px] h-20 bg-green-1 ml-3"></div>
+                  <div class="flex flex-col p-6 overflow-auto" style="width: 60%;">
+                    <div class="text-gray-500 font-bold mb-4 text-[1vw]">错误率最高的题型</div>
+                    <div class="flex "> 
+                      <div v-for="(val, id) in hear_list">
+                        <div class=" text-[0.8vw] ml-2 justify-center text-gray-500 bg-white border-border-1 px-[12px] py-1" style=" border: 1px solid rgba(102, 112, 133, 1);  border-radius: 18px; width: auto; white-space: nowrap;">
+                          {{ val }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex w-full items-center justify-center overflow-hidden">
+                  <div class="mt-5" style="width: 20%;">
+                    <img :src="PersionSpoken" />
+                  </div>
+                  <div class="flex flex-col mb-2" style="width: 20%">
+                    <div class="text-[4vw]">{{ examStore.pastScores.spoken }}</div>
+                    <div class="text-[0.8vw] text-gray-500">近7日平均分</div>
+                  </div>
+                  <div class="border-l  w-[0.5px] h-20 bg-green-1 ml-3"></div>
+                  <div class="flex flex-col pd-2 p-6 overflow-auto" style="width: 60%;">
+                    <div class="text-gray-500 font-bold mb-4 text-[1vw]">最需要提升的部分</div>
+                    <div class="flex "> 
+                      <div v-for="(val, id) in question_list">
+                        <div class=" text-[0.8vw] ml-2 justify-center text-gray-500 bg-white border-border-1 px-[12px] py-1" style=" border: 1px solid rgba(102, 112, 133, 1);  border-radius: 18px; width: auto; white-space: nowrap;">
+                          {{ val }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex w-full items-center justify-center overflow-hidden">
+                  <div class="mt-5" style="width: 20%;">
+                    <img :src="PersionWrite" />
+                  </div>
+                  <div class="flex flex-col mb-2" style="width: 20%">
+                    <div class="text-[4vw]">{{ examStore.pastScores.writing }}</div>
+                    <div class="text-[0.8vw] text-gray-500">近7日平均分</div>
+                  </div>
+                  <div class="border-l  w-[0.5px] h-20 bg-green-1 ml-3"></div>
+                  <div class="flex flex-col pd-2 p-6 overflow-auto" style="width: 60%;">
+                    <div class="text-gray-500 font-bold mb-4 text-[1vw]">错误率最高的题型</div>
+                    <div class="flex "> 
+                      <div v-for="(val, id) in question_list">
+                        <div class=" text-[0.8vw] ml-2 justify-center text-gray-500 bg-white border-border-1 px-[12px] py-1" style=" border: 1px solid rgba(102, 112, 133, 1);  border-radius: 18px; width: auto; white-space: nowrap;">
+                          {{ val }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </a-tab-pane>
             </a-tabs>
             </div>
         </div>
@@ -96,10 +178,9 @@
             </div>
           </div>
           <div
-            class="bg-green-1 text-white w-2/3 h-[35px] rounded-lg border  flex items-center justify-center cursor-pointer max-w-full"  @click="onClick('new')"
+            class="bg-green-1 text-white w-2/3 h-[34px] rounded-lg border  flex items-center justify-center cursor-pointer max-w-full"  @click="onClick('new')"
           >
             {{ $t('学习新单词') }}
-            
           </div>
         </div>
         <a-card class="col-start-4 col-span-2 row-span-3 shadow-lg overflow-y-auto">
@@ -120,15 +201,23 @@ import NewWord from '@/assets/images/word-new.svg'
 import Signed from '@/assets/images/signed.svg'
 import Signing from '@/assets/images/signing.svg'
 import Unsign from '@/assets/images/unsign.svg'
+import PersionRead from '@/assets/images/persion_read.svg'
+import PersionHear from '@/assets/images/persion_hear.svg'
+import PersionSpoken from '@/assets/images/persion_spoken.svg'
+import PersionWrite from '@/assets/images/persion_write.svg'
 import Lock from '@/assets/images/word-lock.svg'
 import { useWordStore } from '@/stores/word'
+import { useExamStore } from '@/stores/exam'
+import { useRoute } from "vue-router"
 const wordStore = useWordStore()
+const examStore = useExamStore()
 import * as echarts from 'echarts';
 import { ref, onMounted, watchEffect} from 'vue'
 const activeKey = ref('1');
 const indexStore = useIndexStore()
 const HomeChart = ref()
 const chart = ref()
+const $route = useRoute()
 watchEffect (() => {
   chart.value?.setOption({
     color: [ '#f1b01f'],
@@ -148,27 +237,6 @@ watchEffect (() => {
 }, {
   flush: 'post'
 })
-// const myEcharts = () => {
-//   const option = {
-//     color: [ '#f1b01f'],
-//     legend: {
-//       data:['时长']
-//     },
-//     xAxis: {
-//       data: ["M","T","W","T","F","S","S"]
-//     },
-//     yAxis: {},
-//     series: [{
-
-//       type: 'bar',
-//       data: [5, 20, 36, 10, 10, 20,10]
-//     }]
-//   };
-//   myChart.value.setOption(option);
-// };
-
-
-
 const style_bg = [
   'background: linear-gradient(256.27deg, #3E8AB3 -8.38%, #166195 128.6%)',
   'background: linear-gradient(250.22deg, #52CDD3 36.77%, #009ED0 117.42%)',
@@ -176,11 +244,16 @@ const style_bg = [
   'background: linear-gradient(254.37deg, #27B170 -16.85%, #49BD86 96.58%)'
 ]
 
+const question_list = ref(['基础题', '强化题', '文章小结题', '逻辑思考题'])
+const hear_list = ref(['基础题', '强化题', '文章小结题', '逻辑思考题'])
+
 const onClick = (type: 'new' ) => {
   wordStore.to_task(type)
 }
 onMounted(() => {
   wordStore.get_vocabs_tasks()
+  examStore.getPastResult()
+  console.log(examStore.pastScores)
   // HomeChart.value = echarts.init(document.getElementById('main'));
   // myEcharts()
   chart.value = echarts.init(HomeChart.value, 'main');

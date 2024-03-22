@@ -58,6 +58,11 @@ export const request_get_result = (sheet_id: string) => {
   return http.get(`api/system/microservice/get_score/${sheet_id}/`)
 }
 
+// 获取历史得分
+export const request_get_past_result = (sheet_id: number) => {
+  return http.get(`api/system/microservice/get_past_scores/${sheet_id}/`)
+}
+
 // 单题记分
 export const request_computed_single_score = (sheet_id: string, question_id: string) => {
   return http.post(`api/system/microservice/grade_answer/`, {
