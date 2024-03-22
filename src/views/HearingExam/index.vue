@@ -83,6 +83,12 @@ const HeaderBtnsConfig = reactive<{
     isShow: false,
     onClick: () => {
       examStore.changeQuestion(-1)
+      const curQuestionItem = examStore.examing_data.questions[examStore.examing_data.curQuestionIndex]
+      if(curQuestionItem.step === 0) {
+        examStore.examing_data.curQuestionIndex > 0 && examStore.examing_data.curQuestionIndex--
+      } else {
+        curQuestionItem.step -= 1
+      }
     }
   },
   continue: {
