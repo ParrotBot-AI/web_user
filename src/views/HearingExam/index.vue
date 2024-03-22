@@ -17,7 +17,7 @@
       <QuestionItem 
         v-else-if="questionItem" 
         v-bind="questionItem"
-        :onAuidoEnded= "onAuidoEnded"
+        :onAuidoEnded="onAuidoEnded"
         title="Listening"
       />
     </a-layout>
@@ -83,6 +83,12 @@ const HeaderBtnsConfig = reactive<{
     isShow: false,
     onClick: () => {
       examStore.changeQuestion(-1)
+      const curQuestionItem = examStore.examing_data.questions[examStore.examing_data.curQuestionIndex]
+      if(curQuestionItem.step === 0) {
+        examStore.examing_data.curQuestionIndex > 0 && examStore.examing_data.curQuestionIndex--
+      } else {
+        curQuestionItem.step -= 1
+      }
     }
   },
   continue: {
@@ -142,6 +148,7 @@ watchEffect(() => {
     HeaderBtnsConfig.help.isShow = true
   } else {
     HeaderBtnsConfig.next.isShow = false
+    HeaderBtnsConfig.prev.isShow = false
     HeaderBtnsConfig.continue.isShow = true
     HeaderBtnsConfig.help.isShow = false
   }
@@ -164,4 +171,4 @@ onMounted(async () => {
 </script>
 <style scoped>
   
-</style>./components/Tf.vue./components/Tf.vue
+</style>

@@ -1,7 +1,7 @@
 <template>
   <a-layout class="w-full h-full flex flex-col absolute top-0 left-0  bg-green-2 z-50">
     <header class="bg-green-2 px-6 py-4 flex justify-between items-center">
-      <div class="font-normal text-2xl text-gray-900 ">
+      <div class="font-normal text-xl text-gray-900 ">
         <ArrowLeftOutlined class="pr-2" @click="onReviewAnswer"/> 返回
       </div>
       <a-button 
@@ -14,7 +14,7 @@
     </header>
     <div class="flex-1 overflow-hidden flex flex-col">
       <div class="text-center h-14 flex items-center justify-between bg-white px-8" :style="{borderBottom: '1px solid #D6DAE1'}">
-        <h2 class="text-gray-900 text[20px] font-bold">{{answerData.question_parent.question_title}}</h2>
+        <h2 class="text-gray-900 text-[20px] font-bold">{{answerData.question_parent.question_title}}</h2>
         <span>
           Question {{ step + 1 }} of {{ examStore.resultData.format_question?.length}}
         </span>
@@ -24,6 +24,7 @@
     </div>
     <QuestionNav 
       :onChangeQues="onChangeQues"
+      v-if="$route.query.type === 'read' || $route.query.type === 'hearing'"
     />
   </a-layout>
   
@@ -34,16 +35,18 @@ import QuestionNav from "./QuestionNav.vue"
 import { computed, ref } from 'vue'
 import { useRoute } from "vue-router"
 import ReadReview from './ReadReview.vue';
+import HearingReview from './HearingReview.vue';
 import { useExamStore } from '@/stores/exam'
 const examStore = useExamStore()
 const step = ref(0)
 const $route = useRoute()
 const ComponentMap = {
-  'read': ReadReview
+  'read': ReadReview,
+  'hearing': HearingReview
 }
 const answerData = computed(() => {
   console.log(examStore.resultData.format_question)
-  return  examStore.resultData.format_question[step.value]
+  return examStore.resultData.format_question[step.value]
 })
 
 const reviewComponent = computed(() => {

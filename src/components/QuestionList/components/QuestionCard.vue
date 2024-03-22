@@ -149,11 +149,15 @@ const showScore = computed(() => {
 })
 
 // 开始模拟考试
-const onSelectQuestion = (v:EXAN_START['q_type']) => {
-  if(curCustomData.value.maxSelectCount === curCustomData.value.minSelectCount && props.section.length === curCustomData.value.maxSelectCount) {
+const onSelectQuestion = async (v:EXAN_START['q_type']) => {
+  if(
+    curCustomData.value.maxSelectCount === curCustomData.value.minSelectCount && props.section.length === curCustomData.value.maxSelectCount ||
+    isHearing.value && props.section.length === 5
+  ) {
     checkboxId.value = props.section.map(val => val.questions[0].question_id)
     type.value = v
-    startMockExam()
+    await examStore.startExam(type.value,checkboxId.value)
+    $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id } })
   } else {
     isShowBtn.value = !isShowBtn.value
     type.value = v
@@ -166,7 +170,7 @@ const startMockExam = async () => {
   if (checkboxId.value.length !== 0) {
     try {
       startExamLoading.value = true
-      await examStore.startExam(type.value,isHearing.value ? [...props.section.slice(0,3).map(val => val.questions[0].question_id) ,...checkboxId.value] : checkboxId.value)
+      await examStore.startExam(type.value,isHearing.value ? [...props.section.slice(0,4).map(val => val.questions[0].question_id) ,...checkboxId.value] : checkboxId.value)
       $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id } })
     } finally {
       startExamLoading.value = false
