@@ -185,13 +185,15 @@ const wordStore = useWordStore()
 const modal2Visible = ref<boolean>(false)
 const myChart = ref()
 const chart = ref()
+
 const formatData = (key: string) => {
   const series = wordStore.vocabs_statics_data?.series
   if(key === 'day') {
     return Object.keys(series)
   }
-  return series ? Object.keys(series).map((item) => series[item][key]) : []
+  return series ? Object.keys(series).map((item) => series[item][key]).flat() : []
 }
+
 
 
 
