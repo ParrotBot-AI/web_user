@@ -66,4 +66,6 @@ const onClickFooterBtn = (index:number) => {
   resultStore.resultData.footerActiveIndex = index
 }
 </script>
-<style scoped></style>
+<style scoped>
+
+</style>

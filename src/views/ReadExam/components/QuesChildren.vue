@@ -31,7 +31,11 @@
         }"
       >
         <div ref="contentDiv" id="content" class="content-box">
-          <p class="px-8 text-gray-500 text-[18px] leading-7 pb-4 indent-8" :class="'read-mock-content-' + (i + 1)"
+          <p 
+            class="px-8 text-gray-500 text-[18px] leading-7 pb-4 indent-8" 
+            :class="['read-mock-content-' + (i + 1), {
+              'active': typeof examStore.curQuestion?.keywords?.p === 'number' ? examStore.curQuestion?.keywords?.p === (i + 1) : examStore.curQuestion?.keywords?.p?.[0] === (i + 1)
+            }]"
             v-for="(val, i) in examStore.curQuestion?.parentQuestion?.question_content" v-html="val" :key="i"></p>
         </div>
       </div>
@@ -126,6 +130,7 @@ const examItems: IExamItems = {
 watchEffect(() => {
   if(examStore.questionData?.sumQuesLength > 0 && examStore.curQuestion?.num === examStore.questionData?.sumQuesLength) {
     HeaderBtnsConfig.submit.isShow = true
+    HeaderBtnsConfig.next.isShow = false
   } else {
     HeaderBtnsConfig.submit.isShow = false
     HeaderBtnsConfig.next.isShow = true
@@ -148,6 +153,9 @@ watchEffect(() => {
     })
     if (keywords_k && keywords_k !== '$$' && paragraphEl) {
       paragraphEl.innerHTML = originText.replace(new RegExp(keywords_k, 'g'), `<b class="bg-[rgba(253,212,78,0.3)]">${keywords_k}</b>`)
+    }
+    if (keywords_s && keywords_p && keywords_k !== '$$' && paragraphEl) {
+      paragraphEl.innerHTML = originText.replace(new RegExp(keywords_s, 'g'), `<b class="bg-[rgba(253,212,78,0.3)]">${keywords_s}</b>`)
     }
     if(keywords_k === '$$' && keywords_s && keywords_p && paragraphEl) {
       const answerValue = examStore.answerData.find(val => val.question_id === examStore.curQuestion?.question_id)?.answer
@@ -187,7 +195,7 @@ watchEffect(async () => {
 
 </script>
 <style scoped>
-  :global(.fill-item) {
+:global(.fill-item) {
   cursor: pointer;
   display: inline;
 }
@@ -210,10 +218,10 @@ watchEffect(async () => {
   font-style: normal;
 }
 
-.content-box {
+.content-box>p {
   position: relative;
 }
-.content-box:before {
+.content-box>p.active:before {
   content: '';
   position: absolute;
   top: 5px;

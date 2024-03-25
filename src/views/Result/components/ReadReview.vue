@@ -2,8 +2,13 @@
   <div class="flex flex-1 overflow-hidden bg-white">
     <div class="w-1/2 h-full overflow-h-auto overflow-x-hidden pt-2" :style="{ borderRight: `1px solid #D0D5DD` }">
       <div ref="contentDiv" id="content" class="content-box">
-        <p class="px-8 text-gray-500 text-[18px] leading-7 pb-4 indent-8" :class="'read-mock-content-' + (i + 1)"
-          v-for="(val, i) in props.answerData?.question_parent.question_content" v-html="val" :key="i"></p>
+        <p 
+          class="px-8 text-gray-500 text-[18px] leading-7 pb-4 indent-8" 
+          :class="['read-mock-content-' + (i + 1), {
+             'active': typeof props.answerData?.keywords?.p === 'number' ? props.answerData?.keywords?.p === (i + 1) : props.answerData?.keywords?.p?.[0] === (i + 1)
+          }]"
+          v-for="(val, i) in props.answerData?.question_parent.question_content" v-html="val" :key="i">
+        </p>
       </div>
     </div>
     <div class="w-1/2 h-full overflow-h-auto overflow-x-hidden px-12 py-7">
@@ -29,11 +34,49 @@
   </div>
 </template>
 <script setup lang="ts">
-import {defineProps} from "vue"
+import { defineProps, ref, watchEffect } from "vue"
+
+const contentDiv = ref<HTMLDivElement | null>(null)
 
 const props = defineProps<{
   answerData: any
 }>()
+
+watchEffect(() => {
+  console.log(props.answerData)
+  const keywords_p = props.answerData?.keywords?.p
+  const keywords_k = props.answerData?.keywords?.k
+  const keywords_s = props.answerData?.keywords?.s
+  const p = Array.isArray(keywords_p) ? keywords_p[0] : keywords_p
+  if (p) {
+    console.log(p)
+    const originText = props.answerData?.question_parent?.question_content[p - 1]
+    const paragraphEls = contentDiv.value?.querySelectorAll('p')
+    const paragraphEl = contentDiv.value?.querySelector('.read-mock-content-' + p)
+    paragraphEls?.forEach((val,i) => {
+      val.innerHTML = props.answerData?.question_parent?.question_content[i]
+    })
+    if (keywords_k && keywords_k !== '$$' && paragraphEl) {
+      paragraphEl.innerHTML = originText.replace(new RegExp(keywords_k, 'g'), `<b class="bg-[rgba(253,212,78,0.3)]">${keywords_k}</b>`)
+    }
+    if (keywords_s && keywords_p && keywords_k !== '$$' && paragraphEl) {
+      paragraphEl.innerHTML = originText.replace(new RegExp(keywords_s, 'g'), `<b class="bg-[rgba(253,212,78,0.3)]">${keywords_s}</b>`)
+    }
+    if(keywords_k === '$$' && keywords_s && keywords_p && paragraphEl) {
+      const _i = props.answerData?.answer?.findIndex(val => val === 1)
+      let startindex = -1
+      paragraphEl.innerHTML = props.answerData?.question_parent?.original_question_content[p-1].replace(/\$\$/g, ($0,index) => {
+        startindex++
+        return startindex === _i ? `<span class="fill-item" data-index="${startindex}">【 <em>${keywords_s}</em> 】</span>` : `<span class="fill-item" data-index="${startindex}">【 <b></b> 】</span>`
+      })
+    }
+    paragraphEl?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  } else {
+    contentDiv.value?.scrollTo(0, 0)
+  }
+}, {
+  flush: 'post'
+})
 
 </script>
 <style scoped>
@@ -58,10 +101,10 @@ const props = defineProps<{
 :global(.fill-item em) {
   font-style: normal;
 }
-.content-box {
+.content-box>p {
   position: relative;
 }
-.content-box:before {
+.content-box>p.active:before {
   content: '';
   position: absolute;
   top: 5px;

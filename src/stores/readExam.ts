@@ -25,8 +25,7 @@ export const useReadExamStore = defineStore('readExam', () => {
    *
    */
   const getExamData = async (id: string) => {
-    console.log('getExamData:::', id)
-    curQuestionIndex.value = 0
+    curQuestionIndex.value = Number(query?.qi) || 0
     questionData.value = {}
     try {
       const [res, answerRes] = await Promise.all([request_getExam(id), request_getExamStutas(id)])
@@ -86,6 +85,12 @@ export const useReadExamStore = defineStore('readExam', () => {
   }
   const changeQuestion = (type) => {
     curQuestionIndex.value += type
+    $router.replace({
+      query: {
+        ...query,
+        qi: curQuestionIndex.value
+      }
+    })
   }
 
   const curQuestion = computed(() => {

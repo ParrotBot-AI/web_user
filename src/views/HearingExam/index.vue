@@ -2,7 +2,7 @@
   <a-spin v-if="loading" size="large" tip="试题加载中..." class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"/>
   <template v-else>
     <a-layout class="w-full h-full flex flex-col">
-      <b-header title="模拟考试">
+      <b-header :title="query?.name || '模拟考试'">
         <template #right>
           <div class="flex">
             <HeaderBtn 

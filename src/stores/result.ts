@@ -288,15 +288,19 @@ export const useResultStore = defineStore('result', () => {
     resultData.questions_r = res.questions_r
     resultData.score_d = Object.values(res.score_d)
     resultData.format_question = res.questions_r.questions.reduce((def, item) => {
-      def.push(...(Array.isArray(item.children) && item.children.length ? item.children.map(val => ({
-        ...val,
-        question_parent: {
-          ...item,
-          question_content: item.question_content?.split(/\\n/),
-          question_title: item.question_title ? item.question_title : '听力原文',
-          children: null
+      def.push(...(Array.isArray(item.children) && item.children.length ? item.children.map(val => {
+        const original_question_content = item.question_content?.split(/\\n/)
+        return {
+          ...val,
+          question_parent: {
+            ...item,
+            original_question_content,
+            question_content: original_question_content.map(content => content.replaceAll(item.keywords.k, '')),
+            question_title: item.question_title ? item.question_title : '听力原文',
+            children: null
+          }
         }
-      })) : []))
+      }) : []))
       return def;
     }, [])
     footerData.length = 0;

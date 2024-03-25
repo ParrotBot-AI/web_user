@@ -31,9 +31,8 @@ const guideContinueClick = () => {
   examStore.changeQuestion(1)
 }
 onMounted(async () => {
-  console.log('query.id', query.id,'111111')
   await examStore.getExamData(query.id as string)
-  // socket.value = new WebSocketClient('ws://' + import.meta.env.VITE_WS_BASEURL + 'ws/question/' + access + '/');
+  socket.value = new WebSocketClient('ws://' + import.meta.env.VITE_WS_BASEURL + 'ws/question/' + access + '/');
   loading.value = false
 })
 

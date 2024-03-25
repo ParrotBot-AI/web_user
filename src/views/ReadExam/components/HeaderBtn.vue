@@ -2,7 +2,7 @@
     <a-button 
       type="primary" 
       v-show="props.isShow && props.id !== 'horn'" 
-      class="pl-3 pr-5 text-[16px] mx-1.5 py-[18px] flex items-center justify-center"
+      class="pl-3 pr-5 text-[16px] mx-1.5 h-[40px] flex items-center justify-center"
       :class="{ 'flex-row-reverse !pr-3 !pl-5': props.id === 'next' || props.id === 'continue', '!pl-5': props.id === 'submit'}" @click="onClick"
       :disabled="props.disabled"
     >
@@ -13,7 +13,7 @@
       <span class="flex justify-center items-center py-[18px] h-8 rounded-md bg-[#B2DAC8]" @click="onVolumeClick">
         <img :src="volume" />
       </span>
-      <div class="w-full h-36 bg-[#B2DAC8] pb-5 pt-1.5 absolute top-full left-0 rounded-br-md rounded-bl-md -mt-1.5" v-show="isVolumeShow">
+      <div class="w-full h-36 bg-[#B2DAC8] pb-5 pt-1.5 absolute top-full left-0 rounded-br-md rounded-bl-md -mt-2" v-show="isVolumeShow">
         <a-slider vertical class="h-full" @change="onChange" v-model:value="volumeVlaue" />
       </div>
     </div>
@@ -26,7 +26,7 @@ import left from '@/assets/images/left.svg'
 import right from '@/assets/images/right.svg'
 import { defineProps, ref, onMounted, onUnmounted, watchEffect } from "vue"
 const isVolumeShow = ref(false)
-const volumeVlaue = ref(0)
+const volumeVlaue = ref(100)
 const icons = {
   progress,
   help,
@@ -49,13 +49,13 @@ const props = defineProps<HeaderBtnProps>()
 function getPlayingAudios() {
   const audios = document.querySelectorAll('audio');
   const playingAudios = Array.from(audios).filter(audio => !audio.paused);
-  return playingAudios[0];
+  return playingAudios[0] || {};
 }
 const onClick = () => {
   props.onClick?.()
 }
 watchEffect(() => {
-  volumeVlaue.value = getPlayingAudios()?.volume * 100
+  props.id ==='horn' && getPlayingAudios() && (getPlayingAudios().volume = volumeVlaue.value / 100)
 }, {
   flush: 'post'
 })
