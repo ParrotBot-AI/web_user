@@ -253,7 +253,6 @@ const onClick = (type: 'new' ) => {
 onMounted(() => {
   wordStore.get_vocabs_tasks()
   examStore.getPastResult()
-  console.log(examStore.pastScores)
   // HomeChart.value = echarts.init(document.getElementById('main'));
   // myEcharts()
   chart.value = echarts.init(HomeChart.value, 'main');

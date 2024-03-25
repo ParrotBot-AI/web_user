@@ -1,5 +1,5 @@
 <template>
-  <a-spin v-if="loading" size="large" tip="试题加载中..." class="fixed top-1/2 left-1/2 -translate-1/2 z-50"/>
+  <a-spin v-if="loading" size="large" tip="试题加载中..." class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"/>
   <template v-else>
     <ProcessDialog v-if="examStore.showProcessDialog" />
     <a-layout class="w-full h-full flex flex-col">
@@ -247,7 +247,7 @@ onUnmounted(() => {
 <style scoped>
 :global(.fill-item) {
   cursor: pointer;
-  display: inline-block;
+  display: inline;
 }
 
 :global(.fill-item) {
@@ -260,7 +260,8 @@ onUnmounted(() => {
   height: 16px;
   background: var(--color-green-1);
   border-radius: 50%;
-  margin: 0 2px;
+  margin: -4px 1px 0;
+  vertical-align: middle;
 }
 
 :global(.fill-item em) {

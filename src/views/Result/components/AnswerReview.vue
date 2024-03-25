@@ -16,7 +16,7 @@
       <div class="text-center h-14 flex items-center justify-between bg-white px-8" :style="{borderBottom: '1px solid #D6DAE1'}">
         <h2 class="text-gray-900 text-[20px] font-bold">{{answerData.question_parent.question_title}}</h2>
         <span>
-          Question {{ step + 1 }} of {{ examStore.resultData.format_question?.length}}
+          Question {{ step + 1 }} of {{ resultStore.resultData.format_question?.length}}
         </span>
         <div class="w-48"></div>
       </div>
@@ -36,8 +36,8 @@ import { computed, ref } from 'vue'
 import { useRoute } from "vue-router"
 import ReadReview from './ReadReview.vue';
 import HearingReview from './HearingReview.vue';
-import { useExamStore } from '@/stores/exam'
-const examStore = useExamStore()
+import { useResultStore } from "@/stores/result"
+const resultStore = useResultStore()
 const step = ref(0)
 const $route = useRoute()
 const ComponentMap = {
@@ -45,8 +45,8 @@ const ComponentMap = {
   'hearing': HearingReview
 }
 const answerData = computed(() => {
-  console.log(examStore.resultData.format_question)
-  return examStore.resultData.format_question[step.value]
+  console.log(resultStore.resultData.format_question)
+  return resultStore.resultData.format_question[step.value]
 })
 
 const reviewComponent = computed(() => {
@@ -54,7 +54,7 @@ const reviewComponent = computed(() => {
 })
 
 const onReviewAnswer = () => {
-  examStore.setShowAnswerHistoryDialog()
+  resultStore.setShowAnswerHistoryDialog()
 }
 
 const onChangeQues = (type, parentIndex, curIndex) => {
@@ -63,11 +63,11 @@ const onChangeQues = (type, parentIndex, curIndex) => {
     if (step.value < 0) {
       step.value = 0
     }
-    if (step.value >= examStore.resultData.format_question.length) {
-      step.value = examStore.resultData.format_question.length - 1
+    if (step.value >= resultStore.resultData.format_question.length) {
+      step.value = resultStore.resultData.format_question.length - 1
     }
   } else {
-    step.value = examStore.resultData.questions_r.questions[parentIndex].children.length * parentIndex + curIndex
+    step.value = resultStore.resultData.questions_r.questions[parentIndex].children.length * parentIndex + curIndex
   }
 }
 </script>

@@ -10,7 +10,7 @@
       </template>
     </b-header>
     <div class="bg-[#edf6f6] flex flex-1 overflow-hidden">
-      <a-spin v-if="loading" size="large" tip="试题加载中..." class="fixed top-1/2 left-1/2 -translate-1/2 z-50"/>
+      <a-spin v-if="loading" size="large" tip="试题加载中..." class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"/>
       <template v-else>
         <div class="flex w-full items-center flex-col bg-[#edf6f6]" v-if="curTask?.payload?.word">
           <h2 class="pb-20 pt-44">{{curTask?.payload?.word}}的意思是？</h2>

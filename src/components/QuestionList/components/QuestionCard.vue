@@ -65,7 +65,7 @@
               <span v-if="v.last_record"> {{ $t('完成得分') }}</span>
               {{ $t(showScore(v).text) }}
             </span>
-            <img :src="edit" alt="edit" @click="onEditClick(v)" class="cursor-pointer" />
+            <img :src="edit" alt="edit" @click="onEditClick(v)" class="cursor-pointer" v-if="!isMock" />
           </div>
         </template>
       </div>
@@ -122,6 +122,9 @@ const checkboxId = ref<Array<number>>([])
 const startExamLoading = ref<boolean>(false)
 const isHearing = computed(() => {
   return $route.name === 'hearing'
+})
+const isMock = computed(() => {
+  return $route.name === 'mock'
 })
 const curCustomData = computed(() => {
   return examStore.customData[$route.name as keyof typeof examStore.customData]

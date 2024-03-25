@@ -133,7 +133,7 @@ router.beforeEach(async (to, from, next) => {
         next({ ...to, replace: true })
       } catch (error) {
         console.error(error)
-        next(false)
+        next('/login')
       }
     } else {
       next()

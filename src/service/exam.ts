@@ -57,7 +57,10 @@ export const request_computed_score = (sheet_id: string) => {
 export const request_get_result = (sheet_id: string) => {
   return http.get(`api/system/microservice/get_score/${sheet_id}/`)
 }
-
+// 重新获取得分
+export const request_get_repeat_result = (sheet_id: string) => {
+  return http.get(`api/system/microservice/get_score_repeat/${sheet_id}/`)
+}
 // 获取历史得分
 export const request_get_past_result = (sheet_id: number) => {
   return http.get(`api/system/microservice/get_past_scores/${sheet_id}/`)

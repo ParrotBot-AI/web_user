@@ -1,5 +1,5 @@
 <template>
-  <a-spin v-if="loading" size="large" tip="题库加载中..." class="fixed top-1/2 left-1/2 -translate-1/2 z-50"/>
+  <a-spin v-if="loading" size="large" tip="题库加载中..." class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 ml-[100px]"/>
   <a-layout class="w-full h-full overflow-hidden" v-else>
     <header class="bg-green-2 pt-4 flex flex-col">
       <a-tabs v-model:activeKey="activeKey" @change="onTabChange" class="page-tab">
@@ -15,7 +15,6 @@
   </a-layout>
 </template>
 <script setup lang="ts">
-import { useRouter } from "vue-router"
 import { onMounted } from 'vue'
 import { useExamStore } from '@/stores/exam'
 import { ref } from 'vue';

@@ -6,40 +6,14 @@ import type { EXAN_START } from "@/service/exam"
 import {
   request_getExamResource,
   request_startExam,
-  request_get_result,
   request_getExam,
   request_saveAnswer,
   request_getExamStutas,
   request_submitExam,
-  request_computed_score,
-  request_get_past_result
+  request_get_past_result,
 } from '@/service/exam'
 import type { ANSWER_STATUS } from "@/service/exam"
-import { number } from 'echarts'
-const exam_range = {
-  27: 'A+',
-  25: 'A',
-  23: 'A-',
-  21: 'B+',
-  19: 'B',
-  17: 'B-',
-  15: 'C+',
-  13: 'C',
-  10: 'C-',
-  0: 'F'
-}
-const practice_range = {
-  10: 'A+',
-  9: 'A',
-  8: 'A-',
-  '7.5': 'B+',
-  7: 'B',
-  6: 'B-',
-  '5.5':'C+',
-  5: 'C',
-  4: 'C-',
-  0: 'F'
-}
+
 export const useExamStore = defineStore('exam', () => {
   const showProcessDialog = ref(false)
   const showAnswerHistoryDialog = ref(false)
@@ -80,51 +54,18 @@ export const useExamStore = defineStore('exam', () => {
     answerData: ANSWER_STATUS[]
     type: number
   }>(examing_data_init)
-
-  const resultData = reactive<{
-    aiComment: string;
-    questions: {
-      title: string;
-      total: number;
-      correct: number;
-    }[];
-    mockScoreTotal: number;
-    mockScore: number;
-    basisScoreTotal: number;
-    basisScore: number;
-    intensifyScoreTotal: number;
-    intensifyScore: number;
-    summarySourceTotal: number;
-    summarySource: number;
-    questions_r: object;
-    format_question: Array<any>
-    score_d: Array<any>
+  const pastScores = reactive<{
+    'writing': number,
+    'spoken' : number,
+    'hear' : number,
+    'read' : number,
   }>({
-    aiComment: '在使用鹦鹉智学时，您可以随时与AI助教交流。我们深知托福学习的困难与沮丧。所以她不仅是一个经验丰富的托福老师，更是一个可以给您情绪价值的好友，帮您排解托福学习的压力。',
-    questions: [
-      {
-        title: '细节题',
-        total: 3,
-        correct: 2,
-      },
-      {
-        title: '排除题',
-        total: 3,
-        correct: 2,
-      }
-    ],
-    mockScoreTotal: 0,
-    mockScore: 0,
-    basisScoreTotal: 0,
-    basisScore: 0,
-    intensifyScoreTotal: 0,
-    intensifyScore: 0,
-    summarySourceTotal: 0,
-    summarySource: 0,
-    questions_r: {},
-    format_question: [],
-    score_d: []
+    'writing': 1,
+    'spoken': 2,
+    'hear': 3,
+    'read': 4,
   })
+
   const questionTitle = ref('')
   const processData = reactive<any[]>([])
   const indexStore = useIndexStore()
@@ -158,43 +99,31 @@ export const useExamStore = defineStore('exam', () => {
       promptText: '',
       maxSelectCount: 2,
       minSelectCount: 2,
+    },
+    'mock': {
+      height: 249,
     }
-  })
-  const pastScores = reactive<{
-    'writing': number,
-    'spoken' : number,
-    'hear' : number,
-    'read' : number,
-  }>({
-    'writing': 1,
-    'spoken': 2,
-    'hear': 3,
-    'read': 4,
   })
   // 考试列表
   const getExamResource = async (page: number, init?: boolean) => {
-    console.log('page:::', page)
     const menuData = indexStore.menuData.list
     const { pattern_id, name } = menuData.find(val => val.key === $route.name)!
-    if (!pattern_id) {
-      return new Error('pattern_id is undefined')
-    }
     if (init) {
       questionTitle.value = name
       exam_data.pageArr = []
       const res = await request_getExamResource({
         exam_id: 1,
-        pattern_id,
+        pattern_id: pattern_id || '',
         limit,
         page: page + 1,
         whether_zt: false,
       })
-      exam_data.allList = res.data
-      exam_data.total = res.total
-      exam_data.pageArr = new Array(Math.ceil(res.total / limit)).fill(0).map((item, index) => {
+      exam_data.allList = $route.name === 'mock'? res.data[0].children : res.data
+      exam_data.total = $route.name === 'mock' ? exam_data.allList.length : res.total
+      exam_data.pageArr = new Array(Math.ceil(exam_data.total / limit)).fill(0).map((item, index) => {
         return {
           start: index * limit + 1,
-          end: Math.min((index + 1) * limit, res.total),
+          end: Math.min((index + 1) * limit, exam_data.total),
           id: index
         }
       })
@@ -337,9 +266,6 @@ export const useExamStore = defineStore('exam', () => {
   const setShowProcessDialog = () => {
     showProcessDialog.value = !showProcessDialog.value
   }
-  const setShowAnswerHistoryDialog = () => {
-    showAnswerHistoryDialog.value = !showAnswerHistoryDialog.value
-  }
   /**
    * [getExamProcess 获取考试进度]
    *
@@ -359,33 +285,8 @@ export const useExamStore = defineStore('exam', () => {
    */
   const requestSubmitExam = async (sheet_id: string) => {
     await request_submitExam(sheet_id)
-    await request_computed_score(sheet_id)
     $router.push(`/result/${sheet_id}?type=${$route?.meta?.parent}` )
   }
-  /**
-   * [getExamResult 获取考试结果]
-   *
-   */
-  const getExamResult = async (sheet_id: string) => {
-    const res = await request_get_result(sheet_id)
-    resultData.mockScoreTotal = res.max_score
-    resultData.mockScore = res.score
-    resultData.questions_r = res.questions_r
-    resultData.score_d = Array.isArray(res.score_d) ? res.score_d : Object.values(res.score_d)
-    resultData.format_question = res.questions_r.questions.reduce((def, item) => {
-      def.push(...item.children.map(val => ({
-        ...val,
-        question_parent: {
-          ...item,
-          question_content: item.question_content?.split(/\\n/),
-          question_title: item.question_title ? item.question_title : '听力原文',
-          children: null
-        }
-      })))
-      return def;
-    }, [])
-  }
-
   const getPastResult = async () => {
     const account_id = indexStore.userInfo.account_id
     const res = await request_get_past_result(account_id)
@@ -394,16 +295,11 @@ export const useExamStore = defineStore('exam', () => {
     pastScores.spoken = res["口语"]
     pastScores.read = res["阅读"]
   }
-
   return {
     getExamProcess,
-    getExamResult,
     getPastResult,
-    pastScores,
-    resultData,
     processData,
     setShowProcessDialog,
-    setShowAnswerHistoryDialog,
     showAnswerHistoryDialog,
     showProcessDialog,
     getExamResource,

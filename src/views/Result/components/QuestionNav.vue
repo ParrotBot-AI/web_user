@@ -13,7 +13,7 @@
     }">
       <section class="flex flex-col">
         <template v-if="query.type === 'read'">
-        <div v-for="(val,index) in examStore.resultData.questions_r?.questions" :key="i" class="p-2 flex items-center">
+        <div v-for="(val,index) in resultStore.resultData.questions_r?.questions" :key="i" class="p-2 flex items-center">
             <h4 class="text-[#667085] text-base font-normal">Passage {{val?.order}}</h4>
             <div class="flex pl-3">
               <span 
@@ -28,11 +28,12 @@
           </div>
         </template>
         <template v-if="query.type === 'hearing'">
-          <div class="b-b-1 pl-[100px] relative" v-for="(sectionNum, sectionIndex) in 2" :key="sectionIndex">
-            <h3 class="text-[#333333] font-normal text-base h-full absolute left-0 w-[100px] flex justify-center items-center" :style="{borderRight: '1px solid #B2DAC8'}">Section {{sectionNum}}</h3>
+          <div class="b-b-1 pl-[100px] relative" v-for="(sectionVal, sectionIndex) in resultStore.resultData.indexData" :key="sectionIndex">
+            <h3 class="text-[#333333] font-normal text-base h-full absolute left-0 w-[100px] flex justify-center items-center" :style="{borderRight: '1px solid #B2DAC8'}">{{ sectionVal.title }}</h3>
             <div>
-              <div v-for="(val,index) in examStore.resultData.questions_r?.questions.slice(sectionIndex*3, sectionIndex*3+3)" :key="index" class="p-2 flex items-center">
-                <h4 class="text-[#667085] text-base font-normal w-[120px]">{{ index === 0 ? 'Conversation' : 'Lecture'}} {{index === 0 ? sectionNum : sectionNum === 1 ? val?.order - 1 : val?.order + 2}}</h4>
+              <div v-for="(val,index) in resultStore.resultData.questions_r?.questions.slice(sectionIndex*3, sectionIndex*3+3)" :key="index" class="p-2 flex items-center">
+                <!-- {{ sectionVal }} -->
+                <h4 class="text-[#667085] text-base font-normal w-[120px]">{{ sectionVal.children[index]?.title }}</h4>
                 <div class="flex pl-3">
                   <span 
                     v-for="(v,i) in val.children" :key="v.question_id" 
@@ -59,12 +60,12 @@
 import { ref, computed, watch, watchEffect, defineProps } from 'vue'
 import { useRoute } from "vue-router"
 import { useDraggable } from '@vueuse/core';
-import { useExamStore } from "@/stores/exam"
+import { useResultStore } from "@/stores/result"
 const props = defineProps<{
   onChangeQues: (type: 1 | -1 | 2, parentIndex?:number, curIndex?: number) => void
 }>()
 const {query} = useRoute()
-const examStore = useExamStore()
+const resultStore = useResultStore()
 const modalTitleRef = ref<HTMLElement>();
 const { x, y, isDragging } = useDraggable(modalTitleRef);
 const startX = ref<number>(0);

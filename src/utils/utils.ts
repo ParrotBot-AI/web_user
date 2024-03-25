@@ -41,3 +41,11 @@ export function isMobile() {
 
   return false; // PC or Other Device
 }
+
+export function dely (time: number) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve()
+    }, time)
+  })
+}

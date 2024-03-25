@@ -39,7 +39,7 @@ const props = defineProps<{
 <style scoped>
 :global(.fill-item) {
   cursor: pointer;
-  display: inline-block;
+  display: inline;
 }
 
 :global(.fill-item) {
@@ -52,7 +52,7 @@ const props = defineProps<{
   height: 16px;
   background: var(--color-green-1);
   border-radius: 50%;
-  margin: 0 2px;
+  margin: -4px 1px 0;
 }
 
 :global(.fill-item em) {
