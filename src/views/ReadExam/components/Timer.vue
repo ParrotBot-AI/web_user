@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-between items-center h-[32px] overflow-hidden">
+  <div class="flex justify-start items-center h-[32px] overflow-hidden">
     <span v-show="showTimer">{{ showTime }}</span>
     <span class="flex justify-center items-center cursor-pointer pl-2" @click="onClick">
       <img :src="showTimer ? hideEye : openEye" alt="hide-eye" class="w-[20px] h-full" />

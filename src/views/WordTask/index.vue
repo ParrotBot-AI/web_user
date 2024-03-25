@@ -29,12 +29,15 @@
           </div>
           <a-button type="primary" class="mt-10 px-24 h-11" @click="wordStore.submit_unknown()">不认识该词</a-button>
         </div>
-        <div class="flex w-full h-full items-center flex-col bg-[#edf6f6] md:px-40 px-12 py-14 " v-else>
-          <div class="bg-white w-full h-full rounded-md max-w-[1000px] relative pt-20 pb-4" :style="{boxShadow: '0 4px 20px rgba(27, 139, 140, 0.2)'}">
-            <h3 class="inline-block bg-[rgba(243,184,78,0.2)] rounded-tr-xl rounded-br-xl text-[#C79741] px-4 py-1 text-base font-normal absolute left-0 top-3">Genrated by AI</h3>
-            <BAutoWord 
-              :data="curTask?.payload?.response!"
-            />
+        <div class="flex w-full h-full items-center flex-col bg-[#edf6f6] md:px-40 px-12 py-14" v-else>
+          <div class="w-full h-[calc(100%-60px)] max-w-[1200px] relative bg-wrap flex flex-col items-center">
+            <div class="bg-white rounded-md w-full h-[98%] relative z-20 pt-20 pb-4 shrink-0" :style="{boxShadow: '0 4px 20px rgba(27, 139, 140, 0.2)'}">
+              <h3 class="inline-block bg-[rgba(243,184,78,0.2)] rounded-tr-xl rounded-br-xl text-[#C79741] px-4 py-1 text-base font-normal absolute left-0 top-3">Genrated by AI</h3>
+              <BAutoWord 
+                :data="curTask?.payload?.response!"
+              />
+            </div>
+            <a-button type="primary" class="w-[300px] h-[44px] shrink-0 mt-6" @click="onClickAINext">下一步</a-button>
           </div>
         </div>
       </template>
@@ -52,6 +55,10 @@ const wordStore = useWordStore()
 
 const curTask = computed(() => wordStore.wordTaskData)
 
+const onClickAINext = () => {
+  console.log('get')
+}
+
 onMounted(async () => {
   await wordStore.start_task()
   loading.value = false
@@ -59,6 +66,30 @@ onMounted(async () => {
 
 </script>
 <style scoped>
+.bg-wrap {
+  position: relative;
+}
+.bg-wrap:after, .bg-wrap:before{
+  content: '';
+  position: absolute;
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: 0;
+}
+.bg-wrap:before {
+  width: 222px;
+  height: 419px;
+  background-image: url('@/assets/images/r-l.png');
+  left: -177px;
+  bottom: -70px;
+}
+.bg-wrap:after {
+  width: 165px;
+  height: 268px;
+  background-image: url('@/assets/images/r-r.png');
+  right: -123px;
+  bottom: -68px;
+}
   .wordBlock {
     background: #fff;
     border-radius: 8px;

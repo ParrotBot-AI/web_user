@@ -12,7 +12,7 @@
         </div>
       </template>
     </b-header>
-    <div class="flex flex-1 bg-white flex-col overflow-hidden" :style="{ borderTop: `1px solid #D0D5DD` }">
+    <div class="flex flex-1 bg-white flex-col overflow-hidden">
       <BGuide 
         v-if="curInfo?.type === 'info'"
         :title="curInfo.title!"
@@ -28,16 +28,15 @@
         :is_show_footer="true"
       />
       <div v-else-if="curInfo?.type === 'question' && curInfo?.step > 0" class="flex flex-col flex-1 overflow-hidden">
-        <div 
-          class="text-center h-14 flex items-center justify-between bg-white px-8" 
-          :style="{ borderBottom: `1px solid #D0D5DD` } "
-        >
-          <h2 class="text-gray-900 text-[20px] font-bold">{{curInfo.title}}</h2>
-          <span>
-              Question {{ step }} of {{ questions.length - 1}}
-            </span>
-          <Timer />
-        </div>
+        <BQuesTitle 
+          :title="curInfo.title" 
+          :index="step" 
+          :length="questions.length - 1"
+        > 
+          <template #right>
+            <Timer />
+          </template>
+        </BQuesTitle>
         <template v-if="curInfo?.keywords?.r === 1200">
           <template v-if="curInfo.step === 1">
             <div class="h-[100px]"></div>

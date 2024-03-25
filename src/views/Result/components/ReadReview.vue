@@ -1,12 +1,12 @@
 <template>
   <div class="flex flex-1 overflow-hidden bg-white">
-    <div class="flex-1 h-full overflow-h-auto overflow-x-hidden pt-2" :style="{ borderRight: `1px solid #D0D5DD` }">
+    <div class="w-1/2 h-full overflow-h-auto overflow-x-hidden pt-2" :style="{ borderRight: `1px solid #D0D5DD` }">
       <div ref="contentDiv" id="content" class="content-box">
         <p class="px-8 text-gray-500 text-[18px] leading-7 pb-4 indent-8" :class="'read-mock-content-' + (i + 1)"
           v-for="(val, i) in props.answerData?.question_parent.question_content" v-html="val" :key="i"></p>
       </div>
     </div>
-    <div class="flex-1 h-full overflow-h-auto overflow-x-hidden px-12 py-7">
+    <div class="w-1/2 h-full overflow-h-auto overflow-x-hidden px-12 py-7">
       <h1 class="text-gray-500 text-[18px] pb-10 font-bold">
         <p v-html="props.answerData?.question_content?.replace(/\[▇\]/g, `<span class='fill-item'>【<b></b>】</span>`)"></p>
       </h1>

@@ -13,13 +13,12 @@
       </a-button>
     </header>
     <div class="flex-1 overflow-hidden flex flex-col">
-      <div class="text-center h-14 flex items-center justify-between bg-white px-8" :style="{borderBottom: '1px solid #D6DAE1'}">
-        <h2 class="text-gray-900 text-[20px] font-bold">{{answerData.question_parent.question_title}}</h2>
-        <span>
-          Question {{ step + 1 }} of {{ resultStore.resultData.format_question?.length}}
-        </span>
-        <div class="w-48"></div>
-      </div>
+      <BQuesTitle 
+          :title="answerData?.question_parent?.question_title" 
+          :index="step + 1" 
+          :length="resultStore.resultData?.format_question?.length"
+        > 
+      </BQuesTitle>
       <component :is="reviewComponent" :answerData="answerData" />
     </div>
     <QuestionNav 

@@ -12,17 +12,19 @@
       </b-header>
       <BaseGuide v-bind="readGuide" v-if="isShowGuide" />
       <template v-else>
-        <div class="text-center h-14 flex items-center justify-between bg-white px-8">
-          <h2 class="text-gray-900 text-[20px] font-bold">{{ examStore.curQuestion?.question_title }}</h2>
-          <span>
-              Question {{ examStore.examing_data.curIndex + 1 }} of {{ examStore.examing_data?.childrenLength}}
-            </span>
-          <div class="text-[18px] text-green-1 cursor-pointer" v-show="examStore.curQuestionChildren?.isShowViewText"
+        <BQuesTitle 
+          :title="examStore.curQuestion?.question_title" 
+          :index="examStore.examing_data.curIndex + 1" 
+          :length="examStore.examing_data.childrenLength"
+        >
+          <template #right>
+            <div class="text-[18px] text-green-1 cursor-pointer" v-show="examStore.curQuestionChildren?.isShowViewText"
             @click="onClickViewText">VIEW TEXT</div>
-          <Timer v-show="!examStore.curQuestionChildren?.isShowViewText" />
-        </div>
-        <div class="flex flex-1 overflow-hidden bg-white" :style="{ borderTop: `1px solid #D0D5DD` }">
-          <div class="flex-1 h-full overflow-h-auto overflow-x-hidden pt-2" :style="{ borderRight: `1px solid #D0D5DD` }"
+            <Timer v-show="!examStore.curQuestionChildren?.isShowViewText" />
+          </template>
+        </BQuesTitle>
+        <div class="flex flex-1 overflow-hidden bg-white">
+          <div class="w-1/2 h-full overflow-h-auto overflow-x-hidden pt-2" :style="{ borderRight: `1px solid #D0D5DD` }"
             v-show="isViewText || !examStore.curQuestionChildren?.isShowViewText">
             <!-- <h1 class="text-center text-[20px] text-gray-900 py-5">{{ examStore.curQuestion?.question_title }}</h1> -->
             <div ref="contentDiv" id="content" class="content-box">
@@ -30,7 +32,7 @@
                 v-for="(val, i) in examStore.curQuestion?.cur_questions_content" v-html="val" :key="i"></p>
             </div>
           </div>
-          <div class="flex-1 h-full overflow-h-auto overflow-x-hidden px-12 py-7">
+          <div class="w-1/2 h-full overflow-h-auto overflow-x-hidden px-12 py-7">
             <div v-show="!(examStore.curQuestionChildren?.isShowViewText && isViewText) && examStore.curQuestion.viewPassage">
               <component v-if="examStore.curQuestionChildren"
                 :is="examItems[examStore.curQuestionChildren?.question_type as keyof IExamItems]"
