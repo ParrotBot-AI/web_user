@@ -7,7 +7,7 @@
       :disabled="props.disabled"
     >
       <img :src="icons[props.id]!" class="px-2" v-if="props.id !== 'submit'"/>
-      <span>{{ $t(props.title) }} </span>
+      <span>{{ props.title }} </span>
     </a-button>
     <div v-show="props.isShow && props.id === 'horn'" class="mx-1.5 w-8 cursor-pointer flex flex-col relative voclume">
       <span class="flex justify-center items-center py-[18px] h-8 rounded-md bg-[#B2DAC8]" @click="onVolumeClick">

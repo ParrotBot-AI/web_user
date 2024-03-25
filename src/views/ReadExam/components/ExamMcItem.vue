@@ -15,8 +15,8 @@
 </template>
 <script setup lang="ts">
 import { defineProps, ref, watch, computed } from 'vue'
-import { useExamStore } from "@/stores/exam"
-const examStore = useExamStore()
+import { useReadExamStore } from "@/stores/readExam"
+const examStore = useReadExamStore()
 const mc_value = ref([]);
 const props = defineProps<{
   question_id: number;

@@ -4,7 +4,7 @@
       <!-- left -->
       <div
         class="left relative overflow-hidden h-full flex flex-col justify-around items-start pt-8 text-white text-center">
-        <img class="absolute top-4 right-4" :src="examEdit" alt="examEdit" @click="toResult"/>
+        <!-- <img class="absolute top-4 right-4" :src="examEdit" alt="examEdit" @click="toResult"/> -->
         <span class="text-[30px] pl-6">{{ $t(props.resource_name.split('-')[0]) }}</span>
         <div v-if="isShowBtn" class="flex justify-around items-center w-full gap-3 px-3">
           <a-button @click="onSelectQuestion('mock_exam')" class="flex flex-1 justify-between items-center h-8 overflow-hidden">
@@ -160,7 +160,7 @@ const onSelectQuestion = async (v:EXAN_START['q_type']) => {
     checkboxId.value = props.section.map(val => val.questions[0].question_id)
     type.value = v
     await examStore.startExam(type.value,checkboxId.value)
-    $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id } })
+    $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id, name: props.resource_name.split('-')[0] } })
   } else {
     isShowBtn.value = !isShowBtn.value
     type.value = v
@@ -174,7 +174,7 @@ const startMockExam = async () => {
     try {
       startExamLoading.value = true
       await examStore.startExam(type.value,isHearing.value ? [...props.section.slice(0,4).map(val => val.questions[0].question_id) ,...checkboxId.value] : checkboxId.value)
-      $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id } })
+      $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id , name: props.resource_name.split('-')[0] } })
     } finally {
       startExamLoading.value = false
     }
@@ -185,7 +185,7 @@ const startMockExam = async () => {
 }
 const onEditClick = async (v:any) => {
   await examStore.startExam('practice', [v.questions[0].question_id])
-  $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id } })
+  $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id, name: props.resource_name.split('-')[0]  } })
 }
 // 计算选中的checkboxId
 const computedCheckboxId = computed(() => {

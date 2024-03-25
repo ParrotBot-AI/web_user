@@ -21,9 +21,9 @@
 <script setup lang="ts">
 import { defineProps, ref, watch, computed } from 'vue'
 import { useRoute } from "vue-router"
-import { useExamStore } from "@/stores/exam"
+import { useReadExamStore } from "@/stores/readExam"
 const $route = useRoute()
-const examStore = useExamStore()
+const examStore = useReadExamStore()
 const sc_value = ref<number>(-1)
 const props = defineProps<{
   question_id: number;
@@ -52,7 +52,7 @@ const isShowAnserHistory = computed(() => {
 
 
 watch(() => props.question_id, () => {
-  const answerValue = examStore.examing_data.answerData.find(val => val.question_id === props.question_id)
+  const answerValue = examStore.answerData.find(val => val.question_id === props.question_id)
   if (answerValue?.is_answer) {
     const index = answerValue?.answer.findIndex(val => val === 1) ?? -1
     if (props.keywords.k !== '$$') {
@@ -76,7 +76,7 @@ const question_contents = computed(() => {
 })
 watch(() => sc_value.value, () => {
   const value = props.options_label.map((val, i) => i === sc_value.value ? 1 : 0)
-  const answerValue = examStore.examing_data.answerData.find(val => val.question_id === props.question_id)?.answer
+  const answerValue = examStore.answerData.find(val => val.question_id === props.question_id)?.answer
   if (sc_value.value > -1 && value.toString() !== answerValue?.toString()) {
     examStore.saveQuestion(props.question_id, value)
   }
