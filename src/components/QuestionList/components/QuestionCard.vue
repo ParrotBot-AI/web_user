@@ -3,10 +3,10 @@
     <div class="flex bg-white exam-card w-full" :style="{height: curCustomData.height + 'px' || 'auto'}">
       <!-- left -->
       <div
-        class="left relative overflow-hidden h-full flex flex-col justify-around items-start pt-8 text-white text-center">
-        <!-- <img class="absolute top-4 right-4" :src="examEdit" alt="examEdit" @click="toResult"/> -->
-        <span class="text-[30px] pl-6">{{ $t(props.resource_name.split('-')[0]) }}</span>
-        <div v-if="isShowBtn" class="flex justify-around items-center w-full gap-3 px-3">
+        class="left relative overflow-hidden h-full flex flex-col items-start text-white text-center">
+        <img class="absolute top-4 right-4 cursor-pointer" :src="examEdit" alt="examEdit" @click="toResult"/>
+        <span class="text-[30px] pl-6 flex-1 flex items-center w-full">{{ $t(props.resource_name.split('-')[0]) }}</span>
+        <div v-if="isShowBtn" class="flex justify-around items-center w-full gap-3 px-3 mb-5">
           <a-button @click="onSelectQuestion('mock_exam')" class="flex flex-1 justify-between items-center h-8 overflow-hidden">
             <img :src="time" alt="time" />
             {{ $t('模考') }}
@@ -16,8 +16,8 @@
             {{ $t('练习') }}
           </a-button>
         </div>
-        <template v-else>
-          <span class="pl-3.5 pb-4 pt-2">
+        <div class="h-10 mb-5 -translate-y-8 flex flex-col items-start pl-3.5" v-else>
+          <span class="pb-4">
             {{ $t('请选择此次'+( type === 'mock_exam' ? '模考' : '练习' )+'文章') }}
             <a-tooltip 
               placement="bottomLeft" 
@@ -31,8 +31,8 @@
               <img :src="hint" alt="hint" />
             </a-tooltip>
           </span>
-          <span class="pl-6 pb-6">{{computedCheckboxId.length}}/{{ curCustomData.maxSelectCount }}</span>
-        </template>
+          <span class="pb-6">{{computedCheckboxId.length}}/{{ curCustomData.maxSelectCount }}</span>
+        </div>
       </div>
       <!-- right 默认展示 -->
       <div
@@ -201,7 +201,7 @@ const backExam = () => {
 }
 
 const toResult = () => {
-  $router.push({ name: 'result' })
+  console.log('暂不支持该功能')
 }
 </script>
 <style scoped>
