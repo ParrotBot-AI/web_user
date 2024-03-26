@@ -28,7 +28,7 @@
           </div>
         </template>
         <template v-if="query.type === 'hearing'">
-          <div class="b-b-1 pl-[100px] relative" v-for="(sectionVal, sectionIndex) in resultStore.resultData.indexData" :key="sectionIndex">
+          <div class="b-b-1 pl-[100px] relative" v-for="(sectionVal, sectionIndex) in resultStore.resultData?.allData[0].list" :key="sectionIndex">
             <h3 class="text-[#333333] font-normal text-base h-full absolute left-0 w-[100px] flex justify-center items-center" :style="{borderRight: '1px solid #B2DAC8'}">{{ sectionVal.title }}</h3>
             <div>
               <div v-for="(val,index) in resultStore.resultData.questions_r?.questions.slice(sectionIndex*3, sectionIndex*3+3)" :key="index" class="p-2 flex items-center">

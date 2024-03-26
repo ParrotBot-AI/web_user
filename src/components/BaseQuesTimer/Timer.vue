@@ -10,27 +10,30 @@
 <script setup lang="ts">
 import openEye from '@/assets/images/open-eye.svg'
 import hideEye from '@/assets/images/hide-eye.svg'
-import { useExamStore } from "@/stores/exam"
 import { defineProps } from "vue"
-import {formatTime} from "@/utils/dayjs"
-import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
-const examStore = useExamStore()
+import { formatTime } from "@/utils/dayjs"
+import { computed, ref, onMounted, onUnmounted, watch, watchEffect } from 'vue'
 const showTimer = ref(true)
+const timeNum = ref(0)
 const props = defineProps<{
   paused?: boolean;
+  times: number;
 }>()
 const TIMER = ref<null | ReturnType<typeof setTimeout>>(null)
 const showTime = computed(() => {
-  return formatTime(examStore.examing_data.time_remain)
+  return formatTime(timeNum.value)
 })
 const start = () => {
   TIMER.value = setInterval(() => {
-    examStore.examing_data.time_remain--
-    if(examStore.examing_data.time_remain <= 0) {
+    timeNum.value--
+    if(timeNum.value <= 0) {
       clearInterval(TIMER.value!)
     }
   }, 1000)
 }
+watchEffect(() => {
+  timeNum.value = props.times
+})
 watch(() => {
   return props.paused
 }, (newVal) => {

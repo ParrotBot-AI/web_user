@@ -3,10 +3,10 @@
     <div class="flex bg-white exam-card w-full" :style="{height: curCustomData.height + 'px' || 'auto'}">
       <!-- left -->
       <div
-        class="left relative overflow-hidden h-full flex flex-col justify-around items-start pt-8 text-white text-center">
-        <img class="absolute top-4 right-4" :src="examEdit" alt="examEdit" @click="toResult"/>
-        <span class="text-[30px] pl-6">{{ $t(props.resource_name.split('-')[0]) }}</span>
-        <div v-if="isShowBtn" class="flex justify-around items-center w-full gap-3 px-3">
+        class="left relative overflow-hidden h-full flex flex-col items-start text-white text-center">
+        <img class="absolute top-4 right-4 cursor-pointer" :src="examEdit" alt="examEdit" @click="toResult"/>
+        <span class="text-[30px] pl-6 flex-1 flex items-center w-full">{{ $t(props.resource_name.split('-')[0]) }}</span>
+        <div v-if="isShowBtn" class="flex justify-around items-center w-full gap-3 px-3 mb-5">
           <a-button @click="onSelectQuestion('mock_exam')" class="flex flex-1 justify-between items-center h-8 overflow-hidden">
             <img :src="time" alt="time" />
             {{ $t('模考') }}
@@ -16,8 +16,8 @@
             {{ $t('练习') }}
           </a-button>
         </div>
-        <template v-else>
-          <span class="pl-3.5 pb-4 pt-2">
+        <div class="h-10 mb-1 -translate-y-8 flex flex-col items-start pl-3.5" :class="{'mb-1': !isHearing, 'mb-4': isHearing}" v-else>
+          <span class="pb-2">
             {{ $t('请选择此次'+( type === 'mock_exam' ? '模考' : '练习' )+'文章') }}
             <a-tooltip 
               placement="bottomLeft" 
@@ -31,8 +31,8 @@
               <img :src="hint" alt="hint" />
             </a-tooltip>
           </span>
-          <span class="pl-6 pb-6">{{computedCheckboxId.length}}/{{ curCustomData.maxSelectCount }}</span>
-        </template>
+          <span class="pb-6">{{computedCheckboxId.length}}/{{ curCustomData.maxSelectCount }}</span>
+        </div>
       </div>
       <!-- right 默认展示 -->
       <div
@@ -50,6 +50,7 @@
             </span>
             <span 
               class="text-gray-500 text-base" 
+              :class="{'w-[110px]':isHearing}"
               v-else
             >
               <template v-if="!isHearing">{{ curCustomData.remark }}{{' '}}{{ v.questions[0].order }}</template>
@@ -160,7 +161,7 @@ const onSelectQuestion = async (v:EXAN_START['q_type']) => {
     checkboxId.value = props.section.map(val => val.questions[0].question_id)
     type.value = v
     await examStore.startExam(type.value,checkboxId.value)
-    $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id } })
+    $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id, name: props.resource_name.split('-')[0] } })
   } else {
     isShowBtn.value = !isShowBtn.value
     type.value = v
@@ -174,7 +175,7 @@ const startMockExam = async () => {
     try {
       startExamLoading.value = true
       await examStore.startExam(type.value,isHearing.value ? [...props.section.slice(0,4).map(val => val.questions[0].question_id) ,...checkboxId.value] : checkboxId.value)
-      $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id } })
+      $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id , name: props.resource_name.split('-')[0] } })
     } finally {
       startExamLoading.value = false
     }
@@ -185,7 +186,7 @@ const startMockExam = async () => {
 }
 const onEditClick = async (v:any) => {
   await examStore.startExam('practice', [v.questions[0].question_id])
-  $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id } })
+  $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id, name: props.resource_name.split('-')[0]  } })
 }
 // 计算选中的checkboxId
 const computedCheckboxId = computed(() => {
@@ -201,7 +202,7 @@ const backExam = () => {
 }
 
 const toResult = () => {
-  $router.push({ name: 'result' })
+  console.log('暂不支持该功能')
 }
 </script>
 <style scoped>

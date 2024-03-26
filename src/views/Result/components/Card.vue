@@ -4,17 +4,18 @@
       <div class="w-[190px] h-[137px] result-icon absolute -top-[70px] left-1/2 -translate-x-1/2">
         <span class="absolute w-[46px] h-[46px] flex justify-center items-center text-white right-[40px] text-2xl">{{ resultStore.resultData.level }}</span>
       </div>
-      <div class="w-[56vw]">
-        <div class="summary-wrap" :class="customData.indexLayout">
+      <div class="w-[56vw] h-full">
+        <div class="summary-wrap" :class="resultStore.curData?.layout">
+          <h5 v-if="resultStore.curData?.subtitle" class="absolute left-8 top-7 text-base"> {{ resultStore.curData?.subtitle }}</h5>
           <div class="flex items-center justify-center flex-col">
-            <h2 class="text-gray-600 font-normal text-[16px]">{{ customData.name }}</h2>
+            <h2 class="text-gray-600 font-normal text-[16px]">{{ resultStore.curData?.name }}</h2>
             <p class="font-bold text-gray-600 pt-2">
-                <span class="text-[36px]">{{ resultStore.resultData?.mockScore }}</span><span class="text-[24px]"> / {{
-          resultStore.resultData?.mockScoreTotal }}</span>
+                <span class="text-[36px]">{{ resultStore.curData?.mockScore }}</span><span class="text-[24px]"> / {{
+          resultStore.curData?.mockScoreTotal }}</span>
               </p>
           </div>
           <ul class="flex">
-            <li v-for="(val, i) in resultStore.resultData.indexData" :key="i" class="list-none flex items-center justify-center flex-col">
+            <li v-for="(val, i) in resultStore.curData?.list" :key="i" class="list-none flex items-center justify-center flex-col">
               <!--听力数据-->
               <template v-if="val.children">
                 <h2 class="text-black font-semibold text-base mb-2">{{ val.title }}</h2>
@@ -40,16 +41,18 @@
             </li>
           </ul>
         </div>
-        <!-- <div class="flex flex-wrap hidden">
-          <span v-for="(val, i) in props.questions" :key="i"
+        <div class="flex flex-wrap" v-if="resultStore.curData?.tags?.length">
+          <span v-for="(val, i) in resultStore.curData?.tags" :key="i"
             class="px-4 py-1.5 rounded-full text-gray-600 bg-[#E7EAEE] text-[16px] mx-2">
             {{ val.title }}: {{ val.correct }}/{{ val.total }}
           </span>
         </div>
-        <div :style="{ background: 'rgba(208, 240, 230, 0.50)' }"
-          class="rounded-md p-5 pt-6 mt-12 ai-comment relative text-gray-500 text-[16px] leading-6 hidden">{{
-        props.aiComment }}
-        </div> -->
+        <div 
+          v-if="resultStore.curData?.aiComment"
+          :style="{ background: 'rgba(208, 240, 230, 0.50)' }"
+          class="rounded-md p-5 pt-6 mt-12 ai-comment relative text-gray-500 text-[16px] leading-6"
+        >{{ resultStore.curData?.aiComment }}
+        </div>
       </div>
     </div>
   </div>

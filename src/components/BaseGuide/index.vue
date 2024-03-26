@@ -1,8 +1,10 @@
 <template>
-  <div class="text-center h-14 flex items-center justify-between bg-white px-8">
-    <h2 class="text-gray-900 text-[20px] font-bold">{{props.title}}</h2>
-  </div>
-  <div class="flex flex-1 justify-center items-center overflow-hidden bg-white" :style="{ borderTop: `1px solid #D0D5DD` }">
+  <BQuesTitle 
+      :title="props.title" 
+      :index="0" 
+      :length="0"
+  />
+  <div class="flex flex-1 justify-center items-center overflow-hidden bg-white">
     <div class="px-32 -mt-40">
       <h2 class="text-[#21272A] pb-10" v-show="props.info_title">
         {{ props.info_title }}

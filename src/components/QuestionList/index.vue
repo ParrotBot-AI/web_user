@@ -3,14 +3,14 @@
   <a-layout class="w-full h-full overflow-hidden" v-else>
     <header class="bg-green-2 pt-4 flex flex-col">
       <a-tabs v-model:activeKey="activeKey" @change="onTabChange" class="page-tab">
-        <a-tab-pane v-for="v in examStore.exam_data.pageArr" :tab="`${v.start}-${v.end}`" :key="v.id"></a-tab-pane>
+        <a-tab-pane v-for="v in examStore.exam_data?.pageArr" :tab="`${v.start}-${v.end}`" :key="v.id"></a-tab-pane>
       </a-tabs>
     </header>
     <div class="flex content-start flex-wrap flex-1 overflow-y-auto py-5 px-3 bg-green-2">
-      <div v-if="!examStore.exam_data.list.length">
+      <div v-if="!examStore.exam_data?.list?.length">
           暂无数据
       </div>
-      <ExamCard v-else v-for="val in examStore.exam_data.list" :key="val.resource_id" v-bind="val" />
+      <ExamCard v-else v-for="val in examStore.exam_data?.list" :key="val.resource_id" v-bind="val" />
     </div>
   </a-layout>
 </template>

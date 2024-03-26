@@ -27,91 +27,14 @@
       :is_show_footer="true"
     />
     <template v-else>
-    <div class="text-center h-14 flex items-center justify-between bg-white px-8">
-      <h2 class="text-gray-900 text-[20px] font-bold">{{curInfo.title}}</h2>
-      <span>
-        Question {{ step }} of {{ speakingInfo.length - 1}}
-      </span>
-      <div></div>
-    </div>
-    <div class="flex flex-1 justify-center items-center overflow-hidden bg-white" :style="{ borderTop: `1px solid #D0D5DD` }">
-      <div v-if="curInfo.order === 1" class="px-32 -mt-56">
-        <div class="text-[#475467] text-xl pb-10 after:content-[''] after:w-[50%] after:h-[1px] after:bg-[#D0D5DD] after:block after:mx-auto after:mt-10">
-          <p v-for="(val,i) in curInfo.question_title" :key="i">{{ val }}</p>
-        </div>
-        <TimerBlock 
-          v-bind="curInfo.keywords!" 
-          v-if="curInfo.step === 2"
-          status="prepare"
-          :onended="onPrepareended"
-        />
-        <TimerBlock 
-          v-bind="curInfo.keywords!" 
-          v-else-if="curInfo.step === 3"
-          status="speak"
-          :onended="onSpeakended"
-        />
-      </div>
-      <div v-else-if="curInfo.order === 2 || curInfo.order === 3" class="px-32 -mt-56">
-        <template v-if="curInfo.step === 1">
-          <h2 class="text-[#21272A] pb-10">
-            <p v-for="(val,i) in curInfo.question_title" :key="i">{{ val }}</p>
-          </h2>
-          <div class="text-[#475467] text-xl pb-10">
-            <p v-for="(val,i) in curInfo.question_content" :key="i">{{ val }}</p>
-          </div>
-          <BTimerCircle 
-            :time="45" 
-            title="Reading time" 
-            class="absolute right-16 bottom-16" 
-            :ended="() => {
-              speakingInfo[step].step++
-              changeQueryQuestion()
-            }"
-          />
-        </template>
-        <template v-else-if="curInfo.step === 2">
-          <BAudio 
-            title="Please listen carefully." 
-            :url="curInfo.voice_link!" 
-            :ended="() => {
-              speakingInfo[step].step++
-              changeQueryQuestion()
-            }"
-            img="2"
-          />
-        </template>
-        <template v-else-if="curInfo.step > 2">
-          <div class="text-[#475467] text-xl pb-10 after:content-[''] after:w-[50%] after:h-[1px] after:bg-[#D0D5DD] after:block after:mx-auto after:mt-10">
-            <p v-for="(val,i) in curInfo.question_title" :key="i">{{ val }}</p>
-          </div>
-          <TimerBlock 
-            v-bind="curInfo.keywords!" 
-            v-if="curInfo.step === 3"
-            status="prepare"
-            :onended="onPrepareended"
-          />
-          <TimerBlock 
-            v-bind="curInfo.keywords!" 
-            v-if="curInfo.step === 4"
-            status="speak"
-            :onended="onSpeakended"
-          />
-        </template>
-      </div>
-      <div v-else-if="curInfo.order === 4" class="px-32 -mt-56">
-        <template v-if="curInfo.step === 1">
-          <BAudio 
-            title="Please listen carefully." 
-            :url="curInfo.voice_link!" 
-            img="2"
-            :ended="() => {
-              speakingInfo[step].step++
-              changeQueryQuestion()
-            }"
-          />
-        </template>
-        <template v-else-if="curInfo.step > 1">
+      <BQuesTitle 
+          :title="curInfo.title" 
+          :index="step" 
+          :length="speakingInfo.length - 1"
+      > 
+      </BQuesTitle>
+      <div class="flex flex-1 justify-center items-center overflow-hidden bg-white">
+        <div v-if="curInfo.order === 1" class="px-32 -mt-56">
           <div class="text-[#475467] text-xl pb-10 after:content-[''] after:w-[50%] after:h-[1px] after:bg-[#D0D5DD] after:block after:mx-auto after:mt-10">
             <p v-for="(val,i) in curInfo.question_title" :key="i">{{ val }}</p>
           </div>
@@ -123,13 +46,89 @@
           />
           <TimerBlock 
             v-bind="curInfo.keywords!" 
-            v-if="curInfo.step === 3"
+            v-else-if="curInfo.step === 3"
             status="speak"
             :onended="onSpeakended"
           />
-        </template>
+        </div>
+        <div v-else-if="curInfo.order === 2 || curInfo.order === 3" class="px-32 -mt-56">
+          <template v-if="curInfo.step === 1">
+            <h2 class="text-[#21272A] pb-10">
+              <p v-for="(val,i) in curInfo.question_title" :key="i">{{ val }}</p>
+            </h2>
+            <div class="text-[#475467] text-xl pb-10">
+              <p v-for="(val,i) in curInfo.question_content" :key="i">{{ val }}</p>
+            </div>
+            <BTimerCircle 
+              :time="45" 
+              title="Reading time" 
+              class="absolute right-16 bottom-16" 
+              :ended="() => {
+                speakingInfo[step].step++
+                changeQueryQuestion()
+              }"
+            />
+          </template>
+          <template v-else-if="curInfo.step === 2">
+            <BAudio 
+              title="Please listen carefully." 
+              :url="curInfo.voice_link!" 
+              :ended="() => {
+                speakingInfo[step].step++
+                changeQueryQuestion()
+              }"
+              img="2"
+            />
+          </template>
+          <template v-else-if="curInfo.step > 2">
+            <div class="text-[#475467] text-xl pb-10 after:content-[''] after:w-[50%] after:h-[1px] after:bg-[#D0D5DD] after:block after:mx-auto after:mt-10">
+              <p v-for="(val,i) in curInfo.question_title" :key="i">{{ val }}</p>
+            </div>
+            <TimerBlock 
+              v-bind="curInfo.keywords!" 
+              v-if="curInfo.step === 3"
+              status="prepare"
+              :onended="onPrepareended"
+            />
+            <TimerBlock 
+              v-bind="curInfo.keywords!" 
+              v-if="curInfo.step === 4"
+              status="speak"
+              :onended="onSpeakended"
+            />
+          </template>
+        </div>
+        <div v-else-if="curInfo.order === 4" class="px-32 -mt-56">
+          <template v-if="curInfo.step === 1">
+            <BAudio 
+              title="Please listen carefully." 
+              :url="curInfo.voice_link!" 
+              img="2"
+              :ended="() => {
+                speakingInfo[step].step++
+                changeQueryQuestion()
+              }"
+            />
+          </template>
+          <template v-else-if="curInfo.step > 1">
+            <div class="text-[#475467] text-xl pb-10 after:content-[''] after:w-[50%] after:h-[1px] after:bg-[#D0D5DD] after:block after:mx-auto after:mt-10">
+              <p v-for="(val,i) in curInfo.question_title" :key="i">{{ val }}</p>
+            </div>
+            <TimerBlock 
+              v-bind="curInfo.keywords!" 
+              v-if="curInfo.step === 2"
+              status="prepare"
+              :onended="onPrepareended"
+            />
+            <TimerBlock 
+              v-bind="curInfo.keywords!" 
+              v-if="curInfo.step === 3"
+              status="speak"
+              :onended="onSpeakended"
+            />
+          </template>
+        </div>
       </div>
-    </div>
   </template>
   </a-layout>
 </template>

@@ -34,8 +34,8 @@
 import { defineProps, computed, ref, watch } from 'vue'
 import DropBox from './DropBox.vue'
 import DragBox from './DragBox.vue'
-import { useExamStore } from "@/stores/exam"
-const examStore = useExamStore()
+import { useReadExamStore } from "@/stores/readExam"
+const examStore = useReadExamStore()
 const res = ref<any[]>([])
 const props = defineProps<{
   question_id: number;
@@ -59,8 +59,8 @@ const resource = computed(() => {
     return def
   }, {})
 })
-watch(() => examStore.examing_data.answerData, () => {
-  const answerValue = examStore.examing_data.answerData.find((val) => val.question_id === props.question_id);
+watch(() => examStore.answerData, () => {
+  const answerValue = examStore.answerData.find((val) => val.question_id === props.question_id);
   const _answer = answerValue?.answer.reduce((def:string[], val, i) => {
     if(val === 1) {
       def.push(props.options_label[i])

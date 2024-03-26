@@ -1,23 +1,22 @@
 <template>
-  <a-layout class="w-full h-full flex flex-col absolute top-0 left-0 -translate-x-full -translate-y-full bg-green-2 z-50"
+  <a-layout class="w-[100vw] h-[100vh] flex flex-col absolute top-0 left-0 bg-green-2 z-20"
     :class="{ 'translate-x-0 translate-y-0': examStore.showProcessDialog }">
-    <header class="bg-green-2 px-6 py-4 flex justify-between items-center">
-      <div class="font-normal text-xl text-gray-900 ">
-        <ArrowLeftOutlined class="pr-2" @click="onClickBack" />模拟考试
-      </div>
-      <div class="flex">
-        <a-button type="primary" class="flex-row-reverse pr-1 pl-3 text-[16px] mx-1.5 flex items-center justify-center"
-          @click="onClickBack">
-          <img :src="right" class="px-2" />
-          <span>RETURN</span>
-        </a-button>
-        <a-button type="primary" class="flex-row-reverse pr-1 pl-3 text-[16px] mx-1.5 flex items-center justify-center"
-          @click="onClickBack">
-          <img :src="right" class="px-2" />
-          <span>GO TO QUESTION</span>
-        </a-button>
-      </div>
-    </header>
+    <b-header title="进度" :onClickBack="onClickBack">
+      <template #right>
+        <div class="flex">
+          <a-button type="primary" class="h-[40px] flex-row-reverse pr-1 pl-3 text-[16px] mx-1.5 flex items-center justify-center"
+            @click="onClickBack">
+            <img :src="right" class="px-2" />
+            <span>RETURN</span>
+          </a-button>
+          <a-button type="primary" class="h-[40px] flex-row-reverse pr-1 pl-3 text-[16px] mx-1.5 flex items-center justify-center"
+            @click="onClickBack">
+            <img :src="right" class="px-2" />
+            <span>GO TO QUESTION</span>
+          </a-button>
+        </div>
+      </template>
+    </b-header>
     <div class="bg-white w-full overflow-hidden flex-1 flex flex-col">
       <div class="flex justify-end px-8 h-12 items-center"
         :style="{ borderBottom: '1px solid #D0D5DD', boxShadow: 'box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05)' }">
@@ -51,12 +50,11 @@
 <script setup lang="ts">
 import right from '@/assets/images/right.svg'
 import Timer from "./Timer.vue"
-import { ArrowLeftOutlined } from '@ant-design/icons-vue';
-import { useExamStore } from "@/stores/exam"
+import { useReadExamStore } from "@/stores/readExam"
 import { useRoute } from "vue-router"
 import { onMounted, ref } from "vue"
 
-const examStore = useExamStore()
+const examStore = useReadExamStore()
 const $route = useRoute()
 const tableLoading = ref(true)
 const columns = [

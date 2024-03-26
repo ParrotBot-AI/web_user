@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import {dely} from "@/utils/utils"
 import {
@@ -31,23 +31,68 @@ const practice_range = {
   4: 'C-',
   0: 'F'
 }
-
+const writing_result_data = {
+  'Integrated Writing': [
+    {
+      key: 'Content & Details Given',
+      title: '内容与细节'
+    },
+    {
+      key: 'Grammar',
+      title: '语法'
+    },
+    {
+      key: 'Structure/Flow',
+      title: '结构与流畅度'
+    }
+  ],
+  'Academic discussion': [
+    {
+      key: 'Contribution',
+      title: '内容贡献'
+    },
+    {
+      key: 'Relevance',
+      title: '相关性'
+    },
+    {
+      key: 'Structure/Flow',
+      title: '结构与流畅度'
+    },
+    {
+      key: 'Grammar',
+      title: '语法'
+    }
+  ],
+}
+const spoken_result_data = [
+  {
+    key: ['Fluency', 'Pronunciation'],
+    title: '流利度'
+  },
+  {
+    key: ['Grammar', 'Vocabulary Usage'],
+    title: '语法与词汇',
+  },
+  {
+    key: 'Content',
+    title: '内容'
+  },
+  {
+    key: 'Coherence',
+    title: '连贯性'
+  }
+]
 export const useResultStore = defineStore('result', () => {
   const showAnswerHistoryDialog = ref(false)
   const {query} = useRoute()
   const resultData = reactive<{
+    footerActiveIndex: number;
     loading: boolean;
     title: String;
     aiComment: string;
     level: string;
-    indexData: Array<any>;
-    questions: {
-      title: string;
-      total: number;
-      correct: number;
-    }[];
-    mockScoreTotal: number;
-    mockScore: number;
+    allData: Array<any>;
     questions_r: object;
     format_question: Array<any>
     score_d: Array<any>
@@ -55,45 +100,14 @@ export const useResultStore = defineStore('result', () => {
     loading: true,
     title: '',
     level: '',
-    indexData: [],
+    footerActiveIndex: 0,
+    allData: [],
     aiComment: '',
-    questions: [
-      // {
-      //   title: '细节题',
-      //   total: 3,
-      //   correct: 2,
-      // },
-    ],
-    mockScoreTotal: 0,
-    mockScore: 0,
     questions_r: {},
     format_question: [],
     score_d: []
   })
   const footerData = reactive<Array<{title: string; id:string}>>([])
-  // 考试列表区分不同类型
-  const customData = reactive({
-    'read': {
-      name: '阅读得分',
-      indexLayout: 'row',
-    },
-    'hearing': {
-      name: '听力得分',
-      indexLayout: 'col',
-    },
-    'spoken': {
-      name: '口语得分',
-      indexLayout: 'col',
-    },
-    'writing': {
-      name: '写作得分',
-      indexLayout: 'col',
-    },
-    'mock': {
-      name: '总分',
-      indexLayout: 'col',
-    }
-  })
   const formatRemarkName = (name: string) => {
     return name.replace(/TPO\s?\d+/g,'')
   }
@@ -114,58 +128,156 @@ export const useResultStore = defineStore('result', () => {
   const formatData = (res:any) => {
     const score_d = Object.values(res.score_d)
     if(query.type === 'hearing') {
-      resultData.mockScoreTotal = res.max_score
-      resultData.mockScore = res.score
-      return (resultData.indexData = score_d.map((val,i) => ({
+      const footerData = score_d.map((val,i) => ({
         title: 'Section ' + (val.find(v => v.name.endsWith('Conversation2') || v.name.endsWith('Lecture3') || v.name.endsWith('Lecture4')) ? 2 : 1),
-        id: `${i}`,
-        children: val.map((v: any, j: number) => ({
-          title: v.name.split(/\s/).slice(-1)[0],
-          id: `${i}-${j}`,
-          count: v.count,
-          total: v.total,
-          isComputed: val.score !== null,
+        id: `${i}`
+      }))
+      // 首页
+      resultData.allData[0] = {
+        layout: 'col',
+        name: '听力得分',
+        mockScore: res.score,
+        mockScoreTotal: res.max_score,
+        aiComment: '', // ai评语
+        tags: [], // 标签
+        list: score_d.map((val,i) => ({
+          ...footerData[i],
+          children: val.map((v: any, j: number) => ({
+            title: v.name.split(/\s/).slice(-1)[0],
+            id: `${i}-${j}`,
+            count: v.count,
+            total: v.total,
+            isComputed: val.score !== null,
+          }))
         }))
-      })))
-    } else if(query.type === 'spoken') {
-      resultData.indexData = res.questions_r.questions.map((val: any, i: number) => {
+      }
+      // 其他数据
+      resultData.allData.push(...footerData.map((v,i) => {
         return {
-          title: 'Task ' + val.order,
-          id: i,
-          isComputed: val.score !== null,
-          count: val.score,
-          total: val.max_score
+          subtitle: v.title,
+          layout: 'row',
+          name: 'Raw Score',
+          mockScore: score_d[i]?.reduce((def, item) => def + item.count, 0),
+          mockScoreTotal: score_d[i]?.reduce((def, item) => def + item.total, 0),
+          // TODO 等接口字段
+          list: [], // 题型数据
+          tags: [], // 标签
+          aiComment: '', // ai评语
         }
-      }) 
-      resultData.mockScoreTotal = res.max_score
-      resultData.mockScore = resultData.indexData.reduce((def, item) => def + item.count, 0)
-      return score_d[0].map((val,i) => ({
+      }))
+      return footerData
+    } else if(query.type === 'spoken') {
+      const footData = score_d[0].map((val,i) => ({
         title: 'Task ' + val.name.split(/\s/).slice(-1)[0],
         id: `${i}`
       }))
-    } else if(query.type === 'writing') {
-      resultData.indexData = res.questions_r.questions.map((val: any, i: number) => {
+      resultData.allData[0] = {
+        layout: 'col',
+        name: '口语得分',
+        mockScore: res.questions_r.questions.reduce((def, item) => def + item.score, 0),
+        mockScoreTotal : res.max_score,
+        list: res.questions_r.questions.map((val: any, i: number) => {
+          return {
+            title: 'Task ' + val.order,
+            id: i,
+            isComputed: val.score !== null,
+            count: val.score,
+            total: val.max_score
+          }
+        }) 
+      }
+      resultData.allData.push(...footData.map((v,i) => {
+        const model_answer = res.questions_r.questions[i]?.model_answer
+        const model_answer_content = typeof model_answer === 'string' ? JSON.parse(model_answer) : model_answer
         return {
-          title: val.keywords.r === 1200 ? 'Integrated Writing' : 'Academic discussion',
-          id: i,
-          isComputed: val.score !== null,
-          count: val.score,
-          total: val.max_score
+          layout: 'col',
+          name: v.title,
+          mockScore: res.questions_r.questions[i].score,
+          mockScoreTotal: res.questions_r.questions[i].max_score,
+          // TODO 等接口字段
+          aiComment: '', // ai评语
+          list: spoken_result_data.map(val => {
+            const sum = Array.isArray(val.key) ? val.key.reduce((_v,_i) => {
+              return Number(model_answer_content?.Grades?.[_i]) + _v
+            },0) : model_answer_content?.Grades?.[val.key]
+            return {
+              title: val.title,
+              count: model_answer_content ? (sum / 2).toFixed(1) : model_answer_content?.Grades?.[v.key],
+              isComputed: model_answer_content?.Status === "OK",
+              total: 4
+            }
+          }), // 题型数据
         }
-      }) 
-      resultData.mockScoreTotal = res.max_score
-      resultData.mockScore = resultData.indexData.reduce((def, item) => def + item.count, 0)
-      return score_d.map((val,i) => ({
+      }))
+      return footData
+    } else if(query.type === 'writing') {
+      const footerData = score_d.map((val,i) => ({
         title: Number(val[0].name.slice(-1)) === 1 ? 'Integrated Writing' : 'Academic discussion',
         id: `${i}`
       }))
+      resultData.allData[0] = {
+        layout: 'col',
+        name: '写作得分',
+        mockScore: res.questions_r.questions.reduce((def, item) => def + item.score, 0),
+        mockScoreTotal: res.max_score,
+        list: res.questions_r.questions.map((val: any, i: number) => {
+          return {
+            title: val.keywords.r === 1200 ? 'Integrated Writing' : 'Academic discussion',
+            id: i,
+            isComputed: val.score !== null,
+            count: val.score,
+            total: val.max_score
+          }
+        }),
+        // TODO 等接口字段
+        aiComment: '', // ai评语
+      }
+      resultData.allData.push(...footerData.map((v,i) => {
+        const model_answer = res.questions_r.questions[i]?.model_answer
+        const model_answer_content = typeof model_answer === 'string' ? JSON.parse(model_answer) : model_answer
+        return {
+          layout: 'col',
+          name: v.title,
+          mockScore: res.questions_r.questions[i].score,
+          mockScoreTotal: res.questions_r.questions[i].max_score,
+          // TODO 等接口字段
+          aiComment: '', // ai评语
+          list: writing_result_data[v.title].map(val => ({
+            title: val.title,
+            count: model_answer_content?.Grades[val.key] || 0,
+            isComputed: model_answer_content?.Grades[val.key] !== null,
+            total: 5
+          })), // 题型数据
+        }
+      }))
+      return footerData
     } else {
-      resultData.mockScoreTotal = res.max_score
-      resultData.mockScore = res.score
-      return score_d.map((val,i) => ({
+      const footData = score_d.map((val,i) => ({
         title: formatRemarkName(val[0].name),
         id: `${i}`
       }))
+      resultData.allData[0] = {
+        layout: 'row',
+        name: '阅读得分',
+        mockScore: res.score,
+        mockScoreTotal: res.max_score,
+        // TODO 等接口字段
+        aiComment: '', // ai评语
+        tags: [], // 标签
+        list: [], // 题型数据
+      }
+      resultData.allData.push(...footData.map((v,i) => ({
+        layout: 'row',
+        name: '模考得分',
+        subtitle: v.title,
+        mockScore: score_d[i]?.reduce((def, item) => def + item.count, 0),
+        mockScoreTotal: score_d[i]?.reduce((def, item) => def + item.total, 0),
+        // TODO 等接口字段
+        aiComment: '', // ai评语
+        tags: [], // 标签
+        list: [], // 题型数据
+      })))
+      return footData
     }
   }
   const computedLevel = (type:number, score:number) => {
@@ -176,15 +288,19 @@ export const useResultStore = defineStore('result', () => {
     resultData.questions_r = res.questions_r
     resultData.score_d = Object.values(res.score_d)
     resultData.format_question = res.questions_r.questions.reduce((def, item) => {
-      def.push(...item.children.map(val => ({
-        ...val,
-        question_parent: {
-          ...item,
-          question_content: item.question_content?.split(/\\n/),
-          question_title: item.question_title ? item.question_title : '听力原文',
-          children: null
+      def.push(...(Array.isArray(item.children) && item.children.length ? item.children.map(val => {
+        const original_question_content = item.question_content?.split(/\\n/)
+        return {
+          ...val,
+          question_parent: {
+            ...item,
+            original_question_content,
+            question_content: original_question_content.map(content => content.replaceAll(item.keywords.k, '')),
+            question_title: item.question_title ? item.question_title : '听力原文',
+            children: null
+          }
         }
-      })))
+      }) : []))
       return def;
     }, [])
     footerData.length = 0;
@@ -207,11 +323,9 @@ export const useResultStore = defineStore('result', () => {
     // resultData回到初始状态 
     resultData.title = ''
     resultData.level = ''
-    resultData.indexData = []
+    resultData.footerActiveIndex = 0
+    resultData.allData = []
     resultData.aiComment = ''
-    resultData.questions = []
-    resultData.mockScoreTotal = 0
-    resultData.mockScore = 0
     resultData.questions_r = {}
     resultData.format_question = []
     resultData.score_d = []
@@ -225,13 +339,16 @@ export const useResultStore = defineStore('result', () => {
     }
   }
 
+  const curData = computed(() => {
+    return resultData.allData[resultData.footerActiveIndex]
+  })
 
   return {
     getExamResult,
+    curData,
     resultData,
     setShowAnswerHistoryDialog,
     showAnswerHistoryDialog,
-    customData,
     footerData
   };
 })
