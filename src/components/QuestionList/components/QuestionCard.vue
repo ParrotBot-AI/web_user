@@ -16,8 +16,8 @@
             {{ $t('练习') }}
           </a-button>
         </div>
-        <div class="h-10 mb-5 -translate-y-8 flex flex-col items-start pl-3.5" v-else>
-          <span class="pb-4">
+        <div class="h-10 mb-1 -translate-y-8 flex flex-col items-start pl-3.5" :class="{'mb-1': !isHearing, 'mb-4': isHearing}" v-else>
+          <span class="pb-2">
             {{ $t('请选择此次'+( type === 'mock_exam' ? '模考' : '练习' )+'文章') }}
             <a-tooltip 
               placement="bottomLeft" 
@@ -50,6 +50,7 @@
             </span>
             <span 
               class="text-gray-500 text-base" 
+              :class="{'w-[110px]':isHearing}"
               v-else
             >
               <template v-if="!isHearing">{{ curCustomData.remark }}{{' '}}{{ v.questions[0].order }}</template>
