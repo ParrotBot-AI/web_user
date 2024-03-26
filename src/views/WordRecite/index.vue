@@ -68,7 +68,7 @@
         </a-card-meta>
       </a-card>
     </div>
-    <div class="flex-1 grid grid-rows-3 grid-cols-9 gap-4 mt-12">
+    <div class="flex-1 grid grid-rows-3 grid-cols-9 gap-4 mt-12 w-full">
       <a-card class="text-gray-500 text-2xl font-bold col-span-5 row-span-3 shadow-lg" >
         {{ $t('单词学习曲线') }}
         <div id="main" style="height: 400px; width: 100%; margin-top: 30px;"></div>
@@ -126,12 +126,13 @@
           <div class="text-sm cursor-pointer">{{ $t('选择') }}</div>
         </div>
       </a-card>
-      <a-card class="col-start-8 col-span-2 shadow-lg flex items-center justify-center">
+      <div class="col-span-2 row-span-3 flex flex-col  justify-center w-full">
+      <a-card class="col-start-8 col-span-2 shadow-lg flex items-end justify-center h-[180px] mb-[70px] ">
         <a-card-meta>
-          <template #description>
-            <img :src="NewWord" class=" w-[110px] h-[82px] top-[-33px] left-16 ml-[20px]" />
+          <template #description >
+            <img :src="NewWord" class="absolute top-[-40px]  " />
             <div
-              class="bg-green-1 text-white w-[159px] h-[40px] rounded-lg border mt-[5px]  flex items-center justify-center cursor-pointer"
+              class="bg-green-1 text-white w-[150px] h-[40px] rounded-lg border mb-[15px]  flex items-center justify-center cursor-pointer"
               @click="onClick('new')"
             >
               {{ $t('学习新单词') }}
@@ -139,12 +140,12 @@
           </template>
         </a-card-meta>
       </a-card>
-      <a-card class="col-start-8 col-span-2 shadow-lg flex items-center justify-center">
+      <a-card class="col-start-8 col-span-2 shadow-lg flex items-end justify-center h-[180px]">
         <a-card-meta >
           <template #description class="flex">
-            <img :src="OldWord" class=" w-[110px] h-[82px] top-[-33px] left-16 ml-[20px] " />
+            <img :src="OldWord"  class="absolute top-[-30px]  " />
             <div
-              class="bg-green-1 text-white w-[159px] h-[40px] mt-[5px] rounded-lg border flex items-center justify-center cursor-pointer"
+              class="bg-green-1 text-white w-[150px] h-[40px] mb-[15px] rounded-lg border flex items-center justify-center cursor-pointer"
               @click="onClick('old')"
             >
              {{ $t('复习旧单词') }}
@@ -152,18 +153,7 @@
           </template>
         </a-card-meta>
       </a-card>
-      <a-card class="col-start-8 col-span-2 shadow-lg flex items-center justify-center">
-        <a-card-meta>
-          <template #description >
-            <img :src="Retest" class="w-[110px] h-[82px] top-[-33px] left-16 ml-[20px]" />
-            <div
-              class="border border-solid text-green-1 border-green-1 w-[165px] h-[40px] mt-[5px]  rounded-lg flex items-center justify-center"
-            >
-             {{ $t('重新测量词汇量') }}
-            </div>
-          </template>
-        </a-card-meta>
-      </a-card>
+    </div>
     </div>
   </div>
 </template>
