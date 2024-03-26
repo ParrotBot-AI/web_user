@@ -55,11 +55,13 @@ const onClickOut = () => {
   width: 100%;
   margin-inline: 0;
   border-radius: 0;
+  padding-left: 40px;
 }
 
 .my-menu-list :global(.ant-menu-light .ant-menu-item-selected) {
   background: #167778;
   color: #fff;
+  opacity: 1;
 }
 
 .my-menu-list :global(.ant-menu-light .ant-menu-item:hover:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected)) {
@@ -71,8 +73,16 @@ const onClickOut = () => {
   outline-offset: 0;
 }
 
+.my-menu-list :global(.ant-menu-item-selected .ant-menu-item-icon) {
+  opacity: 1!important;
+}
+
 .my-menu-list :global(.ant-menu .ant-menu-item .ant-menu-item-icon) {
   opacity: 0.6;
+}
+
+:global(.ant-menu-title-content) {
+  padding-left: 8px;
 }
 .bottomlist {
   position: relative;

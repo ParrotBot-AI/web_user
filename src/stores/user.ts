@@ -23,6 +23,8 @@ export const useUserStore = defineStore('user', () => {
   const api_login = async (data: LOGIN_TYPE_SMS | LOGIN_TYPE_PHOME) => {
     const res = await request_login(data)
     setWithExpiry('userinfo', res, null);
+    setWithExpiry('usermenu', null, null);
+    setWithExpiry('userdata', null, null);
     message.success('登录成功',1, () => {
       if((res.name)) {
         router.push('/home')

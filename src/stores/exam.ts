@@ -102,6 +102,7 @@ export const useExamStore = defineStore('exam', () => {
     },
     'mock': {
       height: 249,
+      remark: ['Reading', 'Listening', 'Speaking', 'Writing'],
     }
   })
   // 考试列表
@@ -299,6 +300,7 @@ export const useExamStore = defineStore('exam', () => {
     getExamProcess,
     getPastResult,
     processData,
+    pastScores,
     setShowProcessDialog,
     showAnswerHistoryDialog,
     showProcessDialog,

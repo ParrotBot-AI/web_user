@@ -72,14 +72,14 @@
           <div class="h-full relative pt-3">
             <a-tabs class="h-full" v-model:activeKey="activeKey">
               <a-tab-pane key="1" tab="我的任务">
-                <BaseCard :title="`${$t('今日任务')} (${indexStore.userTargetsList.today.length})`" :list="indexStore.userTargetsList.today">
+                <BaseCard :title="`${$t('今日任务')} (${indexStore.userTargetsList?.today?.length})`" :list="indexStore.userTargetsList?.today">
                 </BaseCard>
-                <div class="flex items-center flex-col text-gray-500 pt-20" v-if="!indexStore.userTargetsList.tomorrow.length">
+                <!-- <div class="flex items-center flex-col text-gray-500 pt-20" v-if="!indexStore.userTargetsList?.tomorrow?.length">
                   <p>{{ $t('暂无当日任务，请先完成模拟考试获取定制任务') }}</p>
                   <a-button type="primary" class="mt-5 w-[220px] h-10">{{ $t('开始模考 ') }}</a-button>
-                </div>
-                <BaseCard v-if="indexStore.userTargetsList.tomorrow.length"
-                  :title="`${$t('明日任务')} (${indexStore.userTargetsList.tomorrow.length})`" :list="indexStore.userTargetsList.today">
+                </div> -->
+                <BaseCard v-if="indexStore.userTargetsList?.tomorrow?.length"
+                  :title="`${$t('明日任务')} (${indexStore.userTargetsList.tomorrow.length})`" :list="indexStore.userTargetsList?.today">
                 </BaseCard>
               </a-tab-pane>
               <a-tab-pane key="2" tab="个人学习诊断" >
@@ -88,7 +88,7 @@
                     <img :src="PersionRead" />
                   </div>
                   <div class="flex flex-col mb-2" style="width: 20%">
-                    <div class="text-[4vw]">{{ examStore.pastScores.read }}</div>
+                    <div class="text-[4vw]">{{ examStore.pastScores?.read }}</div>
                     <div class="text-[0.8vw] text-gray-500">近7日平均分</div>
                   </div>
                   <div class="border-l  w-[0.5px] h-20 bg-green-1 ml-3"></div>

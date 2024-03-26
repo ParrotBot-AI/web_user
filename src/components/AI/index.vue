@@ -26,4 +26,10 @@
 <script setup lang="ts">
 import Icon from '@ant-design/icons-vue';
 import aiassistant from '@/assets/images/aiassistant.png'
+import { onMounted } from "vue"
+import { useAIStore } from "@/stores/ai"
+const aiStore = useAIStore()
+onMounted(() => {
+  aiStore.init()
+})
 </script>

@@ -116,6 +116,8 @@ export const useIndexStore = defineStore('menu', () => {
       userInfo.mobile = _userInfo.mobile
       userInfo.avatar = _userInfo.avatar
       userInfo.name = _userInfo.name
+      userTargetsList.today = _userInfo.today
+      userTargetsList.tomorrow = _userInfo.tomorrow
       userInfo.account_id = _userInfo.account_id
       return Promise.resolve(userInfo)
     }
@@ -133,7 +135,11 @@ export const useIndexStore = defineStore('menu', () => {
     userInfo.avatar = res.avatar
     userInfo.name = res.name
     userInfo.account_id = account_id
-    setWithExpiry('userdata', userInfo, 1000 * 60 * 60 * 24)
+    setWithExpiry('userdata', {
+      ...userInfo,
+      today: res.tdy,
+      tomorrow: res.tmr
+    }, 1000 * 60 * 60 * 24)
   }
 
   return { requestMenu, getMenuValue, menuData, menuList, userTargets, requestUserInfo, userTargetsList, userInfo, menuBottomList };

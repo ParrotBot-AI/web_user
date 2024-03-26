@@ -39,7 +39,7 @@
         v-if="isShowBtn" 
         class="flex flex-col flex-1 overflow-hidden"
       >
-        <template v-for="(v,i) in props.section" :key="v.section_id">
+        <template v-for="(v,i) in list" :key="v.section_id">
           <h2 v-if="isHearing && i%3===0" class="pl-2 pt-2 text-[#333] text-base font-medium" :style="{borderTop: i===3 ? '1px solid #D0D5DD' : '1px solid transparent'}">Section {{i === 0 ? 1 : 2}}</h2>
           <div class="flex justify-between items-center flex-1 px-2" :class="{separator: !isHearing}">
             <span 
@@ -63,7 +63,7 @@
               class="flex flex-col justify-center text-xs" 
               :style="{ color: showScore(v).color }"
             >
-              <span v-if="v.last_record"> {{ $t('完成得分') }}</span>
+            <span v-if="v.last_record"> {{ $t('完成得分') }}</span>
               {{ $t(showScore(v).text) }}
             </span>
             <img :src="edit" alt="edit" @click="onEditClick(v)" class="cursor-pointer" v-if="!isMock" />
@@ -110,6 +110,7 @@ const props = defineProps<{
   resource_id: number
   resource_name: string
   section: Array<any>
+  children: Array<any>
 }>()
 const examStore = useExamStore()
 const $router = useRouter()
@@ -123,6 +124,9 @@ const checkboxId = ref<Array<number>>([])
 const startExamLoading = ref<boolean>(false)
 const isHearing = computed(() => {
   return $route.name === 'hearing'
+})
+const list = computed(() => {
+  return props.section || props.children
 })
 const isMock = computed(() => {
   return $route.name === 'mock'

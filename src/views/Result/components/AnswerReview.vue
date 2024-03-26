@@ -29,19 +29,21 @@
   
 </template>
 <script setup lang="ts">
-import { ArrowLeftOutlined, AuditOutlined } from '@ant-design/icons-vue';
+import { ArrowLeftOutlined, AuditOutlined } from '@ant-design/icons-vue'
 import QuestionNav from "./QuestionNav.vue"
 import { computed, ref } from 'vue'
 import { useRoute } from "vue-router"
-import ReadReview from './ReadReview.vue';
-import HearingReview from './HearingReview.vue';
+import ReadReview from './ReadReview.vue'
+import HearingReview from './HearingReview.vue'
+import WritingReview from './WritingReview.vue'
 import { useResultStore } from "@/stores/result"
 const resultStore = useResultStore()
 const step = ref(0)
 const $route = useRoute()
 const ComponentMap = {
   'read': ReadReview,
-  'hearing': HearingReview
+  'hearing': HearingReview,
+  'writing': WritingReview
 }
 const answerData = computed(() => {
   console.log(resultStore.resultData.format_question)

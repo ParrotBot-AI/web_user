@@ -14,7 +14,7 @@
       <template v-else>
         <div class="flex w-full items-center flex-col bg-[#edf6f6]" v-if="curTask?.payload?.word">
           <h2 class="pb-20 pt-44">{{curTask?.payload?.word}}的意思是？</h2>
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-2 gap-8">
             <div 
               v-for="(val, i) in curTask?.payload?.stem" :key="i" 
               class="w-[220px] wordBlock p-2"
@@ -37,7 +37,7 @@
                 :data="curTask?.payload?.response!"
               />
             </div>
-            <a-button type="primary" class="w-[300px] h-[44px] shrink-0 mt-6" @click="onClickAINext">下一步</a-button>
+            <a-button type="primary" class="w-[300px] h-[44px] shrink-0 mt-6" @click="onClickAINext" v-if="curTask?.is_end">下一步</a-button>
           </div>
         </div>
       </template>
@@ -56,7 +56,7 @@ const wordStore = useWordStore()
 const curTask = computed(() => wordStore.wordTaskData)
 
 const onClickAINext = () => {
-  console.log('get')
+  wordStore.aiNext()
 }
 
 onMounted(async () => {

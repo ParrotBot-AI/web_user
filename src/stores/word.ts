@@ -105,6 +105,7 @@ export const useWordStore = defineStore('word', () => {
       word_ids: number[]
       response?: string[]
     },
+    is_end: boolean,
     is_answer: boolean
   }>({})
   const get_vocabs_statics = async () => {
@@ -144,8 +145,11 @@ export const useWordStore = defineStore('word', () => {
     const eventSource = new EventSource(url);
 
     eventSource.onmessage = function(event) {
-      wordTaskData.payload.response = [...wordTaskData.payload.response, event.data]
-      console.log(wordTaskData.payload.response)
+      wordTaskData.payload.response = [...wordTaskData.payload.response, event.data.replace(/\[DONE!\]/, '')]
+      if(event.data.match(/\[DONE!\]/)) {
+        wordTaskData.is_end = true
+        eventSource.close();
+      }
     };
 
     eventSource.onerror = function(error) {
@@ -169,6 +173,7 @@ export const useWordStore = defineStore('word', () => {
         } = payload.endpoints.init
         const streaming = payload.endpoints.streaming
         const { clientId } = await http[method](url, input)
+        wordTaskData.is_end = false
         wordTaskData.payload = {
           ...payload,
           response: [],
@@ -197,12 +202,27 @@ export const useWordStore = defineStore('word', () => {
     next({payload:wordTaskData.payload})
   }
 
+  const aiNext = async () => {
+    console.log(wordTaskData)
+    await request_learn_vocabs_tasks({
+      task_account_id: Number($route.query.id),
+      payload: {
+        payload: {
+          ...wordTaskData.payload,
+          execute: true,
+          response: wordTaskData.payload.response?.join('').replaceAll('\n', ''),
+        }
+      }
+    })
+  }
+
   return {
     vocabs_statics_data,
     get_vocabs_statics,
     get_vocabs_tasks,
     start_task,
     to_task,
+    aiNext,
     wordTaskData,
     submit_task,
     submit_unknown
