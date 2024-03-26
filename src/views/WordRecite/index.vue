@@ -17,7 +17,7 @@
           <template #description><span class="text-white">{{ $t('当前词汇量') }}</span></template>
         </a-card-meta>
       </a-card>
-      <a-card class="shadow-lg">
+      <a-card class="shadow-lg h-[140px]">
         <a-card-meta>
           <template #title>
             <span class="text-gray-600 text-5xl leading-30 tracking-normal text-left font-bold">{{
@@ -25,12 +25,12 @@
             }}</span>
           </template>
           <template #description
-            ><span class="text-gray-600 font-seminormal">{{ $t('今日学习') }}</span
+            ><span class="text-gray-600 text-[1vw] font-seminormal">{{ $t('今日学习') }}</span
             ><img :src="up" class="ml-[20px] mt-[2px]"
           /></template>
         </a-card-meta>
       </a-card>
-      <a-card class="shadow-lg">
+      <a-card class="shadow-lg h-[140px]">
         <a-card-meta>
           <template #title>
             <span class="text-gray-600 text-5xl leading-30 tracking-normal text-left font-bold">{{
@@ -38,12 +38,12 @@
             }}</span>
           </template>
           <template #description
-            ><span class="text-gray-600 font-seminormal">{{ $t('今日复习') }}</span
+            ><span class="text-gray-600 font-seminormal text-[1vw]">{{ $t('今日复习') }}</span
             ><img :src="down" class="ml-[20px] mt-[2px]"
           /></template>
         </a-card-meta>
       </a-card>
-      <a-card class="shadow-lg">
+      <a-card class="shadow-lg h-[140px]">
         <a-card-meta>
           <template #title>
             <span class="text-gray-600 text-5xl leading-30 tracking-normal text-left font-bold">{{
@@ -51,11 +51,11 @@
             }}</span>
           </template>
           <template #description
-            ><span class="text-gray-600 font-seminormal">{{ $t('总计学习') }}</span></template
+            ><span class="text-gray-600 font-seminormal text-[1vw]">{{ $t('总计学习') }}</span></template
           >
         </a-card-meta>
       </a-card>
-      <a-card class="shadow-lg">
+      <a-card class="shadow-lg h-[140px]">
         <a-card-meta>
           <template #title>
             <span class="text-gray-600 text-5xl leading-30 tracking-normal text-left font-bold">{{
@@ -63,7 +63,7 @@
             }}</span>
           </template>
           <template #description
-            ><span class="text-gray-600 font-seminormal">{{ $t('总计复习') }}</span></template
+            ><span class="text-gray-600 font-seminormal text-[1vw]">{{ $t('总计复习') }}</span></template
           >
         </a-card-meta>
       </a-card>
@@ -71,7 +71,7 @@
     <div class="flex-1 grid grid-rows-3 grid-cols-9 gap-4 mt-12">
       <a-card class="text-gray-500 text-2xl font-bold col-span-5 row-span-3 shadow-lg" >
         {{ $t('单词学习曲线') }}
-        <div ref="myChart" style="height: 400px; width: 100%; margin-top: 30px;"></div>
+        <div id="main" style="height: 400px; width: 100%; margin-top: 30px;"></div>
       </a-card>
       <a-card class="text-gray-500 text-2xl font-bold col-start-6 col-span-2 row-span-3 shadow-lg">
         {{ $t('单词学习进度') }}
@@ -83,9 +83,9 @@
         </div>
         <div class="flex mt-4 px-3 w-full items-center">
           <img :src="Tick" alt="layout" class="w-5 h-5" />
-          <div class="mx-5 flex-1">
-            <div class="text-sm">{{ $t(wordStore.vocabs_statics_data.status_book[0].level_book[0].name) }}</div>
-            <div class="text-sm font-normal">{{ $t('总计')+ wordStore.vocabs_statics_data.status_book[0].level_book[0].counts +$t('个') }}</div>
+          <div class="mx-5 flex-1 text-[1vw]">
+            <div class="text-[1vw]">{{ $t(wordStore.vocabs_statics_data.status_book[0].level_book[0].name) }}</div>
+            <div class="text-[0.8vw] font-normal">{{ $t('总计')+ wordStore.vocabs_statics_data.status_book[0].level_book[0].counts +$t('个') }}</div>
           </div>
           <div class="text-sm text-green-1 cursor-pointer">{{ $t('重选') }}</div>
         </div>
@@ -182,9 +182,9 @@ import Lock from '@/assets/images/word-lock.svg'
 import Retest from '@/assets/images/word-retest.svg'
 import { useWordStore } from '@/stores/word'
 const wordStore = useWordStore()
-const modal2Visible = ref<boolean>(false)
 const myChart = ref()
-const chart = ref()
+let Chart :any
+let clickPoint: any = null; // 用于保存点击位置信息
 
 const formatData = (key: string) => {
   const series = wordStore.vocabs_statics_data?.series
@@ -195,25 +195,40 @@ const formatData = (key: string) => {
 }
 
 
-
-
 watchEffect (() => {
-  chart.value?.setOption({
+
+  let options = {
     backgroundColor: '#ffffff',
-    color: ['#FDD44E', '#B2DAC8'],
+    color: ['#FDD44E', '#1B9f8f'],
     tooltip: {
       trigger: 'axis',
+      position: function (point:any, params:any, dom:any, rect:any, size:any) {
+        return [point[0]-50, point[1] - size.contentSize[1]-10];
+      },
       axisPointer: {
-        type: 'cross',
-        label: {
-          backgroundColor: '#000000'
-        }
-      }
-    },
+        type: 'line',
 
-    // legend: {
-    //   data: ['学习单词', '遗忘单词']
-    // },
+        label: {
+          backgroundColor: '#6a7985'
+        }
+      },
+      formatter: function(params:any) {
+        console.log(params)
+        var tooltipHtml = '<div class="custom-tooltip">';
+        tooltipHtml += '<div class="arrow"></div>'; 
+        tooltipHtml += '<div class="content">'; 
+        tooltipHtml += '<div class="tooltip-title">' + '<div class="tooltip-title-study">'+'</div>'+'学习' + params[0].value + '</div>'; // Example: Axis label
+        tooltipHtml += '<div class="tooltip-title">' + '<div class="tooltip-title-forget">'+'</div>'+'遗忘' + params[1].value + '</div>'; // Example: Axis label
+        return tooltipHtml;
+      },
+      extraCssText: 'pointer-events: none;'
+    },
+    legend: {
+      right: 10,
+      data: ['学习单词', '遗忘单词'],
+      icon: 'circle'
+      
+    },
     toolbox: {
       feature: {
         saveAsImage: {
@@ -287,22 +302,25 @@ watchEffect (() => {
         data: formatData('wrong_words')
       }
     ]
-  });
+  }
+  Chart?.setOption(options);
 }, {
   flush: 'post'
 })
 
 onMounted(() => {
-  modal2Visible.value = true
+  // modal2Visible.value = true
   wordStore.get_vocabs_statics() 
   wordStore.get_vocabs_tasks()
-  console.log(Array.isArray(wordStore.vocabs_statics_data?.series))
-  chart.value = echarts.init(myChart.value, 'main');
+  Chart = echarts.init(document.getElementById("main"));
   window.addEventListener('resize', () => {
-    const chart = echarts.getInstanceByDom(myChart.value);
-    if (chart) {
-      chart.resize();
-    }
+    Chart.resize();
+  });
+  Chart.on('click', (params: any) => {
+    // 获取点击位置信息
+    clickPoint = params.event;
+    // 重新绘制图表
+    Chart.setOption({});
   });
 })
 
@@ -310,3 +328,43 @@ const onClick = (type: 'new' | 'old') => {
   wordStore.to_task(type)
 }
 </script>
+
+<style>
+
+.custom-tooltip{
+  width: 100px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+
+}
+.tooltip-title {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+}
+.tooltip-title-study {
+  width: 14px;
+  height: 14px;
+  gap: 0px;
+  opacity: 0.5px;
+  border-radius: 50%;
+  background: rgba(249, 206, 104, 1);
+  margin-right:10px ;
+}
+.tooltip-title-forget {
+  width: 14px;
+  height: 14px;
+  gap: 0px;
+  opacity: 0.5px;
+  border-radius: 50%;
+  margin-right:10px ;
+  background: rgba(27, 139, 140, 1);
+
+}
+
+</style>
