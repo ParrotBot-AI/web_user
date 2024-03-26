@@ -39,6 +39,7 @@ import { onMounted, ref, nextTick, watch} from "vue"
 import { useAIStore } from "@/stores/ai"
 const bottom = ref(null)
 const messageContainer = ref(null)
+const timer = ref(null)
 const aiStore = useAIStore()
 const val = ref('')
 const onSend = async () => {
@@ -47,25 +48,28 @@ const onSend = async () => {
   val.value = ''
   await aiStore.sendMessage(v)
 }
-let timer = null
 const scrollToBottom = () => {
   // 100毫秒检查一次否滚动到底部
-  clearInterval(timer)
-  timer = setInterval(() => {
+  clearInterval(timer.value)
+  timer.value = setInterval(() => {
     bottom.value.scrollIntoView({
       behavior: 'smooth'
     })
   }, 100)
 };
-watch(() => aiStore.list.length,() => {
-  nextTick((() => {
-    scrollToBottom()
-  }))
-}, {
-  immediate: true
+// watch(() => aiStore.list.length,() => {
+//   nextTick((() => {
+//     scrollToBottom()
+//   }))
+// }, {
+//   immediate: true
+// })
+onMounted(() => {
+  scrollToBottom()
+  aiStore.init()
 })
 onMounted(() => {
-  aiStore.init()
+  clearInterval(timer.value)
 })
 
 </script>

@@ -13,7 +13,7 @@
       :length="examStore.curQuestion?.isViewPassage ? 0 : examStore.questionData?.sumQuesLength"
     >
       <template #right>
-        <BQuesTimer v-show="!examStore.curQuestion?.viewText_open" :times="examStore.curQuestion?.time_remain" />
+        <BQuesTimer v-show="!examStore.curQuestion?.viewText_open" :times="examStore?.questionData?.time_remain" />
         <div 
           v-show="examStore.curQuestion?.viewText_open" 
           class="text-[#1B8B8C] font-semibold cursor-pointer"
@@ -137,8 +137,9 @@ watchEffect(() => {
   }
 })
 watchEffect(() => {
-  if(!examStore.curQuestion?.isViewPassage) {
+  if(examStore.curQuestion?.isViewPassage) {
     contentDiv.value?.scrollTo(0, 0)
+    return
   }
   const keywords_p = examStore.curQuestion?.keywords?.p
   const keywords_k = examStore.curQuestion?.keywords?.k

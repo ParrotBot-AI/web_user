@@ -121,7 +121,7 @@ export const useReadExamStore = defineStore('readExam', () => {
    */
   const requestSubmitExam = async () => {
     await request_submitExam(query?.id)
-    $router.push(`/result/${query?.id}?type=${meta?.parent}` )
+    $router.push(`/result/${query?.id}?type=${meta?.parent}`)
   }
 
   const saveQuestion = async (question_id: number, answer: number[]) => {

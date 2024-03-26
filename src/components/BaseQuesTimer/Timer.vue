@@ -32,7 +32,10 @@ const start = () => {
   }, 1000)
 }
 watchEffect(() => {
+  console.log(props.times)
   timeNum.value = props.times
+}, {
+  flush: 'sync'
 })
 watch(() => {
   return props.paused
