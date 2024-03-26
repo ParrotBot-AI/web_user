@@ -178,7 +178,7 @@
             </div>
           </div>
           <div
-            class="bg-green-1 text-white w-2/3 h-[34px] rounded-lg border  flex items-center justify-center cursor-pointer max-w-full"  @click="onClick('new')"
+            class="bg-green-1 text-white w-2/3 h-[34px] rounded-lg border  flex items-center justify-center cursor-pointer"  @click="onClick('new')"
           >
             {{ $t('学习新单词') }}
           </div>
