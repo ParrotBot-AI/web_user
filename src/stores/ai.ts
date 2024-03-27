@@ -9,11 +9,30 @@ export const useAIStore = defineStore('ai', () => {
   const list = reactive<any>([])
   const indexStore = useIndexStore()
   const aiParams = {
+    // Contains a string of which category of TOEFL the query is from
+    // Can be "Reading","Listening", "Speaking", or "Writing"
     toeflType: '',
+    // Contains a string of which 快键 was used
+    // Can be“其他问题",“错题解析”,“解题思路”,“重点信息",“段落逻辑”,or“听力逻辑"
+    // 段落逻辑 is exclusive to Reading toeflType
+    // 听力逻辑 is exclusive to Listening toeflType
+    // Speaking and Writing toeflType can only have 其他问题
     queryType: '',
+    // Contains the query the student enters into the chatbox
+    // Only needed for 其他问题 queryType
     chatbotQuery: '',
+    // Contains the "passage" for whatever toeflType
+    // Needed for every queryTypel
+    // Reading -the corresponding paragraph in the reading question
+    // Listening -the corresponding transcript for the listening question
+    // Speaking-the corresponding stimulus the student reads/listens to for their question
+    // Writing - the corresponding stimulus the student reads/listens to for their question
     'Main Content': '',
+    // Contains the multiple choice question the student is asking questions about
+    // Only used for 错题解析,解题思路,重点信息 queryTypes
     mcq: '',
+    // Contains the general method to find the solution for that question type
+    // Only used for 解题思路 queryType
     problemMethod: ''
   }
   const init = async () => {
