@@ -11,6 +11,7 @@ import {
   request_getExamStutas,
   request_submitExam,
   request_get_past_result,
+  request_start_mixed_exam,
 } from '@/service/exam'
 import type { ANSWER_STATUS } from "@/service/exam"
 
@@ -65,7 +66,7 @@ export const useExamStore = defineStore('exam', () => {
     'hear': 3,
     'read': 4,
   })
-
+  const types = ['read', 'spoken', 'hearing', 'writing']
   const questionTitle = ref('')
   const processData = reactive<any[]>([])
   const indexStore = useIndexStore()
@@ -143,6 +144,16 @@ export const useExamStore = defineStore('exam', () => {
     })
 
     examing_data.sheet_id = res.sheet_id;
+  }
+  const startMixedExam = async (q_type: EXAN_START['q_type'], question_ids: number[], father_sheet: number) => {
+    const account_id = indexStore.userInfo.account_id
+    const res = await request_start_mixed_exam({
+      q_type,
+      question_ids,
+      account_id,
+      father_sheet,
+    })
+    return res
   }
   /**
    * [getExamData 考试或者练习页面根据 sheet_id 获取试题数据]
@@ -297,7 +308,9 @@ export const useExamStore = defineStore('exam', () => {
     pastScores.read = res["阅读"]
   }
   return {
+    types,
     getExamProcess,
+    startMixedExam,
     getPastResult,
     processData,
     pastScores,

@@ -295,7 +295,7 @@ export const useResultStore = defineStore('result', () => {
           question_parent: {
             ...item,
             original_question_content,
-            question_content: original_question_content.map(content => content.replaceAll(item.keywords.k, '')),
+            question_content: original_question_content?.map(content => content.replaceAll(item.keywords.k, '')),
             question_title: item.question_title ? item.question_title : '听力原文',
             children: null
           }

@@ -74,6 +74,14 @@ const router = createRouter({
       component: () => import('@/views/WritingExam/index.vue')
     },
     {
+      path: '/mixed-exam',
+      name: 'mixedExam',
+      meta: {
+        parent: 'mixed'
+      },
+      component: () => import('@/views/MixedExam/index.vue')
+    },
+    {
       path: '/word-task',
       name: 'wordTask',
       meta: {

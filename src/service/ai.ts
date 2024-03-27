@@ -5,7 +5,3 @@ const baseur = import.meta.env.VITE_AI_APP_BASEURL as string;
 export const startStream = async (params:any) => {
   return http.post(baseur + '/v1/modelapi/streaming/', params)
 }
-
-export const sendAi = async (key:string) => {
-  return http.get(baseur + `/v1/modelapi/assistantChatbot/${key}/`)
-}

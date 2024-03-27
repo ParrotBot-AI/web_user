@@ -103,11 +103,13 @@ import edit from '@/assets/images/edit.svg'
 import { useExamStore } from '@/stores/exam'
 import { useRoute, useRouter } from "vue-router"
 import { message } from "ant-design-vue"
+import { setWithExpiry } from "@/utils/storage"
 import hint from "@/assets/images/hint.png"
 // 显示按钮
 const isShowBtn = ref(true)
 const props = defineProps<{
   resource_id: number
+  id: number
   resource_name: string
   section: Array<any>
   children: Array<any>
@@ -158,6 +160,26 @@ const showScore = computed(() => {
 
 // 开始模拟考试
 const onSelectQuestion = async (v:EXAN_START['q_type']) => {
+  if($route.name === 'mock') { // 综合模考
+    setWithExpiry(`mixedExam-${props.id}`, {
+      id: props.id,
+      resource_name: props.resource_name,
+      curStep: 'read',
+      curIndex: 0,
+      quesid: props.children.map(val => val.questions)
+    })
+    const res = await examStore.startMixedExam(type.value, props.children[0].questions, props.id)
+    $router.push({ 
+      name: 'readExam',
+      query: {
+        type: 'mixedExam',
+        mid: props.id,
+        name: props.resource_name,
+        id: res.sheet_id
+      }
+    })
+    // return
+  }
   if(
     curCustomData.value.maxSelectCount === curCustomData.value.minSelectCount && props.section.length === curCustomData.value.maxSelectCount ||
     isHearing.value && props.section.length === 5

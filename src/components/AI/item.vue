@@ -4,31 +4,46 @@
     'right-msg': props.type === 'send'
   }">
     <h2 class="text-[#344054] font-normal text-[14px] pb-1">{{ props.name }}</h2>
-    <p class="py-[10px] px-[14px] items-center text-base mt-2 inline-block" v-if="props.type === 'send'">
-      {{ allPassage }}
-    </p>
-    <p class="py-[10px] px-[14px] items-center text-base mt-2 inline-block" v-else>
-      <PassageWord :word="val" :onended="onended" v-for="(val,i) in allPassage" :key="i"/>
-    </p>
+    <template v-if="!props.isEnd">
+      <p class="py-[10px] px-[14px] items-center text-base mt-2 inline-block" v-if="props.type === 'send'">
+        {{ allPassage }}
+      </p>
+      <p class="py-[10px] px-[14px] items-center text-base mt-2 inline-block" v-else>
+        <PassageWord :word="val" :onended="onended" v-for="(val,i) in allPassage" :key="i"/>
+      </p>
+    </template>
+    <template v-else>
+      <p class="py-[10px] px-[14px] items-center text-base mt-2 inline-block">
+        {{ props.type === 'send' ? allPassage : allPassage.join('').replaceAll('\n', '')}}
+      </p>
+    </template>
   </div>
 </template>
 <script setup lang="ts">
 import { defineProps, computed, ref, onMounted } from 'vue'
 import PassageWord from "@/components/BaseAutoWord/children.vue"
+import { useAIStore } from "@/stores/ai"
+import { all } from 'node_modules/axios/index.cjs';
 const startPassageIndex = ref(1)
+const aiStore = useAIStore()
 const props = defineProps<{
   content: string[] | string
   type: 'receive' | 'send'
   name: string
+  isEnd: boolean
+  id: string | number
 }>()
 onMounted(() => {
   startPassageIndex.value = 1
 })
 const allPassage = computed(() => {
-  return props.type === 'receive' ? props.content.slice(0, startPassageIndex.value) : props.content
+  return props.type === 'receive' && !props.isEnd ? props.content.slice(0, startPassageIndex.value) : props.content
 })
 const onended = () => {
   startPassageIndex.value++
+  if(startPassageIndex.value > props.content.length) {
+    aiStore.setIsEnd(props.id)
+  }
 }
 
 </script>

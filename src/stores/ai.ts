@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia'
-import http from "@/utils/http";
 import { reactive, ref } from 'vue'
 import { useIndexStore } from "@/stores/index"
 import { useRouter, useRoute } from 'vue-router'
-import {startStream, sendAi} from "@/service/ai";
+import {startStream} from "@/service/ai";
 let starindex = 0;
 export const useAIStore = defineStore('ai', () => {
   const list = reactive<any>([])
   const indexStore = useIndexStore()
+  const indexInit = ref(false)
   const aiParams = {
     // Contains a string of which category of TOEFL the query is from
     // Can be "Reading","Listening", "Speaking", or "Writing"
@@ -36,13 +36,15 @@ export const useAIStore = defineStore('ai', () => {
     problemMethod: ''
   }
   const init = async () => {
+    if(indexInit.value) return
     list.push({
       type: 'receive',
       name: '鹦鹉AI助教',
+      isEnd: false,
       id: 'init',
       content: ['Hi\n there! \nNice \nto \nmeet \nyou! \n如\n果\n你\n对\n托\n福\n学\n习\n有\n任\n何\n问\n题\n都\n可\n以\n在\n这\n里\n向\n我\n提\n问\n！']
     })
-    
+    indexInit.value = true
   }
 
   const sendMessage = async (chatbotQuery:string) => {
@@ -66,6 +68,7 @@ export const useAIStore = defineStore('ai', () => {
           list.push({
             type: 'receive',
             id: starindex++,
+            isEnd: false,
             name: '鹦鹉AI助教',
             content: massages
           })
@@ -73,9 +76,13 @@ export const useAIStore = defineStore('ai', () => {
       }
     }
   }
+  const setIsEnd = (id) => {
+    list.find(item => item.id === id).isEnd = true
+  }
   return {
     init,
     list,
-    sendMessage
+    sendMessage,
+    setIsEnd
   }
 })

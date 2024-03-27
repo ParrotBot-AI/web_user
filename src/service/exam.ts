@@ -73,3 +73,8 @@ export const request_computed_single_score = (sheet_id: string, question_id: str
     question_id
   })
 }
+
+// 综合模考
+export const request_start_mixed_exam = (data: any) => {
+  return http.post(`/api/system/microservice/create_mock_sheet/`, data)
+}

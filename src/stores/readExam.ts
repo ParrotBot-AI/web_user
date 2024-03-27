@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { reactive, computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { getWithExpiry } from "@/utils/storage"
 import {
   request_getExam,
   request_saveAnswer,
@@ -121,6 +122,12 @@ export const useReadExamStore = defineStore('readExam', () => {
    */
   const requestSubmitExam = async () => {
     await request_submitExam(query?.id)
+    if(query?.type === 'mixed' && query?.mid){
+      const mixdata = getWithExpiry(`mixedExam-${query?.mid}`)
+      console.log(mixdata)
+      // $router.push(`/result/${query?.id}?type=${query?.type}&mid=${query?.mid}`)
+      return
+    }
     $router.push(`/result/${query?.id}?type=${meta?.parent}`)
   }
 
