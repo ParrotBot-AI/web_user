@@ -36,12 +36,26 @@ const props = defineProps<{
 const question_contents = computed(() => {
   return props.question_content.split(/\\n/)
 })
+watch(() => props.question_id, () => {
+  const answerValue = examStore.answerData?.find(val => val.question_id === props.question_id)
+  if (answerValue?.is_answer) {
+    mc_value.value =  answerValue?.answer?.reduce((def, val,i) => { 
+      val === 1 && def.push(i)
+      return def
+    }, [])
+  }
+}, {
+  immediate: true
+})
 watch(() => mc_value.value, () => {
   if(mc_value.value.length > props.restriction.rc) {
     mc_value.value.shift()
   }
   const value = props.options_label.map((val, i) => Number((Object.values(mc_value.value) as number[]).includes(i)))
-  examStore.saveQuestion(props.question_id, value)
+  const answerValue = examStore.answerData.find(val => val.question_id === props.question_id)?.answer
+  if (mc_value.value.length === props.restriction.rc && value.toString() !== answerValue?.toString()) {
+    examStore.saveQuestion(props.question_id, value)
+  }
 })
 </script>
 <style scoped>

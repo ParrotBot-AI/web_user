@@ -24,7 +24,6 @@
   </template>
 </template>
 <script setup lang="ts">
-import type {HeaderBtnProps, KeyofIcons} from "@/views/ReadExam/components/HeaderBtn.vue"
 import QuestionItem from "./components/QuestionItem.vue"
 import HeaderBtn from "@/views/ReadExam/components/HeaderBtn.vue"
 import { onMounted, ref, reactive, computed, watchEffect } from 'vue'
@@ -49,26 +48,15 @@ const hearingGuide = reactive({
   ]
 })
 
-const HeaderBtnsConfig = reactive<{
-  [k in KeyofIcons]: HeaderBtnProps
-}>({
+const HeaderBtnsConfig = reactive<any>({
   horn: {
     title: 'horn',
     id: 'horn',
     disabled: true,
     isShow: false,
   },
-  progress: {
-    title: '进度',
-    id: 'progress',
-    disabled: true,
-    isShow: false,
-    onClick: () => {
-      examStore.setShowProcessDialog()
-    }
-  },
   help: {
-    title: '帮助',
+    title: 'HELP',
     id: 'help',
     disabled: false,
     isShow: false,
@@ -77,7 +65,7 @@ const HeaderBtnsConfig = reactive<{
     }
   },
   prev: {
-    title: '上一步',
+    title: 'BACK',
     disabled: false,
     id: 'prev',
     isShow: false,
@@ -92,7 +80,7 @@ const HeaderBtnsConfig = reactive<{
     }
   },
   continue: {
-    title: '跳过',
+    title: 'CONTINUE',
     id: 'continue',
     disabled: false,
     isShow: true,
@@ -105,7 +93,7 @@ const HeaderBtnsConfig = reactive<{
     }
   },
   next: {
-    title: '下一步',
+    title: 'NEXT',
     id: 'next',
     disabled: false,
     isShow: false,
@@ -120,7 +108,7 @@ const HeaderBtnsConfig = reactive<{
     }
   },
   submit: {
-    title: '提交',
+    title: 'SUBMIT',
     id: 'submit',
     disabled: false,
     isShow: false,
@@ -163,8 +151,8 @@ onMounted(async () => {
     isShowGuide.value = false
   }
   examStore.examing_data.questions.map(val => {
-    val.played = false
-    val.step = -1
+    val.played = query.quesIndex > -1
+    val.step = query.quesIndex > -1 ? Number(query.quesIndex) : -1
   })
   loading.value = false
 })

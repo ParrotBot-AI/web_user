@@ -162,7 +162,7 @@ const HeaderBtnsConfig = reactive<{
     isShow: false,
   },
   continue: {
-    title: '跳过',
+    title: 'CONTINUE',
     id: 'continue',
     disabled: false,
     isShow: true,

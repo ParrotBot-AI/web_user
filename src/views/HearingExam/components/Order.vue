@@ -27,7 +27,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, defineProps, computed } from 'vue'
+import { ref, defineProps, computed, watchEffect } from 'vue'
 import { useExamStore } from "@/stores/exam"
 import DropBox from '@/views/ReadExam/components/DropBox.vue'
 import DragBox from '@/views/ReadExam/components/DragBox.vue'
@@ -46,6 +46,13 @@ const resource = computed(() => {
     def[i] = val
     return def
   }, {})
+})
+watchEffect(() => {
+  const answerValue = examStore.examing_data?.answerData?.find((val) => val.question_id === props.question_id);
+  const _answer = answerValue?.answer.map(val => `${val}`)
+  if(_answer?.length === 3) {
+    res.value = _answer
+  }
 })
 const onDrop = ({ type, index }: { type: string, index: number }) => {
   res.value[index] = type

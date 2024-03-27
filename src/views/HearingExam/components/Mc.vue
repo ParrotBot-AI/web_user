@@ -12,7 +12,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, defineProps, watch } from 'vue'
+import { ref, defineProps, watch, watchEffect } from 'vue'
 import { useExamStore } from "@/stores/exam"
 const examStore = useExamStore()
 const mc_value = ref([])
@@ -27,12 +27,25 @@ const props = defineProps<{
     r: number;
   }
 }>()
+
+watchEffect(() => {
+  const answerValue = examStore.examing_data?.answerData?.find(val => val.question_id === props.question_id)
+  if (answerValue?.is_answer) {
+    mc_value.value =  answerValue?.answer?.reduce((def, val,i) => { 
+      val === 1 && def.push(i)
+      return def
+    }, [])
+  }
+})
 watch(() => mc_value.value, () => {
   if(mc_value.value.length > props.restriction.rc) {
     mc_value.value.shift()
   }
   const value = props.options_label.map((val, i) => Number((Object.values(mc_value.value) as number[]).includes(i)))
-  examStore.saveQuestion(props.question_id, value)
+  const answerValue = examStore.examing_data?.answerData?.find(val => val.question_id === props.question_id)?.answer
+  if (mc_value.value.length === props.restriction.rc && value.toString() !== answerValue?.toString()) {
+    examStore.saveQuestion(props.question_id, value)
+  }
 })
 </script>
 <style scoped>

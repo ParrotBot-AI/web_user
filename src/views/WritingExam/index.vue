@@ -191,7 +191,7 @@ const HeaderBtnsConfig = reactive<{
     isShow: false,
   },
   continue: {
-    title: '跳过',
+    title: 'CONTINUE',
     id: 'continue',
     disabled: false,
     isShow: true,
@@ -205,7 +205,7 @@ const HeaderBtnsConfig = reactive<{
     }
   },
   next: {
-    title: '下一步',
+    title: 'NEXT',
     id: 'next',
     disabled: false,
     isShow: false,
@@ -226,7 +226,7 @@ const HeaderBtnsConfig = reactive<{
     }
   },
   submit: {
-    title: '提交',
+    title: 'SUBMIT',
     id: 'submit',
     disabled: false,
     isShow: false,
