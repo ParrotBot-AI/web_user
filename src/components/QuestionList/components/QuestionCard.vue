@@ -7,11 +7,11 @@
         <img class="absolute top-4 right-4 cursor-pointer" :src="examEdit" alt="examEdit" @click="toResult"/>
         <span class="text-[30px] pl-6 flex-1 flex items-center w-full">{{ $t(props.resource_name.split('-')[0]) }}</span>
         <div v-if="isShowBtn" class="flex justify-around items-center w-full gap-3 px-3 mb-5">
-          <a-button @click="onSelectQuestion('mock_exam')" class="flex flex-1 justify-between items-center h-8 overflow-hidden">
+          <a-button @click="onSelectQuestion('mock_exam')" class="flex w-1/2 justify-between items-center h-8 overflow-hidden">
             <img :src="time" alt="time" />
             {{ $t('模考') }}
           </a-button>
-          <a-button @click="onSelectQuestion('practice')" class="flex flex-1 justify-between items-center h-8 overflow-hidden">
+          <a-button v-show="$route.name !== 'mock'" @click="onSelectQuestion('practice')" class="flex w-1/2 justify-between items-center h-8 overflow-hidden">
             <img :src="practice" alt="practice" />
             {{ $t('练习') }}
           </a-button>
@@ -161,24 +161,26 @@ const showScore = computed(() => {
 // 开始模拟考试
 const onSelectQuestion = async (v:EXAN_START['q_type']) => {
   if($route.name === 'mock') { // 综合模考
+    const res = await examStore.startMixedExam(type.value)
     setWithExpiry(`mixedExam-${props.id}`, {
       id: props.id,
+      father_sheet: res.sheet_id,
       resource_name: props.resource_name,
       curStep: 'read',
       curIndex: 0,
       quesid: props.children.map(val => val.questions)
     })
-    const res = await examStore.startMixedExam(type.value, props.children[0].questions, props.id)
+    await examStore.startExam(type.value, props.children[0].questions, res.sheet_id)
     $router.push({ 
       name: 'readExam',
       query: {
         type: 'mixedExam',
-        mid: props.id,
+        mid: res.sheet_id,
         name: props.resource_name,
-        id: res.sheet_id
+        id: examStore.examing_data.sheet_id
       }
     })
-    // return
+    return
   }
   if(
     curCustomData.value.maxSelectCount === curCustomData.value.minSelectCount && props.section.length === curCustomData.value.maxSelectCount ||

@@ -136,15 +136,17 @@ export const useExamStore = defineStore('exam', () => {
   /**
    * [startExam 开始考试 获取sheet_id]
    */
-  const startExam = async (q_type: EXAN_START['q_type'], question_ids: number[]) => {
+  const startExam = async (q_type: EXAN_START['q_type'], question_ids: number[], father_sheet?:string) => {
     const account_id = indexStore.userInfo.account_id
-    const res = await request_startExam({
+    const params = {
       q_type,
       question_ids,
       account_id,
-    })
-
+    }
+    father_sheet && (params['father_sheet'] = father_sheet)
+    const res = await request_startExam(params)
     examing_data.sheet_id = res.sheet_id;
+    return res
   }
   const startMixedExam = async (q_type: EXAN_START['q_type'], question_ids: number[], father_sheet: number) => {
     const account_id = indexStore.userInfo.account_id
