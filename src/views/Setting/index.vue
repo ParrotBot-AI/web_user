@@ -1,9 +1,9 @@
 <template>
-  <div class="flex w-full h-full ">
+  <div class="flex w-full h-full overflow-y-auto ">
     <a-tabs class="w-full h-full page-tab-setting " >
       <a-tab-pane key="1" tab="个人账号" class="flex  ">
-        <div class="bg-white w-[225px] h-[202px] flex flex-col  items-center justify-center border border-border-1 border-solid rounded-md ml-[100px]" >
-          <a-avatar class="bg-green-1 top-[-10px] shadow-lg border border-border-1 border-solid" style="font-size: 40px;" 
+        <div class="bg-white w-[200px] h-[192px] flex flex-col  items-center justify-center border border-border-1 border-solid rounded-md ml-[100px]"  >
+          <a-avatar class="bg-green-1 top-[-10px] shadow-lg border border-border-1 border-solid" style="font-size: 40px; width: 48%;" 
           :size="100" :src="indexStore.userInfo.avatar" :alt="indexStore.userInfo.name">
             {{ indexStore.userInfo.name[0] || '' }}
           </a-avatar>
@@ -16,7 +16,7 @@
           <div class="text-green-1 py-1">删除</div>
           </div>
         </div>
-        <div class="bg-white w-[740px] h-full flex flex-col border border-border-1 border-solid rounded-md p-[80px] ml-[50px]">
+        <div class="bg-white w-[740px] h-full flex flex-col border border-border-1 border-solid rounded-md p-[80px] ml-[50px]" style="width: 50%;">  
           <h1 class="text-[26px]">账户信息</h1>
           <a-form
           ref="formRef"    
@@ -26,7 +26,7 @@
           class="mt-8"
            >
            <a-form-item :label="$t('用户名')" name="code" >
-              <a-input  class="px-3.5 py-2.5" v-model:value=indexStore.userInfo.userId disabled="true">
+              <a-input  class="px-3.5 py-2.5" v-model:value=indexStore.userInfo.name disabled="true">
               </a-input>
             </a-form-item>
 
@@ -192,7 +192,7 @@
         </div>
       </a-tab-pane>
       <a-tab-pane key="2" tab="关于鹦鹉智学" class="w-full h-full flex items-center justify-center " >
-        <div class="bg-white w-[740px] h-[818px] flex border border-border-1 border-solid rounded-md flex-col p-[80px]"> 
+        <div class="bg-white w-[740px] h-[818px] flex border border-border-1 border-solid rounded-md flex-col p-[80px]" style="width: 55%;"> 
           <div class="flex flex-col w-full items-center justify-center">
             <img :src="About" alt="about">
             <span class="text-[20px] pt-3">Version 1.0.0</span>
@@ -238,6 +238,7 @@ import  About  from  '@/assets/images/about.svg';
 import { ref } from 'vue'
 
 const indexStore = useIndexStore()
+console.log(indexStore.userInfo)
 const isopen_web = ref(false)
 const isopen_messages = ref(false)
 const revise_password = ref(false)
