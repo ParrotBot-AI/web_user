@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col w-[368px] bg-white rounded-md border border-border-1 border-solid">
+  <div class="flex flex-col w-[340px] bg-white rounded-md border border-border-1 border-solid">
     <header class="flex px-3 pt-4 items-center justify-center">
       <span class="w-11 h-11">
         <img :src="aiassistant" alt="aiassistant" class="w-[55px] -mt-1"/>

@@ -7,11 +7,11 @@
         <img class="absolute top-4 right-4 cursor-pointer" :src="examEdit" alt="examEdit" @click="toResult"/>
         <span class="text-[30px] pl-6 flex-1 flex items-center w-full">{{ $t(props.resource_name.split('-')[0]) }}</span>
         <div v-if="isShowBtn" class="flex justify-around items-center w-full gap-3 px-3 mb-5">
-          <a-button @click="onSelectQuestion('mock_exam')" class="flex flex-1 justify-between items-center h-8 overflow-hidden">
+          <a-button @click="onSelectQuestion('mock_exam')" class="flex w-1/2 justify-between items-center h-8 overflow-hidden">
             <img :src="time" alt="time" />
             {{ $t('模考') }}
           </a-button>
-          <a-button @click="onSelectQuestion('practice')" class="flex flex-1 justify-between items-center h-8 overflow-hidden">
+          <a-button v-show="$route.name !== 'mock'" @click="onSelectQuestion('practice')" class="flex w-1/2 justify-between items-center h-8 overflow-hidden">
             <img :src="practice" alt="practice" />
             {{ $t('练习') }}
           </a-button>
@@ -41,7 +41,7 @@
       >
         <template v-for="(v,i) in list" :key="v.section_id">
           <h2 v-if="isHearing && i%3===0" class="pl-2 pt-2 text-[#333] text-base font-medium" :style="{borderTop: i===3 ? '1px solid #D0D5DD' : '1px solid transparent'}">Section {{i === 0 ? 1 : 2}}</h2>
-          <div class="flex justify-between items-center flex-1 px-2" :class="{separator: !isHearing}">
+          <div class="flex justify-between items-center flex-1 px-3" :class="{separator: !isHearing}">
             <span 
               class="text-gray-500 break-word w-24 font-semibold text-base" 
               v-if="Array.isArray(curCustomData.remark)"
@@ -60,10 +60,10 @@
               <template v-else-if="isHearing && i%3 === 0">Conversation{{' '}}1</template>
             </span>
             <span 
-              class="flex flex-col justify-center text-xs" 
+              class="flex flex-col justify-center text-xs min-w-[50px]" 
               :style="{ color: showScore(v).color }"
             >
-            <span v-if="v.last_record"> {{ $t('完成得分') }}</span>
+              <span v-show="showScore(v).color === '#F7A705'"> {{ $t('完成得分') }}</span>
               {{ $t(showScore(v).text) }}
             </span>
             <img :src="edit" alt="edit" @click="onEditClick(v)" class="cursor-pointer" v-if="!isMock" />
@@ -139,10 +139,10 @@ const curCustomData = computed(() => {
 // 计算得分状态
 const showScore = computed(() => {
   return (item: any) => {
-    if (item.last_record) {
+    if (item.questions[0]?.last_record) {
       return {
         color: '#F7A705',
-        text: `${item.last_record} / ${item.question_count}`
+        text: `${item.questions[0]?.last_record} / ${item.questions[0]?.total}`
       }
     } else if (item.xxx) {
       return {
@@ -161,24 +161,26 @@ const showScore = computed(() => {
 // 开始模拟考试
 const onSelectQuestion = async (v:EXAN_START['q_type']) => {
   if($route.name === 'mock') { // 综合模考
+    const res = await examStore.startMixedExam(type.value)
     setWithExpiry(`mixedExam-${props.id}`, {
       id: props.id,
+      father_sheet: res.sheet_id,
       resource_name: props.resource_name,
       curStep: 'read',
       curIndex: 0,
       quesid: props.children.map(val => val.questions)
     })
-    const res = await examStore.startMixedExam(type.value, props.children[0].questions, props.id)
+    await examStore.startExam(type.value, props.children[0].questions, res.sheet_id)
     $router.push({ 
       name: 'readExam',
       query: {
         type: 'mixedExam',
-        mid: props.id,
+        mid: res.sheet_id,
         name: props.resource_name,
-        id: res.sheet_id
+        id: examStore.examing_data.sheet_id
       }
     })
-    // return
+    return
   }
   if(
     curCustomData.value.maxSelectCount === curCustomData.value.minSelectCount && props.section.length === curCustomData.value.maxSelectCount ||
