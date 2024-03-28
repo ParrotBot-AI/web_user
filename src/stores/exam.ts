@@ -117,6 +117,7 @@ export const useExamStore = defineStore('exam', () => {
         exam_id: 1,
         pattern_id: pattern_id || '',
         limit,
+        account_id: indexStore.userInfo.account_id,
         page: page + 1,
         whether_zt: false,
       })

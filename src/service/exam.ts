@@ -3,6 +3,7 @@ type EXAM_RESOURCE = {
   exam_id: number
   pattern_id: string | number
   whether_zt: boolean
+  account_id: number
   page?: number
   limit?: number
 }

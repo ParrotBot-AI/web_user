@@ -41,7 +41,7 @@
       >
         <template v-for="(v,i) in list" :key="v.section_id">
           <h2 v-if="isHearing && i%3===0" class="pl-2 pt-2 text-[#333] text-base font-medium" :style="{borderTop: i===3 ? '1px solid #D0D5DD' : '1px solid transparent'}">Section {{i === 0 ? 1 : 2}}</h2>
-          <div class="flex justify-between items-center flex-1 px-2" :class="{separator: !isHearing}">
+          <div class="flex justify-between items-center flex-1 px-3" :class="{separator: !isHearing}">
             <span 
               class="text-gray-500 break-word w-24 font-semibold text-base" 
               v-if="Array.isArray(curCustomData.remark)"
@@ -60,10 +60,10 @@
               <template v-else-if="isHearing && i%3 === 0">Conversation{{' '}}1</template>
             </span>
             <span 
-              class="flex flex-col justify-center text-xs" 
+              class="flex flex-col justify-center text-xs min-w-[50px]" 
               :style="{ color: showScore(v).color }"
             >
-            <span v-if="v.last_record"> {{ $t('完成得分') }}</span>
+              <span v-show="showScore(v).color === '#F7A705'"> {{ $t('完成得分') }}</span>
               {{ $t(showScore(v).text) }}
             </span>
             <img :src="edit" alt="edit" @click="onEditClick(v)" class="cursor-pointer" v-if="!isMock" />
@@ -139,10 +139,10 @@ const curCustomData = computed(() => {
 // 计算得分状态
 const showScore = computed(() => {
   return (item: any) => {
-    if (item.last_record) {
+    if (item.questions[0]?.last_record) {
       return {
         color: '#F7A705',
-        text: `${item.last_record} / ${item.question_count}`
+        text: `${item.questions[0]?.last_record} / ${item.questions[0]?.total}`
       }
     } else if (item.xxx) {
       return {

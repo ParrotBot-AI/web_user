@@ -23,7 +23,6 @@
 import { defineProps, computed, ref, onMounted } from 'vue'
 import PassageWord from "@/components/BaseAutoWord/children.vue"
 import { useAIStore } from "@/stores/ai"
-import { all } from 'node_modules/axios/index.cjs';
 const startPassageIndex = ref(1)
 const aiStore = useAIStore()
 const props = defineProps<{
