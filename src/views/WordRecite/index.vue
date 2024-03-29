@@ -68,12 +68,12 @@
         </a-card-meta>
       </a-card>
     </div>
-    <div class="flex-1 grid grid-rows-3 grid-cols-9 gap-4 mt-12 w-full">
+    <div class="flex-1 grid grid-rows-3 grid-cols-10 gap-4 mt-12 w-full">
       <a-card class="text-gray-500 text-2xl font-bold col-span-5 row-span-3 shadow-lg" >
         {{ $t('单词学习曲线') }}
         <div id="main" style="height: 400px; width: 100%; margin-top: 30px;"></div>
       </a-card>
-      <a-card class="text-gray-500 text-2xl font-bold col-start-6 col-span-2 row-span-3 shadow-lg">
+      <a-card class="text-gray-500 text-2xl font-bold col-start-6 col-span-3 row-span-3 shadow-lg">
         {{ $t('单词学习进度') }}
         <div class="text-green-1 mt-[20px] text-[16px]">{{ 'lv' + wordStore.vocabs_statics_data.status_book[0].current_level + ' 26%' }} </div>
         <a-progress strokeColor="#1B8B8C" :percent="30" :showInfo="false"/>
@@ -92,7 +92,7 @@
         <div class="border-l  w-[0.5px] h-7 bg-green-1 ml-5"></div>
         <div class="flex  px-3 w-full items-center">
           <img :src="Tick" alt="layout" class="w-5 h-5" />
-          <div class="mx-5 flex-1">
+          <div class="mx-5 flex-1 w-[100px] text-nowrap">
             <div class="text-sm">{{ $t(wordStore.vocabs_statics_data.status_book[0].level_book[1].name) }}</div>
             <div class="text-sm font-normal">{{ $t('总计')+ wordStore.vocabs_statics_data.status_book[0].level_book[1].counts +$t('个') }}</div>
           </div>
@@ -101,7 +101,7 @@
         <div class="border-l  w-[0.5px] h-7 bg-green-1 ml-5"></div>
         <div class="flex  px-3 w-full items-center">
           <img :src="RightArrow" alt="layout" class="w-5 h-5" />
-          <div class="mx-5 flex-1">
+          <div class="mx-5 flex-1 w-[100px] text-nowrap">
             <div class="text-sm">{{ $t('托福高频词') }}</div>
             <div class="text-sm font-normal">{{ $t('总计')+ 4321 +$t('个') }}</div>
           </div>
@@ -110,7 +110,7 @@
         <div class="border-l  w-[0.5px] h-7 bg-green-1 ml-5"></div>
         <div class="flex  px-3 w-full items-center">
           <img :src="Lock" alt="layout" class="w-5 h-5" />
-          <div class="mx-5 flex-1">
+          <div class="mx-5 flex-1 w-[100px] text-nowrap">
             <div class="text-sm">{{ $t('托福真题词') }}</div>
             <div class="text-sm font-normal">{{ $t('总计')+ 4321 +$t('个') }}</div>
           </div>
@@ -119,7 +119,7 @@
         <div class="border-l  w-[0.5px] h-7 bg-green-1 ml-5"></div>
         <div class="flex px-3 w-full items-center">
           <img :src="Lock" alt="layout" class="w-5 h-5" />
-          <div class="mx-5 flex-1">
+          <div class="mx-5 flex-1 w-[100px] text-nowrap">
             <div class="text-sm">{{ $t(wordStore.vocabs_statics_data.status_book[0].level_book[2].name) }}</div>
             <div class="text-sm font-normal">{{ $t('总计')+ wordStore.vocabs_statics_data.status_book[0].level_book[2].counts +$t('个') }}</div>
           </div>
