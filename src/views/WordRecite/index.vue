@@ -26,8 +26,8 @@
           </template>
           <template #description
             ><span class="text-gray-600 text-[1vw] font-seminormal">{{ $t('今日学习') }}</span
-            ><img :src="up" class="ml-[20px] mt-[2px]"
-          /></template>
+            > <img :src="wordStore.vocabs_statics_data.today_day_study >= wordStore.vocabs_statics_data.last_day_study ? up : down" class="ml-[20px] mt-[2px]" />
+          </template>
         </a-card-meta>
       </a-card>
       <a-card class="shadow-lg h-[140px]">
@@ -39,7 +39,7 @@
           </template>
           <template #description
             ><span class="text-gray-600 font-seminormal text-[1vw]">{{ $t('今日复习') }}</span
-            ><img :src="down" class="ml-[20px] mt-[2px]"
+            ><img :src="wordStore.vocabs_statics_data.today_day_review >= wordStore.vocabs_statics_data.last_day_review ? up : down" class="ml-[20px] mt-[2px]"
           /></template>
         </a-card-meta>
       </a-card>
@@ -81,11 +81,11 @@
           <div class="text-sm font-normal">500</div>
           <div class="text-sm font-normal ml-auto" >1000</div>
         </div>
-        <div class="flex mt-4 px-3 w-full items-center">
+        <div class="flex mt-6 px-3 w-full items-center">
           <img :src="Tick" alt="layout" class="w-5 h-5" />
-          <div class="mx-5 flex-1 text-[1vw]">
-            <div class="text-[1vw]">{{ $t(wordStore.vocabs_statics_data.status_book[0].level_book[0].name) }}</div>
-            <div class="text-[0.8vw] font-normal">{{ $t('总计')+ wordStore.vocabs_statics_data.status_book[0].level_book[0].counts +$t('个') }}</div>
+          <div class="mx-5 flex-1 w-[100px] text-nowrap">
+            <div class="text-sm">{{ $t(wordStore.vocabs_statics_data.status_book[0].level_book[0].name) }}</div>
+            <div class="text-sm font-normal">{{ $t('总计')+ wordStore.vocabs_statics_data.status_book[0].level_book[0].counts +$t('个') }}</div>
           </div>
           <div class="text-sm text-green-1 cursor-pointer">{{ $t('重选') }}</div>
         </div>
@@ -175,6 +175,7 @@ const wordStore = useWordStore()
 const myChart = ref()
 let Chart :any
 let clickPoint: any = null; // 用于保存点击位置信息
+
 
 const formatData = (key: string) => {
   const series = wordStore.vocabs_statics_data?.series
@@ -299,19 +300,20 @@ watchEffect (() => {
 })
 
 onMounted(() => {
-  // modal2Visible.value = true
   wordStore.get_vocabs_statics() 
   wordStore.get_vocabs_tasks()
   Chart = echarts.init(document.getElementById("main"));
   window.addEventListener('resize', () => {
     Chart.resize();
   });
+  
   Chart.on('click', (params: any) => {
     // 获取点击位置信息
     clickPoint = params.event;
     // 重新绘制图表
     Chart.setOption({});
   });
+
 })
 
 const onClick = (type: 'new' | 'old') => {
