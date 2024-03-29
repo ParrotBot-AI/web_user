@@ -110,7 +110,10 @@ export const useWordStore = defineStore('word', () => {
   }>({})
   const get_vocabs_statics = async () => {
     const res = await request_get_vocabs_statics(indexStore.userInfo.account_id)
+    console.log(res)
     vocabs_statics_data.series = res.series
+    vocabs_statics_data.last_day_review = res.last_day_review
+    vocabs_statics_data.last_day_study = res.last_day_study
     vocabs_statics_data.today_day_review = res.today_day_review
     vocabs_statics_data.today_day_study= res.today_day_study
     vocabs_statics_data.total_review = res.total_review
