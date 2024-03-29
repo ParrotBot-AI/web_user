@@ -84,11 +84,11 @@
               </a-tab-pane>
               <a-tab-pane key="2" tab="个人学习诊断" >
                 <div class="flex w-full items-center justify-center overflow-hidden">
-                  <div class="mt-5" style="width: 20%;">
+                  <div class="mt-5 mr-4" style="width: 10%;">
                     <img :src="PersionRead" />
                   </div>
-                  <div class="flex flex-col mb-2" style="width: 20%">
-                    <div class="text-[4vw]">{{ examStore.pastScores?.read }}</div>
+                  <div class="flex flex-col mb-2  items-center " style="width: 25%">
+                    <div class="text-[3.5vw]">{{ examStore.pastScores.read}}</div>
                     <div class="text-[0.8vw] text-gray-500">近7日平均分</div>
                   </div>
                   <div class="border-l  w-[0.5px] h-20 bg-green-1 ml-3"></div>
@@ -104,11 +104,11 @@
                   </div>
                 </div>
                 <div class="flex w-full items-center justify-center overflow-hidden">
-                  <div class="mt-5" style="width: 20%;">
+                  <div class="mt-5 mr-4" style="width: 10%;">
                     <img :src="PersionHear" />
                   </div>
-                  <div class="flex flex-col mb-2" style="width: 20%">
-                    <div class="text-[4vw]">{{ examStore.pastScores.hear }}</div>
+                  <div class="flex flex-col mb-2  items-center" style="width: 25%">
+                    <div class="text-[3.5vw]">{{ examStore.pastScores.hear }}</div>
                     <div class="text-[0.8vw] text-gray-500">近7日平均分</div>
                   </div>
                   <div class="border-l  w-[0.5px] h-20 bg-green-1 ml-3"></div>
@@ -124,11 +124,11 @@
                   </div>
                 </div>
                 <div class="flex w-full items-center justify-center overflow-hidden">
-                  <div class="mt-5" style="width: 20%;">
+                  <div class="mt-5 mr-4" style="width: 10%;">
                     <img :src="PersionSpoken" />
                   </div>
-                  <div class="flex flex-col mb-2" style="width: 20%">
-                    <div class="text-[4vw]">{{ examStore.pastScores.spoken }}</div>
+                  <div class="flex flex-col mb-2  items-center" style="width: 25%">
+                    <div class="text-[3.5vw]">{{ examStore.pastScores.spoken }}</div>
                     <div class="text-[0.8vw] text-gray-500">近7日平均分</div>
                   </div>
                   <div class="border-l  w-[0.5px] h-20 bg-green-1 ml-3"></div>
@@ -144,11 +144,11 @@
                   </div>
                 </div>
                 <div class="flex w-full items-center justify-center overflow-hidden">
-                  <div class="mt-5" style="width: 20%;">
+                  <div class="mt-5 mr-4" style="width: 10%;">
                     <img :src="PersionWrite" />
                   </div>
-                  <div class="flex flex-col mb-2" style="width: 20%">
-                    <div class="text-[4vw]">{{ examStore.pastScores.writing }}</div>
+                  <div class="flex flex-col mb-2 items-center" style="width: 25%">
+                    <div class="text-[3.5vw]">{{ examStore.pastScores.writing }}</div>
                     <div class="text-[0.8vw] text-gray-500">近7日平均分</div>
                   </div>
                   <div class="border-l  w-[0.5px] h-20 bg-green-1 ml-3"></div>

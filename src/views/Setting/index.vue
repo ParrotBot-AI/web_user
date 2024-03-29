@@ -192,7 +192,7 @@
         </div>
       </a-tab-pane>
       <a-tab-pane key="2" tab="关于鹦鹉智学" class="w-full h-full flex items-center justify-center " >
-        <div class="bg-white w-[740px] h-[818px] flex border border-border-1 border-solid rounded-md flex-col p-[80px]" style="width: 55%;"> 
+        <div class="bg-white w-[740px] h-[818px] flex border border-border-1 border-solid rounded-md flex-col p-[80px]" style="width: 50%;"> 
           <div class="flex flex-col w-full items-center justify-center">
             <img :src="About" alt="about">
             <span class="text-[20px] pt-3">Version 1.0.0</span>
