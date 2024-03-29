@@ -47,6 +47,17 @@
               v-if="Array.isArray(curCustomData.remark)"
             >
               {{ curCustomData.remark[i] }}
+              <a-tooltip 
+                placement="bottomLeft" 
+                v-if="i === list.length - 1"
+                color="#D0F0E6" 
+                :overlayInnerStyle="{color: '#0A3F64',fontSize: '12px',borderRadius: '15px',borderTopLeftRadius: '0',border: '1px solid #0A3F64', marginTop: '-20px', marginLeft: '3px', padding: '10px'}"
+              >
+                <template #title>
+                  <span>小啾预测题是AI自动生成的写作题目，<br/>帮您更好地迎战新的写作考核模式</span>
+                </template>
+                <span class="!font-normal text-[#B2DAC8] text-xs flex items-center"><img :src="hint" alt="hint" class="mr-1"/>小啾预测题</span>
+              </a-tooltip>
             </span>
             <span 
               class="text-gray-500 text-base" 
