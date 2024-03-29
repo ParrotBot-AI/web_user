@@ -84,7 +84,7 @@
         </template>
         <template v-if="curInfo.keywords?.r === 600">
           <div class="flex text-base flex-1">
-            <div class="flex flex-1 flex-col py-10 px-10 text-[#475467]">
+            <div class="flex w-1/2 flex-col py-10 px-10 text-[#475467]">
               <div v-for="(val,i) in curInfo.question_title" :key="i">
                 {{ val }}
               </div>
@@ -98,7 +98,7 @@
                 <p v-for="(v,i) in curInfo?.question_content[0]?.content" :key="i">{{ v }}</p>
               </div>
             </div>
-            <div class="flex flex-1 flex-col py-4" :style="{ borderLeft: `1px solid #D0D5DD`}" >
+            <div class="flex w-1/2 flex-col py-4" :style="{ borderLeft: `1px solid #D0D5DD`}" >
               <div v-for="(val,i) in curInfo?.question_content?.slice(1)" :key="i" class="text-[#475467] text-base flex mb-4 items-start">
                 <Avatar 
                   :src="i == 0 ? Man1 : Man2"
@@ -166,6 +166,7 @@ const curInfo = computed(() => {
 })
 
 const onChange = (content:string) => {
+  console.log('onChange::', content)
   questions[step.value].answer = content
 }
 const onAudioEnded = () => {

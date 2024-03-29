@@ -22,13 +22,12 @@
     @copy="$event.preventDefault()" 
     @paste="$event.preventDefault()"
     v-model="textValue"
-    @input="props.onChange(textValue)"
   />
 </div>  
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import copy from "copy-to-clipboard"
 const showTimer = ref(true)
 const textAreaEl= ref<null | HTMLTextAreaElement>(null)
@@ -41,11 +40,11 @@ function insertAtCursor(myField:HTMLTextAreaElement , myValue:string) {
   if (myField.selectionStart || myField.selectionStart === 0) {
     var startPos = myField.selectionStart;
     var endPos = myField.selectionEnd;
-    myField.value = myField.value.substring(0, startPos)
+    textValue.value = myField.value.substring(0, startPos)
       + myValue
       + myField.value.substring(endPos, myField.value.length);
   } else {
-    myField.value += myValue;
+    textValue.value += myValue;
   }
 }
 const onClick = async (val:string) => {
@@ -56,7 +55,7 @@ const onClick = async (val:string) => {
     copy(selectedText)
   } else if(val === 'Cut'){
     copy(selectedText)
-    textAreaEl.value!.value = textAreaEl.value!.value.substring(0, startPos) + textAreaEl.value!.value.substring(endPos)
+    textValue.value = textAreaEl.value!.value.substring(0, startPos) + textAreaEl.value!.value.substring(endPos)
   } else if(val === 'Paste'){
     const selectedText =  await navigator.clipboard.readText()
     insertAtCursor(textAreaEl.value!, selectedText)
@@ -67,6 +66,11 @@ const props = defineProps<WritingBtnProps>()
 const onShowWordClick = () => {
   showTimer.value = !showTimer.value
 }
+
+watch(() => textValue.value, () => {
+  console.log('watch', textValue.value)
+  props.onChange(textValue.value)
+})
 
 </script>
 
