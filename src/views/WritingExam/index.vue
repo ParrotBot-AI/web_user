@@ -166,7 +166,6 @@ const curInfo = computed(() => {
 })
 
 const onChange = (content:string) => {
-  console.log('onChange::', content)
   questions[step.value].answer = content
 }
 const onAudioEnded = () => {

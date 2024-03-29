@@ -160,34 +160,35 @@ export const useWordStore = defineStore('word', () => {
         eventSource.close();
     };
   }
-
+  const nextDataFormat = async (payload:any) => {
+    if(payload.endpoints) {
+      const {
+        input,
+        method,
+        url
+      } = payload.endpoints.init
+      const streaming = payload.endpoints.streaming
+      const { clientId } = await http[method](url, input)
+      wordTaskData.is_end = false
+      wordTaskData.payload = {
+        ...payload,
+        response: [],
+      }
+      connectSSE(streaming.url.replace('{ClientID}', clientId));
+    } else {
+      wordTaskData.payload = {
+        ...payload,
+      }
+      wordTaskData.is_answer = false
+    }
+  }
   const next = async (data:any) => {
     try {
       const { payload } = await request_learn_vocabs_tasks({
         task_account_id: Number($route.query.id),
         payload: data
       })
-      // console.log(payload)
-      if(payload.endpoints) {
-        const {
-          input,
-          method,
-          url
-        } = payload.endpoints.init
-        const streaming = payload.endpoints.streaming
-        const { clientId } = await http[method](url, input)
-        wordTaskData.is_end = false
-        wordTaskData.payload = {
-          ...payload,
-          response: [],
-        }
-        connectSSE(streaming.url.replace('{ClientID}', clientId));
-      } else {
-        wordTaskData.payload = {
-          ...payload,
-        }
-        wordTaskData.is_answer = false
-      }
+      nextDataFormat(payload)
     } catch (error) {
       console.log(error)
     }
@@ -206,8 +207,7 @@ export const useWordStore = defineStore('word', () => {
   }
 
   const aiNext = async () => {
-    console.log(wordTaskData)
-    await request_learn_vocabs_tasks({
+    const { payload } = await request_learn_vocabs_tasks({
       task_account_id: Number($route.query.id),
       payload: {
         payload: {
@@ -217,6 +217,7 @@ export const useWordStore = defineStore('word', () => {
         }
       }
     })
+    nextDataFormat(payload)
   }
 
   return {

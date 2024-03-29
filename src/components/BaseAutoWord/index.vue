@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full w-full overflow-y-auto px-14 text-[#667085]"> 
+  <div class="h-full w-full overflow-y-auto px-14 text-[#667085] wrod-artial"> 
     <PassageWord :word="val" :onended="onended" v-for="(val,i) in allPassage" :key="i"/>
   </div>
 </template>
@@ -18,5 +18,7 @@ const onended = () => {
 }
 </script>
 <style scoped>
-  
+  .wrod-artial >div:nth-child(1){
+    text-align: center;
+  }
 </style>

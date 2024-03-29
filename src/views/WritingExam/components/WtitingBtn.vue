@@ -68,7 +68,6 @@ const onShowWordClick = () => {
 }
 
 watch(() => textValue.value, () => {
-  console.log('watch', textValue.value)
   props.onChange(textValue.value)
 })
 
