@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import {request_login, request_sms, request_resetPassword, request_logout, request_setUserInfo} from "@/service/user"
-import {setWithExpiry} from "@/utils/storage"
+import {setWithExpiry, removeWithExpiry} from "@/utils/storage"
 import router from "@/router"
 import type { LOGIN_TYPE_SMS, LOGIN_TYPE_PHOME, RESRPASSWOED, SETUSERINFO } from "@/service/user"
 import {message} from "ant-design-vue"
@@ -23,8 +23,8 @@ export const useUserStore = defineStore('user', () => {
   const api_login = async (data: LOGIN_TYPE_SMS | LOGIN_TYPE_PHOME) => {
     const res = await request_login(data)
     setWithExpiry('userinfo', res, null);
-    setWithExpiry('usermenu', null, null);
-    setWithExpiry('userdata', null, null);
+    removeWithExpiry('usermenu');
+    removeWithExpiry('userdata');
     message.success('登录成功',1, () => {
       if((res.name)) {
         router.push('/home')
@@ -44,6 +44,7 @@ export const useUserStore = defineStore('user', () => {
 
   const api_out = async () => {
     await request_logout()
+    window.localStorage.clear()
   }
   return {onClickChangeLoginType, loginType, api_sms, api_login, api_findPassword, api_out, api_setUserInfo}
 })

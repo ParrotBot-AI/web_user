@@ -33,3 +33,8 @@ export function getWithExpiry<T>(key: string, storageType: StorageType = 'localS
   return item.value;
 }
 
+
+export function removeWithExpiry(key: string, storageType: StorageType = 'localStorage'): void {
+  const storage = storageType === 'localStorage' ? localStorage : sessionStorage;
+  storage.removeItem(key);
+}
