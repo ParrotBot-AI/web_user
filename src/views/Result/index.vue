@@ -2,7 +2,7 @@
   <a-spin v-if="resultStore.resultData.loading" size="large" tip="成绩计算中..." class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"/>
   <template v-else>
     <AnswerReview v-if="resultStore.showAnswerHistoryDialog" />
-    <a-layout class="w-full h-full flex flex-col">
+    <a-layout class="w-full h-full flex flex-col relative z-40">
       <b-header :title="resultStore.resultData.title">
         <template #right>
           <div class="flex">

@@ -125,6 +125,28 @@ export const useResultStore = defineStore('result', () => {
       setResultData(res)
     }
   }
+  const formatAIModel = (res:any) => {
+    const model_answer = res?.model_answer
+    if(!model_answer) return {
+      model_answer_content: {},
+      model_answer: ''
+    }
+    const model_answer_content = typeof model_answer === 'string' ? JSON.parse(model_answer) : model_answer
+    if(model_answer_content['General Feedback']){
+      const _arr = model_answer_content['General Feedback'].split(/\n?(.+):\s/i).slice(1)
+      model_answer_content['format_G_F'] = new Array(_arr.length / 2).fill(0).reduce((def, item, index) => {
+        def[_arr[index * 2]] = _arr[index * 2 + 1]
+        return def
+      }, {})
+    }
+    if(model_answer_content['Mind-Map']){
+      model_answer_content['format_M_M'] = model_answer_content['Mind-Map'].split(/\n/)
+    }
+    return {
+      model_answer_content,
+      model_answer
+    }
+  }
   const formatData = (res:any) => {
     const score_d = Object.values(res.score_d)
     if(query.type === 'hearing') {
@@ -187,8 +209,7 @@ export const useResultStore = defineStore('result', () => {
         }) 
       }
       resultData.allData.push(...footData.map((v,i) => {
-        const model_answer = res.questions_r.questions[i]?.model_answer
-        const model_answer_content = typeof model_answer === 'string' ? JSON.parse(model_answer) : model_answer
+        const {model_answer, model_answer_content} = formatAIModel(res.questions_r.questions[i])
         return {
           layout: 'col',
           name: v.title,
@@ -196,6 +217,9 @@ export const useResultStore = defineStore('result', () => {
           mockScoreTotal: res.questions_r.questions[i].max_score,
           // TODO 等接口字段
           aiComment: '', // ai评语
+          model_answer,
+          model_answer_content,
+          question: res.questions_r.questions[i],
           list: spoken_result_data.map(val => {
             const sum = Array.isArray(val.key) ? val.key.reduce((_v,_i) => {
               return Number(model_answer_content?.Grades?.[_i]) + _v
@@ -233,8 +257,7 @@ export const useResultStore = defineStore('result', () => {
         aiComment: '', // ai评语
       }
       resultData.allData.push(...footerData.map((v,i) => {
-        const model_answer = res.questions_r.questions[i]?.model_answer
-        const model_answer_content = typeof model_answer === 'string' ? JSON.parse(model_answer) : model_answer
+        const {model_answer, model_answer_content} = formatAIModel(res.questions_r.questions[i])
         return {
           layout: 'col',
           name: v.title,
@@ -242,6 +265,11 @@ export const useResultStore = defineStore('result', () => {
           mockScoreTotal: res.questions_r.questions[i].max_score,
           // TODO 等接口字段
           aiComment: '', // ai评语
+          model_answer,
+          model_answer_content,
+          question: res.questions_r.questions[i],
+          curIndex: i + 1,
+          length: res.questions_r.questions.length,
           list: writing_result_data[v.title].map(val => ({
             title: val.title,
             count: model_answer_content?.Grades[val.key] || 0,

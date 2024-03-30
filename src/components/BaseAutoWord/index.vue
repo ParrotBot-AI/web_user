@@ -11,7 +11,7 @@ const props = defineProps<{
   data: string[]
 }>()
 const allPassage = computed(() => {
-  return props.data.slice(0, startPassageIndex.value)
+  return props?.data?.slice(0, startPassageIndex.value)
 })
 const onended = () => {
   startPassageIndex.value++

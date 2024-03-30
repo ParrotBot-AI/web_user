@@ -1,6 +1,6 @@
 <template>
   <a-layout class="w-full h-full flex flex-col absolute top-0 left-0  bg-green-2 z-50">
-    <header class="bg-green-2 px-6 py-4 flex justify-between items-center">
+    <header class="bg-green-2 px-6 py-4 flex justify-between items-center" v-show="$route.query.type === 'read' || $route.query.type === 'hearing'">
       <div class="font-normal text-xl text-gray-900 ">
         <ArrowLeftOutlined class="pr-2" @click="onReviewAnswer"/> 返回
       </div>
@@ -17,6 +17,7 @@
           :title="answerData?.question_parent?.question_title" 
           :index="step + 1" 
           :length="resultStore.resultData?.format_question?.length"
+          v-show="$route.query.type === 'read' || $route.query.type === 'hearing'"
         > 
       </BQuesTitle>
       <component :is="reviewComponent" :answerData="answerData" />
@@ -37,6 +38,7 @@ import { useRoute } from "vue-router"
 import ReadReview from './ReadReview.vue'
 import HearingReview from './HearingReview.vue'
 import WritingReview from './WritingReview.vue'
+import SpokenReview from "./SpokenReview.vue"
 import { useResultStore } from "@/stores/result"
 const resultStore = useResultStore()
 const step = ref(0)
@@ -44,7 +46,8 @@ const $route = useRoute()
 const ComponentMap = {
   'read': ReadReview,
   'hearing': HearingReview,
-  'writing': WritingReview
+  'writing': WritingReview,
+  'spoken': SpokenReview
 }
 const answerData = computed(() => {
   console.log(resultStore.resultData.format_question)

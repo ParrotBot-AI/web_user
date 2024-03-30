@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import http from "@/utils/http";
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useIndexStore } from "./index"
 import { useRouter, useRoute } from 'vue-router'
 import {request_get_vocabs_statics, request_get_vocabs_tasks, request_start_vocabs_tasks, request_learn_vocabs_tasks} from "@/service/word";
@@ -104,10 +104,12 @@ export const useWordStore = defineStore('word', () => {
       word_id: number
       word_ids: number[]
       response?: string[]
+      hint: string | null
     },
     is_end: boolean,
     is_answer: boolean
   }>({})
+  const finished = ref(false)
   const get_vocabs_statics = async () => {
     const res = await request_get_vocabs_statics(indexStore.userInfo.account_id)
     console.log(res)
@@ -137,12 +139,16 @@ export const useWordStore = defineStore('word', () => {
     
   }
   const start_task = async () => {
-    const task_account_id = Number($route.query.id)
-    const { payload } = await request_start_vocabs_tasks(task_account_id!)
-    wordTaskData.payload = {
-      ...payload,
+    try {
+      const task_account_id = Number($route.query.id)
+      const { payload } = await request_start_vocabs_tasks(task_account_id!)
+      wordTaskData.payload = {
+        ...payload,
+      }
+      wordTaskData.is_answer = false
+    }catch (error) {
+      $router.push('/wordRecite')
     }
-    wordTaskData.is_answer = false
   }
   const connectSSE = (url:string) => {
     const eventSource = new EventSource(url);
@@ -184,20 +190,31 @@ export const useWordStore = defineStore('word', () => {
   }
   const next = async (data:any) => {
     try {
-      const { payload } = await request_learn_vocabs_tasks({
+      const data = await request_learn_vocabs_tasks({
         task_account_id: Number($route.query.id),
         payload: data
       })
-      nextDataFormat(payload)
+      if(data === 'finished') { 
+        finished.value = true
+      } else {
+        const {payload} = data
+        nextDataFormat(payload)
+      }
     } catch (error) {
       console.log(error)
     }
   }
 
   const submit_task = async (i: number) => {
-    wordTaskData.payload.answer[i] = 1
-    wordTaskData.is_answer = true
-    next({payload:wordTaskData.payload})
+    if(wordTaskData.payload.hint) {
+      console.log('hint')
+      wordTaskData.payload.answer[i] = 1
+      wordTaskData.is_answer = true
+    } else  {
+      wordTaskData.payload.answer[i] = 1
+      wordTaskData.is_answer = true
+      next({payload:wordTaskData.payload})
+    }
   }
 
   const submit_unknown = () => {
@@ -229,7 +246,8 @@ export const useWordStore = defineStore('word', () => {
     aiNext,
     wordTaskData,
     submit_task,
-    submit_unknown
+    submit_unknown,
+    finished
   }
   
 })

@@ -130,14 +130,11 @@ router.beforeEach(async (to, from, next) => {
   }
   const userInfo = getWithExpiry<USERINFO>('userinfo')!;
   const isLoggedIn = userInfo?.access
-  console.log('userInfo:::', userInfo)
   const indexStore = useIndexStore()
   if (isLoggedIn) {
-    console.log('isRoutesAdded:::', isRoutesAdded)
     if (!isRoutesAdded) {
       try {
         const res: any = await Promise.allSettled([indexStore.requestMenu(), indexStore.requestUserInfo(userInfo?.userId)]);
-        console.log('res::::',res)
         const menuData = res[0].value.data
         indexStore.getMenuValue(menuData)
         
