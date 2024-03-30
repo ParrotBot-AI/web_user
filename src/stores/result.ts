@@ -220,6 +220,8 @@ export const useResultStore = defineStore('result', () => {
           model_answer,
           model_answer_content,
           question: res.questions_r.questions[i],
+          curIndex: i + 1,
+          length: res.questions_r.questions.length,
           list: spoken_result_data.map(val => {
             const sum = Array.isArray(val.key) ? val.key.reduce((_v,_i) => {
               return Number(model_answer_content?.Grades?.[_i]) + _v
