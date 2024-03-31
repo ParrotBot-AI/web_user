@@ -27,10 +27,7 @@
           </p>
         </div>
         <h4 class="text-[#667085] font-normal text-base mb-4">播放听力材料</h4>
-        <audio controls>
-          <source :src="props.data?.question.voice_link" type="audio/mpeg">
-          Your browser does not support the audio element.
-        </audio>
+        <BaseResAudio :src="props.data?.question.voice_link" />
       </div>
       <div class="w-1/2 flex flex-col overflow-y-auto px-[80px] pt-[20px] text-[#475467] text-base">
         <p class="my-6">
@@ -48,6 +45,7 @@
 </template>
 <script setup lang="ts">
 import { AuditOutlined } from '@ant-design/icons-vue'
+import BaseResAudio from "@/components/BaseResAudio/index.vue"
 import { defineProps } from "vue"
 const props = defineProps<{
   data: any[]

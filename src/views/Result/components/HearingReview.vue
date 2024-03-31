@@ -7,10 +7,7 @@
       </div>
       <div class="mt-4 mx-8">
         <h4 class="text-[#667085] font-normal text-base mb-4">播放听力材料</h4>
-        <audio controls>
-          <source :src="props.answerData?.question_parent.voice_link" type="audio/mpeg">
-          Your browser does not support the audio element.
-        </audio>
+        <BaseResAudio :src="props.answerData?.question_parent.voice_link" />
       </div>
     </div>
     <div class="flex-1 h-full overflow-h-auto overflow-x-hidden px-12 py-7">
@@ -33,7 +30,7 @@
 </template>
 <script setup lang="ts">
 import {defineProps} from "vue"
-
+import BaseResAudio from "@/components/BaseResAudio/index.vue"
 const props = defineProps<{
   answerData: any
 }>()
