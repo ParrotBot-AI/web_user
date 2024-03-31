@@ -13,7 +13,7 @@
             <div class="flex w-full justify-center mt-10" style=" height: 30%">
                 <div v-for="(v,i) in question[0]" :key="i"  class="flex flex-col items-center justify-center bg-white border border-border-1 border-solid rounded-md mx-5" style="width: 14%; " :style="{ backgroundColor: v.backgroundColor }" @click="toggleImage(0, i)">
                     <img :src="v.isselect ? v.selectimg : v.img" class="w-1/2" >
-                    <div class=" mt-4" :style="{ color: v.isselect ? 'white' : 'black' }">{{ v.title }}</div>
+                    <div class=" mt-4" :style="{ color: v.isselect ? 'white' : '#667085' }">{{ v.title }}</div>
                 </div>
             </div>
         </div>
@@ -24,7 +24,7 @@
             <div class="flex w-full justify-center mt-10" style=" height: 30%">
                 <div v-for="(v,i) in question[1]" :key="i" class="flex flex-col items-center justify-center bg-white border border-border-1 border-solid rounded-md mx-5" style="width: 14%; " :style="{ backgroundColor: v.backgroundColor }" @click="toggleImage(1, i)">
                     <img :src="v.isselect ? v.selectimg : v.img" class="w-1/2">
-                    <div class=" mt-4">{{ v.title }}</div>
+                    <div class=" mt-4" :style="{ color: v.isselect ? 'white' : '#667085' }">{{ v.title }}</div>
                 </div>
             </div>
         </div>
@@ -35,7 +35,7 @@
             <div class="flex w-full justify-center mt-10" style=" height: 30%">
                 <div v-for="(v,i) in question[2]" :key="i" class="flex flex-col items-center justify-center bg-white border border-border-1 border-solid rounded-md mx-5" style="width: 14%; " :style="{ backgroundColor: v.backgroundColor }" @click="toggleImage(2, i)">
                     <img :src="v.isselect ? v.selectimg : v.img" class="w-1/2">
-                    <div class=" mt-4">{{ v.title }}</div>
+                    <div class=" mt-4" :style="{ color: v.isselect ? 'white' : '#667085' }">{{ v.title }}</div>
                 </div>
             </div>
         </div>
