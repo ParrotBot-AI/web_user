@@ -27,7 +27,7 @@
           </p>
         </div>
         <h4 class="text-[#667085] font-normal text-base mb-4">播放听力材料</h4>
-        <BaseResAudio :src="props.data?.question.voice_link" />
+        <BaseResAudio :src="props.data?.question.answer_voice_link" />
       </div>
       <div class="w-1/2 flex flex-col overflow-y-auto px-[80px] pt-[20px] text-[#475467] text-base">
         <p class="my-6">

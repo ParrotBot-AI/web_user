@@ -395,12 +395,15 @@ const onClick = (type: 'new' | 'old') => {
 .word-list>div:after {
   content: '';
   position: absolute;
-  top: 32px;
-  bottom: -20px;
+  top: 34px;
+  bottom: -34px;
   width: 1px;
   left: 21px;
   background: #D0D5DD;
   z-index: 0;
+}
+.word-list>div:last-child:after {
+  display: none;
 }
 .word-list>div.g:after {
   background: #B2DAC8;

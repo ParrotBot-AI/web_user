@@ -5,20 +5,24 @@
       <!--用户信息-->
       <div class="pb-7">
         <div class="flex">
-          <div class="flex  bg-white w-full h-[150px] ml-12 mt-4 shadow-lg rounded-md border border-border-1 border-solid">
-            <a-avatar class="bg-green-1  top-[-10px] left-[-50px] shadow-lg  rounded-md border border-border-1 border-solid" style="font-size: 40px;" shape="square" :size="100"
+          <div class="flex bg-white w-full h-[130px] ml-[60px] mt-4 shadow-lg rounded-md border border-border-1 border-solid relative pl-[80px]">
+            <a-avatar
+             class="bg-green-1 absolute top-[-10px] left-[-60px] shadow-lg rounded-md border border-border-1 border-solid" 
+              style="font-size: 40px;" 
+              shape="square" 
+              :size="100"
               :src="indexStore.userInfo.avatar" :alt="indexStore.userInfo.name">
               {{ indexStore.userInfo.name[0] || '' }}
             </a-avatar>
-            <div class="overflow-hidden h-full flex flex-col items-start" style="width: 40%;">
+            <div class="overflow-hidden h-full flex flex-col pr-10 max-w-[45%]">
               <h1 class="text-[25px] text-gray-900 pt-6">{{ $t(getCurrentTimeOfDay()+'好') }}，{{ indexStore.userInfo.name }}
               </h1>
-              <p class="text-gray-600 pt-4">Cease to struggle and you cease to live.</p>
+              <p class="text-gray-600 pt-6 truncate">Cease to struggle and you cease to live.</p>
             </div>
             <div class="flex h-full items-center justify-start"> 
-              <div class="border-l w-[0.5px] h-1/2 bg-gray-500  "></div>
+              <div class="border-l w-[0.5px] h-1/2 bg-[rgba(0,0,0,0.20)]"></div>
             </div>
-            <div class="flex flex-col ml-[20px] pt-8">
+            <div class="flex flex-col ml-[40px] pt-6">
               <div class="font-bold text-[18px]">
                 每日打卡{{ ' ' }}
                 <a-tooltip 
@@ -86,15 +90,15 @@
               </a-tab-pane>
               <a-tab-pane key="2" tab="个人学习诊断" >
                 <div v-for="(val, i) in examStore?.pastScores" class="flex w-full items-center justify-center overflow-hidden" :key="i">
-                  <div class="mt-5 mr-4" style="width: 10%;">
-                    <img :src="listIcon(i)" />
+                  <div class="flex mb-2 items-center justify-center w-[180px]">
+                    <img :src="listIcon(i)" width="26" class="mt-3"/>
+                    <div class="flex flex-col flex-1 overflow-hidden text-center">
+                      <div class="text-[50px] text-[#475467] font-medium">{{ val.avg_s }}</div>
+                      <div class="text-base text-[#6B7280] mt-2">近7日平均分</div>
+                    </div>
                   </div>
-                  <div class="flex flex-col mb-2 items-center " style="width: 25%">
-                    <div class="text-[3.5vw]">{{ val.avg_s }}</div>
-                    <div class="text-[0.8vw] text-gray-500">近7日平均分</div>
-                  </div>
-                  <div class="border-l w-[0.5px] h-20 bg-green-1 ml-3"></div>
-                  <div class="flex flex-col p-6" style="width: 60%;">
+                  <div class="border-l w-[0.5px] bg-[#D0F0E6] ml-3 h-[78px]"></div>
+                  <div class="flex flex-1 flex-col p-6 overflow-hidden">
                     <div class="text-gray-500 font-bold mb-4 text-[1vw]">错误率最高的题型</div>
                     <div class="flex overflow-auto scorll-bar-hidden" v-if="val.tag"> 
                       <div v-for="(v, i) in val.tag" :key="i">
@@ -129,7 +133,7 @@
             {{!wordStore?.vocabs_tasks_data.find(item => item.task_name === '学习新单词') ? '今日已学完' : '学习新单词'}} 
           </a-button>
         </div>
-        <a-card class="col-start-4 col-span-2 row-span-3 shadow-lg overflow-y-auto">
+        <a-card class="col-start-4 col-span-2 row-span-3 shadow-lg overflow-y-auto scorll-bar-hidden">
           <div class="font-bold text-[20px]">近七日学习时长</div>
           <div ref="HomeChart" style="height: 300px; width: 100%;"></div>
         </a-card>

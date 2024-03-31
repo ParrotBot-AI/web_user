@@ -57,7 +57,7 @@
         </template>
       </a-table>
       <div class="fixed flex right-4 bottom-8 flex-col">
-        <div class="bg-white h-24 w-24 p-2 mb-2">二维码</div>
+        <div class="bg-white h-28 w-28 p-2 mb-2"><img :src="erweima" class="w-full h-full" /></div>
         <p class="text-[#3B3205]">扫码联系客服</p>
       </div>
     </div>
@@ -71,6 +71,7 @@
 <script setup lang="ts">
 import Contain from '@/assets/images/contain.svg'
 import Horn from '@/assets/images/horn.svg'
+import erweima from '@/assets/images/erweima.jpg'
 import { request_menu_ad } from "@/service/user"
 import { ref } from "vue"
 const adUrl = ref('')
