@@ -1,5 +1,6 @@
 :root {
   --color-login-bg: #CFE4DA;
+  --color-form: #ecf5f1;
   --color-border: #EAECF0;
   --color-white: #fff;
   --color-gray-900: #101828;
@@ -17,6 +18,7 @@
   --color-blue-2: #C9F8E3;
   --color-black-1: #050A15;
   --color-yellow-1: #eaba61;
+  --color-yellow-2: #F3B84E;
   --color-blue-3: #5E6BA2;
   --color-blue-4: #66E8E9;
   

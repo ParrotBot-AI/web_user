@@ -230,10 +230,12 @@ import hint from "@/assets/images/hint.png"
 import { useWordStore } from '@/stores/word'
 import { useExamStore } from '@/stores/exam'
 import { ref, onMounted, watchEffect} from 'vue'
+import {  useUserStore} from '@/stores/user'
 import { useRoute } from "vue-router"
 const calenderOpen = ref(false)
 const wordStore = useWordStore()
 const examStore = useExamStore()
+const userStore = useUserStore()
 import * as echarts from 'echarts';
 const activeKey = ref('1');
 const indexStore = useIndexStore()
@@ -271,6 +273,8 @@ const onClick = (type: 'new' ) => {
 onMounted(() => {
   wordStore.get_vocabs_tasks()
   examStore.getPastResult()
+  userStore.api_checkin()
+  console.log(userStore.api_checkin())
   // HomeChart.value = echarts.init(document.getElementById('main'));
   // myEcharts()
   chart.value = echarts.init(HomeChart.value, 'main');

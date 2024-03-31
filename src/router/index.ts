@@ -99,6 +99,11 @@ const router = createRouter({
       name: 'welcome',
       component: () => import('@/views/Welcome/index.vue')
     },
+    {
+      path: '/form',
+      name: 'form',
+      component: () => import('@/views/Form/index.vue')
+    },
   ]
 })
 
