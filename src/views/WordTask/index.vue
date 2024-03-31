@@ -13,9 +13,9 @@
       <a-spin v-if="loading" size="large" tip="试题加载中..." class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"/>
       <template v-else>
         <!--单词背诵-->
-        <div class="flex w-full items-center flex-col bg-[#edf6f6]" v-if="curTask?.payload?.word">
-          <p v-if="curTask?.payload?.hint" class="text-[#667085] text-[18px] font-medium mb-2"> {{ curTask?.payload?.hint }} </p>
-          <h2 class="pb-20 pt-44">{{curTask?.payload?.word}}的意思是？</h2>
+        <div class="flex w-full items-center flex-col bg-[#edf6f6] pt-44" v-if="curTask?.payload?.word">
+          <p v-if="curTask?.payload?.hint" class="text-[#667085] text-[18px] font-medium pb-5 w-[500px]"> {{ curTask?.payload?.hint }} </p>
+          <h2 class="pb-20">{{curTask?.payload?.word}}的意思是？</h2>
           <div class="grid grid-cols-2 gap-8">
             <div 
               v-for="(val, i) in curTask?.payload?.stem" :key="i" 
@@ -45,7 +45,7 @@
         </div>
       </template>
     </div>
-    <div v-else>
+    <div class="bg-[#edf6f6] flex flex-1 overflow-hidden items-center justify-center" v-else>
       <div class="flex flex-col items-center justify-center h-full">
         <h2 class="text-2xl">恭喜你完成了今天的任务</h2>
         <a-button type="primary" class="mt-10 w-[300px] h-[44px]" @click="router.push('/wordRecite')">返回单词首页</a-button>

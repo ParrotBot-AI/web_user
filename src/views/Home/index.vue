@@ -19,7 +19,19 @@
               <div class="border-l w-[0.5px] h-1/2 bg-gray-500  "></div>
             </div>
             <div class="flex flex-col ml-[20px] pt-8">
-              <div class="font-bold text-[18px]">每日打卡</div>
+              <div class="font-bold text-[18px]">
+                每日打卡
+                <a-tooltip 
+                  placement="bottomLeft" 
+                  color="#D0F0E6" 
+                  :overlayInnerStyle="{color: '#0A3F64',fontSize: '12px',borderRadius: '15px',borderTopLeftRadius: '0',border: '1px solid #0A3F64', marginTop: '-20px', marginLeft: '3px', padding: '10px'}"
+                >
+                  <template #title>
+                    <span>每日学习30分钟以上即完成当日<br/>打卡任务！加油哦！</span>
+                  </template>
+                  <img :src="hint" alt="hint" />
+                </a-tooltip>
+              </div>
               <div class="flex text-[12px] font-normal pt-3 ml-[-8px]">
                 <div class="flex px-[10px] flex-col items-center"><img :src="Signed" class=" w-4/5 " />M</div>
                 <div class="flex px-[10px] flex-col items-center"><img :src="Signed" class=" w-4/5 " />T</div>
@@ -33,32 +45,23 @@
           </div>
         </div>
         <div class="grid w-full grid-cols-4 gap-2 h-[130px] py-4 ">
-          <a-card class="h-[116px] flex items-center justify-center"  v-for="(val, id) in indexStore.userTargets" :key="val.id" :style="style_bg[id]" >
+          <a-card class="h-[116px] flex items-center justify-center" v-for="(val, id) in indexStore.userTargets" :key="val.id" :style="style_bg[id]" >
             <a-card-meta >
               <template #title>
-                <span v-if="val.id === 'next_test'" class="absolute right-1 top-1 w-6 h-6 cursor-pointer">
+                <span v-if="val.id === 'next_test'" class="absolute right-1 top-1 w-6 h-6 cursor-pointer" @click="openCalendar">
                   <img :src="bxCalendar" />
                 </span>
-                <span class="flex items-center justify-center text-[34px] text-white">{{ 
-                  // val.val 
-                  0
-                  }}</span>
+                <span class="flex items-center justify-center text-[34px] text-white">{{ 0 }}</span>
               </template>
               <template #description>
-                <span class="text-white">{{ 
-                  $t(val.desc) 
-                  }}</span>
+                <span class="text-white">{{  $t(val.desc) }}</span>
               </template>
             </a-card-meta>
           </a-card>
-          <a-card class="h-[116px] flex items-center justify-center"   :style="style_bg[3]" >
+          <a-card class="h-[116px] flex items-center justify-center" :style="style_bg[3]" >
             <a-card-meta >
               <template #title>
-                <span class="flex items-center justify-center text-[34px] text-white">{{ 
-                  // val.val 
-                  
-                  0
-                  }}</span>
+                <span class="flex items-center justify-center text-[34px] text-white">{{ 0 }}</span>
               </template>
               <template #description>
                 <span class="text-white">
@@ -67,7 +70,6 @@
               </template>
             </a-card-meta>
           </a-card>
-          
         </div>
       </div>
       <div class="grid grid-cols-5 grid-rows-5 gap-4 flex-1 overflow-hidden">
@@ -194,6 +196,20 @@
       </div>
     </div>
     <AIComponent />
+    <a-modal 
+      class="calendar-modal"
+      v-model:open="calenderOpen" 
+      title=""
+      :closable="false"
+      :footer="null"
+      width="320px"
+    >
+      <a-calendar :fullscreen="false">
+        <template #headerRender>
+          <div style="margin-bottom: 10px" class="h-[50px] bg-[#1B8B8C] text-white flex justify-center items-center">选择你的托福考试时间</div>
+        </template>
+      </a-calendar>
+    </a-modal>
   </div>
 </template>
 <script setup lang="ts">
@@ -210,25 +226,22 @@ import PersionHear from '@/assets/images/persion_hear.svg'
 import PersionSpoken from '@/assets/images/persion_spoken.svg'
 import PersionWrite from '@/assets/images/persion_write.svg'
 import bxCalendar from "@/assets/homeIcon/bx_calendar.svg"
-import Lock from '@/assets/images/word-lock.svg'
+import hint from "@/assets/images/hint.png"
 import { useWordStore } from '@/stores/word'
 import { useExamStore } from '@/stores/exam'
+import { ref, onMounted, watchEffect} from 'vue'
 import { useRoute } from "vue-router"
+const calenderOpen = ref(false)
 const wordStore = useWordStore()
 const examStore = useExamStore()
 import * as echarts from 'echarts';
-import { ref, onMounted, watchEffect} from 'vue'
 const activeKey = ref('1');
 const indexStore = useIndexStore()
 const HomeChart = ref()
 const chart = ref()
-const $route = useRoute()
 watchEffect (() => {
   chart.value?.setOption({
     color: [ '#f1b01f'],
-    // legend: {
-    //   data:['时长']
-    // },
     xAxis: {
       data: ["M","T","W","T","F","S","S"]
     },
@@ -268,10 +281,24 @@ onMounted(() => {
     }
   });
 })
+const openCalendar = () => {
+  calenderOpen.value = true
+}
 </script>
 <style scoped>
 :global(.ant-tabs-content-holder) {
   overflow-y: auto;
+}
+:global(.calendar-modal .ant-modal-content) {
+  padding: 0;
+}
+:global(.calendar-modal .ant-picker-calendar-date-content) {
+  display: none;
+}
+:global(.calendar-modal .ant-picker-calendar.ant-picker-calendar-full .ant-picker-calendar-date) {
+  width: 17px;
+  height: 17px;
+  padding: 0;
 }
 </style>
 

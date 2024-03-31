@@ -202,14 +202,14 @@ export const useWordStore = defineStore('word', () => {
   }
   const next = async (data:any) => {
     try {
-      const data = await request_learn_vocabs_tasks({
+      const res = await request_learn_vocabs_tasks({
         task_account_id: Number($route.query.id),
         payload: data
       })
-      if(data === 'finished') { 
+      if(res === 'finished') { 
         finished.value = true
       } else {
-        const {payload} = data
+        const {payload} = res
         nextDataFormat(payload)
       }
     } catch (error) {
@@ -219,9 +219,16 @@ export const useWordStore = defineStore('word', () => {
 
   const submit_task = async (i: number) => {
     if(wordTaskData.payload.hint) {
-      console.log('hint')
+      wordTaskData.payload.answer[0] = 0
+      wordTaskData.payload.answer[1] = 0
+      wordTaskData.payload.answer[2] = 0
+      wordTaskData.payload.answer[3] = 0
       wordTaskData.payload.answer[i] = 1
       wordTaskData.is_answer = true
+      console.log(wordTaskData.payload.answer.join(''), wordTaskData.payload.correct_answer.join(''))
+      if(wordTaskData.payload.answer.join('') === wordTaskData.payload.correct_answer.join('')) {
+        next({payload:wordTaskData.payload})
+      }
     } else  {
       wordTaskData.payload.answer[i] = 1
       wordTaskData.is_answer = true

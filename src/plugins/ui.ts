@@ -19,6 +19,7 @@ import {
   Slider,
   Spin,
   Switch,
+  Calendar
 } from 'ant-design-vue';
 import type { App } from 'vue'
 import { createFromIconfontCN } from '@ant-design/icons-vue'
@@ -48,6 +49,7 @@ export function registerUI() {
     app.use(Tooltip)
     app.use(Switch)
     app.use(Modal)
+    app.use(Calendar)
     app.component('IconFont', IconFont)
     app.config.globalProperties.$message = message
   }
