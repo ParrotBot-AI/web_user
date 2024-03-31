@@ -81,17 +81,19 @@
           <div class="text-sm font-normal">{{ wordStore.vocabs_statics_data.status_book?.level_status }}</div>
           <div class="text-sm font-normal ml-auto" >{{ wordStore.vocabs_statics_data.status_book?.level_total }}</div>
         </div>
-        <div v-for="(val,i) in wordStore.vocabs_statics_data.status_book.level_book" :key="i">
-          <div class="flex mt-6 px-3 w-full items-start" >
-            <img :src="Tick" alt="layout" class="w-5 h-5 mt-2" v-show="val.id < wordStore.vocabs_statics_data.status_book.current_level"/>
-            <img :src="sum" alt="layout" class="w-5 h-5 mt-2" v-show="val.id === wordStore.vocabs_statics_data.status_book.current_level"/>
-            <img :src="Lock" alt="layout" class="w-5 h-5 mt-2" v-show="val.id > wordStore.vocabs_statics_data.status_book.current_level"/>
-            <div class="mx-5 flex-1 w-[100px] text-nowrap">
-              <div class="text-sm">{{ $t(val.name) }}</div>
-              <div class="text-sm font-normal">{{ $t('总计')+ val.counts +$t('个') }}</div>
+        <div class="word-list">
+          <div v-for="(val,i) in wordStore.vocabs_statics_data.status_book.level_book" :key="i" :class="{'g': val.id < wordStore.vocabs_statics_data.status_book.current_level}">
+            <div class="flex mt-6 px-3 w-full items-start" >
+              <img :src="Tick" alt="layout" class="w-5 h-5 mt-2" v-show="val.id < wordStore.vocabs_statics_data.status_book.current_level"/>
+              <img :src="sum" alt="layout" class="w-5 h-5 mt-2" v-show="val.id === wordStore.vocabs_statics_data.status_book.current_level"/>
+              <img :src="Lock" alt="layout" class="w-5 h-5 mt-2" v-show="val.id > wordStore.vocabs_statics_data.status_book.current_level"/>
+              <div class="mx-5 flex-1 w-[100px] text-nowrap">
+                <div class="text-sm">{{ $t(val.name) }}</div>
+                <div class="text-sm font-normal">{{ $t('总计')+ val.counts +$t('个') }}</div>
+              </div>
+              <span class="text-base text-[#1B8B8C] font-noraml cursor-pointer" v-if="isshowJump(val)" @click="onShowDialog(i+1)">跳过</span>
+              <span class="text-base text-[#1B8B8C] font-noraml cursor-pointer" v-if="val.id > wordStore.vocabs_statics_data.status_book?.current_level"  @click="onShowDialog(i)">跳到</span>
             </div>
-            <span class="text-base text-[#1B8B8C] font-noraml cursor-pointer" v-if="isshowJump(val)" @click="onShowDialog(i+1)">跳过</span>
-            <span class="text-base text-[#1B8B8C] font-noraml cursor-pointer" v-if="val.id > wordStore.vocabs_statics_data.status_book?.current_level"  @click="onShowDialog(i)">跳到</span>
           </div>
         </div>
       </a-card>
@@ -382,5 +384,21 @@ const onClick = (type: 'new' | 'old') => {
 :global(.word-dialog .ant-modal-footer > button) {
   height: 44px;
   width: 150px;
+}
+.word-list>div{
+  position: relative;
+}
+.word-list>div:after {
+  content: '';
+  position: absolute;
+  top: 32px;
+  bottom: -20px;
+  width: 1px;
+  left: 21px;
+  background: #D0D5DD;
+  z-index: 0;
+}
+.word-list>div.g:after {
+  background: #B2DAC8;
 }
 </style>

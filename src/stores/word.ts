@@ -279,6 +279,7 @@ export const useWordStore = defineStore('word', () => {
       account_id: indexStore.userInfo.account_id,
       category_id: vocabs_statics_data.status_book.level_book[i]?.id
     })
+    get_vocabs_statics()
   }
   return {
     vocabs_statics_data,
