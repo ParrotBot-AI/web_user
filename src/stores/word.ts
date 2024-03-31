@@ -25,6 +25,7 @@ export const useWordStore = defineStore('word', () => {
     total_review: number;
     total_study: number;
     vocab: number;
+    refuse_skip: boolean | null;
     is_skip_remind: boolean | null;
   }>({
     is_skip_remind: null,
@@ -129,7 +130,7 @@ export const useWordStore = defineStore('word', () => {
     vocabs_statics_data.total_study = res.total_study
     vocabs_statics_data.status_book = res.status_book
     vocabs_statics_data.is_skip_remind = res.is_skip_remind
-    // vocabs_statics_data.is_skip_remind = true
+    vocabs_statics_data.refuse_skip = res.refuse_skip
     vocabs_statics_data.vocab = res.vocab
   }
   const get_vocabs_tasks = async () => {
@@ -249,16 +250,32 @@ export const useWordStore = defineStore('word', () => {
   }
   const dialogEvent = async (type) => {
     if(type) {
-      await request_jump({
-        account_id: indexStore.userInfo.account_id,
-        category_id: ''
-      })
+      const {current_level} = vocabs_statics_data.status_book
+      const currentBook = vocabs_statics_data.status_book.level_book.findIndex(val => val.id === current_level)
+      const next_level = vocabs_statics_data.status_book.level_book[currentBook + 1]
+      if(next_level) {
+        await request_jump({
+          account_id: indexStore.userInfo.account_id,
+          category_id: next_level.id
+        })
+      } else {
+        await request_refuse_jump(indexStore.userInfo.account_id)
+      }
     } else {
       await request_refuse_jump(indexStore.userInfo.account_id)
     }
+    vocabs_statics_data.is_skip_remind = null
+    vocabs_statics_data.refuse_skip = true
+  }
+  const on_jump_vocabs = async (i) => {
+    await request_jump({
+      account_id: indexStore.userInfo.account_id,
+      category_id: vocabs_statics_data.status_book.level_book[i]?.id
+    })
   }
   return {
     vocabs_statics_data,
+    on_jump_vocabs,
     dialogEvent,
     get_vocabs_statics,
     get_vocabs_tasks,

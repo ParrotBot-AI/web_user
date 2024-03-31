@@ -90,6 +90,8 @@
               <div class="text-sm">{{ $t(val.name) }}</div>
               <div class="text-sm font-normal">{{ $t('总计')+ val.counts +$t('个') }}</div>
             </div>
+            <span class="text-base text-[#1B8B8C] font-noraml cursor-pointer" v-if="isshowJump(val)" @click="onShowDialog(i+1)">跳过</span>
+            <span class="text-base text-[#1B8B8C] font-noraml cursor-pointer" v-if="val.id > wordStore.vocabs_statics_data.status_book?.current_level"  @click="onShowDialog(i)">跳到</span>
           </div>
         </div>
       </a-card>
@@ -125,24 +127,23 @@
   </div>
   <a-modal 
     title="" 
-    v-model:open="wordStore.vocabs_statics_data.is_skip_remind" 
+    v-model:open="dislogOpen" 
     cancelText="取消"
     okText="依然跳过"
     class="word-dialog"
     @ok="() => wordStore.dialogEvent(true)"
     @cancel="() => wordStore.dialogEvent(false)"
   >
-    <span class="-mt-[80px] w-[200px] block mx-auto"><img :src="WordIcon" alt="dialog" class="w-full" /></span>
-    <p class="pt-7 text-base text-center px-3">自行跳过词库可能让您词汇掌握不扎实，且不能跳回原来的等级。为保证快速提升成绩，我们会从最基础的词库开始查漏补缺。当我们发现您已经掌握这个词库时，会主动提醒您更新到更高级的词汇库。</p>
+    <span class="-mt-[80px] w-[200px] block mx-auto"><img :src="WordIcon1" alt="dialog" class="w-full" /></span>
+    <p class="pt-7 text-base text-center px-3">这座小山已经容不下你了 <br /> <br /> 您的正确率过高，推荐您跳级下一个词库</p>
   </a-modal>
   <a-modal 
     title="" 
-    v-model:open="wordStore.vocabs_statics_data.is_skip_remind" 
     cancelText="取消"
+    v-model:open="jumpDialog"
     okText="依然跳过"
     class="word-dialog"
-    @ok="() => wordStore.dialogEvent(true)"
-    @cancel="() => wordStore.dialogEvent(false)"
+    @ok="onJump"
   >
     <span class="-mt-[80px] w-[200px] block mx-auto"><img :src="WordIcon" alt="dialog" class="w-full" /></span>
     <p class="pt-7 text-base text-center px-3">自行跳过词库可能让您词汇掌握不扎实，且不能跳回原来的等级。为保证快速提升成绩，我们会从最基础的词库开始查漏补缺。当我们发现您已经掌握这个词库时，会主动提醒您更新到更高级的词汇库。</p>
@@ -150,7 +151,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watchEffect} from 'vue'
+import { ref, onMounted, watchEffect, computed} from 'vue'
 import * as echarts from 'echarts'
 import up from '@/assets/images/up.svg'
 import down from '@/assets/images/down.svg'
@@ -161,13 +162,24 @@ import Tick from '@/assets/images/word-tick.svg'
 import sum from "@/assets/images/1.jpg"
 import Lock from '@/assets/images/word-lock.svg'
 import WordIcon from "@/assets/images/word-icon.png"
+import WordIcon1 from "@/assets/images/word-icon-1.png"
 import { useWordStore } from '@/stores/word'
 const wordStore = useWordStore()
 const myChart = ref()
+const jumpDialog = ref(false)
+const jumpDialogIndex = ref(-1)
+
 let Chart :any
 let clickPoint: any = null; // 用于保存点击位置信息
-
-
+const isshowJump = computed(() => {
+  const level_book = wordStore.vocabs_statics_data.status_book.level_book
+  return (val) => {
+    return wordStore.vocabs_statics_data.status_book?.current_level === val.id && wordStore.vocabs_statics_data.status_book?.current_level < level_book[level_book.length - 1].id
+  }
+})
+const dislogOpen = computed(() => {
+  return wordStore.vocabs_statics_data.is_skip_remind === 1 && !wordStore.vocabs_statics_data.refuse_skip
+})
 const formatData = (key: string) => {
   const series = wordStore.vocabs_statics_data?.series
   if(key === 'day') {
@@ -175,10 +187,15 @@ const formatData = (key: string) => {
   }
   return series ? Object.keys(series).map((item) => series[item][key]).flat() : []
 }
-
-
+const onShowDialog = (index: number) => {
+  jumpDialogIndex.value = index
+  jumpDialog.value = true
+}
+const onJump = () => {
+  wordStore.on_jump_vocabs(jumpDialogIndex.value)
+  jumpDialog.value = false
+}
 watchEffect (() => {
-
   let options = {
     backgroundColor: '#ffffff',
     color: ['#FDD44E', '#1B9f8f'],
