@@ -208,9 +208,11 @@ import PersionWrite from '@/assets/images/persion_write.svg'
 import Lock from '@/assets/images/word-lock.svg'
 import { useWordStore } from '@/stores/word'
 import { useExamStore } from '@/stores/exam'
+import {  useUserStore} from '@/stores/user'
 import { useRoute } from "vue-router"
 const wordStore = useWordStore()
 const examStore = useExamStore()
+const userStore = useUserStore()
 import * as echarts from 'echarts';
 import { ref, onMounted, watchEffect} from 'vue'
 const activeKey = ref('1');
@@ -253,6 +255,8 @@ const onClick = (type: 'new' ) => {
 onMounted(() => {
   wordStore.get_vocabs_tasks()
   examStore.getPastResult()
+  userStore.api_checkin()
+  console.log(userStore.api_checkin())
   // HomeChart.value = echarts.init(document.getElementById('main'));
   // myEcharts()
   chart.value = echarts.init(HomeChart.value, 'main');

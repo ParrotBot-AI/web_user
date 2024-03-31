@@ -70,6 +70,9 @@ export const request_menu = () => {
 export const request_userInfo = (userId: number) => {
   return http.get(`/api/system/user/get_user/${userId}/`)
 }
+export const get_account_checkin = (account_id: number) => {
+  return http.get(`/api/system/user/get_account_checkin/${account_id}/`)
+}
 export type SETUSERINFO = {
   name: string
 }

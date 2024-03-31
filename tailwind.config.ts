@@ -15,6 +15,7 @@ const tailwindConfig = {
     },
     colors: {
       'login-bg': 'var(--color-login-bg)',
+      'form': 'var(--color-form)',
       'green-1': 'var(--color-green-1)',
       'green-2': 'var(--color-green-2)',
       'white': 'var(--color-white)',
@@ -29,6 +30,7 @@ const tailwindConfig = {
       'blue-2': 'var(--color-blue-2)',
       'black-1': 'var(--color-black-1)',
       'yellow-1': 'var(--color-yellow-1)',
+      'yellow-2': 'var(--color-yellow-2)',
       'blue-3': 'var(--color-blue-3)',
       'blue-4': 'var(--color-blue-4)',
       'transparent': 'var(--color-transparent)'

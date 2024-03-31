@@ -1,13 +1,15 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import {request_login, request_sms, request_resetPassword, request_logout, request_setUserInfo} from "@/service/user"
+import {request_login, request_sms, request_resetPassword, request_logout, request_setUserInfo, get_account_checkin} from "@/service/user"
 import {setWithExpiry, removeWithExpiry} from "@/utils/storage"
 import router from "@/router"
 import type { LOGIN_TYPE_SMS, LOGIN_TYPE_PHOME, RESRPASSWOED, SETUSERINFO } from "@/service/user"
 import {message} from "ant-design-vue"
+import { useIndexStore } from './index'
 type LoginType = 'code' | 'password' | 'findPassword'
 export const useUserStore = defineStore('user', () => {
   const loginType = ref<LoginType>('code')
+  const indexStore = useIndexStore()
   // 切换登录方式
   const onClickChangeLoginType = (type:LoginType) => {
     loginType.value = type
@@ -46,5 +48,10 @@ export const useUserStore = defineStore('user', () => {
     await request_logout()
     window.localStorage.clear()
   }
-  return {onClickChangeLoginType, loginType, api_sms, api_login, api_findPassword, api_out, api_setUserInfo}
+  const api_checkin = async () => {
+    const account_id = indexStore.userInfo.account_id
+    const res = await get_account_checkin(account_id)
+    return res
+  }
+  return {onClickChangeLoginType, loginType, api_sms, api_login, api_findPassword, api_out, api_setUserInfo, api_checkin}
 })
