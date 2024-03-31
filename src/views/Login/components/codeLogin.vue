@@ -52,7 +52,10 @@
       </a-form-item>
     </a-form>
     <h4 class="text-center pt-4 font-normal text-gray-600 text-[12px]">
-      {{$t('未注册的手机号验证通过后将直接注册') }}
+      {{$t('未注册手机验证后自动登录，注册即代表同意') }}
+      <a href="https://yingwuzhixue.com/legal.html" target="_blank" class="text-[#1B8B8C]"> 《鹦鹉智学协议》</a> 
+      和
+      <a href="https://yingwuzhixue.com/legal.html" target="_blank" class="text-[#1B8B8C]"> 《隐私条款》</a>
     </h4>
   </div>
 </template>

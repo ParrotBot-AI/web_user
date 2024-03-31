@@ -41,10 +41,10 @@
             </li>
           </ul>
         </div>
-        <div class="flex flex-wrap" v-if="resultStore.curData?.tags?.length">
+        <div class="flex flex-wrap mt-2" v-if="resultStore.curData?.tags?.length">
           <span v-for="(val, i) in resultStore.curData?.tags" :key="i"
-            class="px-4 py-1.5 rounded-full text-gray-600 bg-[#E7EAEE] text-[16px] mx-2">
-            {{ val.title }}: {{ val.correct }}/{{ val.total }}
+            class="px-4 py-1.5 rounded-full text-gray-600 bg-[#E7EAEE] text-[16px] mx-2 mt-4">
+            {{ val.name }}: {{ val.sum }}/{{ val.count }}
           </span>
         </div>
         <div 

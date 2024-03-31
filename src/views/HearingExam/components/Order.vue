@@ -50,9 +50,9 @@ const resource = computed(() => {
 watchEffect(() => {
   const answerValue = examStore.examing_data?.answerData?.find((val) => val.question_id === props.question_id);
   const _answer = answerValue?.answer.map(val => `${val}`)
-  if(_answer?.length === 3) {
+  if(answerValue?.is_answer) {
     res.value = _answer
-  }
+  } 
 })
 const onDrop = ({ type, index }: { type: string, index: number }) => {
   res.value[index] = type

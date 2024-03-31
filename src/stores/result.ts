@@ -147,13 +147,38 @@ export const useResultStore = defineStore('result', () => {
       model_answer
     }
   }
+  const formatlist = (res, data) => {
+    res.forEach(val => {
+      val.total = data.filter(v => val.include.includes(v.name))?.reduce((def, item) => def + item.count || 0, 0);
+      val.count = data.filter(v => val.include.includes(v.name))?.reduce((def, item) => def + item.sum || 0, 0);
+      val.isComputed = true
+    })
+    return {
+      list: res,
+      tags: data.map(val => ({
+        ...val,
+        name: val.name.replace(/^(阅读|听力)/g,'')
+      }))
+    }
+  }
   const formatData = (res:any) => {
     const score_d = Object.values(res.score_d)
     if(query.type === 'hearing') {
-      const footerData = score_d.map((val,i) => ({
-        title: 'Section ' + (val.find(v => v.name.endsWith('Conversation2') || v.name.endsWith('Lecture3') || v.name.endsWith('Lecture4')) ? 2 : 1),
-        id: `${i}`
-      }))
+      const formatListConfig = [{
+        title: '基础题',
+        include: ['听力目的主旨题','听力内容主旨题','听力细节题'],
+      },
+      {
+        title: '强化题',
+        include: ['听力推理题','听力句子功能题','听力连结内容题','听力组织结构题'],
+      }]
+      const footerData = score_d.map((val) => {
+        const id = val.find(v => v.name.endsWith('Conversation2') || v.name.endsWith('Lecture3') || v.name.endsWith('Lecture4')) ? 2 : 1
+        return {
+          title: 'Section ' + id,
+          id: id
+        }
+      })
       // 首页
       resultData.allData[0] = {
         layout: 'col',
@@ -161,7 +186,6 @@ export const useResultStore = defineStore('result', () => {
         mockScore: res.score,
         mockScoreTotal: res.max_score,
         aiComment: '', // ai评语
-        tags: [], // 标签
         list: score_d.map((val,i) => ({
           ...footerData[i],
           children: val.map((v: any, j: number) => ({
@@ -181,9 +205,8 @@ export const useResultStore = defineStore('result', () => {
           name: 'Raw Score',
           mockScore: score_d[i]?.reduce((def, item) => def + item.count, 0),
           mockScoreTotal: score_d[i]?.reduce((def, item) => def + item.total, 0),
+          ...formatlist(formatListConfig,res.tag_d[v.id]), // 题型数据 标签
           // TODO 等接口字段
-          list: [], // 题型数据
-          tags: [], // 标签
           aiComment: '', // ai评语
         }
       }))
@@ -282,6 +305,18 @@ export const useResultStore = defineStore('result', () => {
       }))
       return footerData
     } else {
+      const formatListConfig = [{
+        title: '基础题',
+        include: ["阅读词汇题","阅读指代题","句子简化题","阅读细节题","阅读排除题"],
+      },
+      {
+        title: '强化题',
+        include: ["阅读修辞目的题","阅读插入句子题","阅读推断题"],
+      },
+      {
+        title: '文章小结题',
+        include: ["阅读文章内容小结题","阅读表格题"],
+      }]
       const footData = score_d.map((val,i) => ({
         title: formatRemarkName(val[0].name),
         id: `${i}`
@@ -291,10 +326,8 @@ export const useResultStore = defineStore('result', () => {
         name: '阅读得分',
         mockScore: res.score,
         mockScoreTotal: res.max_score,
-        // TODO 等接口字段
-        aiComment: '', // ai评语
-        tags: [], // 标签
-        list: [], // 题型数据
+        aiComment: '', // TODO 等接口字段 ai评语
+        ...formatlist(formatListConfig,res.tag_d.all), // 题型数据  标签
       }
       resultData.allData.push(...footData.map((v,i) => ({
         layout: 'row',
@@ -304,8 +337,7 @@ export const useResultStore = defineStore('result', () => {
         mockScoreTotal: score_d[i]?.reduce((def, item) => def + item.total, 0),
         // TODO 等接口字段
         aiComment: '', // ai评语
-        tags: [], // 标签
-        list: [], // 题型数据
+        ...formatlist(formatListConfig,res.tag_d[v.id * 1 + 1]), // 题型数据  标签
       })))
       return footData
     }

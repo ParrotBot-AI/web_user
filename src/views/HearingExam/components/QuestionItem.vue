@@ -60,7 +60,8 @@ const props = defineProps<{
   }>
 }>()
 const curQuestion = computed(() => {
-  console.log(props.children[props.step])
+  // TODO: 为什么这里会有问题 props.children[props.step] 为 undefined
+  console.log('curQuestion::', props.children[props.step])
   return props.children[props.step]
 })
 const onEnded = () => {
