@@ -3,7 +3,14 @@ import http from "@/utils/http";
 import { reactive, ref } from 'vue'
 import { useIndexStore } from "./index"
 import { useRouter, useRoute } from 'vue-router'
-import {request_get_vocabs_statics, request_get_vocabs_tasks, request_start_vocabs_tasks, request_learn_vocabs_tasks} from "@/service/word";
+import { 
+  request_get_vocabs_statics, 
+  request_get_vocabs_tasks, 
+  request_start_vocabs_tasks, 
+  request_learn_vocabs_tasks,
+  request_refuse_jump,
+  request_jump,
+} from "@/service/word";
 export const useWordStore = defineStore('word', () => {
   const indexStore = useIndexStore()
   const $router = useRouter()
@@ -12,12 +19,15 @@ export const useWordStore = defineStore('word', () => {
     last_day_review: number; 
     last_day_study: number;
     series: any[];
-    status_book: any[];
+    status_book: any;
     today_day_review: number;
     today_day_study: number;
     total_review: number;
     total_study: number;
+    vocab: number;
+    is_skip_remind: boolean | null;
   }>({
+    is_skip_remind: null,
     last_day_review: 0,
     last_day_study: 0,
     series: [
@@ -47,38 +57,36 @@ export const useWordStore = defineStore('word', () => {
       "wrong_words": 0 
       }
     ], 
-    status_book: [
-      {       
-        "current_level": 1,
-        "level_book": [
-          {
-              "counts": 5262,
-              "id": 1,
-              "name": "4/6级单词",
-              "order": 1
-          },
-          {
-              "counts": 1905,
-              "id": 2,
-              "name": "托福核心词汇",
-              "order": 100
-          },
-          {
-              "counts": 335,
-              "id": 3,
-              "name": "托福学科词汇",
-              "order": 101
-          }
-        ],
-        "level_status": 7502,
-        "level_total": 5262
-      }
-    ],
-    
+    status_book: {       
+      "current_level": 1,
+      "level_book": [
+        {
+            "counts": 5262,
+            "id": 1,
+            "name": "4/6级单词",
+            "order": 1
+        },
+        {
+            "counts": 1905,
+            "id": 2,
+            "name": "托福核心词汇",
+            "order": 100
+        },
+        {
+            "counts": 335,
+            "id": 3,
+            "name": "托福学科词汇",
+            "order": 101
+        }
+      ],
+      "level_status": 7502,
+      "level_total": 5262
+    },
     today_day_review: 0,
     today_day_study: 0,
     total_review: 0,
     total_study: 0,
+    vocab: 0,
   })
   const vocabs_tasks_data = reactive<Array<{
     complete_p: number 
@@ -112,7 +120,6 @@ export const useWordStore = defineStore('word', () => {
   const finished = ref(false)
   const get_vocabs_statics = async () => {
     const res = await request_get_vocabs_statics(indexStore.userInfo.account_id)
-    console.log(res)
     vocabs_statics_data.series = res.series
     vocabs_statics_data.last_day_review = res.last_day_review
     vocabs_statics_data.last_day_study = res.last_day_study
@@ -120,6 +127,10 @@ export const useWordStore = defineStore('word', () => {
     vocabs_statics_data.today_day_study= res.today_day_study
     vocabs_statics_data.total_review = res.total_review
     vocabs_statics_data.total_study = res.total_study
+    vocabs_statics_data.status_book = res.status_book
+    vocabs_statics_data.is_skip_remind = res.is_skip_remind
+    // vocabs_statics_data.is_skip_remind = true
+    vocabs_statics_data.vocab = res.vocab
   }
   const get_vocabs_tasks = async () => {
     const res = await request_get_vocabs_tasks(indexStore.userInfo.account_id)
@@ -236,9 +247,19 @@ export const useWordStore = defineStore('word', () => {
     })
     nextDataFormat(payload)
   }
-
+  const dialogEvent = async (type) => {
+    if(type) {
+      await request_jump({
+        account_id: indexStore.userInfo.account_id,
+        category_id: ''
+      })
+    } else {
+      await request_refuse_jump(indexStore.userInfo.account_id)
+    }
+  }
   return {
     vocabs_statics_data,
+    dialogEvent,
     get_vocabs_statics,
     get_vocabs_tasks,
     start_task,

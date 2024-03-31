@@ -36,6 +36,9 @@
           <a-card class="h-[116px] flex items-center justify-center"  v-for="(val, id) in indexStore.userTargets" :key="val.id" :style="style_bg[id]" >
             <a-card-meta >
               <template #title>
+                <span v-if="val.id === 'next_test'" class="absolute right-1 top-1 w-6 h-6 cursor-pointer">
+                  <img :src="bxCalendar" />
+                </span>
                 <span class="flex items-center justify-center text-[34px] text-white">{{ 
                   // val.val 
                   0
@@ -96,6 +99,7 @@
                     <div class="text-gray-500 font-bold mb-4 text-[1vw]">错误率最高的题型</div>
                     <div class="flex "> 
                       <div v-for="(val, id) in question_list">
+                        <div>1</div>
                         <div class=" text-[0.8vw] ml-2 justify-center text-gray-500 bg-white border-border-1 px-[12px] py-1" style=" border: 1px solid rgba(102, 112, 133, 1);  border-radius: 18px; width: auto; white-space: nowrap;">
                           {{ val }}
                         </div>
@@ -205,6 +209,7 @@ import PersionRead from '@/assets/images/persion_read.svg'
 import PersionHear from '@/assets/images/persion_hear.svg'
 import PersionSpoken from '@/assets/images/persion_spoken.svg'
 import PersionWrite from '@/assets/images/persion_write.svg'
+import bxCalendar from "@/assets/homeIcon/bx_calendar.svg"
 import Lock from '@/assets/images/word-lock.svg'
 import { useWordStore } from '@/stores/word'
 import { useExamStore } from '@/stores/exam'

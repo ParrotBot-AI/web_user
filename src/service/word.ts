@@ -19,3 +19,13 @@ export const request_start_vocabs_tasks = (id:number) => {
 export const request_learn_vocabs_tasks = (data) => {
   return http.post(`api/system/microservice/learning_task/`, data)
 }
+
+// 拒绝跳级
+export const request_refuse_jump = (id) => {
+  return http.post(`api/system/microservice/refuse_jump_vocabs/${id}/`)
+}
+
+// 跳级
+export const request_jump = (data) => {
+  return http.post(`/api/system/microservice/jump_vocabs/`, data)
+}

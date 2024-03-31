@@ -11,7 +11,7 @@
         <a-card-meta>
           <template #title>
             <span class="text-white text-5xl font-normal leading-30 tracking-normal text-left"
-              >{{ $t('未测试') }}</span
+              >{{ wordStore.vocabs_statics_data?.vocab ? wordStore.vocabs_statics_data?.vocab : $t('未测试') }}</span
             >
           </template>
           <template #description><span class="text-white">{{ $t('当前词汇量') }}</span></template>
@@ -47,7 +47,7 @@
         <a-card-meta>
           <template #title>
             <span class="text-gray-600 text-5xl leading-30 tracking-normal text-left font-bold">{{
-              wordStore.vocabs_statics_data.total_review
+              wordStore.vocabs_statics_data.total_study
             }}</span>
           </template>
           <template #description
@@ -59,7 +59,7 @@
         <a-card-meta>
           <template #title>
             <span class="text-gray-600 text-5xl leading-30 tracking-normal text-left font-bold">{{
-              wordStore.vocabs_statics_data.total_study
+              wordStore.vocabs_statics_data.total_review
             }}</span>
           </template>
           <template #description
@@ -75,55 +75,22 @@
       </a-card>
       <a-card class="text-gray-500 text-2xl font-bold col-start-6 col-span-3 row-span-3 shadow-lg">
         {{ $t('单词学习进度') }}
-        <div class="text-green-1 mt-[20px] text-[16px]">{{ 'lv' + wordStore.vocabs_statics_data.status_book[0].current_level + ' 26%' }} </div>
+        <div class="text-green-1 mt-[20px] text-[16px]">{{ 'lv' + wordStore.vocabs_statics_data.status_book?.current_level }} {{ (wordStore.vocabs_statics_data.status_book?.level_status /  wordStore.vocabs_statics_data.status_book?.level_total * 100).toFixed(1) }}% </div>
         <a-progress strokeColor="#1B8B8C" :percent="30" :showInfo="false"/>
         <div class="flex w-full mt-[-10px]" >
-          <div class="text-sm font-normal">500</div>
-          <div class="text-sm font-normal ml-auto" >1000</div>
+          <div class="text-sm font-normal">{{ wordStore.vocabs_statics_data.status_book?.level_status }}</div>
+          <div class="text-sm font-normal ml-auto" >{{ wordStore.vocabs_statics_data.status_book?.level_total }}</div>
         </div>
-        <div class="flex mt-6 px-3 w-full items-center">
-          <img :src="Tick" alt="layout" class="w-5 h-5" />
-          <div class="mx-5 flex-1 w-[100px] text-nowrap">
-            <div class="text-sm">{{ $t(wordStore.vocabs_statics_data.status_book[0].level_book[0].name) }}</div>
-            <div class="text-sm font-normal">{{ $t('总计')+ wordStore.vocabs_statics_data.status_book[0].level_book[0].counts +$t('个') }}</div>
+        <div v-for="(val,i) in wordStore.vocabs_statics_data.status_book.level_book" :key="i">
+          <div class="flex mt-6 px-3 w-full items-start" >
+            <img :src="Tick" alt="layout" class="w-5 h-5 mt-2" v-show="val.id < wordStore.vocabs_statics_data.status_book.current_level"/>
+            <img :src="sum" alt="layout" class="w-5 h-5 mt-2" v-show="val.id === wordStore.vocabs_statics_data.status_book.current_level"/>
+            <img :src="Lock" alt="layout" class="w-5 h-5 mt-2" v-show="val.id > wordStore.vocabs_statics_data.status_book.current_level"/>
+            <div class="mx-5 flex-1 w-[100px] text-nowrap">
+              <div class="text-sm">{{ $t(val.name) }}</div>
+              <div class="text-sm font-normal">{{ $t('总计')+ val.counts +$t('个') }}</div>
+            </div>
           </div>
-          <div class="text-sm text-green-1 cursor-pointer">{{ $t('重选') }}</div>
-        </div>
-        <div class="border-l  w-[0.5px] h-7 bg-green-1 ml-5"></div>
-        <div class="flex  px-3 w-full items-center">
-          <img :src="Tick" alt="layout" class="w-5 h-5" />
-          <div class="mx-5 flex-1 w-[100px] text-nowrap">
-            <div class="text-sm">{{ $t(wordStore.vocabs_statics_data.status_book[0].level_book[1].name) }}</div>
-            <div class="text-sm font-normal">{{ $t('总计')+ wordStore.vocabs_statics_data.status_book[0].level_book[1].counts +$t('个') }}</div>
-          </div>
-          <div class="text-sm text-green-1 cursor-pointer">{{ $t('重选') }}</div>
-        </div>
-        <div class="border-l  w-[0.5px] h-7 bg-green-1 ml-5"></div>
-        <div class="flex  px-3 w-full items-center">
-          <img :src="RightArrow" alt="layout" class="w-5 h-5" />
-          <div class="mx-5 flex-1 w-[100px] text-nowrap">
-            <div class="text-sm">{{ $t('托福高频词') }}</div>
-            <div class="text-sm font-normal">{{ $t('总计')+ 4321 +$t('个') }}</div>
-          </div>
-          <div class="text-sm text-green-1 cursor-pointer">{{ $t('跳过') }}</div>
-        </div>
-        <div class="border-l  w-[0.5px] h-7 bg-green-1 ml-5"></div>
-        <div class="flex  px-3 w-full items-center">
-          <img :src="Lock" alt="layout" class="w-5 h-5" />
-          <div class="mx-5 flex-1 w-[100px] text-nowrap">
-            <div class="text-sm">{{ $t('托福真题词') }}</div>
-            <div class="text-sm font-normal">{{ $t('总计')+ 4321 +$t('个') }}</div>
-          </div>
-          <div class="text-sm cursor-pointer">{{ $t('选择') }}</div>
-        </div>
-        <div class="border-l  w-[0.5px] h-7 bg-green-1 ml-5"></div>
-        <div class="flex px-3 w-full items-center">
-          <img :src="Lock" alt="layout" class="w-5 h-5" />
-          <div class="mx-5 flex-1 w-[100px] text-nowrap">
-            <div class="text-sm">{{ $t(wordStore.vocabs_statics_data.status_book[0].level_book[2].name) }}</div>
-            <div class="text-sm font-normal">{{ $t('总计')+ wordStore.vocabs_statics_data.status_book[0].level_book[2].counts +$t('个') }}</div>
-          </div>
-          <div class="text-sm cursor-pointer">{{ $t('选择') }}</div>
         </div>
       </a-card>
       <div class="col-span-2 row-span-3 flex flex-col  justify-center w-full">
@@ -156,6 +123,30 @@
     </div>
     </div>
   </div>
+  <a-modal 
+    title="" 
+    v-model:open="wordStore.vocabs_statics_data.is_skip_remind" 
+    cancelText="取消"
+    okText="依然跳过"
+    class="word-dialog"
+    @ok="() => wordStore.dialogEvent(true)"
+    @cancel="() => wordStore.dialogEvent(false)"
+  >
+    <span class="-mt-[80px] w-[200px] block mx-auto"><img :src="WordIcon" alt="dialog" class="w-full" /></span>
+    <p class="pt-7 text-base text-center px-3">自行跳过词库可能让您词汇掌握不扎实，且不能跳回原来的等级。为保证快速提升成绩，我们会从最基础的词库开始查漏补缺。当我们发现您已经掌握这个词库时，会主动提醒您更新到更高级的词汇库。</p>
+  </a-modal>
+  <a-modal 
+    title="" 
+    v-model:open="wordStore.vocabs_statics_data.is_skip_remind" 
+    cancelText="取消"
+    okText="依然跳过"
+    class="word-dialog"
+    @ok="() => wordStore.dialogEvent(true)"
+    @cancel="() => wordStore.dialogEvent(false)"
+  >
+    <span class="-mt-[80px] w-[200px] block mx-auto"><img :src="WordIcon" alt="dialog" class="w-full" /></span>
+    <p class="pt-7 text-base text-center px-3">自行跳过词库可能让您词汇掌握不扎实，且不能跳回原来的等级。为保证快速提升成绩，我们会从最基础的词库开始查漏补缺。当我们发现您已经掌握这个词库时，会主动提醒您更新到更高级的词汇库。</p>
+  </a-modal>
 </template>
 
 <script setup lang="ts">
@@ -167,9 +158,9 @@ import WordTest from '@/assets/images/word-test.svg'
 import NewWord from '@/assets/images/word-new.svg'
 import OldWord from '@/assets/images/word-old.svg'
 import Tick from '@/assets/images/word-tick.svg'
-import RightArrow from '@/assets/images/word-right.svg'
+import sum from "@/assets/images/1.jpg"
 import Lock from '@/assets/images/word-lock.svg'
-import Retest from '@/assets/images/word-retest.svg'
+import WordIcon from "@/assets/images/word-icon.png"
 import { useWordStore } from '@/stores/word'
 const wordStore = useWordStore()
 const myChart = ref()
@@ -321,7 +312,7 @@ const onClick = (type: 'new' | 'old') => {
 }
 </script>
 
-<style>
+<style scoped>
 
 .custom-tooltip{
   width: 100px;
@@ -358,5 +349,21 @@ const onClick = (type: 'new' | 'old') => {
   background: rgba(27, 139, 140, 1);
 
 }
-
+:global(.word-dialog.ant-modal) {
+  top: 230px;
+}
+:global(.word-dialog.ant-modal .ant-modal-footer) {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+:global(.word-dialog.ant-modal .ant-modal-footer .ant-btn.ant-btn-default){
+  background: #D0F0E6;
+  color: #1B8B8C;
+  border-color: transparent;
+}
+:global(.word-dialog .ant-modal-footer > button) {
+  height: 44px;
+  width: 150px;
+}
 </style>
