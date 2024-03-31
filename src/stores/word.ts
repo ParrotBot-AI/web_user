@@ -283,6 +283,7 @@ export const useWordStore = defineStore('word', () => {
   }
   return {
     vocabs_statics_data,
+    vocabs_tasks_data,
     on_jump_vocabs,
     dialogEvent,
     get_vocabs_statics,

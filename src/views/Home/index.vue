@@ -114,14 +114,19 @@
                 <img :src="NewWord"  style="width: 100%;"/>
             </div>
             <div style="width: 60%;">
-              <span class=" flex flex-col items-center text-[1vw]" style="width: 100%;">您的当前词汇量为<span class="text-[4vw]">0</span></span>
+              <span class=" flex flex-col items-center text-[1vw]" style="width: 100%;">您的当前词汇量为<span class="text-[4vw]">
+                {{ wordStore.vocabs_statics_data?.vocab ? wordStore.vocabs_statics_data?.vocab : $t('未测试') }}
+              </span></span>
             </div>
           </div>
-          <div
-            class="bg-green-1 text-white w-2/3 h-[34px] rounded-lg border  flex items-center justify-center cursor-pointer"  @click="onClick('new')"
+          <a-button
+            type="primary"
+            class="bg-green-1 text-white w-2/3 h-[34px] rounded-lg border  flex items-center justify-center cursor-pointer"  
+            @click="onClick('new')"
+            :disabled="!wordStore?.vocabs_tasks_data.find(item => item.task_name === '学习新单词')"
           >
-            {{ $t('学习新单词') }}
-          </div>
+            {{!wordStore?.vocabs_tasks_data.find(item => item.task_name === '学习新单词') ? '今日已学完' : '学习新单词'}} 
+          </a-button>
         </div>
         <a-card class="col-start-4 col-span-2 row-span-3 shadow-lg overflow-y-auto">
           <div class="font-bold text-[20px]">近七日学习时长</div>
@@ -211,6 +216,7 @@ const onClick = (type: 'new' ) => {
   wordStore.to_task(type)
 }
 onMounted(() => {
+  wordStore.get_vocabs_statics() 
   wordStore.get_vocabs_tasks()
   examStore.getPastResult()
   userStore.api_checkin()

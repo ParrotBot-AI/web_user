@@ -102,12 +102,14 @@
         <a-card-meta>
           <template #description >
             <img :src="NewWord" class="absolute top-[-40px]  " />
-            <div
+            <a-button
+              type="primary"
               class="bg-green-1 text-white w-[150px] h-[40px] rounded-lg border mb-[15px]  flex items-center justify-center cursor-pointer"
+              :disabled="!wordStore?.vocabs_tasks_data.find(item => item.task_name === '学习新单词')"
               @click="onClick('new')"
             >
-              {{ $t('学习新单词') }}
-            </div>
+            {{!wordStore?.vocabs_tasks_data.find(item => item.task_name === '学习新单词') ? '今日已学完' : '学习新单词'}} 
+            </a-button>
           </template>
         </a-card-meta>
       </a-card>
@@ -115,12 +117,14 @@
         <a-card-meta >
           <template #description class="flex">
             <img :src="OldWord"  class="absolute top-[-30px]  " />
-            <div
+            <a-button
+              type="primary"
               class="bg-green-1 text-white w-[150px] h-[40px] mb-[15px] rounded-lg border flex items-center justify-center cursor-pointer"
+              :disabled="!wordStore?.vocabs_tasks_data.find(item => item.task_name === '复习旧单词')"
               @click="onClick('old')"
             >
-             {{ $t('复习旧单词') }}
-            </div>
+              {{!wordStore?.vocabs_tasks_data.find(item => item.task_name === '复习旧单词') ? '今日已复习' : '复习旧单词'}} 
+            </a-button>
           </template>
         </a-card-meta>
       </a-card>
