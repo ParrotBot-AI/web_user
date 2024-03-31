@@ -82,3 +82,6 @@ export const request_getAccount_id = (userId: number, data: {exam_id: number}) =
 export const request_setUserInfo = (userId: number, data: SETUSERINFO) => {
   return http.patch(`/api/system/user/${userId}/`, data)
 }
+export const request_menu_ad = () => {
+  return http.get(`/api/system/menu/menu_ad/`)
+}

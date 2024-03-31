@@ -3,7 +3,7 @@
     <div class="w-full flex items-center justify-center" style="background: rgba(253, 212, 78, 1);">
       <img :src="Horn"/>
       <div class="pl-[20px]">即日起至5月1日支付9.9元即可获得鹦鹉智学APP三个月会员+超值礼包！</div>
-      <div class="font-bold pl-[40px] ">查看详情<div class="h-[1px] bg-black-1 w-16"></div></div>
+      <div class="font-bold pl-[40px] cursor-pointer" @click="onClickDel">查看详情<div class="h-[1px] bg-black-1 w-16"></div></div>
     </div>
     <div class="flex flex-1 w-full overflow-auto pt-16 pb-10 justify-center">
       <a-table 
@@ -62,12 +62,19 @@
       </div>
     </div>
   </div>
+  <a-modal v-model:open="adOpen" class="ad-modal" :footer="null">  
+    <img :src="adUrl" width="100%"/>
+    <a-button @click="toAD" class="mx-auto block w-[220px] text-[#1B8B8C] border-[#1B8B8C]">领取礼包</a-button>
+  </a-modal>
 </template>
 
 <script setup lang="ts">
 import Contain from '@/assets/images/contain.svg'
 import Horn from '@/assets/images/horn.svg'
-
+import { request_menu_ad } from "@/service/user"
+import { ref } from "vue"
+const adUrl = ref('')
+const adOpen = ref(false)
 const columns = [
   { 
     dataIndex: 'col1' ,
@@ -106,6 +113,15 @@ const data = [
   { col1: '小啾预测题',  col2: 'Contain', col3: 'Contain', col4: 'Contain' },
   { col1: '问题诊断', col2: 'Contain', col3: 'Contain', col4: 'Contain' },
 ];
+
+const onClickDel = async () => {
+  adOpen.value = true
+  const { url } = await request_menu_ad()
+  adUrl.value = url
+}
+const toAD = () => {
+  window.open('https://work.weixin.qq.com/ca/cawcdebd45fd31b6f9')
+}
 </script>
 
 <style>
@@ -137,6 +153,20 @@ const data = [
 
 .ant-table-wrapper .ant-table:not(.ant-table-bordered) .ant-table-tbody >tr >td {
   border-top: 1px solid #caced6;
+}
+
+.ad-modal.ant-modal{
+  top: 300px;
+  background: none;
+  width: 640px!important;
+}
+.ad-modal.ant-modal .ant-modal-content {
+  background: none;
+  box-shadow: none;
+}
+.ad-modal.ant-modal .ant-modal-close{
+  top: 43px;
+  inset-inline-end: 67px;
 }
 </style>
 
