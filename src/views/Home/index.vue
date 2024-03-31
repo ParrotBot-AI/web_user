@@ -128,9 +128,8 @@
             type="primary"
             class="bg-green-1 text-white w-2/3 h-[34px] rounded-lg border  flex items-center justify-center cursor-pointer"  
             @click="onClick('new')"
-            :disabled="!wordStore?.vocabs_tasks_data.find(item => item.task_name === '学习新单词')"
           >
-            {{!wordStore?.vocabs_tasks_data.find(item => item.task_name === '学习新单词') ? '今日已学完' : '学习新单词'}} 
+            学习新单词
           </a-button>
         </div>
         <a-card class="col-start-4 col-span-2 row-span-3 shadow-lg overflow-y-auto scorll-bar-hidden">

@@ -4,7 +4,7 @@
       <div class="w-[190px] h-[137px] result-icon absolute -top-[70px] left-1/2 -translate-x-1/2">
         <span class="absolute w-[46px] h-[46px] flex justify-center items-center text-white right-[40px] text-2xl">{{ resultStore.resultData.level }}</span>
       </div>
-      <div class="w-[56vw] h-full">
+      <div class="w-[56vw] h-full flex flex-col items-center">
         <div class="summary-wrap" :class="resultStore.curData?.layout">
           <h5 v-if="resultStore.curData?.subtitle" class="absolute left-8 top-7 text-base"> {{ resultStore.curData?.subtitle }}</h5>
           <div class="flex items-center justify-center flex-col">
@@ -41,7 +41,7 @@
             </li>
           </ul>
         </div>
-        <div class="flex flex-wrap mt-2" v-if="resultStore.curData?.tags?.length">
+        <div class="flex flex-wrap mt-2 justify-center" v-if="resultStore.curData?.tags?.length">
           <span v-for="(val, i) in resultStore.curData?.tags" :key="i"
             class="px-4 py-1.5 rounded-full text-gray-600 bg-[#E7EAEE] text-[16px] mx-2 mt-4">
             {{ val.name }}: {{ val.sum }}/{{ val.count }}

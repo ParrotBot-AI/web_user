@@ -49,7 +49,7 @@
               {{ curCustomData.remark[i] }}
               <a-tooltip 
                 placement="bottomLeft" 
-                v-if="i === list.length - 1"
+                v-if="i === list.length - 1 && $route.name !== 'mock'"
                 color="#D0F0E6" 
                 :overlayInnerStyle="{color: '#0A3F64',fontSize: '12px',borderRadius: '15px',borderTopLeftRadius: '0',border: '1px solid #0A3F64', marginTop: '-20px', marginLeft: '3px', padding: '10px'}"
               >
