@@ -1,6 +1,6 @@
 import { reactive, computed, h, watchEffect } from 'vue'
 import { defineStore } from 'pinia'
-import { request_userInfo, request_menu } from '@/service/user'
+import { request_userInfo, request_menu, requst_update_questionnaire } from '@/service/user'
 import type { MENUITEM } from "@/service/user"
 import { IconFont } from "@/plugins/ui"
 import { useRoute } from "vue-router"
@@ -141,7 +141,13 @@ export const useIndexStore = defineStore('menu', () => {
       tomorrow: res.tmr
     }, 1000 * 60 * 60 * 24)
   }
-
-  return { requestMenu, getMenuValue, menuData, menuList, userTargets, requestUserInfo, userTargetsList, userInfo, menuBottomList };
+  const set_update_questionnaire = async (data: any) => {
+    const res = await requst_update_questionnaire({
+      account_id: userInfo.account_id,
+      ...data,
+    })
+    console.log(res);
+  }
+  return { set_update_questionnaire, requestMenu, getMenuValue, menuData, menuList, userTargets, requestUserInfo, userTargetsList, userInfo, menuBottomList };
 })
 

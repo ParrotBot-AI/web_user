@@ -20,7 +20,7 @@
             </div>
             <div class="flex flex-col ml-[20px] pt-8">
               <div class="font-bold text-[18px]">
-                每日打卡
+                每日打卡{{ ' ' }}
                 <a-tooltip 
                   placement="bottomLeft" 
                   color="#D0F0E6" 
@@ -33,13 +33,14 @@
                 </a-tooltip>
               </div>
               <div class="flex text-[12px] font-normal pt-3 ml-[-8px]">
-                <div class="flex px-[10px] flex-col items-center"><img :src="Signed" class=" w-4/5 " />M</div>
-                <div class="flex px-[10px] flex-col items-center"><img :src="Signed" class=" w-4/5 " />T</div>
-                <div class="flex px-[10px] flex-col items-center"><img :src="Signed" class=" w-4/5 " />W</div>
-                <div class="flex flex-col px-[10px] items-center"><img :src="Signing" class=" w-4/5 " />T</div>
-                <div class="flex flex-col px-[10px] items-center"><img :src="Unsign" class=" w-11/12"  />F</div>
-                <div class="flex flex-col px-[10px] items-center"><img :src="Unsign" class=" w-11/12 " />S</div>
-                <div class="flex flex-col px-[10px] items-center"><img :src="Unsign" class=" w-11/12" />S</div>
+                <div class="flex px-[10px] flex-col items-center" v-for="(val,i) in userStore.homeCharts" :key="val?.date">
+                  <span class="w-[24px] h-[24px] daka-icon" :class="val.class">
+                      <svg width="24px" height="24px" v-if="val.class==='today'">
+                        <path id="fanPath" fill="#F3B84E" :d="computedStyle(val.todayDake)"/>
+                      </svg>
+                    </span>
+                  <span class="mt-1">{{ val.week_day[0] }}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -143,9 +144,19 @@
       :footer="null"
       width="320px"
     >
-      <a-calendar :fullscreen="false">
-        <template #headerRender>
+      <a-calendar 
+        :fullscreen="false" 
+        v-model:value="examDate" 
+        :disabledDate="current => current < dayjs().startOf('day')"
+        @select="onselect"
+      >
+        <template #headerRender="{value:current}"> 
           <div style="margin-bottom: 10px" class="h-[50px] bg-[#1B8B8C] text-white flex justify-center items-center">选择你的托福考试时间</div>
+          <header class="flex justify-between items-center px-3 pb-2">
+            <LeftOutlined class="cursor-pointer" @click="onclickChangeMonth(-1)" />
+            <span>{{current.year()}}年{{current.month() + 1}}月</span>
+            <RightOutlined class="cursor-pointer" @click="onclickChangeMonth(1)" />
+          </header>
         </template>
       </a-calendar>
     </a-modal>
@@ -157,9 +168,6 @@ import { useIndexStore } from '@/stores/index'
 import BaseCard from "@/components/BaseCard/index.vue"
 import { getCurrentTimeOfDay } from "@/utils/utils"
 import NewWord from '@/assets/images/word-new.svg'
-import Signed from '@/assets/images/signed.svg'
-import Signing from '@/assets/images/signing.svg'
-import Unsign from '@/assets/images/unsign.svg'
 import PersionRead from '@/assets/images/persion_read.svg'
 import PersionHear from '@/assets/images/persion_hear.svg'
 import PersionSpoken from '@/assets/images/persion_spoken.svg'
@@ -168,18 +176,23 @@ import bxCalendar from "@/assets/homeIcon/bx_calendar.svg"
 import hint from "@/assets/images/hint.png"
 import { useWordStore } from '@/stores/word'
 import { useExamStore } from '@/stores/exam'
-import { ref, onMounted, watchEffect} from 'vue'
-import {  useUserStore} from '@/stores/user'
-import { useRoute } from "vue-router"
+import * as echarts from 'echarts';
+import { ref, onMounted, watchEffect, computed} from 'vue'
+import { useUserStore} from '@/stores/user'
+import {
+  LeftOutlined,
+  RightOutlined
+} from '@ant-design/icons-vue';
+import dayjs, { Dayjs } from 'dayjs';
 const calenderOpen = ref(false)
 const wordStore = useWordStore()
 const examStore = useExamStore()
 const userStore = useUserStore()
-import * as echarts from 'echarts';
 const activeKey = ref('1');
 const indexStore = useIndexStore()
 const HomeChart = ref()
 const chart = ref()
+const examDate = ref<Dayjs>()
 const icons = {
   'read': PersionRead,
   'hear': PersionHear,
@@ -193,13 +206,12 @@ watchEffect (() => {
   chart.value?.setOption({
     color: [ '#f1b01f'],
     xAxis: {
-      data: ["M","T","W","T","F","S","S"]
+      data: userStore?.homeCharts?.map(item => item?.week_day[0])
     },
     yAxis: {},
     series: [{
-
       type: 'bar',
-      data: [5, 20, 36, 10, 10, 20,10]
+      data: userStore?.homeCharts?.map(item => item?.study_time)
     }]
   });
 }, {
@@ -220,8 +232,7 @@ onMounted(() => {
   wordStore.get_vocabs_tasks()
   examStore.getPastResult()
   userStore.api_checkin()
-  // HomeChart.value = echarts.init(document.getElementById('main'));
-  // myEcharts()
+  examDate.value = dayjs()
   chart.value = echarts.init(HomeChart.value, 'main');
   window.addEventListener('resize', () => {
     const chart = echarts.getInstanceByDom(HomeChart.value);
@@ -232,6 +243,30 @@ onMounted(() => {
 })
 const openCalendar = () => {
   calenderOpen.value = true
+}
+const computedStyle = computed(() => {
+  return (data) => {
+    const percentage = data.count_process / data.count_total * 100;
+    // const percentage = 30;
+    const startAngle = -90; // 从12点钟方向开始
+    const endAngle = startAngle + percentage * 360 / 100;
+
+    const startX = 12 + Math.cos(startAngle * Math.PI / 180) * 12;
+    const startY = 12 + Math.sin(startAngle * Math.PI / 180) * 12;
+    const endX = 12 + Math.cos(endAngle * Math.PI / 180) * 12;
+    const endY = 12 + Math.sin(endAngle * Math.PI / 180) * 12;
+
+    const largeArcFlag = percentage > 50 ? 1 : 0;
+    return `M12,12 L${startX},${startY} A12,12 0 ${largeArcFlag},1 ${endX},${endY} Z`
+  }
+})
+const onclickChangeMonth = (type) => {
+  examDate.value = examDate.value.add(type, 'month')
+}
+const onselect = (val) => {
+  indexStore.set_update_questionnaire({
+    next_test_time: val.format('YYYY-MM-DD')
+  })
 }
 </script>
 <style scoped>
@@ -249,8 +284,47 @@ const openCalendar = () => {
   height: 17px;
   padding: 0;
 }
+:global(.calendar-modal .ant-picker-calendar .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner) {
+  background: #F3B84E;
+  border-radius: 100%;
+}
+:global(.calendar-modal .ant-picker-calendar .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before) {
+  border: none;
+}
+:global(.calendar-modal .ant-picker-content>tbody) {
+  margin-top: 10px!important;
+}
 .scorll-bar-hidden {
   scrollbar-width: none;
+}
+.daka-icon {
+  border-radius: 50%;
+  overflow: hidden;
+}
+.daka-icon.success {
+  background-color: #F3B84E;
+  background-image: url('@/assets/images/signed.svg');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.daka-icon.fail {
+  background-color: #D0D5DD;
+  background-image: url('@/assets/homeIcon/fail-icon.svg');
+  background-size: 50% auto;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.daka-icon.today {
+  background-color: #FFEAA4;
+  position: relative;
+}
+.daka-icon.lock {
+  background-color: #D0D5DD;
+  background-image: url('@/assets/images/unsign.svg');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
 }
 </style>
 

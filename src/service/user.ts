@@ -85,3 +85,7 @@ export const request_setUserInfo = (userId: number, data: SETUSERINFO) => {
 export const request_menu_ad = () => {
   return http.get(`/api/system/menu/menu_ad/`)
 }
+
+export const requst_update_questionnaire = (data) => {
+  return http.post(`/api/system/microservice/update_questionnaire/`, data)
+}
