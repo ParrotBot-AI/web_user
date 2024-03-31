@@ -79,97 +79,31 @@
               <a-tab-pane key="1" tab="我的任务">
                 <BaseCard :title="`${$t('今日任务')} (${indexStore.userTargetsList?.today?.length})`" :list="indexStore.userTargetsList?.today">
                 </BaseCard>
-                <!-- <div class="flex items-center flex-col text-gray-500 pt-20" v-if="!indexStore.userTargetsList?.tomorrow?.length">
-                  <p>{{ $t('暂无当日任务，请先完成模拟考试获取定制任务') }}</p>
-                  <a-button type="primary" class="mt-5 w-[220px] h-10">{{ $t('开始模考 ') }}</a-button>
-                </div> -->
                 <BaseCard v-if="indexStore.userTargetsList?.tomorrow?.length"
                   :title="`${$t('明日任务')} (${indexStore.userTargetsList.tomorrow.length})`" :list="indexStore.userTargetsList?.today">
                 </BaseCard>
               </a-tab-pane>
               <a-tab-pane key="2" tab="个人学习诊断" >
-                <div class="flex w-full items-center justify-center overflow-hidden">
+                <div v-for="(val, i) in examStore?.pastScores" class="flex w-full items-center justify-center overflow-hidden" :key="i">
                   <div class="mt-5 mr-4" style="width: 10%;">
-                    <img :src="PersionRead" />
+                    <img :src="listIcon(i)" />
                   </div>
-                  <div class="flex flex-col mb-2  items-center " style="width: 25%">
-                    <div class="text-[3.5vw]">{{ examStore.pastScores.read}}</div>
+                  <div class="flex flex-col mb-2 items-center " style="width: 25%">
+                    <div class="text-[3.5vw]">{{ val.avg_s }}</div>
                     <div class="text-[0.8vw] text-gray-500">近7日平均分</div>
                   </div>
-                  <div class="border-l  w-[0.5px] h-20 bg-green-1 ml-3"></div>
-                  <div class="flex flex-col p-6 overflow-auto" style="width: 60%;">
+                  <div class="border-l w-[0.5px] h-20 bg-green-1 ml-3"></div>
+                  <div class="flex flex-col p-6" style="width: 60%;">
                     <div class="text-gray-500 font-bold mb-4 text-[1vw]">错误率最高的题型</div>
-                    <div class="flex "> 
-                      <div v-for="(val, id) in question_list">
-                        <div>1</div>
+                    <div class="flex overflow-auto scorll-bar-hidden" v-if="val.tag"> 
+                      <div v-for="(v, i) in val.tag" :key="i">
                         <div class=" text-[0.8vw] ml-2 justify-center text-gray-500 bg-white border-border-1 px-[12px] py-1" style=" border: 1px solid rgba(102, 112, 133, 1);  border-radius: 18px; width: auto; white-space: nowrap;">
-                          {{ val }}
+                          {{ v.name }}
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="flex w-full items-center justify-center overflow-hidden">
-                  <div class="mt-5 mr-4" style="width: 10%;">
-                    <img :src="PersionHear" />
-                  </div>
-                  <div class="flex flex-col mb-2  items-center" style="width: 25%">
-                    <div class="text-[3.5vw]">{{ examStore.pastScores.hear }}</div>
-                    <div class="text-[0.8vw] text-gray-500">近7日平均分</div>
-                  </div>
-                  <div class="border-l  w-[0.5px] h-20 bg-green-1 ml-3"></div>
-                  <div class="flex flex-col p-6 overflow-auto" style="width: 60%;">
-                    <div class="text-gray-500 font-bold mb-4 text-[1vw]">错误率最高的题型</div>
-                    <div class="flex "> 
-                      <div v-for="(val, id) in hear_list">
-                        <div class=" text-[0.8vw] ml-2 justify-center text-gray-500 bg-white border-border-1 px-[12px] py-1" style=" border: 1px solid rgba(102, 112, 133, 1);  border-radius: 18px; width: auto; white-space: nowrap;">
-                          {{ val }}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="flex w-full items-center justify-center overflow-hidden">
-                  <div class="mt-5 mr-4" style="width: 10%;">
-                    <img :src="PersionSpoken" />
-                  </div>
-                  <div class="flex flex-col mb-2  items-center" style="width: 25%">
-                    <div class="text-[3.5vw]">{{ examStore.pastScores.spoken }}</div>
-                    <div class="text-[0.8vw] text-gray-500">近7日平均分</div>
-                  </div>
-                  <div class="border-l  w-[0.5px] h-20 bg-green-1 ml-3"></div>
-                  <div class="flex flex-col pd-2 p-6 overflow-auto" style="width: 60%;">
-                    <div class="text-gray-500 font-bold mb-4 text-[1vw]">最需要提升的部分</div>
-                    <div class="flex "> 
-                      <div v-for="(val, id) in question_list">
-                        <div class=" text-[0.8vw] ml-2 justify-center text-gray-500 bg-white border-border-1 px-[12px] py-1" style=" border: 1px solid rgba(102, 112, 133, 1);  border-radius: 18px; width: auto; white-space: nowrap;">
-                          {{ val }}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="flex w-full items-center justify-center overflow-hidden">
-                  <div class="mt-5 mr-4" style="width: 10%;">
-                    <img :src="PersionWrite" />
-                  </div>
-                  <div class="flex flex-col mb-2 items-center" style="width: 25%">
-                    <div class="text-[3.5vw]">{{ examStore.pastScores.writing }}</div>
-                    <div class="text-[0.8vw] text-gray-500">近7日平均分</div>
-                  </div>
-                  <div class="border-l  w-[0.5px] h-20 bg-green-1 ml-3"></div>
-                  <div class="flex flex-col pd-2 p-6 overflow-auto" style="width: 60%;">
-                    <div class="text-gray-500 font-bold mb-4 text-[1vw]">错误率最高的题型</div>
-                    <div class="flex "> 
-                      <div v-for="(val, id) in question_list">
-                        <div class=" text-[0.8vw] ml-2 justify-center text-gray-500 bg-white border-border-1 px-[12px] py-1" style=" border: 1px solid rgba(102, 112, 133, 1);  border-radius: 18px; width: auto; white-space: nowrap;">
-                          {{ val }}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
               </a-tab-pane>
             </a-tabs>
             </div>
@@ -241,6 +175,15 @@ const activeKey = ref('1');
 const indexStore = useIndexStore()
 const HomeChart = ref()
 const chart = ref()
+const icons = {
+  'read': PersionRead,
+  'hear': PersionHear,
+  'spoken': PersionSpoken,
+  'writing': PersionWrite
+}
+const listIcon = (i) => {
+  return icons[i]
+}
 watchEffect (() => {
   chart.value?.setOption({
     color: [ '#f1b01f'],
@@ -264,9 +207,6 @@ const style_bg = [
   'background: linear-gradient(254.37deg, #27B170 -16.85%, #49BD86 96.58%)'
 ]
 
-const question_list = ref(['基础题', '强化题', '文章小结题', '逻辑思考题'])
-const hear_list = ref(['基础题', '强化题', '文章小结题', '逻辑思考题'])
-
 const onClick = (type: 'new' ) => {
   wordStore.to_task(type)
 }
@@ -274,7 +214,6 @@ onMounted(() => {
   wordStore.get_vocabs_tasks()
   examStore.getPastResult()
   userStore.api_checkin()
-  console.log(userStore.api_checkin())
   // HomeChart.value = echarts.init(document.getElementById('main'));
   // myEcharts()
   chart.value = echarts.init(HomeChart.value, 'main');
@@ -303,6 +242,9 @@ const openCalendar = () => {
   width: 17px;
   height: 17px;
   padding: 0;
+}
+.scorll-bar-hidden {
+  scrollbar-width: none;
 }
 </style>
 

@@ -55,16 +55,11 @@ export const useExamStore = defineStore('exam', () => {
     answerData: ANSWER_STATUS[]
     type: number
   }>(examing_data_init)
-  const pastScores = reactive<{
-    'writing': number,
-    'spoken' : number,
-    'hear' : number,
-    'read' : number,
-  }>({
-    'writing': 1,
-    'spoken': 2,
-    'hear': 3,
-    'read': 4,
+  const pastScores = reactive({
+    'writing': {},
+    'spoken': {},
+    'hear': {},
+    'read': {},
   })
   const types = ['read', 'spoken', 'hearing', 'writing']
   const questionTitle = ref('')
