@@ -31,7 +31,7 @@
             </a-form-item>
 
            <a-form-item :label="$t('密码')" name="code" >
-              <a-input  class="px-3.5 py-0" :placeholder="$t('输入验证码')">
+              <a-input  class="px-3.5 py-0" :placeholder="$t('输入密码')">
                 <template #suffix>
                   <span
                     class="text h-full py-2.5 px-2 cursor-pointer text-green-1 " @click="onClickpassword()"
@@ -45,50 +45,52 @@
                   class="mt-[100px] my-modal"
                   >
                   <div class="text-[26px] py-[30px] text-black-1">修改密码</div>
-                  <a-form-item name="mobile" >
-                    <div class="pb-[15px]">手机号</div>
-                    <a-input
-                      type="tel"
-                      class="py-2 px-3.5"
-                      v-model:value=indexStore.userInfo.mobile
-                      disabled="true"
-                    >
-                      <template #prefix>
-                        <span
-                          class="text-gray-500 pr-2 relative after:content-[''] after:w-[1px] after:h-5 after:bg-gray-500 after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2"
-                          >+86</span
-                        >
-                      </template>
-                    </a-input>
-                  </a-form-item>
-                  <a-form-item name="mobile" >
-                    <div class="pb-[15px]">验证码</div>
-                    <a-input
-                      type="tel"
-                      class="py-2 px-3.5"
-                      :placeholder= "$t('请输入验证码')"
-                    >
-                    <template #suffix>
-                      <span
-                        class="text px-2 cursor-pointer  text-green-1"
-                      >
-                    获取验证码
-                      </span>
-                    </template>
-                    </a-input>
-                  </a-form-item>
-                  <a-form-item  name="mobile" >
-                    <div class="pb-[15px]">设置新密码</div>
-                    <a-input
-                      type="tel"
-                      class="py-2 px-3.5"
-                      :placeholder= "$t('请输入新密码')"
-                    >
-                    </a-input>
-                  </a-form-item>
-                  <a-button type="primary" html-type="submit" class="shadow-none w-full px-4 py-2.5 h-auto"
-                  >{{ $t('确认') }}</a-button
-                >
+                  <a-form
+        ref="formRef"
+        :model="formState"
+        layout="vertical"
+        name="login"
+        autocomplete="off"
+        @finish="onFinish"
+       
+      >
+      <a-form-item
+        label="手机号"
+        name="mobile"
+        :rules="rulesRef.mobile"
+      >
+        <a-input v-model:value="formState.mobile" type="tel" class="py-2.5 px-3.5" placeholder="输入您的手机号">
+          <template #prefix>
+            <span class="text-gray-500 pr-2 relative after:content-[''] after:w-[1px] after:h-5 after:bg-gray-500 after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2">+86</span>
+          </template>
+        </a-input>
+      </a-form-item>
+
+      <a-form-item
+        label="验证码"
+        name="code"
+        :rules="rulesRef.code"
+      >
+        <a-input v-model:value="formState.code" class="px-3.5 py-0" placeholder="输入验证码">
+          <template #suffix>
+            <span @click="onClickGetCode" class="text h-full py-2.5 px-2 cursor-pointer text-green-1">
+             {{ getCodeBtnText }}
+            </span>
+          </template>
+        </a-input>
+      </a-form-item>
+      <a-form-item
+        label="设置新密码"
+        name="password"
+        :rules="rulesRef.password"
+      >
+        <a-input v-model:value="formState.password" class="py-2.5 px-3.5" placeholder="输入新密码">
+        </a-input>
+      </a-form-item>
+      <a-form-item class="mb-0">
+        <a-button type="primary" html-type="submit" class="shadow-none w-full px-4 py-2.5 h-auto" :loading="loading">确认</a-button>
+      </a-form-item>
+    </a-form>
                   </a-modal>
                 </template>
               </a-input>
@@ -199,7 +201,7 @@
           </div>
           <h1 class="text-[26px] flex w-1/2 items-start justify-start pt-10">隐私条款</h1>
             <a-form-item  name="code" >
-              <a-input  class="px-3.5 py-2.5 mt-8" :placeholder="$t('《鹦鹉智学协议')" disabled="true">
+              <a-input  class="px-3.5 py-2.5 mt-8" :placeholder="$t('《鹦鹉智学协议》')" disabled="true">
                 <template #suffix>
                   <span
                     class="text px-2 cursor-pointer font-bold text-green-1"
@@ -208,7 +210,7 @@
                   </span>
                 </template>
               </a-input>
-              <a-input  class="px-3.5 py-2.5 mt-8" :placeholder="$t('《隐私保护指引')" disabled="true">
+              <a-input  class="px-3.5 py-2.5 mt-8" :placeholder="$t('《隐私保护指引》')" disabled="true">
                 <template #suffix>
                   <span
                     class="text px-2 cursor-pointer font-bold text-green-1"
@@ -218,9 +220,9 @@
                 </template>
               </a-input>
               <h1 class="text-[26px] flex w-1/2 items-start justify-start pt-10">反馈意见</h1>
-              <div class="flex items-center justify-center">
-                <div>添加企业微信</div>
-                <div class="flex pl-10">客服邮箱<div class="text-green-1 pl-2">support@parrotbot.com</div></div>
+              <div class="flex items-center justify-center h-full">
+                <div class="flex flex-col mt-2" style="width: 30%;"><img :src="erweima" style="width: 127px;" /><div class="w-[127px] flex justify-center items-center text-[16px] text-[#475467]">添加企业微信</div></div>
+                <div class="flex text-[16px] h-full items-center justify-center mr-10"><div class="text-[#475467]">客服邮箱</div><div class="text-green-1 pl-2">frank_fan@parrotbot.cn</div></div>
               </div>
             </a-form-item>
         </div>
@@ -235,7 +237,14 @@
 import { useIndexStore } from '@/stores/index'
 import  Ellipse  from  '@/assets/images/Ellipse.png';
 import  About  from  '@/assets/images/about.svg';
-import { ref } from 'vue'
+import {reactive, ref} from "vue"
+import { useUserStore } from "@/stores/user"
+import { mobileRegex } from "@/utils/utils"
+import { ArrowLeftOutlined } from '@ant-design/icons-vue';
+import type { RESRPASSWOED } from "@/service/user"
+import type { FormInstance } from 'ant-design-vue'
+import {useGetCode} from "@/utils/useGetCode"
+import erweima from '@/assets/images/erweima.jpg'
 
 const indexStore = useIndexStore()
 console.log(indexStore.userInfo)
@@ -245,7 +254,40 @@ const revise_password = ref(false)
 const revise_number = ref(false)
 const rev = ref(true)
 
-
+const userStore = useUserStore()
+const loading = ref(false)
+const formRef = ref<FormInstance>();
+const {getCodeBtnText, getCode, resetCode} = useGetCode()
+const formState = reactive<RESRPASSWOED>({
+  mobile: '',
+  code: '',
+  password: ''
+})
+const rulesRef = reactive({
+  mobile: [{ required: true, message: '请输入你的手机号！' }, { pattern: mobileRegex, message: '请输入正确的手机号！', trigger: 'blur'}],
+  code: [{ required: true, message: '请输入验证码！' }],
+  password: [{ required: true, message: '请输入密码！' }]
+});
+const onFinish = async () => {
+  try {
+    loading.value = true
+    await userStore.api_findPassword(formState)
+  }catch(e){
+    console.log(e)
+  }finally{
+    loading.value = false
+  }
+}
+const onClickGetCode = () => {
+  formRef.value!.validateFields('mobile').then(() => {
+     getCode(formState.mobile, () => {
+        userStore.api_sms(formState.mobile, resetCode)
+     })
+  })
+}
+const onClickToPassword = () => {
+  userStore.onClickChangeLoginType('password')
+}
 
 const onClickpassword = () => {
   revise_password.value = true
