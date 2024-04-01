@@ -29,7 +29,8 @@
               {{val}}
             </div>
           </div>
-          <a-button type="primary" class="mt-10 px-24 h-11" @click="wordStore.submit_unknown()">不认识该词</a-button>
+          <a-button type="primary" class="mt-10 w-[270px] h-11" @click="wordStore.error_next()" v-if="curTask?.is_error">下一步</a-button>
+          <a-button type="primary" class="mt-10 w-[270px] h-11" @click="wordStore.submit_unknown()" v-else>不认识该词</a-button>
         </div>
         <!--AI文章-->
         <div class="flex w-full h-full items-center flex-col bg-[#edf6f6] md:px-40 px-12 py-14" v-else>

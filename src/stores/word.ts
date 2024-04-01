@@ -117,7 +117,24 @@ export const useWordStore = defineStore('word', () => {
     },
     is_end: boolean,
     is_answer: boolean
-  }>({})
+    is_error: boolean
+  }>({
+    payload: {
+      answer: [],
+      correct_answer: [],
+      stem: [],
+      study: false,
+      target: [],
+      unknown: false,
+      word: '',
+      word_id: 0,
+      word_ids: [],
+      hint: null
+    },
+    is_end: false,
+    is_answer: false,
+    is_error: false
+  })
   const finished = ref(false)
   const get_vocabs_statics = async () => {
     const res = await request_get_vocabs_statics(indexStore.userInfo.account_id)
@@ -218,22 +235,21 @@ export const useWordStore = defineStore('word', () => {
   }
 
   const submit_task = async (i: number) => {
-    if(wordTaskData.payload.hint) {
-      wordTaskData.payload.answer[0] = 0
-      wordTaskData.payload.answer[1] = 0
-      wordTaskData.payload.answer[2] = 0
-      wordTaskData.payload.answer[3] = 0
-      wordTaskData.payload.answer[i] = 1
-      wordTaskData.is_answer = true
-      console.log(wordTaskData.payload.answer.join(''), wordTaskData.payload.correct_answer.join(''))
-      if(wordTaskData.payload.answer.join('') === wordTaskData.payload.correct_answer.join('')) {
-        next({payload:wordTaskData.payload})
-      }
-    } else  {
-      wordTaskData.payload.answer[i] = 1
+    wordTaskData.payload.answer = wordTaskData.payload.answer.map(() => 0)
+    wordTaskData.payload.answer[i] = 1
+    // 正确的
+    if(wordTaskData.payload.answer.join('') === wordTaskData.payload.correct_answer.join('')) {
       wordTaskData.is_answer = true
       next({payload:wordTaskData.payload})
+    } else {
+      wordTaskData.is_error = true
+      wordTaskData.is_answer = true
     }
+    
+  }
+  const error_next = () => {
+    next({payload:wordTaskData.payload})
+    wordTaskData.is_error = false
   }
 
   const submit_unknown = () => {
@@ -294,7 +310,8 @@ export const useWordStore = defineStore('word', () => {
     wordTaskData,
     submit_task,
     submit_unknown,
-    finished
+    finished,
+    error_next
   }
   
 })
