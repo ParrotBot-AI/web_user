@@ -1,16 +1,16 @@
-import { defineStore } from 'pinia'
-import http from "@/utils/http";
-import { reactive, ref } from 'vue'
-import { useIndexStore } from "./index"
-import { useRouter, useRoute } from 'vue-router'
-import { 
-  request_get_vocabs_statics, 
-  request_get_vocabs_tasks, 
-  request_start_vocabs_tasks, 
+import {
+  request_get_vocabs_statics,
+  request_get_vocabs_tasks,
+  request_jump,
   request_learn_vocabs_tasks,
   request_refuse_jump,
-  request_jump,
+  request_start_vocabs_tasks,
 } from "@/service/word";
+import http from "@/utils/http";
+import { defineStore } from 'pinia';
+import { reactive, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useIndexStore } from "./index";
 export const useWordStore = defineStore('word', () => {
   const indexStore = useIndexStore()
   const $router = useRouter()
@@ -235,6 +235,9 @@ export const useWordStore = defineStore('word', () => {
   }
 
   const submit_task = async (i: number) => {
+    if(wordTaskData.is_error) {
+      return
+    }
     wordTaskData.payload.answer = wordTaskData.payload.answer.map(() => 0)
     wordTaskData.payload.answer[i] = 1
     // 正确的
@@ -257,7 +260,11 @@ export const useWordStore = defineStore('word', () => {
     wordTaskData.is_answer = true
     next({payload:wordTaskData.payload})
   }
-
+  const submit_Study = () => {
+    wordTaskData.payload.study = true
+    wordTaskData.is_answer = true
+    next({payload:wordTaskData.payload})
+  }
   const aiNext = async () => {
     const { payload } = await request_learn_vocabs_tasks({
       task_account_id: Number($route.query.id),
@@ -298,6 +305,7 @@ export const useWordStore = defineStore('word', () => {
     get_vocabs_statics()
   }
   return {
+    submit_Study,
     vocabs_statics_data,
     vocabs_tasks_data,
     on_jump_vocabs,

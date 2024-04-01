@@ -20,9 +20,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, computed, ref, onMounted } from 'vue'
-import PassageWord from "@/components/BaseAutoWord/children.vue"
-import { useAIStore } from "@/stores/ai"
+import PassageWord from "@/components/BaseAutoWord/children.vue";
+import { useAIStore } from "@/stores/ai";
+import { computed, defineProps, onMounted, ref } from 'vue';
 const startPassageIndex = ref(1)
 const aiStore = useAIStore()
 const props = defineProps<{

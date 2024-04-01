@@ -37,10 +37,10 @@
                 </a-tooltip>
               </div>
               <div class="flex text-[12px] font-normal pt-3 ml-[-8px]">
-                <div class="flex px-[10px] flex-col items-center" v-for="(val,i) in userStore.homeCharts" :key="val?.date">
+                <div class="flex px-[10px] flex-col items-center" v-for="(val,i) in userStore.homeDaka" :key="val?.date">
                   <span class="w-[24px] h-[24px] daka-icon" :class="val.class">
                       <svg width="24px" height="24px" v-if="val.class==='today'">
-                        <path id="fanPath" fill="#F3B84E" :d="computedStyle(val.todayDake)"/>
+                        <path id="fanPath" fill="#F3B84E" :d="computedStyle(val)"/>
                       </svg>
                     </span>
                   <span class="mt-1">{{ val.week_day[0] }}</span>
@@ -53,25 +53,13 @@
           <a-card class="h-[116px] flex items-center justify-center" v-for="(val, id) in indexStore.userTargets" :key="val.id" :style="style_bg[id]" >
             <a-card-meta >
               <template #title>
-                <span v-if="val.id === 'next_test'" class="absolute right-1 top-1 w-6 h-6 cursor-pointer" @click="openCalendar">
+                <span v-if="val.id === 'test_due'" class="absolute right-1 top-1 w-6 h-6 cursor-pointer" @click="openCalendar">
                   <img :src="bxCalendar" />
                 </span>
-                <span class="flex items-center justify-center text-[34px] text-white">{{ 0 }}</span>
+                <span class="flex items-center justify-center text-[34px] text-white">{{ val.val || 0 }}</span>
               </template>
               <template #description>
                 <span class="text-white">{{  $t(val.desc) }}</span>
-              </template>
-            </a-card-meta>
-          </a-card>
-          <a-card class="h-[116px] flex items-center justify-center" :style="style_bg[3]" >
-            <a-card-meta >
-              <template #title>
-                <span class="flex items-center justify-center text-[34px] text-white">{{ 0 }}</span>
-              </template>
-              <template #description>
-                <span class="text-white">
-                  VIP到期天数
-                  </span>
               </template>
             </a-card-meta>
           </a-card>
@@ -166,27 +154,28 @@
   </div>
 </template>
 <script setup lang="ts">
-import AIComponent from '@/components/AI/index.vue'
-import { useIndexStore } from '@/stores/index'
-import BaseCard from "@/components/BaseCard/index.vue"
-import { getCurrentTimeOfDay } from "@/utils/utils"
-import NewWord from '@/assets/images/word-new.svg'
-import PersionRead from '@/assets/images/persion_read.svg'
-import PersionHear from '@/assets/images/persion_hear.svg'
-import PersionSpoken from '@/assets/images/persion_spoken.svg'
-import PersionWrite from '@/assets/images/persion_write.svg'
 import bxCalendar from "@/assets/homeIcon/bx_calendar.svg"
 import hint from "@/assets/images/hint.png"
-import { useWordStore } from '@/stores/word'
+import PersionHear from '@/assets/images/persion_hear.svg'
+import PersionRead from '@/assets/images/persion_read.svg'
+import PersionSpoken from '@/assets/images/persion_spoken.svg'
+import PersionWrite from '@/assets/images/persion_write.svg'
+import NewWord from '@/assets/images/word-new.svg'
+import AIComponent from '@/components/AI/index.vue'
+import BaseCard from "@/components/BaseCard/index.vue"
 import { useExamStore } from '@/stores/exam'
-import * as echarts from 'echarts';
-import { ref, onMounted, watchEffect, computed} from 'vue'
-import { useUserStore} from '@/stores/user'
+import { useIndexStore } from '@/stores/index'
+import { useUserStore } from '@/stores/user'
+import { useWordStore } from '@/stores/word'
+import { getCurrentTimeOfDay } from "@/utils/utils"
 import {
-  LeftOutlined,
-  RightOutlined
-} from '@ant-design/icons-vue';
-import dayjs, { Dayjs } from 'dayjs';
+LeftOutlined,
+RightOutlined
+} from '@ant-design/icons-vue'
+import { message } from 'ant-design-vue'
+import dayjs, { Dayjs } from 'dayjs'
+import * as echarts from 'echarts'
+import { computed, onMounted, ref, watchEffect } from 'vue'
 const calenderOpen = ref(false)
 const wordStore = useWordStore()
 const examStore = useExamStore()
@@ -235,6 +224,7 @@ onMounted(() => {
   wordStore.get_vocabs_tasks()
   examStore.getPastResult()
   userStore.api_checkin()
+  indexStore.daka()
   examDate.value = dayjs()
   chart.value = echarts.init(HomeChart.value, 'main');
   window.addEventListener('resize', () => {
@@ -249,7 +239,7 @@ const openCalendar = () => {
 }
 const computedStyle = computed(() => {
   return (data) => {
-    const percentage = data.count_process / data.count_total * 100;
+    const percentage = data.count_process / data.count_target * 100;
     // const percentage = 30;
     const startAngle = -90; // 从12点钟方向开始
     const endAngle = startAngle + percentage * 360 / 100;
@@ -263,16 +253,28 @@ const computedStyle = computed(() => {
     return `M12,12 L${startX},${startY} A12,12 0 ${largeArcFlag},1 ${endX},${endY} Z`
   }
 })
+watchEffect(() => {
+  // indexStore.userTargets[2].val 是多少天之后考试
+  if (indexStore.userTargets[2].val) {
+    examDate.value = dayjs().add(indexStore.userTargets[2].val, 'day')
+  }
+})
 const onclickChangeMonth = (type) => {
   examDate.value = examDate.value.add(type, 'month')
 }
-const onselect = (val) => {
-  indexStore.set_update_questionnaire({
-    next_test_time: val.format('YYYY-MM-DD')
+const onselect = async (val) => {
+  await indexStore.set_update_questionnaire({
+    next_exam_date: val.format('YYYY-MM-DD')
   })
+  calenderOpen.value = false
+  await userStore.api_checkin()
+  message.success('设置成功')
 }
 </script>
 <style scoped>
+:global(.ant-picker-calendar) {
+  overflow: hidden;
+}
 :global(.ant-tabs-content-holder) {
   overflow-y: auto;
 }

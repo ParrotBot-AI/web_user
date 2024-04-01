@@ -1,8 +1,7 @@
-import { defineStore } from 'pinia'
-import { reactive, ref } from 'vue'
-import { useIndexStore } from "@/stores/index"
-import { useRouter, useRoute } from 'vue-router'
-import {startStream} from "@/service/ai";
+import { startStream } from "@/service/ai";
+import { useIndexStore } from "@/stores/index";
+import { defineStore } from 'pinia';
+import { reactive, ref } from 'vue';
 let starindex = 0;
 export const useAIStore = defineStore('ai', () => {
   const list = reactive<any>([])
@@ -13,13 +12,18 @@ export const useAIStore = defineStore('ai', () => {
     // Can be "Reading","Listening", "Speaking", or "Writing"
     toeflType: '',
     // Contains a string of which 快键 was used
-    // Can be“其他问题",“错题解析”,“解题思路”,“重点信息",“段落逻辑”,or“听力逻辑"
+    // Can be“,“段落逻辑”,or“听力逻辑"
     // 段落逻辑 is exclusive to Reading toeflType
     // 听力逻辑 is exclusive to Listening toeflType
     // Speaking and Writing toeflType can only have 其他问题
-    queryType: '',
+    // 【阅读】： 错题解析”,“解题思路”,“重点信息",段落逻辑  /  其他问题 input 发送的时候
+    // 【听力】： 错题解析”,“解题思路”,“重点信息",听力逻辑  /  其他问题 input 发送的时候
+    // 【口语】： 其他问题 input 发送的时候
+    // 【写作】： 其他问题 input 发送的时候
+    queryType: '', 
     // Contains the query the student enters into the chatbox
     // Only needed for 其他问题 queryType
+    // 输入的文本内容
     chatbotQuery: '',
     // Contains the "passage" for whatever toeflType
     // Needed for every queryTypel
@@ -27,9 +31,11 @@ export const useAIStore = defineStore('ai', () => {
     // Listening -the corresponding transcript for the listening question
     // Speaking-the corresponding stimulus the student reads/listens to for their question
     // Writing - the corresponding stimulus the student reads/listens to for their question
+    // '\n'
     'Main Content': '',
     // Contains the multiple choice question the student is asking questions about
     // Only used for 错题解析,解题思路,重点信息 queryTypes
+    // 题目
     mcq: '',
     // Contains the general method to find the solution for that question type
     // Only used for 解题思路 queryType

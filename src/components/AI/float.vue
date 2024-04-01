@@ -13,12 +13,14 @@
           <b class="w-[14px] h-[3px] bg-[#1B8B8C] rounded-md"></b>
         </span>
       </header>
+      <!--聊天区-->
       <section class="flex-1 overflow-auto px-6 pt-4 tellList bg-[#F0F7F7]" ref="messageContainer">
-        
+        <Item v-for="item in list" :key="item.id" v-bind="item" />
         <div ref="bottom"></div>
       </section>
-      <section class="bg-[#F0F7F7] h-[36px] overflow-x-auto overflow-y-hidden flex flex-nowrap items-center over-x px-2">
-        <a-button class="h-[24px] shrink-0 text-xs mx-[4px] border-[#B2DAC8] rounded-full" v-for="val in btns" :key="val.title">{{ val.title }}</a-button>
+      <!--快捷tag-->
+      <section class="bg-[#F0F7F7] h-[36px] overflow-x-auto overflow-y-hidden flex flex-nowrap items-center over-x px-2" v-if="btns.length">
+        <a-button class="h-[24px] shrink-0 text-xs mx-[4px] border-[#B2DAC8] rounded-full" v-for="val in btns" :key="val.title" @click="onClickTag(val.title)">{{ val.title }}</a-button>
       </section>
       <footer class="flex h-[56px] items-center px-2">
         <a-input 
@@ -43,12 +45,26 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed, watch, watchEffect, defineProps } from 'vue'
+import aiassistant from '@/assets/images/aiassistant.png';
 import Icon from '@ant-design/icons-vue';
-import aiassistant from '@/assets/images/aiassistant.png'
 import { useDraggable } from '@vueuse/core';
+import { computed, defineProps, ref, watch, watchEffect } from 'vue';
+import { useRoute } from "vue-router";
+import Item from "./item.vue";
+const props = defineProps<{
+  data: any
+}>()
+const aiParams = {
+    toeflType: '',
+    queryType: '', 
+    chatbotQuery: '',
+    'Main Content': '',
+    mcq: '',
+    problemMethod: ''
+}
 const dragRect = ref({ left: 0, right: 0, top: 0, bottom: 0 });
 const modalTitleRef = ref<HTMLElement>();
+const { query } = useRoute();
 const { x, y, isDragging } = useDraggable(modalTitleRef);
 const startX = ref<number>(0);
 const startY = ref<number>(0);
@@ -59,17 +75,43 @@ const preTransformX = ref(0);
 const preTransformY = ref(0);
 const open = ref(false);
 const val = ref('')
-const btns = [{
-  title: '错题解析',
-}, {
-  title: '解题思路',
-}, {
-  title: '重点信息',
-}, {
-  title: '段落逻辑',
-}, {
-  title: '听力逻辑'
-}]
+let starindex = 0;
+const list = ref([]);
+const btns = computed<any>(() => {
+  switch (query.type) {
+    case 'read':
+      aiParams.toeflType = 'Reading'
+      return [{
+        title: '错题解析',
+      }, {
+        title: '解题思路',
+      }, {
+        title: '重点信息',
+      }, {
+        title: '段落逻辑',
+      }]
+      
+    case 'hearing':
+      aiParams.toeflType = 'Listening'
+      return [{
+        title: '错题解析',
+      }, {
+        title: '解题思路',
+      }, {
+        title: '重点信息',
+      }, {
+        title: '听力逻辑',
+      }]
+    case 'spoken':
+      aiParams.toeflType = 'Speaking'
+      return []
+    case 'writing':
+      aiParams.toeflType = 'Writing'
+      return []
+  }
+  return []
+})
+
 watch([x, y], () => {
   if (!startedDrag.value) {
     startX.value = x.value;
@@ -112,7 +154,38 @@ const onOpen = () => {
 }
 
 const onSend = () => {
-
+  if(!val.value) {
+    return
+  }
+  list.value.push({
+    type: 'send',
+    id: starindex++,
+    name: '',
+    content: val.value
+  })
+  const params = {
+    ...aiParams,
+    queryType: '其他问题',
+    chatbotQuery: val.value,
+    'Main Content': '',
+  }
+  console.log(params, props.data)
+}
+const onClickTag = (title: string) => {
+  // console.log(title)
+  list.value.push({
+    type: 'send',
+    id: starindex++,
+    name: '',
+    content: title
+  })
+  const params = {
+    ...aiParams,
+    queryType: title,
+    'Main Content': '',
+    mcq: '',
+  }
+  console.log(params, props.data)
 }
 </script>
 <style scoped>
@@ -124,6 +197,32 @@ const onSend = () => {
     background: var(--Base-White, #FFF);
     box-shadow: 0px 5px 24px 0px rgba(16, 24, 40, 0.20);
     overflow: hidden;
+  }
+  /** 偶数 */
+  :global(.tellList>div) {
+    margin-bottom: 6px;
+  }
+  :global(.tellList>div.right-msg>p) {
+    border-radius: 8px 0px 8px 8px;
+    font-size: 14px;
+    float: right;
+    background-color: #1B8B8C;
+    color: white;
+  }
+  :global(.tellList>div.right-msg>h2) {
+    text-align: right;
+    display: none;
+  }
+  /** 奇数 */
+  :global(.tellList>div.left-msg>p){
+    border-radius: 0px 8px 8px 8px;
+    float: left;
+    background-color: #D0F0E6;
+    font-size: 14px;
+    color: #101828;
+  }
+  :global(.tellList>div.left-msg>h2) {
+    text-align: left;
   }
   .over-x::-webkit-scrollbar{
     display: none;

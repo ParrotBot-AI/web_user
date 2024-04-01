@@ -1,9 +1,9 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import { getWithExpiry } from "@/utils/storage"
 import type { MENUITEM, USERINFO } from "@/service/user"
-import { formatStr } from "@/utils/utils"
 import { useIndexStore } from "@/stores/index"
-import NProgress from 'nprogress';
+import { getWithExpiry } from "@/utils/storage"
+import { formatStr } from "@/utils/utils"
+import NProgress from 'nprogress'
+import { createRouter, createWebHistory } from 'vue-router'
 let isRoutesAdded: boolean = false
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -139,7 +139,7 @@ router.beforeEach(async (to, from, next) => {
   if (isLoggedIn) {
     if (!isRoutesAdded) {
       try {
-        const res: any = await Promise.allSettled([indexStore.requestMenu(), indexStore.requestUserInfo(userInfo?.userId)]);
+        const res: any = await Promise.allSettled([indexStore.requestMenu(), indexStore.requestUserInfo(to,userInfo?.userId)]);
         const menuData = res[0].value.data
         indexStore.getMenuValue(menuData)
         

@@ -1,10 +1,10 @@
-import { reactive, ref } from 'vue'
-import { defineStore } from 'pinia'
-import {request_login, request_sms, request_resetPassword, request_logout, request_setUserInfo, get_account_checkin} from "@/service/user"
-import {setWithExpiry, removeWithExpiry} from "@/utils/storage"
 import router from "@/router"
-import type { LOGIN_TYPE_SMS, LOGIN_TYPE_PHOME, RESRPASSWOED, SETUSERINFO } from "@/service/user"
-import {message} from "ant-design-vue"
+import type { LOGIN_TYPE_PHOME, LOGIN_TYPE_SMS, RESRPASSWOED, SETUSERINFO } from "@/service/user"
+import { get_account_checkin, request_login, request_logout, request_resetPassword, request_setUserInfo, request_sms } from "@/service/user"
+import { removeWithExpiry, setWithExpiry } from "@/utils/storage"
+import { message } from "ant-design-vue"
+import { defineStore } from 'pinia'
+import { reactive, ref } from 'vue'
 import { useIndexStore } from './index'
 type LoginType = 'code' | 'password' | 'findPassword'
 export const useUserStore = defineStore('user', () => {
@@ -53,31 +53,18 @@ export const useUserStore = defineStore('user', () => {
   }
   const api_checkin = async () => {
     const account_id = indexStore.userInfo.account_id
-    const {charts, current, daka} = await get_account_checkin(account_id)
+    const {charts, current, daka, info} = await get_account_checkin(account_id)
     homeCharts.length = 0
-    const todayIndex = charts.findIndex(val => val.date === current)
-    homeCharts.push(...charts.map((val:any,i) => {
-      let classname = ''
-      if(i < todayIndex) {
-        if(val.study_time > 0 && val.login_count > 0) {
-          classname = 'success'
-        } else {
-          classname = 'fail'
-        }
-      } else if(i === todayIndex) { 
-        classname = 'today'
-      } else if (i > todayIndex) {
-        classname = 'lock'
-      }
-      return {
-        ...val,
-        todayDake: daka.find(val => val.date === current) ? daka.find(val => val.date === current) : null,
-        class: classname,
-      }
-    }))
+    homeCharts.push(...charts)
     homeDate.value = current
     homeDaka.length = 0
-    homeDaka.push(...daka)
+    homeDaka.push(...daka.map(val => ({
+      ...val,
+      class: val.lock ? 'lock' : val.count_process === val.count_target ? 'success' : val.date === current ? 'today' : ''
+    })))
+    indexStore.userTargets.forEach(val => {
+      val.val = info[val.id]
+    })
   }
   return {
     onClickChangeLoginType, loginType, api_sms, 

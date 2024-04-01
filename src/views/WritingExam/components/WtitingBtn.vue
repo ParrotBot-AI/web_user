@@ -19,10 +19,15 @@
   <textarea 
     ref="textAreaEl"
     class="w-full h-full border-none resize-none outline-[#edf6f6] text-base" 
+    v-model="textValue"
+  />
+  <!-- <textarea 
+    ref="textAreaEl"
+    class="w-full h-full border-none resize-none outline-[#edf6f6] text-base" 
     @copy="$event.preventDefault()" 
     @paste="$event.preventDefault()"
     v-model="textValue"
-  />
+  /> -->
 </div>  
 </template>
 

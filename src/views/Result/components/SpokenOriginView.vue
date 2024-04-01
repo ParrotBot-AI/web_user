@@ -44,9 +44,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import { AuditOutlined } from '@ant-design/icons-vue'
-import BaseResAudio from "@/components/BaseResAudio/index.vue"
-import { defineProps } from "vue"
+import BaseResAudio from "@/components/BaseResAudio/index.vue";
+import { AuditOutlined } from '@ant-design/icons-vue';
+import { defineProps } from "vue";
 const props = defineProps<{
   data: any[]
   onExit: () => void

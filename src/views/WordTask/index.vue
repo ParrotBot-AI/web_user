@@ -4,11 +4,11 @@
       <template #right>
         <div class="flex items-center">
           <p class="text-xs text-[#1B8B8C] mr-3 flex">
-            <span class="mx-2 flex items-center"><img :src="icon1" class="mx-1"/>已学习单词 {{ curTask.payload?.today_study }}</span>
-            <span class="flex items-center"><img :src="icon2" class="mx-1"/>发现生词 {{ curTask.payload?.process?.c}}/{{ curTask.payload?.process?.t}}</span>
+            <span class="mx-2 flex items-center"><img :src="icon1" class="mx-1"/>已学习单词 {{ curTask.payload?.today_study || 0}}</span>
+            <span class="flex items-center"><img :src="icon2" class="mx-1"/>发现生词 {{ curTask.payload?.process?.c || 0}}/{{ curTask.payload?.process?.t || 0}}</span>
           </p>
           <a-button type="primary" class="mx-2 flex items-center justify-center"><img :src="help" class="pr-2" />帮助</a-button>
-          <a-button type="primary" class="mx-2 flex items-center justify-center">直接进入背诵 <img :src="right" class="pl-2" /></a-button>
+          <a-button type="primary" class="mx-2 flex items-center justify-center" @click="wordStore.submit_Study()">直接进入背诵 <img :src="right" class="pl-2" /></a-button>
         </div>
       </template>
     </b-header>
@@ -16,7 +16,7 @@
       <a-spin v-if="loading" size="large" tip="试题加载中..." class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"/>
       <template v-else>
         <!--单词背诵-->
-        <div class="flex w-full items-center flex-col bg-[#edf6f6] pt-44" v-if="curTask?.payload?.word">
+        <div class="flex w-full items-center flex-col bg-[#edf6f6] pt-44" :class="{'!pt-20': curTask?.payload?.hint }" v-if="curTask?.payload?.word">
           <p v-if="curTask?.payload?.hint" class="text-[#667085] text-[18px] font-medium pb-5 w-[500px]"> {{ curTask?.payload?.hint }} </p>
           <h2 class="pb-20">{{curTask?.payload?.word}}的意思是？</h2>
           <div class="grid grid-cols-2 gap-8">
@@ -58,14 +58,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, computed, ref } from 'vue'
-import { useRouter } from "vue-router"
-import BAutoWord from '@/components/BaseAutoWord/index.vue'
 import help from '@/assets/images/help.svg'
 import right from '@/assets/images/right.svg'
-import { useWordStore } from '@/stores/word'
 import icon1 from "@/assets/images/word-icon-1.svg"
 import icon2 from "@/assets/images/word-icon-2.svg"
+import BAutoWord from '@/components/BaseAutoWord/index.vue'
+import { useWordStore } from '@/stores/word'
+import { computed, onMounted, ref } from 'vue'
+import { useRouter } from "vue-router"
 
 const loading = ref(true)
 const wordStore = useWordStore()

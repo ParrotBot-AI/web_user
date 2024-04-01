@@ -1,22 +1,23 @@
 <template>
-  <!--批注-->
-  <AnnotationView 
-    :data="resultStore.resultData.allData.slice(1)"
-    :onViewOrigin="onViewOrigin"
-    :onBack="onBack"
-  />
   <!--原题-->
   <SpokenOrigin 
     v-if="OriginView.open"
     :data="OriginView.data"
     :onExit="onExit"
   />
+  <!--批注-->
+  <AnnotationView 
+    v-else
+    :data="resultStore.resultData.allData.slice(1)"
+    :onViewOrigin="onViewOrigin"
+    :onBack="onBack"
+  />
 </template>
 <script lang="ts" setup>
+import { useResultStore } from "@/stores/result";
+import { reactive } from 'vue';
 import AnnotationView from './AnnotationView.vue';
 import SpokenOrigin from './SpokenOriginView.vue';
-import {useResultStore} from "@/stores/result"
-import {reactive} from 'vue'
 const resultStore = useResultStore()
 const OriginView = reactive({
   open: false,
