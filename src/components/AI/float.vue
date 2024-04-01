@@ -15,7 +15,7 @@
       </header>
       <!--聊天区-->
       <section class="flex-1 overflow-auto px-6 pt-4 tellList bg-[#F0F7F7]" ref="messageContainer">
-        <Item v-for="item in list" :key="item.id" v-bind="item" />
+        <Item v-for="item in list" :key="item.id" v-bind="item" :onAllEnd="onAllEnd"/>
         <div ref="bottom"></div>
       </section>
       <!--快捷tag-->
@@ -46,15 +46,18 @@
 </template>
 <script setup lang="ts">
 import aiassistant from '@/assets/images/aiassistant.png';
+import { startStream } from "@/service/ai";
 import Icon from '@ant-design/icons-vue';
 import { useDraggable } from '@vueuse/core';
-import { computed, defineProps, ref, watch, watchEffect } from 'vue';
+import { computed, defineProps, onUnmounted, ref, watch, watchEffect } from 'vue';
 import { useRoute } from "vue-router";
 import Item from "./item.vue";
+const timer = ref(null)
+const bottom = ref(null)
 const props = defineProps<{
   data: any
 }>()
-const aiParams = {
+const aiParams:any = {
     toeflType: '',
     queryType: '', 
     chatbotQuery: '',
@@ -76,7 +79,7 @@ const preTransformY = ref(0);
 const open = ref(false);
 const val = ref('')
 let starindex = 0;
-const list = ref([]);
+const list = ref<any[]>([]);
 const btns = computed<any>(() => {
   switch (query.type) {
     case 'read':
@@ -152,7 +155,63 @@ const transformStyle = computed(() => {
 const onOpen = () => {
   open.value = !open.value
 }
-
+const scrollToBottom = () => {
+  // 100毫秒检查一次否滚动到底部
+  clearInterval(timer.value)
+  timer.value = setInterval(() => {
+    bottom.value.scrollIntoView({
+      behavior: 'smooth'
+    })
+  }, 100)
+}
+const onAllEnd = () => {
+  clearInterval(timer.value)
+}
+onUnmounted(() => {
+  clearInterval(timer.value)
+})
+const getMainContent = (data) => {
+  switch (query.type) {
+    case 'read':
+      return `${data?.question_parent?.question_content.join('\n')} \n\n ${data?.detail.join('\n')}`
+    case 'hearing':
+      return `${data?.question_parent.voice_content} \n\n ${data?.question_content} \n\n ${data?.detail.join('\n')}`
+    case 'spoken':
+      return `${data?.question?.question_content || ''} \n\n ${data?.question?.title || ''} \n\n ${data?.question?.voice_content || ''}`
+    case 'writing':
+      return `${data?.question?.question_content} \n\n ${data?.question?.answer} `
+  }
+}
+const getMcq = (data) => {
+  switch (query.type) {
+    case 'read':
+      return data?.question_content
+    case 'hearing':
+      return `${data?.question_content}`
+    case 'spoken':
+      return ''
+    case 'writing':
+      return data?.question?.question_title
+  }
+}
+const connentAI = async (params) => {
+  scrollToBottom()
+  const {clientId} = await startStream(params)
+  const massages = [] 
+  const eventSource = new EventSource(`${import.meta.env.VITE_AI_APP_BASEURL}/v1/modelapi/assistantChatbot/${clientId}/`)
+    eventSource.onmessage = function(event) {
+      massages.push(event.data.replace(/\[DONE!\]/, ''))
+      if(event.data.match(/\[DONE!\]/)){
+          list.value.push({
+            type: 'receive',
+            id: starindex++,
+            isEnd: false,
+            content: massages
+          })
+          eventSource.close()
+      }
+  }
+}
 const onSend = () => {
   if(!val.value) {
     return
@@ -167,12 +226,13 @@ const onSend = () => {
     ...aiParams,
     queryType: '其他问题',
     chatbotQuery: val.value,
-    'Main Content': '',
+    'Main Content': getMainContent(props.data),
   }
-  console.log(params, props.data)
+  connentAI(params)
+  val.value = ''
 }
 const onClickTag = (title: string) => {
-  // console.log(title)
+  const mcq_titles = ['错题解析','解题思路','重点信息']
   list.value.push({
     type: 'send',
     id: starindex++,
@@ -182,10 +242,10 @@ const onClickTag = (title: string) => {
   const params = {
     ...aiParams,
     queryType: title,
-    'Main Content': '',
-    mcq: '',
+    'Main Content': getMainContent(props.data),
+    mcq: mcq_titles.includes(title) ? getMcq(props.data) : '',
   }
-  console.log(params, props.data)
+  connentAI(params)
 }
 </script>
 <style scoped>
@@ -223,6 +283,10 @@ const onClickTag = (title: string) => {
   }
   :global(.tellList>div.left-msg>h2) {
     text-align: left;
+  }
+  :global(.tellList>div.left-msg>p div){
+    padding-bottom: 0;
+    text-indent: 0;
   }
   .over-x::-webkit-scrollbar{
     display: none;

@@ -31,6 +31,7 @@ const props = defineProps<{
   name: string
   isEnd: boolean
   id: string | number
+  onAllEnd: () => void
 }>()
 onMounted(() => {
   startPassageIndex.value = 1
@@ -42,6 +43,7 @@ const onended = () => {
   startPassageIndex.value++
   if(startPassageIndex.value > props.content.length) {
     aiStore.setIsEnd(props.id)
+    props?.onAllEnd()
   }
 }
 

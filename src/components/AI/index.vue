@@ -6,8 +6,8 @@
       </span>
       <h2 class="flex-1 pl-4 font-normal text-green-3 py-2.5" :style="{borderBottom: `1px solid var(--color-gray-200)`}">{{ $t('鹦鹉AI助教') }}</h2>
     </header>
-    <section class="flex-1 overflow-auto px-6 pt-4 tellList" ref="messageContainer">
-      <Item v-for="item in aiStore.list" :key="item.id" v-bind="item" />
+    <section class="flex-1 overflow-auto px-6 pt-4 tellList" ref="messageContainer" @scroll="onScroll">
+      <Item v-for="item in aiStore.list" :key="item.id" v-bind="item" :onAllEnd="onAllEnd" />
       <div ref="bottom"></div>
     </section>
     <footer class="flex px-6 py-4" :style="{borderTop: `1px solid var(--color-gray-300)`}">
@@ -32,11 +32,11 @@
   </div>
 </template>
 <script setup lang="ts">
+import aiassistant from '@/assets/images/aiassistant.png';
+import { useAIStore } from "@/stores/ai";
 import Icon from '@ant-design/icons-vue';
-import Item from "./item.vue"
-import aiassistant from '@/assets/images/aiassistant.png'
-import { onMounted, ref, nextTick, watch} from "vue"
-import { useAIStore } from "@/stores/ai"
+import { onMounted, onUnmounted, ref } from "vue";
+import Item from "./item.vue";
 const bottom = ref(null)
 const messageContainer = ref(null)
 const timer = ref(null)
@@ -47,31 +47,26 @@ const onSend = async () => {
   const v = val.value
   val.value = ''
   await aiStore.sendMessage(v)
-}
-const scrollToBottom = () => {
-  // 100毫秒检查一次否滚动到底部
   clearInterval(timer.value)
   timer.value = setInterval(() => {
-    bottom.value.scrollIntoView({
-      behavior: 'smooth'
-    })
+    scrollToBottom()
   }, 100)
+}
+const onAllEnd = () => {
+  clearInterval(timer.value)
+}
+const scrollToBottom = () => {
+  bottom.value.scrollIntoView({
+    behavior: 'smooth'
+  })
 };
-// watch(() => aiStore.list.length,() => {
-//   nextTick((() => {
-//     scrollToBottom()
-//   }))
-// }, {
-//   immediate: true
-// })
 onMounted(() => {
   scrollToBottom()
   aiStore.init()
 })
-onMounted(() => {
+onUnmounted(() => {
   clearInterval(timer.value)
 })
-
 </script>
 <style>
 .tellList p>div {
