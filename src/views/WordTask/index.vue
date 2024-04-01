@@ -3,7 +3,10 @@
     <b-header title="单词练习">
       <template #right>
         <div class="flex items-center">
-          <p class="text-xs">已学习单词 16</p>
+          <p class="text-xs text-[#1B8B8C] mr-3 flex">
+            <span class="mx-2 flex items-center"><img :src="icon1" class="mx-1"/>已学习单词 {{ curTask.payload?.today_study }}</span>
+            <span class="flex items-center"><img :src="icon2" class="mx-1"/>发现生词 {{ curTask.payload?.process?.c}}/{{ curTask.payload?.process?.t}}</span>
+          </p>
           <a-button type="primary" class="mx-2 flex items-center justify-center"><img :src="help" class="pr-2" />帮助</a-button>
           <a-button type="primary" class="mx-2 flex items-center justify-center">直接进入背诵 <img :src="right" class="pl-2" /></a-button>
         </div>
@@ -61,6 +64,9 @@ import BAutoWord from '@/components/BaseAutoWord/index.vue'
 import help from '@/assets/images/help.svg'
 import right from '@/assets/images/right.svg'
 import { useWordStore } from '@/stores/word'
+import icon1 from "@/assets/images/word-icon-1.svg"
+import icon2 from "@/assets/images/word-icon-2.svg"
+
 const loading = ref(true)
 const wordStore = useWordStore()
 const router = useRouter()
