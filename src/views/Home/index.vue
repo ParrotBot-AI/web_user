@@ -5,7 +5,7 @@
       <!--用户信息-->
       <div class="pb-7">
         <div class="flex">
-          <div class="flex bg-white w-full h-[130px] ml-[60px] mt-4 shadow-lg rounded-md border border-border-1 border-solid relative pl-[80px]">
+          <div class="w-[calc(100%-60px)] flex bg-white h-[130px] ml-[60px] mt-4 shadow-lg rounded-md border border-border-1 border-solid relative pl-[80px]">
             <a-avatar
              class="bg-green-1 absolute top-[-10px] left-[-60px] shadow-lg rounded-md border border-border-1 border-solid" 
               style="font-size: 40px;" 
