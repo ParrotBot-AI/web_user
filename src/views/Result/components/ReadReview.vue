@@ -32,10 +32,11 @@
       </div>
     </div>
   </div>
+  <FloatAI :data="props.answerData" />
 </template>
 <script setup lang="ts">
-import { defineProps, ref, watchEffect } from "vue"
-
+import FloatAI from "@/components/AI/float.vue";
+import { defineProps, ref, watchEffect } from "vue";
 const contentDiv = ref<HTMLDivElement | null>(null)
 
 const props = defineProps<{
@@ -43,13 +44,11 @@ const props = defineProps<{
 }>()
 
 watchEffect(() => {
-  console.log(props.answerData)
   const keywords_p = props.answerData?.keywords?.p
   const keywords_k = props.answerData?.keywords?.k
   const keywords_s = props.answerData?.keywords?.s
   const p = Array.isArray(keywords_p) ? keywords_p[0] : keywords_p
   if (p) {
-    console.log(p)
     const originText = props.answerData?.question_parent?.question_content[p - 1]
     const paragraphEls = contentDiv.value?.querySelectorAll('p')
     const paragraphEl = contentDiv.value?.querySelector('.read-mock-content-' + p)

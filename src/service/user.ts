@@ -89,3 +89,7 @@ export const request_menu_ad = () => {
 export const requst_update_questionnaire = (data) => {
   return http.post(`/api/system/microservice/update_questionnaire/`, data)
 }
+
+export const request_update_checkin = (data) => {
+  return http.post(`/api/system/user/update_account_checkin/${data}/`)
+}

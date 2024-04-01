@@ -13,7 +13,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { defineProps } from 'vue';
 const props = defineProps<{
   title: string
   list: Array<any>

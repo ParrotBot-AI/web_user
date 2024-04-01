@@ -1,16 +1,16 @@
-import { defineStore } from 'pinia'
-import http from "@/utils/http";
-import { reactive, ref } from 'vue'
-import { useIndexStore } from "./index"
-import { useRouter, useRoute } from 'vue-router'
-import { 
-  request_get_vocabs_statics, 
-  request_get_vocabs_tasks, 
-  request_start_vocabs_tasks, 
+import {
+  request_get_vocabs_statics,
+  request_get_vocabs_tasks,
+  request_jump,
   request_learn_vocabs_tasks,
   request_refuse_jump,
-  request_jump,
+  request_start_vocabs_tasks,
 } from "@/service/word";
+import http from "@/utils/http";
+import { defineStore } from 'pinia';
+import { reactive, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useIndexStore } from "./index";
 export const useWordStore = defineStore('word', () => {
   const indexStore = useIndexStore()
   const $router = useRouter()
@@ -117,7 +117,24 @@ export const useWordStore = defineStore('word', () => {
     },
     is_end: boolean,
     is_answer: boolean
-  }>({})
+    is_error: boolean
+  }>({
+    payload: {
+      answer: [],
+      correct_answer: [],
+      stem: [],
+      study: false,
+      target: [],
+      unknown: false,
+      word: '',
+      word_id: 0,
+      word_ids: [],
+      hint: null
+    },
+    is_end: false,
+    is_answer: false,
+    is_error: false
+  })
   const finished = ref(false)
   const get_vocabs_statics = async () => {
     const res = await request_get_vocabs_statics(indexStore.userInfo.account_id)
@@ -218,22 +235,24 @@ export const useWordStore = defineStore('word', () => {
   }
 
   const submit_task = async (i: number) => {
-    if(wordTaskData.payload.hint) {
-      wordTaskData.payload.answer[0] = 0
-      wordTaskData.payload.answer[1] = 0
-      wordTaskData.payload.answer[2] = 0
-      wordTaskData.payload.answer[3] = 0
-      wordTaskData.payload.answer[i] = 1
-      wordTaskData.is_answer = true
-      console.log(wordTaskData.payload.answer.join(''), wordTaskData.payload.correct_answer.join(''))
-      if(wordTaskData.payload.answer.join('') === wordTaskData.payload.correct_answer.join('')) {
-        next({payload:wordTaskData.payload})
-      }
-    } else  {
-      wordTaskData.payload.answer[i] = 1
+    if(wordTaskData.is_error) {
+      return
+    }
+    wordTaskData.payload.answer = wordTaskData.payload.answer.map(() => 0)
+    wordTaskData.payload.answer[i] = 1
+    // 正确的
+    if(wordTaskData.payload.answer.join('') === wordTaskData.payload.correct_answer.join('')) {
       wordTaskData.is_answer = true
       next({payload:wordTaskData.payload})
+    } else {
+      wordTaskData.is_error = true
+      wordTaskData.is_answer = true
     }
+    
+  }
+  const error_next = () => {
+    next({payload:wordTaskData.payload})
+    wordTaskData.is_error = false
   }
 
   const submit_unknown = () => {
@@ -241,7 +260,11 @@ export const useWordStore = defineStore('word', () => {
     wordTaskData.is_answer = true
     next({payload:wordTaskData.payload})
   }
-
+  const submit_Study = () => {
+    wordTaskData.payload.study = true
+    wordTaskData.is_answer = true
+    next({payload:wordTaskData.payload})
+  }
   const aiNext = async () => {
     const { payload } = await request_learn_vocabs_tasks({
       task_account_id: Number($route.query.id),
@@ -282,6 +305,7 @@ export const useWordStore = defineStore('word', () => {
     get_vocabs_statics()
   }
   return {
+    submit_Study,
     vocabs_statics_data,
     vocabs_tasks_data,
     on_jump_vocabs,
@@ -294,7 +318,8 @@ export const useWordStore = defineStore('word', () => {
     wordTaskData,
     submit_task,
     submit_unknown,
-    finished
+    finished,
+    error_next
   }
   
 })

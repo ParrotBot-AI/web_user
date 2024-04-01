@@ -1,15 +1,14 @@
-import { reactive, computed, h, watchEffect } from 'vue'
-import { defineStore } from 'pinia'
-import { request_userInfo, request_menu, requst_update_questionnaire } from '@/service/user'
-import type { MENUITEM } from "@/service/user"
-import { IconFont } from "@/plugins/ui"
-import { useRoute } from "vue-router"
-import { formatStr } from "@/utils/utils"
-import { setWithExpiry, getWithExpiry } from "@/utils/storage"
-import Union from "@/assets/homeIcon/Union.svg"
-import Hourglass from "@/assets/homeIcon/Hourglass.svg"
 import Group from "@/assets/homeIcon/Group.svg"
-import { request_getAccount_id } from '@/service/user' 
+import Hourglass from "@/assets/homeIcon/Hourglass.svg"
+import Union from "@/assets/homeIcon/Union.svg"
+import { IconFont } from "@/plugins/ui"
+import type { MENUITEM } from "@/service/user"
+import { request_getAccount_id, request_menu, request_update_checkin, request_userInfo, requst_update_questionnaire } from '@/service/user'
+import { getWithExpiry, setWithExpiry } from "@/utils/storage"
+import { formatStr } from "@/utils/utils"
+import { defineStore } from 'pinia'
+import { computed, h, reactive, watchEffect } from 'vue'
+import { useRoute } from "vue-router"
 
 
 export const useIndexStore = defineStore('menu', () => {
@@ -31,16 +30,22 @@ export const useIndexStore = defineStore('menu', () => {
       desc: '目前预测分数',
     },
     {
-      id: 'total_study_days',
+      id: 'study_day',
       icon: Group,
       val: 0,
       desc: '已经学习天数',
     },
     {
-      id: 'next_test',
+      id: 'test_due',
       val: 0,
       icon: Hourglass,
       desc: '距离考试天数',
+    },
+    {
+      id: 'vip_due',
+      val: 0,
+      icon: Hourglass,
+      desc: 'VIP到期天数',
     }
   ])
   const userTargetsList = reactive({
@@ -107,9 +112,13 @@ export const useIndexStore = defineStore('menu', () => {
     setWithExpiry('usermenu', res, 1000 * 60 * 60 * 24)
     return res
   }
-  const requestUserInfo = async (userId: number) => {
+  const daka = async () => {
+    const res = await request_update_checkin(userInfo.account_id)
+    console.log(res)
+  }
+  const requestUserInfo = async (to, userId: number) => {
     const _userInfo = getWithExpiry<any>('userdata')!;
-    if(_userInfo) {
+    if(_userInfo && to.name !== 'home') {
       userInfo.userId = userId
       userInfo.username = _userInfo.username
       userInfo.email = _userInfo.email
@@ -123,9 +132,6 @@ export const useIndexStore = defineStore('menu', () => {
     }
     const res = await request_userInfo(userId)
     const { account_id } = await request_getAccount_id(userId, { exam_id: 1 })
-    userTargets.forEach(val => {
-      val.val = res[val.id]
-    })
     userTargetsList.today = res.tdy
     userTargetsList.tomorrow = res.tmr
     userInfo.userId = userId
@@ -147,7 +153,8 @@ export const useIndexStore = defineStore('menu', () => {
       ...data,
     })
     console.log(res);
+    
   }
-  return { set_update_questionnaire, requestMenu, getMenuValue, menuData, menuList, userTargets, requestUserInfo, userTargetsList, userInfo, menuBottomList };
+  return { daka, request_update_checkin, set_update_questionnaire, requestMenu, getMenuValue, menuData, menuList, userTargets, requestUserInfo, userTargetsList, userInfo, menuBottomList };
 })
 

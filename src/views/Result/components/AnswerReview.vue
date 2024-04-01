@@ -27,19 +27,17 @@
       v-if="$route.query.type === 'read' || $route.query.type === 'hearing'"
     />
   </a-layout>
-  <FloatAI />
 </template>
 <script setup lang="ts">
+import { useResultStore } from "@/stores/result"
 import { ArrowLeftOutlined, AuditOutlined } from '@ant-design/icons-vue'
-import QuestionNav from "./QuestionNav.vue"
-import FloatAI from "@/components/AI/float.vue"
 import { computed, ref } from 'vue'
 import { useRoute } from "vue-router"
-import ReadReview from './ReadReview.vue'
 import HearingReview from './HearingReview.vue'
-import WritingReview from './WritingReview.vue'
+import QuestionNav from "./QuestionNav.vue"
+import ReadReview from './ReadReview.vue'
 import SpokenReview from "./SpokenReview.vue"
-import { useResultStore } from "@/stores/result"
+import WritingReview from './WritingReview.vue'
 const resultStore = useResultStore()
 const step = ref(0)
 const $route = useRoute()

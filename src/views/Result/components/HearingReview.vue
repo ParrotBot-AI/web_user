@@ -27,10 +27,12 @@
       </div>
     </div>
   </div>
+  <FloatAI :data="props.answerData" />
 </template>
 <script setup lang="ts">
-import {defineProps} from "vue"
-import BaseResAudio from "@/components/BaseResAudio/index.vue"
+import FloatAI from "@/components/AI/float.vue";
+import BaseResAudio from "@/components/BaseResAudio/index.vue";
+import { defineProps } from "vue";
 const props = defineProps<{
   answerData: any
 }>()

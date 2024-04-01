@@ -33,7 +33,7 @@
     <div class="h-[50px] bg-[#F0F7F7] w-full"></div>
     <div class="flex-1 overflow-hidden bg-white w-full flex">
       <div class="w-1/2 relative flex flex-col" :style="{borderRight: '1px solid #D0D5DD'}">
-        <h2 class="text-[#667085] font-base py-4 pl-[128px]">原版</h2>
+        <h2 class="text-[#667085] font-base py-4 pl-[128px] text-base">原版</h2>
         <div class="overflow-y-auto flex-1 w-full pl-[128px] pr-[68px]">
           <div v-for="(val,i) in curData?.model_answer_content?.Content" :key="i" class="mb-2 text-base relative">
             <span class="absolute -left-[34px] top-[3px] text-[#1B8B8C] w-[20px] h-[20px] text-xs border border-[#1B8B8C] border-solid rounded-full flex justify-center items-center">{{ i }}</span>
@@ -65,7 +65,7 @@
       </div>
     </div>
     <!---footer-->
-    <footer class="bg-[#F0F7F7] h-[168px] flex justify-between items-center px-10">
+    <footer class="bg-[#F0F7F7] h-[124px] flex justify-between items-center px-10">
       <div>
         <h2 class="text-[#667085] text-base pb-2">问题标注</h2>
         <div class="flex">
@@ -88,12 +88,14 @@
       </div>
     </footer>
   </div>
+  <FloatAI :data="curData" />
 </template>
 <script setup lang="ts">
-import { RightOutlined, AuditOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons-vue'
-import resultIcon from "@/assets/images/result-icon.png"
-import {defineProps, ref, computed} from "vue"
-import { useRoute } from "vue-router"
+import resultIcon from "@/assets/images/result-icon.png";
+import FloatAI from "@/components/AI/float.vue";
+import { AuditOutlined, EyeInvisibleOutlined, RightOutlined } from '@ant-design/icons-vue';
+import { computed, defineProps, ref } from "vue";
+import { useRoute } from "vue-router";
 const props = defineProps<{
   data: any[]
   onViewOrigin: (curdata:any) => void
@@ -103,7 +105,6 @@ const curIndex = ref(0)
 const curAiIndex = ref(0)
 const {query} = useRoute()
 const curData = computed(() => {
-  console.log(props.data)
   console.log(props.data[curIndex.value])
   return props.data[curIndex.value]
 })
