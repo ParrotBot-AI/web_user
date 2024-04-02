@@ -174,7 +174,7 @@ const showScore = computed(() => {
 const onSelectQuestion = async (v:EXAN_START['q_type']) => {
   if($route.name === 'mock') { // 综合模考
     const res = await examStore.startMixedExam(type.value)
-    setWithExpiry(`mixedExam-${props.id}`, {
+    setWithExpiry(`mixedExam-${res.sheet_id}`, {
       id: props.id,
       father_sheet: res.sheet_id,
       resource_name: props.resource_name,
@@ -188,7 +188,6 @@ const onSelectQuestion = async (v:EXAN_START['q_type']) => {
       query: {
         type: 'mixedExam',
         mid: res.sheet_id,
-        miid: props.id,
         name: props.resource_name,
         id: examStore.examing_data.sheet_id
       }

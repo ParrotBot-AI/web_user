@@ -12,7 +12,7 @@
 </template>
 <script setup lang="ts">
 import { ArrowLeftOutlined } from '@ant-design/icons-vue';
-import { useRouter } from "vue-router"
+import { useRouter } from "vue-router";
 const props = defineProps<{
   title?: string
   class?: string
@@ -21,6 +21,6 @@ const props = defineProps<{
 const $router = useRouter()
 const onClickBack = () => {
   props.onClickBack ? props.onClickBack() : $router.back()
-  
+  window.location.reload()
 }
 </script>

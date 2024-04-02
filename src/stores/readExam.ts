@@ -123,13 +123,11 @@ export const useReadExamStore = defineStore('readExam', () => {
    */
   const requestSubmitExam = async () => {
     await request_submitExam(query?.id)
-    if(query?.type === 'mixedExam' && query?.mid && query?.miid){
-      const mixdata = getWithExpiry(`mixedExam-${query?.miid}`)
-      console.log('mixdata:::', mixdata)
-      await examStore.startExam('mock', mixdata?.quesid[1], mixdata?.father_sheet)
-      console.log(examStore.examing_data.sheet_id)
+    if(query?.type === 'mixedExam' && query?.mid && query?.mid){
+      const mixdata = getWithExpiry(`mixedExam-${query?.mid}`)
+      await examStore.startExam('mock_exam', mixdata?.quesid[1], mixdata?.father_sheet)
       $router.push({
-        name: 'spokenExam',
+        name: 'hearingExam',
         query: {
           type: 'mixedExam',
           mid: mixdata?.father_sheet,

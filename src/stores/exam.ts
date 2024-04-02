@@ -1,19 +1,21 @@
+import type { EXAN_START } from "@/service/exam"
+import { getWithExpiry } from '@/utils/storage'
 import { defineStore } from 'pinia'
-import { reactive, computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useIndexStore } from './index'
-import type { EXAN_START } from "@/service/exam"
-import {
-  request_getExamResource,
-  request_startExam,
-  request_getExam,
-  request_saveAnswer,
-  request_getExamStutas,
-  request_submitExam,
-  request_get_past_result,
-  request_start_mixed_exam,
-} from '@/service/exam'
+
 import type { ANSWER_STATUS } from "@/service/exam"
+import {
+  request_getExam,
+  request_getExamResource,
+  request_getExamStutas,
+  request_get_past_result,
+  request_saveAnswer,
+  request_startExam,
+  request_start_mixed_exam,
+  request_submitExam,
+} from '@/service/exam'
 
 export const useExamStore = defineStore('exam', () => {
   const showProcessDialog = ref(false)
@@ -295,6 +297,36 @@ export const useExamStore = defineStore('exam', () => {
    */
   const requestSubmitExam = async (sheet_id: string) => {
     await request_submitExam(sheet_id)
+    const {query, name} = $route
+    const mixdata = getWithExpiry(`mixedExam-${query?.mid}`)
+    if(query?.type === 'mixedExam' && query?.mid){
+      if(name === 'hearingExam'){
+        await startExam('mock_exam', mixdata?.quesid[2], mixdata?.father_sheet)
+        $router.push({
+          name: 'spokenExam',
+          query: {
+            type: 'mixedExam',
+            mid: mixdata?.father_sheet,
+            name: mixdata.resource_name,
+            id: examing_data.sheet_id
+          }
+        })
+      } else if(name === 'spokenExam'){
+        await startExam('mock_exam', mixdata?.quesid[3], mixdata?.father_sheet)
+        $router.push({
+          name: 'writingExam',
+          query: {
+            type: 'mixedExam',
+            mid: mixdata?.father_sheet,
+            name: mixdata.resource_name,
+            id: examing_data.sheet_id
+          }
+        })
+      } else if(name === 'writingExam'){
+        $router.push(`/result/${mixdata?.father_sheet}?type=mock` )
+      }
+      return
+    }
     $router.push(`/result/${sheet_id}?type=${$route?.meta?.parent}` )
   }
   const getPastResult = async () => {
