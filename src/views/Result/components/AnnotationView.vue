@@ -72,7 +72,7 @@
               >{{ k }}</span>
               <a-tooltip 
                 placement="bottomRight" 
-                :overlayInnerStyle="{marginTop:'-10px', background: '#D0F0E6', color: '#0A3F64',fontSize: '12px',borderRadius: '15px',borderTopLeftRadius: '0',border: '1px solid #0A3F64', marginTop: '-20px', marginLeft: '3px', padding: '10px'}"
+                :overlayInnerStyle="{'margin-top':'-10px', background: '#D0F0E6', color: '#0A3F64',fontSize: '12px',borderRadius: '15px',borderTopLeftRadius: '0',border: '1px solid #0A3F64', marginTop: '-20px', marginLeft: '3px', padding: '10px'}"
               >
                   <template #title>
                     <div>{{ v.Feedback }}</div>
