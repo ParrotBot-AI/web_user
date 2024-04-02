@@ -6,47 +6,53 @@
         <div class="w-1/2 absolute bottom-0 left-0 text-[0px] z-0">
         <img :src="Form1" alt="login-bg" class="w-1/3" />
         </div>
-        <div v-if="index===1" class="flex flex-col w-full  items-center justify-center mb-[-100px] " style="height: 80%;"> 
-            <div class="text-gray-600">学习目标</div>
-            <div class="my-2 text-[2vw]">问题1 </div>
-            <div class="text-gray-600">您目前的学习阶段是？</div>
-            <div class="flex w-full justify-center mt-10" style=" height: 30%">
-                <div v-for="(v,i) in question[0]" :key="i"  class="flex flex-col items-center justify-center bg-white border border-border-1 border-solid rounded-md mx-5" style="width: 14%; " :style="{ backgroundColor: v.backgroundColor }" @click="toggleImage(0, i)">
-                    <img :src="v.isselect ? v.selectimg : v.img" class="w-1/2" >
-                    <div class=" mt-4" :style="{ color: v.isselect ? 'white' : '#667085' }">{{ v.title }}</div>
+        <div v-if="index===1" class="flex flex-col w-full  items-center justify-center mt-[30px] mb-[-100px] " style="height: 80%;"> 
+            <div class="text-[#475467] text-[16px] mb-1">学习目标</div>
+            <div class="my-2 text-[36px]">问题1 </div>
+            <div class="text-[#475467] text-[20px]">您目前的学习阶段是？</div>
+            <div class="flex w-full justify-center mt-[70px]" style=" height: 30%">
+                <div v-for="(v,i) in question[index-1]" :key="i"  class="flex flex-col items-center justify-center bg-white  rounded-md mx-4" style="width: 186px; height: 200px; border-radius: 8px 8px 8px 8px;border: 1px 1px 1px 1px;border: 1px solid rgba(208, 213, 221, 1)" :style="{ backgroundColor: v.backgroundColor }" @click="toggleImage(0, i)">
+                    <img :src="v.isselect ? v.selectimg : v.img" class="w-[74.85px] mt-2" >
+                    <div class=" mt-9 text-[16px]" :style="{ color: v.isselect ? 'white' : '#667085' }">{{ v.title }}</div>
                 </div>
             </div>
         </div>
-        <div v-if="index===2" class="flex flex-col w-full  items-center justify-center mb-[-100px] " style="height: 80%;"> 
-            <div class="text-gray-600">学习目标</div>
-            <div class="my-2 text-[2vw]">问题2 </div>
-            <div class="text-gray-600">您的学习目的是？</div>
-            <div class="flex w-full justify-center mt-10" style=" height: 30%">
-                <div v-for="(v,i) in question[1]" :key="i" class="flex flex-col items-center justify-center bg-white border border-border-1 border-solid rounded-md mx-5" style="width: 14%; " :style="{ backgroundColor: v.backgroundColor }" @click="toggleImage(1, i)">
-                    <img :src="v.isselect ? v.selectimg : v.img" class="w-1/2">
-                    <div class=" mt-4" :style="{ color: v.isselect ? 'white' : '#667085' }">{{ v.title }}</div>
+        <div v-if="index===2" class="flex flex-col w-full  items-center justify-center mt-[30px] mb-[-100px] " style="height: 80%;"> 
+            <div class="text-[#475467] text-[16px] mb-1">学习目标</div>
+            <div class="my-2 text-[36px]">问题2 </div>
+            <div class="text-[#475467] text-[20px]">您的学习目的是？</div>
+            <div class="flex w-full justify-center mt-[70px]" style=" height: 30%">
+                <div v-for="(v,i) in question[index-1]" :key="i" class="flex flex-col items-center justify-center bg-white  rounded-md mx-4" style="width: 186px; height: 200px; border-radius: 8px 8px 8px 8px;border: 1px 1px 1px 1px;border: 1px solid rgba(208, 213, 221, 1)" :style="{ backgroundColor: v.backgroundColor }"  @click="toggleImage(1, i)">
+                    <img :src="v.isselect ? v.selectimg : v.img" class="w-[74.85px] mt-2">
+                    <div class=" mt-9 text-[16px]" :style="{ color: v.isselect ? 'white' : '#667085' }">{{ v.title }}</div>
                 </div>
             </div>
         </div>
-        <div v-if="index===3" class="flex flex-col w-full  items-center justify-center mb-[-100px] " style="height: 80%;"> 
-            <div class="text-gray-600">学习目标</div>
-            <div class="my-2 text-[2vw]">问题3 </div>
-            <div class="text-gray-600">您是否正在机构补习托福？</div>
-            <div class="flex w-full justify-center mt-10" style=" height: 30%">
-                <div v-for="(v,i) in question[2]" :key="i" class="flex flex-col items-center justify-center bg-white border border-border-1 border-solid rounded-md mx-5" style="width: 14%; " :style="{ backgroundColor: v.backgroundColor }" @click="toggleImage(2, i)">
-                    <img :src="v.isselect ? v.selectimg : v.img" class="w-1/2">
-                    <div class=" mt-4" :style="{ color: v.isselect ? 'white' : '#667085' }">{{ v.title }}</div>
+        <div v-if="index===3" class="flex flex-col w-full  items-center justify-center mt-[30px] mb-[-100px] " style="height: 80%;"> 
+            <div class="text-[#475467] text-[16px] mb-1">学习目标</div>
+            <div class="my-2 text-[36px]">问题3 </div>
+            <div class="text-[#475467] text-[20px]">您是否正在机构补习托福？</div>
+            <div class="flex w-full justify-center mt-[70px]" style=" height: 30%">
+                <div v-for="(v,i) in question[index-1]" :key="i" class="flex flex-col items-center justify-center bg-white  rounded-md mx-4" style="width: 186px; height: 200px; border-radius: 8px 8px 8px 8px;border: 1px 1px 1px 1px;border: 1px solid rgba(208, 213, 221, 1)" :style="{ backgroundColor: v.backgroundColor }"  @click="toggleImage(2, i)">
+                    <img :src="v.isselect ? v.selectimg : v.img" class="w-[74.85px] mt-2">
+                    <div class=" mt-9 text-[16px]" :style="{ color: v.isselect ? 'white' : '#667085' }">{{ v.title }}</div>
                 </div>
             </div>
         </div>
-        <div class="w-full flex flex-col items-center mb-[200px]" >
-            <div class="w-full flex items-center justify-center mb-7">
-                <a-button  class="bg-login-bg shadow-none w-1/22 py-2 h-auto mr-7 " @click="subindex">
-                    <img :src="Left" class="w-full">
+        <div class="w-full flex flex-col items-center mt-[30px]" >
+            <div class="w-full flex  justify-center mb-7">
+                <a-button
+                    class="flex  justify-center items-center shadow-none w-[44px] py-2 h-auto mr-7"
+                    :disabled="index === 1"
+                    :class="{ 'bg-[#EAECF0]': index === 1, 'bg-login-bg': index !== 1 }"
+                    @click="subindex"
+                >
+                    <img :src="index === 1 ? LeftDisable : Left"  class="w-[22px]">
                 </a-button>
-                <a-button type="primary" class="shadow-none w-1/6 px-4 py-2.5 h-auto " @click="addindex">下一步</a-button>
+
+                <a-button type="primary" class="shadow-none w-[293px] px-4 py-2.5 h-[44px] " @click="addindex">下一步</a-button>
             </div>
-                <a-progress :percent="percent" :showInfo="false" strokeColor="#F3B84E" style="width: 22%;" />
+                <a-progress :percent="percent" :showInfo="false" strokeColor="#F3B84E" style="width: 360px" />
                 <div class="text-gray-500">问题{{ index }}/3</div>
         </div>
     </div>
@@ -74,6 +80,7 @@ import TutorSelect from '@/assets/images/tutor-select.svg'
 import Selfstudy from '@/assets/images/selfstudy.svg'
 import SelfstudySelect from '@/assets/images/selfstudy-select.svg'
 import Left from '@/assets/images/left2.svg'
+import LeftDisable from '@/assets/images/left2-disable.svg'
 import Back from '@/assets/images/back.svg'
 import {ref} from 'vue'
 const index = ref(1)
@@ -122,7 +129,7 @@ const toggleImage = (groupIndex: number, itemIndex: number) => {
     group.forEach((item, index) => {
         if (index === itemIndex) {
             item.isselect = !item.isselect;
-            item.backgroundColor = item.isselect ? '#1B8B8C' : 'white';
+            item.backgroundColor = item.isselect ? '#4CAAAF' : 'white';
         } else {
             item.isselect = false;
             item.backgroundColor = 'white';
