@@ -1,12 +1,12 @@
-import { defineStore } from 'pinia'
-import { reactive, ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
-import {dely} from "@/utils/utils"
 import {
-  request_get_result,
   request_computed_score,
-  request_get_repeat_result
+  request_get_repeat_result,
+  request_get_result
 } from '@/service/exam'
+import { dely } from "@/utils/utils"
+import { defineStore } from 'pinia'
+import { computed, reactive, ref } from 'vue'
+import { useRoute } from 'vue-router'
 const exam_range = {
   27: 'A+',
   25: 'A',
@@ -83,6 +83,118 @@ const spoken_result_data = [
     title: '连贯性'
   }
 ]
+const task_quesFooterType = [
+  {
+    type: '内容',
+    id: 'Content',
+    style: {
+      color: '#667085',
+      background: 'rgba(253, 212, 78, 0.3)',
+    } 
+  },
+  {
+    type: '连贯性',
+    id: 'Coherence',
+    style: {
+      color: '#667085',
+      'text-decoration-line': 'underline',
+      'text-decoration-color': '#667085'
+    } 
+  },
+  {
+    type: '语法',
+    id: 'Grammar and Language Use',
+    style: {
+      color: '#667085',
+      'text-decoration-line': 'underline',
+      'text-decoration-style': 'dashed',
+      'text-decoration-color': '#C33473'
+    } 
+  },
+  {
+    type: '优秀用句',
+    id: 'Good',
+    style: {
+      color: '#667085',
+      background: 'rgba(183, 217, 114, 0.3)',
+    } 
+  }
+]
+const i_quesFooterType = [
+  {
+    type: '内容与细节',
+    id: 'Content & Details Given',
+    style: {
+      color: '#667085',
+      background: 'rgba(253, 212, 78, 0.3)',
+    } 
+  },
+  {
+    type: '结构与流畅度',
+    id: 'Structure/Flow',
+    style: {
+      color: '#667085',
+      'text-decoration-line': 'underline',
+      'text-decoration-color': '#667085'
+    } 
+  },
+  {
+    type: '语法',
+    id: 'Grammar',
+    style: {
+      color: '#667085',
+      'text-decoration-line': 'underline',
+      'text-decoration-style': 'dashed',
+      'text-decoration-color': '#C33473'
+    } 
+  },
+  {
+    type: '优秀用句',
+    id: 'Good',
+    style: {
+      color: '#667085',
+      background: 'rgba(183, 217, 114, 0.3)',
+    } 
+  }
+]
+const a_writingTypes = [
+  {
+    type: '贡献度与相关性',
+    id: ["Contribution","Relevance"],
+    style: {
+      color: '#667085',
+      background: 'rgba(253, 212, 78, 0.3)',
+    } 
+  },
+  {
+    type: '结构与流畅度',
+    id: 'Structure/Flow',
+    style: {
+      color: '#667085',
+      'text-decoration-line': 'underline',
+      'text-decoration-color': '#667085'
+    } 
+  },
+  {
+    type: '语法',
+    id: 'Grammar',
+    style: {
+      color: '#667085',
+      'text-decoration-line': 'underline',
+      'text-decoration-style': 'dashed',
+      'text-decoration-color': '#C33473'
+    } 
+  },
+  {
+    type: '优秀用句',
+    id: 'Good',
+    style: {
+      color: '#667085',
+      background: 'rgba(183, 217, 114, 0.3)',
+    } 
+  }
+]
+
 export const useResultStore = defineStore('result', () => {
   const showAnswerHistoryDialog = ref(false)
   const {query} = useRoute()
@@ -233,6 +345,8 @@ export const useResultStore = defineStore('result', () => {
       }
       resultData.allData.push(...footData.map((v,i) => {
         const {model_answer, model_answer_content} = formatAIModel(res.questions_r.questions[i])
+        const content = model_answer_content?.Content.filter(val => Object.keys(val).length > 0);
+        const ques_mark = task_quesFooterType;
         return {
           layout: 'col',
           name: v.title,
@@ -241,10 +355,28 @@ export const useResultStore = defineStore('result', () => {
           // TODO 等接口字段
           aiComment: '', // ai评语
           model_answer,
-          model_answer_content,
+          model_answer_content: {
+            ...model_answer_content,
+            'sent_back': content.map(val => Object.keys(val).reduce((def, key) => {
+              const style = model_answer_content['Sentence Feedback'][key].Type?.reduce((d,v) => {
+                return {
+                  ...ques_mark.find(v1 => v1.id === v || v1.id.includes(v))?.style,
+                };
+              }, {})
+              def[key] = {
+                ...model_answer_content['Sentence Feedback'][key],
+                original: val[key],
+                style,
+                curStyle: {...style},
+                aiStyle: {...style}
+              }
+              return def
+            }, {}))
+          },
           question: res.questions_r.questions[i],
           curIndex: i + 1,
           length: res.questions_r.questions.length,
+          ques_mark: task_quesFooterType,
           list: spoken_result_data.map(val => {
             const sum = Array.isArray(val.key) ? val.key.reduce((_v,_i) => {
               return Number(model_answer_content?.Grades?.[_i]) + _v
@@ -283,15 +415,35 @@ export const useResultStore = defineStore('result', () => {
       }
       resultData.allData.push(...footerData.map((v,i) => {
         const {model_answer, model_answer_content} = formatAIModel(res.questions_r.questions[i])
+        const content = model_answer_content?.Content.filter(val => Object.keys(val).length > 0);
+        const ques_mark = v.title === 'Integrated Writing' ? i_quesFooterType : a_writingTypes;
         return {
           layout: 'col',
           name: v.title,
+          ques_mark,
           mockScore: res.questions_r.questions[i].score,
           mockScoreTotal: res.questions_r.questions[i].max_score,
           // TODO 等接口字段
           aiComment: '', // ai评语
           model_answer,
-          model_answer_content,
+          model_answer_content: {
+            ...model_answer_content,
+            'sent_back': content.map(val => Object.keys(val).reduce((def, key) => {
+              const style = model_answer_content['Sentence Feedback'][key].Type?.reduce((d,v) => {
+                return {
+                  ...ques_mark.find(v1 => v1.id === v || v1.id.includes(v))?.style,
+                };
+              }, {})
+              def[key] = {
+                ...model_answer_content['Sentence Feedback'][key],
+                original: val[key],
+                style,
+                curStyle: {...style},
+                aiStyle: {...style}
+              }
+              return def
+            }, {}))
+          },
           question: res.questions_r.questions[i],
           curIndex: i + 1,
           length: res.questions_r.questions.length,
@@ -405,8 +557,29 @@ export const useResultStore = defineStore('result', () => {
     return resultData.allData[resultData.footerActiveIndex]
   })
 
+  const showHoverMark = (key, index, i, type) => {
+    const data = resultData.allData.slice(1)[i]?.model_answer_content['sent_back']
+    data.map((val) => {
+      Object.keys(val).map((k) => {
+        if(type === 'hover') {
+          if(key === k) {
+            val[k].curStyle = {
+              ...val[key].style,
+              'font-weight': '700',
+            }
+          } else {
+            val[k].curStyle = {}
+          }
+        } else {
+          val[k].curStyle = val[k].style
+        }
+      })
+    })
+  }
+
   return {
     getExamResult,
+    showHoverMark,
     curData,
     resultData,
     setShowAnswerHistoryDialog,

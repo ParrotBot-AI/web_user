@@ -1,5 +1,5 @@
 <template>
-    <div class="flex mt-6">
+    <div class="flex mt-6" :class="props.class">
       <audio 
         controls="false" 
         class="opacity-0 w-0 h-0" 
@@ -18,19 +18,19 @@
         @click="onPlay"
       >
         <CaretRightOutlined 
-          class="text-[24px] text-[#1B8B8C] ml-1.5" 
+          class="text-[24px] text-[#1B8B8C] ml-[4px] mt-0" 
           v-show="paused" 
         />
         <PauseOutlined 
-          class="text-[18px] text-[#1B8B8C] ml-0.5 mt-0.5" 
+          class="text-[18px] text-[#1B8B8C]" 
           v-show="!paused" 
         />
       </span>
-      <div class="mt-3 overflow-hidden w-[300px]">
+      <div class="mt-3 overflow-hidden w-[300px] audio-bar">
         <div class="h-2 bg-[#F2F2F2] rounded-full relative">
           <div class="absolute left-0 top-0 h-full rounded-full bg-[#1B8B8C]" :style="{width: computedWidth}"></div>
         </div>
-        <p class="flex justify-between mt-2">
+        <p class="flex justify-between mt-2 times">
           <span class="text-xs text-[#1B8B8C]">{{ curTimeText }}</span>
           <span class="text-xs text-[#BDBDBD]">{{ durationText }}</span>
         </p>
@@ -39,15 +39,16 @@
 </template>
     
 <script setup lang='ts'>
-import { defineProps, onUnmounted, ref, computed } from 'vue'
+import { formatTime } from "@/utils/dayjs";
 import { CaretRightOutlined, PauseOutlined } from '@ant-design/icons-vue';
-import {formatTime} from "@/utils/dayjs"
+import { computed, defineProps, onUnmounted, ref } from 'vue';
 const paused = ref(false)
 const audioElement = ref<HTMLAudioElement | null>(null)
 const sumDuration = ref(0)
 const curTime = ref(0)
 const props = defineProps<{
     src: string;
+    class?: string
 }>()
 const loadedmetadata = () => {
   sumDuration.value = audioElement.value?.duration || 0

@@ -10,7 +10,7 @@
             type="primary" 
             class="px-4 text-[16px] mx-1.5 py-[18px] flex items-center justify-center"
           >
-            <span><EyeInvisibleOutlined class="mr-1.5"/> 隐藏批注</span>
+            <span @click="toggle_mark"><EyeInvisibleOutlined v-show="showmark" class="mr-1.5" /> <EyeOutlined v-show="!showmark" class="mr-1.5" /> {{ showmark ? '隐藏批注' : '查看批注' }}</span>
           </a-button>
           <a-button 
             type="primary" 
@@ -30,23 +30,69 @@
       </template>
     </b-header>
     <!--中间内容-->
-    <div class="h-[50px] bg-[#F0F7F7] w-full"></div>
+    <div class="h-[50px] bg-[#F0F7F7] w-full pl-[128px] pr-[100px]">
+      <p v-if="query.type === 'spoken'" class="text-[#475467] truncate mt-1"><b>Question: </b>{{ curData?.question?.question_title }}</p>
+    </div>
+    <div 
+      class="w-[80px] h-[80px] bg-white fixed right-[calc(50vw+20px)] z-100 rounded-full flex flex-col justify-center items-center" 
+      :style="{
+        border: '10px solid #F0F7F7',
+        top: query.type === 'spoken' ? `95px` : `82px`
+      }">
+      <span class="text-xs text-[rgba(0,0,0,0.50)]">评分</span>
+      <p class="text-[#475467] text-[14px]"><span class="text-[20px]">{{ curData?.model_answer_content?.Overall }}</span> / {{ curData?.mockScoreTotal }}</p>
+    </div>
+    <div 
+      class="w-[80px] h-[80px] bg-white fixed right-[20px] z-100 rounded-full flex flex-col justify-center items-center" 
+      :style="{
+        border: '10px solid #F0F7F7',
+        top: query.type === 'spoken' ? `95px` : `82px`
+      }">
+      <span class="text-xs text-[rgba(0,0,0,0.50)]">评分</span>
+      <p class="text-[#475467] text-[14px]"><span class="text-[20px]">{{ curData?.model_answer_content?.['Edited Overall'] || curData?.mockScoreTotal }}</span> / {{ curData?.mockScoreTotal }}</p>
+    </div>
     <div class="flex-1 overflow-hidden bg-white w-full flex">
-      <div class="w-1/2 relative flex flex-col" :style="{borderRight: '1px solid #D0D5DD'}">
-        <h2 class="text-[#667085] font-base py-4 pl-[128px] text-base">原版</h2>
-        <div class="overflow-y-auto flex-1 w-full pl-[128px] pr-[68px]">
-          <div v-for="(val,i) in curData?.model_answer_content?.Content" :key="i" class="mb-2 text-base relative">
-            <span class="absolute -left-[34px] top-[3px] text-[#1B8B8C] w-[20px] h-[20px] text-xs border border-[#1B8B8C] border-solid rounded-full flex justify-center items-center">{{ i }}</span>
-            {{ val }}
+      <div class="w-1/2 relative flex flex-col relative" :style="{borderRight: '1px solid #D0D5DD'}">
+        <h2 class="text-[#667085] font-base py-4 pl-[128px] text-base" v-if="query.type === 'writing'">原版</h2>
+        <h2 class="text-[#667085] font-base py-4 pl-[128px] text-base flex items-center overflow-hidden" v-else >
+          <span class="mr-4 mt-4">原版录音与文字转换</span>
+          <BaseResAudio :src="curData?.question.answer_voice_link" class="my-audio"/>
+        </h2>
+        <div class="overflow-y-auto flex-1 w-full pl-[128px] pr-[68px]" ref="all_p">
+          <div v-for="(val,i) in curData?.model_answer_content?.sent_back" :key="i" class="mb-5 text-base relative all-ps">
+           
+            <p 
+              v-for="(v,k) in val" :key="k" class="relative text-base" 
+              :style="showmark ? v.curStyle : {}"
+              @mouseover="() => onShowCurMark(k, i, 'hover')"
+              @mouseleave="() => onShowCurMark(k, i, 'leave')"
+            >
+              <span 
+                class="absolute top-[2px] -ml-[34px] text-[#1B8B8C] w-[20px] h-[20px] text-xs border border-[#1B8B8C] border-solid rounded-full flex justify-center items-center"
+              >{{ k }}</span>
+              <a-tooltip 
+                placement="bottomRight" 
+                :overlayInnerStyle="{marginTop:'-10px', background: '#D0F0E6', color: '#0A3F64',fontSize: '12px',borderRadius: '15px',borderTopLeftRadius: '0',border: '1px solid #0A3F64', marginTop: '-20px', marginLeft: '3px', padding: '10px'}"
+              >
+                  <template #title>
+                    <div>{{ v.Feedback }}</div>
+                  </template>
+                  {{ v.original }}
+              </a-tooltip>
+            </p>
           </div>
         </div>
       </div>
-      <div class="w-1/2">
+      <div class="w-1/2 relative">
         <a-tabs v-model:activeKey="curAiIndex" class="my-table">
           <a-tab-pane :key="0" tab="AI 批改">
-            <div v-for="(val,i) in curData?.model_answer_content?.['Sentence Feedback']" :key="i" class="mb-2 text-base relative">
-              <span class="absolute -left-[34px] top-[3px] text-[#1B8B8C] w-[20px] h-[20px] text-xs border border-[#1B8B8C] border-solid rounded-full flex justify-center items-center">{{ i }}</span>
-              {{ val?.['Edited'] }}
+            <div v-for="(val,i) in curData?.model_answer_content?.sent_back" :key="i" class="text-base relative mb-5">
+              <p v-for="(v,k) in val" :key="k" class="relative text-base" :style="showmark ? v.curStyle : {}">
+                <span 
+                  class="absolute top-[2px] -ml-[34px] text-[#1B8B8C] w-[20px] h-[20px] text-xs border border-[#1B8B8C] border-solid rounded-full flex justify-center items-center"
+                >{{ k }}</span>
+                {{ v.Edited }}
+              </p>
             </div>
           </a-tab-pane>
           <a-tab-pane :key="1" tab="AI 点评">
@@ -69,7 +115,7 @@
       <div>
         <h2 class="text-[#667085] text-base pb-2">问题标注</h2>
         <div class="flex">
-          <div v-for="val in types" :key="val.id" class="flex text-base">
+          <div v-for="val in curData?.ques_mark" :key="val.id" class="flex text-base">
             <p :style="val.style">Aa</p>
             <b class="mx-2 font-normal text-[#667085]">{{ val.type }}</b>
           </div>
@@ -93,9 +139,14 @@
 <script setup lang="ts">
 import resultIcon from "@/assets/images/result-icon.png";
 import FloatAI from "@/components/AI/float.vue";
-import { AuditOutlined, EyeInvisibleOutlined, RightOutlined } from '@ant-design/icons-vue';
+import BaseResAudio from "@/components/BaseResAudio/index.vue";
+import { useResultStore } from "@/stores/result";
+import { AuditOutlined, EyeInvisibleOutlined, EyeOutlined, RightOutlined } from '@ant-design/icons-vue';
 import { computed, defineProps, ref } from "vue";
 import { useRoute } from "vue-router";
+const showmark = ref(true)
+const resultStore = useResultStore()
+const all_p = ref(null)
 const props = defineProps<{
   data: any[]
   onViewOrigin: (curdata:any) => void
@@ -105,86 +156,16 @@ const curIndex = ref(0)
 const curAiIndex = ref(0)
 const {query} = useRoute()
 const curData = computed(() => {
-  console.log(props.data[curIndex.value])
   return props.data[curIndex.value]
 })
-const writingTypes = [
-  {
-    type: '内容与细节',
-    id: 1,
-    style: {
-      color: '#667085',
-      background: '#FDD44E',
-    } 
-  },
-  {
-    type: '结构与流畅度',
-    id: 2,
-    style: {
-      color: '#667085',
-      'text-decoration-line': 'underline',
-      'text-decoration-color': '#667085'
-    } 
-  },
-  {
-    type: '语法',
-    id: 3,
-    style: {
-      color: '#667085',
-      'text-decoration-line': 'underline',
-      'text-decoration-style': 'dashed',
-      'text-decoration-color': '#C33473'
-    } 
-  },
-  {
-    type: '优秀用句',
-    id: 4,
-    style: {
-      color: '#667085',
-      background: '#B7D972',
-    } 
-  }
-]
-const spokenTypes = [
-  {
-    type: '内容',
-    id: 1,
-    style: {
-      color: '#667085',
-      background: '#FDD44E',
-    } 
-  },
-  {
-    type: '连贯性',
-    id: 2,
-    style: {
-      color: '#667085',
-      'text-decoration-line': 'underline',
-      'text-decoration-color': '#667085'
-    } 
-  },
-  {
-    type: '语法',
-    id: 3,
-    style: {
-      color: '#667085',
-      'text-decoration-line': 'underline',
-      'text-decoration-style': 'dashed',
-      'text-decoration-color': '#C33473'
-    } 
-  },
-  {
-    type: '优秀用句',
-    id: 4,
-    style: {
-      color: '#667085',
-      background: '#B7D972',
-    } 
-  }
-]
-const types = computed(() => {
-  return query.type === 'writing' ? writingTypes : spokenTypes
-})
+
+const toggle_mark = () => {
+  showmark.value = !showmark.value
+}
+const onShowCurMark = (key, index, type) => {
+  if(!showmark.value) return
+  resultStore.showHoverMark(key, index, curIndex.value, type)
+}
 </script>
 <style scoped>
   .my-table {
@@ -208,5 +189,26 @@ const types = computed(() => {
     overflow-y: auto;
     height: 100%;
     padding: 0 80px;
+  }
+  :global(.ant-tabs-top >.ant-tabs-nav::before) {
+    display: none;
+  }
+  :global(.my-audio .audio-bar){
+    width: 190px;
+    position: relative;
+    padding-right: 45px;
+  }
+  :global(.my-audio .times>span:nth-child(1)){
+    display: none;
+  }
+  :global(.my-audio .times>span:nth-child(2)){
+    position: absolute;
+    top: -3px;
+    right: 0;
+    font-size: 12px;
+    font-weight: normal;
+  }
+  :global(.ant-tooltip-arrow) {
+    display: none!important;
   }
 </style>
