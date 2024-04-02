@@ -57,13 +57,13 @@
 </a-layout>
 </template>
 <script setup lang="ts">
-import { reactive, watchEffect, ref } from "vue"
+import { useReadExamStore } from '@/stores/readExam'
+import { reactive, ref, watchEffect } from "vue"
+import ExamLastMcItem from './ExamLastMcItem.vue'
+import ExamMCItem from './ExamMcItem.vue'
+import ExamSCItem from './ExamSCItem.vue'
 import type { HeaderBtnProps } from "./HeaderBtn.vue"
 import HeaderBtn from "./HeaderBtn.vue"
-import ExamSCItem from './ExamSCItem.vue'
-import ExamMCItem from './ExamMcItem.vue'
-import ExamLastMcItem from './ExamLastMcItem.vue'
-import { useReadExamStore } from '@/stores/readExam'
 const examStore = useReadExamStore()
 const contentDiv = ref<HTMLDivElement | null>(null)
 const HeaderBtnsConfig = reactive<{

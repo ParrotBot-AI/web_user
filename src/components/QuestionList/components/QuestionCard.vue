@@ -105,17 +105,18 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, ref, computed } from "vue"
-import type {EXAN_START} from "@/service/exam"
-import time from '@/assets/images/time.svg'
-import practice from '@/assets/images/practice.svg'
-import examEdit from '@/assets/images/exam-edit.svg'
 import edit from '@/assets/images/edit.svg'
-import { useExamStore } from '@/stores/exam'
-import { useRoute, useRouter } from "vue-router"
-import { message } from "ant-design-vue"
-import { setWithExpiry } from "@/utils/storage"
+import examEdit from '@/assets/images/exam-edit.svg'
 import hint from "@/assets/images/hint.png"
+import practice from '@/assets/images/practice.svg'
+import time from '@/assets/images/time.svg'
+import type { EXAN_START } from "@/service/exam"
+import { useExamStore } from '@/stores/exam'
+import { setWithExpiry } from "@/utils/storage"
+import { getRandomSubarray } from "@/utils/utils"
+import { message } from "ant-design-vue"
+import { computed, defineProps, ref } from "vue"
+import { useRoute, useRouter } from "vue-router"
 // 显示按钮
 const isShowBtn = ref(true)
 const props = defineProps<{
@@ -181,12 +182,13 @@ const onSelectQuestion = async (v:EXAN_START['q_type']) => {
       curIndex: 0,
       quesid: props.children.map(val => val.questions)
     })
-    await examStore.startExam(type.value, props.children[0].questions, res.sheet_id)
+    await examStore.startExam(type.value, getRandomSubarray(props.children[0].questions, 2), res.sheet_id)
     $router.push({ 
       name: 'readExam',
       query: {
         type: 'mixedExam',
         mid: res.sheet_id,
+        miid: props.id,
         name: props.resource_name,
         id: examStore.examing_data.sheet_id
       }

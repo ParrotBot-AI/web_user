@@ -75,8 +75,8 @@
       </a-card>
       <a-card class="text-gray-500 text-2xl font-bold col-start-6 col-span-3 row-span-3 shadow-lg">
         {{ $t('单词学习进度') }}
-        <div class="text-green-1 mt-[20px] text-[16px]">{{ 'lv' + wordStore.vocabs_statics_data.status_book?.current_level }} {{ (wordStore.vocabs_statics_data.status_book?.level_status /  wordStore.vocabs_statics_data.status_book?.level_total * 100).toFixed(1) }}% </div>
-        <a-progress strokeColor="#1B8B8C" :percent="30" :showInfo="false"/>
+        <div class="text-green-1 mt-[20px] text-[16px]">{{ 'lv' + wordStore.vocabs_statics_data.status_book?.current_level }} {{ num }} %</div>
+        <a-progress strokeColor="#1B8B8C" :percent="num" :showInfo="false"/>
         <div class="flex w-full mt-[-10px]" >
           <div class="text-sm font-normal">{{ wordStore.vocabs_statics_data.status_book?.level_status }}</div>
           <div class="text-sm font-normal ml-auto" >{{ wordStore.vocabs_statics_data.status_book?.level_total }}</div>
@@ -155,19 +155,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watchEffect, computed} from 'vue'
-import * as echarts from 'echarts'
-import up from '@/assets/images/up.svg'
+import sum from "@/assets/images/1.jpg"
 import down from '@/assets/images/down.svg'
-import WordTest from '@/assets/images/word-test.svg'
+import up from '@/assets/images/up.svg'
+import WordIcon1 from "@/assets/images/word-icon-1.png"
+import WordIcon from "@/assets/images/word-icon.png"
+import Lock from '@/assets/images/word-lock.svg'
 import NewWord from '@/assets/images/word-new.svg'
 import OldWord from '@/assets/images/word-old.svg'
+import WordTest from '@/assets/images/word-test.svg'
 import Tick from '@/assets/images/word-tick.svg'
-import sum from "@/assets/images/1.jpg"
-import Lock from '@/assets/images/word-lock.svg'
-import WordIcon from "@/assets/images/word-icon.png"
-import WordIcon1 from "@/assets/images/word-icon-1.png"
 import { useWordStore } from '@/stores/word'
+import * as echarts from 'echarts'
+import { computed, onMounted, ref, watchEffect } from 'vue'
 const wordStore = useWordStore()
 const myChart = ref()
 const jumpDialog = ref(false)
@@ -183,6 +183,9 @@ const isshowJump = computed(() => {
 })
 const dislogOpen = computed(() => {
   return wordStore.vocabs_statics_data.is_skip_remind === 1 && !wordStore.vocabs_statics_data.refuse_skip
+})
+const num = computed(() => {
+  return (wordStore.vocabs_statics_data.status_book?.level_status /  wordStore.vocabs_statics_data.status_book?.level_total * 100).toFixed(1) 
 })
 const formatData = (key: string) => {
   const series = wordStore.vocabs_statics_data?.series

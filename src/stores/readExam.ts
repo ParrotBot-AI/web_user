@@ -1,20 +1,21 @@
-import { defineStore } from 'pinia'
-import { reactive, computed, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { getWithExpiry } from "@/utils/storage"
 import {
   request_getExam,
-  request_saveAnswer,
   request_getExamStutas,
+  request_saveAnswer,
   request_submitExam,
 } from '@/service/exam'
+import { useExamStore } from '@/stores/exam'
+import { getWithExpiry } from '@/utils/storage'
+import { defineStore } from 'pinia'
+import { computed, reactive, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 export const useReadExamStore = defineStore('readExam', () => {
   const showProcessDialog = ref(false)
   const showAnswerHistoryDialog = ref(false)
   const {query, meta} = useRoute()
   const $router = useRouter()
-
+  const examStore = useExamStore()
 
   const questionTitle = ref('')
   const processData = reactive<any[]>([])
@@ -96,7 +97,7 @@ export const useReadExamStore = defineStore('readExam', () => {
 
   const curQuestion = computed(() => {
     if(!questionData.value?.formatQuestion) return {}
-    questionData.value.formatQuestion[curQuestionIndex.value].viewText_flag = questionData.value.formatQuestion[curQuestionIndex.value].viewText_open 
+    questionData.value.formatQuestion[curQuestionIndex.value].viewText_flag = questionData.value.formatQuestion[curQuestionIndex.value]?.viewText_open 
     return questionData.value?.formatQuestion?.[curQuestionIndex.value]
   })
 
@@ -122,10 +123,20 @@ export const useReadExamStore = defineStore('readExam', () => {
    */
   const requestSubmitExam = async () => {
     await request_submitExam(query?.id)
-    if(query?.type === 'mixed' && query?.mid){
-      const mixdata = getWithExpiry(`mixedExam-${query?.mid}`)
-      console.log(mixdata)
-      // $router.push(`/result/${query?.id}?type=${query?.type}&mid=${query?.mid}`)
+    if(query?.type === 'mixedExam' && query?.mid && query?.miid){
+      const mixdata = getWithExpiry(`mixedExam-${query?.miid}`)
+      console.log('mixdata:::', mixdata)
+      await examStore.startExam('mock', mixdata?.quesid[1], mixdata?.father_sheet)
+      console.log(examStore.examing_data.sheet_id)
+      $router.push({
+        name: 'spokenExam',
+        query: {
+          type: 'mixedExam',
+          mid: mixdata?.father_sheet,
+          name: mixdata.resource_name,
+          id: examStore.examing_data.sheet_id
+        }
+      })
       return
     }
     $router.push(`/result/${query?.id}?type=${meta?.parent}`)

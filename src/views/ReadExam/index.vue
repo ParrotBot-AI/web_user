@@ -13,15 +13,15 @@
   </template>
 </template>
 <script setup lang="ts">
-import { useRoute } from "vue-router"
-import WebSocketClient from '@/utils/ws'
-import QuesChilren from "./components/QuesChildren.vue"
 import type { USERINFO } from "@/service/user"
-import GuideChildren from "./components/GuideChildren.vue"
-import { onMounted, ref, onUnmounted } from 'vue'
 import { useReadExamStore } from '@/stores/readExam'
 import { getWithExpiry } from '@/utils/storage'
+import WebSocketClient from '@/utils/ws'
+import { onMounted, onUnmounted, ref } from 'vue'
+import { useRoute } from "vue-router"
+import GuideChildren from "./components/GuideChildren.vue"
 import ProcessDialog from './components/ProcessDialog.vue'
+import QuesChilren from "./components/QuesChildren.vue"
 const { access } = getWithExpiry<USERINFO>('userinfo')!
 const socket = ref<WebSocketClient | null>(null)
 const loading = ref(true)
@@ -32,7 +32,7 @@ const guideContinueClick = () => {
 }
 onMounted(async () => {
   await examStore.getExamData(query.id as string)
-  socket.value = new WebSocketClient('ws://' + import.meta.env.VITE_WS_BASEURL + 'ws/question/' + access + '/');
+  // socket.value = new WebSocketClient('ws://' + import.meta.env.VITE_WS_BASEURL + 'ws/question/' + access + '/');
   loading.value = false
 })
 

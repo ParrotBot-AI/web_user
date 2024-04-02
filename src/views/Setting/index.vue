@@ -205,6 +205,7 @@
                 <template #suffix>
                   <span
                     class="text px-2 cursor-pointer font-bold text-green-1"
+                    @click="toLink"
                   >
                 查看
                   </span>
@@ -214,6 +215,7 @@
                 <template #suffix>
                   <span
                     class="text px-2 cursor-pointer font-bold text-green-1"
+                    @click="toLink"
                   >
                 查看
                   </span>
@@ -234,20 +236,17 @@
 
 <script setup lang="ts">
 
-import { useIndexStore } from '@/stores/index'
-import  Ellipse  from  '@/assets/images/Ellipse.png';
-import  About  from  '@/assets/images/about.svg';
-import {reactive, ref} from "vue"
-import { useUserStore } from "@/stores/user"
-import { mobileRegex } from "@/utils/utils"
-import { ArrowLeftOutlined } from '@ant-design/icons-vue';
-import type { RESRPASSWOED } from "@/service/user"
-import type { FormInstance } from 'ant-design-vue'
-import {useGetCode} from "@/utils/useGetCode"
-import erweima from '@/assets/images/erweima.jpg'
+import About from '@/assets/images/about.svg';
+import erweima from '@/assets/images/erweima.jpg';
+import type { RESRPASSWOED } from "@/service/user";
+import { useIndexStore } from '@/stores/index';
+import { useUserStore } from "@/stores/user";
+import { useGetCode } from "@/utils/useGetCode";
+import { mobileRegex } from "@/utils/utils";
+import type { FormInstance } from 'ant-design-vue';
+import { reactive, ref } from "vue";
 
 const indexStore = useIndexStore()
-console.log(indexStore.userInfo)
 const isopen_web = ref(false)
 const isopen_messages = ref(false)
 const revise_password = ref(false)

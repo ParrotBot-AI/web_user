@@ -49,3 +49,12 @@ export function dely (time: number) {
     }, time)
   })
 }
+
+export function getRandomSubarray(arr, length) {
+  if (length > arr.length) {
+    throw new Error("Length cannot be greater than the array length");
+  }
+
+  const shuffled = arr.slice().sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, length);
+}
