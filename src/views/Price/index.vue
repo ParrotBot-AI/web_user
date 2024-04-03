@@ -47,9 +47,11 @@
             <img v-if="text === 'Contain' && index !== 7" :src="Contain" class="w-[25px] "  alt="Contain" />
             <img v-else-if="index === 7" :src="Contain" class="w-[25px] pt-[16px] "  alt="Contain" />
             <span v-else >{{ text }}</span>
-            <div v-if="index === 0" class="text-[17px] font-bold text-green-1" style="color:  rgba(36, 135, 189, 1);">网课保分版会员
-              <div class="text-black-1 text-[30px] pt-[20px]">1288/套
-                <div class="text-[12px] font-normal text-gray-500 pt-[20px]">在练习版会员的基础上，您将获得网课及每日智能任务功能。我们将附赠您12个月会员及终身留学顾问我们承诺：每日平均学习30分钟，3个月不达100分全额退款。1年内托福出分110+ 获得全额奖学金。
+            <div v-if="index === 0" class="text-[17px] font-bold text-green-1" style="color:  rgba(36, 135, 189, 1);">自适应学习版
+              <div class="text-black-1 text-[30px] pt-[20px]">即将推出
+                <div class="text-[12px] font-normal text-gray-500 pt-[20px]">
+                  在练习版会员的基础上，您将获得网课及每日智能任务功能。<br />
+                  我们将附赠您12个月会员及终身留学顾问。
                 </div>
               </div>
             </div>
@@ -70,8 +72,8 @@
 
 <script setup lang="ts">
 import Contain from '@/assets/images/contain.svg'
-import Horn from '@/assets/images/horn.svg'
 import erweima from '@/assets/images/erweima.jpg'
+import Horn from '@/assets/images/horn.svg'
 import { request_menu_ad } from "@/service/user"
 import { ref } from "vue"
 const adUrl = ref('')
@@ -105,7 +107,7 @@ const columns = [
 
 const data = [
   { col1: '套餐选择', col2: '', col3: '' , col4:''},
-  { col1: '每日智能任务', col2: '无', col3: '简易版', col4: '保分版' },
+  { col1: '每日智能任务', col2: '无', col3: '每日30题', col4: '自适应版' },
   { col1: '口语、写作实时批改', col2: '每日1题', col3: '每日30题', col4: '每日30题' },
   { col1: '7*24实时答疑', col2: '无', col3: 'Contain', col4: 'Contain' },
   { col1: '单词无痛背诵', col2: '无', col3: 'Contain', col4: 'Contain' },

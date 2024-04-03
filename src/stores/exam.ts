@@ -1,27 +1,30 @@
-import type { EXAN_START } from "@/service/exam"
+import type { ANSWER_STATUS, EXAN_START } from "@/service/exam"
+import {
+  request_computed_score,
+  request_getExam,
+  request_getExamResource,
+  request_getExamStutas,
+  request_get_past_result,
+  request_get_result,
+  request_saveAnswer,
+  request_startExam,
+  request_start_mixed_exam,
+  request_submitExam
+} from '@/service/exam'
+import { useResultStore } from "@/stores/result"
 import { getWithExpiry } from '@/utils/storage'
 import { defineStore } from 'pinia'
 import { computed, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useIndexStore } from './index'
 
-import type { ANSWER_STATUS } from "@/service/exam"
-import {
-  request_getExam,
-  request_getExamResource,
-  request_getExamStutas,
-  request_get_past_result,
-  request_saveAnswer,
-  request_startExam,
-  request_start_mixed_exam,
-  request_submitExam,
-} from '@/service/exam'
-
 export const useExamStore = defineStore('exam', () => {
   const showProcessDialog = ref(false)
   const showAnswerHistoryDialog = ref(false)
   const $route = useRoute()
   const $router = useRouter()
+  const resultStore = useResultStore()
+
   // 题库列表
   const exam_data = reactive<{
     allList: any[];
@@ -301,6 +304,8 @@ export const useExamStore = defineStore('exam', () => {
     const mixdata = getWithExpiry(`mixedExam-${query?.mid}`)
     if(query?.type === 'mixedExam' && query?.mid){
       if(name === 'hearingExam'){
+        await request_computed_score(sheet_id)
+        await request_get_result(sheet_id)
         await startExam('mock_exam', mixdata?.quesid[2], mixdata?.father_sheet)
         $router.push({
           name: 'spokenExam',
@@ -312,6 +317,8 @@ export const useExamStore = defineStore('exam', () => {
           }
         })
       } else if(name === 'spokenExam'){
+        await request_computed_score(sheet_id)
+        await request_get_result(sheet_id)
         await startExam('mock_exam', mixdata?.quesid[3], mixdata?.father_sheet)
         $router.push({
           name: 'writingExam',
@@ -323,6 +330,8 @@ export const useExamStore = defineStore('exam', () => {
           }
         })
       } else if(name === 'writingExam'){
+        await request_computed_score(sheet_id)
+        await request_get_result(sheet_id)
         $router.push(`/result/${mixdata?.father_sheet}?type=mock` )
       }
       return

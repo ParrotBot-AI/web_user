@@ -1,10 +1,13 @@
 import {
+  request_computed_score,
   request_getExam,
   request_getExamStutas,
+  request_get_result,
   request_saveAnswer,
-  request_submitExam,
+  request_submitExam
 } from '@/service/exam'
 import { useExamStore } from '@/stores/exam'
+import { useResultStore } from "@/stores/result"
 import { getWithExpiry } from '@/utils/storage'
 import { defineStore } from 'pinia'
 import { computed, reactive, ref } from 'vue'
@@ -16,7 +19,7 @@ export const useReadExamStore = defineStore('readExam', () => {
   const {query, meta} = useRoute()
   const $router = useRouter()
   const examStore = useExamStore()
-
+  const resultStore = useResultStore()
   const questionTitle = ref('')
   const processData = reactive<any[]>([])
   const curQuestionIndex = ref(0)
@@ -125,6 +128,8 @@ export const useReadExamStore = defineStore('readExam', () => {
     await request_submitExam(query?.id)
     if(query?.type === 'mixedExam' && query?.mid && query?.mid){
       const mixdata = getWithExpiry(`mixedExam-${query?.mid}`)
+      await request_computed_score(query?.id)
+      await request_get_result(query?.id)
       await examStore.startExam('mock_exam', mixdata?.quesid[1], mixdata?.father_sheet)
       $router.push({
         name: 'hearingExam',
