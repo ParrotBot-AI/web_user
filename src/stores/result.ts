@@ -352,8 +352,7 @@ export const useResultStore = defineStore('result', () => {
           name: v.title,
           mockScore: res.questions_r.questions[i].score,
           mockScoreTotal: res.questions_r.questions[i].max_score,
-          // TODO 等接口字段
-          aiComment: '', // ai评语
+          aiComment: model_answer_content?.format_G_F?.General,
           model_answer,
           model_answer_content: {
             ...model_answer_content,
@@ -417,14 +416,14 @@ export const useResultStore = defineStore('result', () => {
         const {model_answer, model_answer_content} = formatAIModel(res.questions_r.questions[i])
         const content = model_answer_content?.Content.filter(val => Object.keys(val).length > 0);
         const ques_mark = v.title === 'Integrated Writing' ? i_quesFooterType : a_writingTypes;
+        console.log(model_answer_content)
         return {
           layout: 'col',
           name: v.title,
           ques_mark,
           mockScore: res.questions_r.questions[i].score,
           mockScoreTotal: res.questions_r.questions[i].max_score,
-          // TODO 等接口字段
-          aiComment: '', // ai评语
+          aiComment: model_answer_content?.format_G_F?.General,
           model_answer,
           model_answer_content: {
             ...model_answer_content,
@@ -547,6 +546,10 @@ export const useResultStore = defineStore('result', () => {
     await request_computed_score(sheet_id)
     const res = await request_get_result(sheet_id)
     if(res.score !== null){
+      if(query.type === 'mock'){
+        console.log('综合模考:::', res)
+        return
+      }
       setResultData(res)
     } else {
       startLoopRequsetResult(sheet_id)

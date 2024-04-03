@@ -48,7 +48,6 @@ const ComponentMap = {
   'spoken': SpokenReview
 }
 const answerData = computed(() => {
-  console.log(resultStore.resultData.format_question)
   return resultStore.resultData.format_question[step.value]
 })
 

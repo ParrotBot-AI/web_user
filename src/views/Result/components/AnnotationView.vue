@@ -59,16 +59,16 @@
           <BaseResAudio :src="curData?.question.answer_voice_link" class="my-audio"/>
         </h2>
         <div class="overflow-y-auto flex-1 w-full pl-[128px] pr-[68px]" ref="all_p">
-          <div v-for="(val,i) in curData?.model_answer_content?.sent_back" :key="i" class="mb-5 text-base relative all-ps">
-           
+          <div v-for="(val,i) in curData?.model_answer_content?.sent_back" :key="i" class="mb-4 text-base relative all-ps">
             <p 
-              v-for="(v,k) in val" :key="k" class="relative text-base" 
-              :style="showmark ? v.curStyle : {}"
+              v-for="(v,k) in val" :key="k" class="relative text-base inline" 
               @mouseover="() => onShowCurMark(k, i, 'hover')"
               @mouseleave="() => onShowCurMark(k, i, 'leave')"
             >
               <span 
-                class="absolute top-[2px] -ml-[34px] text-[#1B8B8C] w-[20px] h-[20px] text-xs border border-[#1B8B8C] border-solid rounded-full flex justify-center items-center"
+                class="bg-[#1B8B8C] text-[#fff] w-[20px] h-[20px] text-xs border border-[#1B8B8C] border-solid rounded-full inline-block text-center mx-1"
+                :style="{lineHeight: '20px'}"
+                v-show="showmark"
               >{{ k }}</span>
               <a-tooltip 
                 placement="bottomRight" 
@@ -77,7 +77,7 @@
                   <template #title>
                     <div>{{ v.Feedback }}</div>
                   </template>
-                  {{ v.original }}
+                  <span :style="showmark ? v.curStyle : {}">{{ v.original }}</span>
               </a-tooltip>
             </p>
           </div>
@@ -87,11 +87,13 @@
         <a-tabs v-model:activeKey="curAiIndex" class="my-table">
           <a-tab-pane :key="0" tab="AI 批改">
             <div v-for="(val,i) in curData?.model_answer_content?.sent_back" :key="i" class="text-base relative mb-5">
-              <p v-for="(v,k) in val" :key="k" class="relative text-base" :style="showmark ? v.curStyle : {}">
+              <p v-for="(v,k) in val" :key="k" class="relative text-base inline">
                 <span 
-                  class="absolute top-[2px] -ml-[34px] text-[#1B8B8C] w-[20px] h-[20px] text-xs border border-[#1B8B8C] border-solid rounded-full flex justify-center items-center"
+                  :style="{lineHeight: '20px'}"
+                  v-show="showmark"
+                  class="text-[#fff] bg-[#1B8B8C] w-[20px] h-[20px] text-xs border border-[#1B8B8C] border-solid rounded-full inline-block text-center mx-1"
                 >{{ k }}</span>
-                {{ v.Edited }}
+                <span :style="showmark ? v.curStyle : {}">{{ v.Edited === 'No Change' ? v.original : v.Edited }}</span>
               </p>
             </div>
           </a-tab-pane>
