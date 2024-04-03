@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full overflow-hidden fixed top-0 left-0 z-30 flex flex-col bg-white">
-    <b-header :title="props.data?.name">
+    <b-header :title="props.data?.name" :onClickBack="props.onBack">
       <template #right>
         <div class="flex">
           <a-button 
@@ -49,6 +49,7 @@ import { AuditOutlined } from '@ant-design/icons-vue';
 import { defineProps } from "vue";
 const props = defineProps<{
   data: any[]
+  onBack: () => void
   onExit: () => void
 }>()
 console.log(props.data)

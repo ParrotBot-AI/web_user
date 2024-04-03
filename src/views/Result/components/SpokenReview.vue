@@ -4,6 +4,7 @@
     v-if="OriginView.open"
     :data="OriginView.data"
     :onExit="onExit"
+    :onBack="onBack"
   />
   <!--批注-->
   <AnnotationView 

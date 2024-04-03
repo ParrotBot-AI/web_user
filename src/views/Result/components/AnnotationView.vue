@@ -1,6 +1,6 @@
 <template>
   <div class="flex-1 w-full h-full overflow-hidden relative z-20 flex flex-col">
-    <b-header :title="curData.name">
+    <b-header :title="curData.name" :onClickBack="props.onBack">
       <template #center>
         <img :src="resultIcon" alt="logo" width="184px" class="-top-2 fixed left-1/2 -translate-x-1/2"/>
       </template>

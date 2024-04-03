@@ -183,7 +183,7 @@ const onSelectQuestion = async (v:EXAN_START['q_type']) => {
       quesid: props.children.map(val => val.questions)
     })
     await examStore.startExam(type.value, getRandomSubarray(props.children[0].questions, 2), res.sheet_id)
-    $router.push({ 
+    await $router.push({ 
       name: 'readExam',
       query: {
         type: 'mixedExam',
@@ -201,12 +201,11 @@ const onSelectQuestion = async (v:EXAN_START['q_type']) => {
     checkboxId.value = props.section.map(val => val.questions[0].question_id)
     type.value = v
     await examStore.startExam(type.value,checkboxId.value)
-    $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id, name: props.resource_name.split('-')[0] } })
+    await $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id, name: props.resource_name.split('-')[0] } })
   } else {
     isShowBtn.value = !isShowBtn.value
     type.value = v
   }
-  
 }
 
 // 跳转到开始考试

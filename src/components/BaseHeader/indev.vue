@@ -21,6 +21,5 @@ const props = defineProps<{
 const $router = useRouter()
 const onClickBack = () => {
   props.onClickBack ? props.onClickBack() : $router.back()
-  window.location.reload()
 }
 </script>

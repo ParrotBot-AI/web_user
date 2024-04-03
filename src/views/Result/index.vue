@@ -3,7 +3,7 @@
   <template v-else>
     <AnswerReview v-if="resultStore.showAnswerHistoryDialog" />
     <a-layout class="w-full h-full flex flex-col relative z-40">
-      <b-header :title="resultStore.resultData.title">
+      <b-header :title="resultStore.resultData.title" :onClickBack="onClickBack">
         <template #right>
           <div class="flex">
             <a-button 
@@ -43,19 +43,21 @@
   </template>
 </template>
 <script setup lang="ts">
-import { useRoute, useRouter } from "vue-router"
-import { RightOutlined, LeftOutlined } from '@ant-design/icons-vue';
-import Card from './components/Card.vue'
-import { watchEffect } from "vue"
-import AnswerReview from './components/AnswerReview.vue'
-import { useResultStore } from "@/stores/result"
+import { useResultStore } from "@/stores/result";
+import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
+import { watchEffect } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import AnswerReview from './components/AnswerReview.vue';
+import Card from './components/Card.vue';
 const resultStore = useResultStore()
 const $route = useRoute()
 const $router = useRouter()
 watchEffect(async () => {
   await resultStore.getExamResult($route.params.sheetId as string)
 })
-
+const onClickBack = () => {
+  $router.push('/'+$route.query.type)
+}
 const onBackClick = () => {
   $router.replace('/')
 }

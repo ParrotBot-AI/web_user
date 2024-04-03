@@ -1,6 +1,6 @@
 <template>
   <div class="h-full w-full flex flex-col">
-    <b-header title="单词练习">
+    <b-header title="单词练习" :onClickBack="() => router.push('/wordRecite')">
       <template #right>
         <div class="flex items-center">
           <p class="text-xs text-[#1B8B8C] mr-3 flex">

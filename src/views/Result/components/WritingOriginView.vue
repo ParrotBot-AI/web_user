@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full overflow-hidden fixed top-0 left-0 z-30 flex flex-col bg-white">
-    <b-header :title="props.data?.name">
+    <b-header :title="props.data?.name" :onClickBack="props.onBack">
       <template #right>
         <div class="flex">
           <a-button 
@@ -77,15 +77,16 @@
   </div>
 </template>
 <script setup lang="ts">
-import { AuditOutlined } from '@ant-design/icons-vue'
-import BAudio from "@/components/BaseAudio/index.vue"
-import { defineProps, computed } from "vue"
-import Avatar from "@/views/WritingExam/components/Avatar.vue"
-import Man from '@/assets/images/man.jpg'
 import Man1 from '@/assets/images/man-1.jpg'
 import Man2 from '@/assets/images/man-2.jpg'
+import Man from '@/assets/images/man.jpg'
+import BAudio from "@/components/BaseAudio/index.vue"
+import Avatar from "@/views/WritingExam/components/Avatar.vue"
+import { AuditOutlined } from '@ant-design/icons-vue'
+import { computed, defineProps } from "vue"
 const props = defineProps<{
   data: any[]
+  onBack: () => void
   onExit: () => void
 }>()
 console.log(props.data)

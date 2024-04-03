@@ -528,6 +528,60 @@ export const useResultStore = defineStore('result', () => {
     resultData.level = computedLevel(res.type,res.score)
     resultData.loading = false
   }
+
+  const setMixedResultData = (res: any) => {
+    const mixFooterData = [
+      {
+        title: '阅读',
+        id: 'reading',
+        layout: 'row',
+      },
+      {
+        title: '听力',
+        id: 'hearing',
+        layout: 'col',
+      },
+      {
+        title: '口语',
+        id: 'spoken',
+        layout: 'col',
+      },
+      {
+        title: '写作',
+        id: 'writing',
+        layout: 'table',
+      },
+    ]
+    console.log(res)
+    resultData.questions_r = []
+    resultData.score_d = []
+    resultData.format_question = []
+    footerData.length = 0
+    footerData[0] = {
+      title: '模考',
+      id: 'all',
+    };
+    footerData.push(...mixFooterData)
+    resultData.allData[0] = {
+      layout: 'col',
+      name: '总分',
+      mockScore: res.score,
+      mockScoreTotal: 120,
+      aiComment: '', // ai评语
+      list: mixFooterData.map((val,i) => ({
+        title: val.title,
+        isComputed: true,
+        total: res.detail[i].max_score,
+        count: res.detail[i].score,
+      }))
+    }
+    resultData.allData.push(...mixFooterData.map((v,i) => {
+      return {
+
+      }
+    }))
+    resultData.loading = false
+  }
   /**
    * [getExamResult 获取考试结果]
    *
@@ -547,7 +601,7 @@ export const useResultStore = defineStore('result', () => {
     const res = await request_get_result(sheet_id)
     if(res.score !== null){
       if(query.type === 'mock'){
-        console.log('综合模考:::', res)
+        setMixedResultData(res)
         return
       }
       setResultData(res)
