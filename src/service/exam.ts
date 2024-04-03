@@ -22,7 +22,7 @@ export const request_startExam = (data: EXAN_START) => {
 }
 
 export const request_getExam = (id: string) => {
-  return http.get(`/api/system/microservice/get_mock/${id}`)
+  return http.get(`/api/system/microservice/get_mock/${id}/`)
 }
 // 查看答题状态 进度
 export type ANSWER_STATUS = {
@@ -51,25 +51,25 @@ export const request_submitExam = (sheet_id: string) => {
 
 // 计算得分
 export const request_computed_score = (sheet_id: string) => {
-  return http.post(`api/system/microservice/scoring/${sheet_id}/`)
+  return http.post(`/api/system/microservice/scoring/${sheet_id}/`)
 }
 
 // 获取得分
 export const request_get_result = (sheet_id: string) => {
-  return http.get(`api/system/microservice/get_score/${sheet_id}/`)
+  return http.get(`/api/system/microservice/get_score/${sheet_id}/`)
 }
 // 重新获取得分
 export const request_get_repeat_result = (sheet_id: string) => {
-  return http.get(`api/system/microservice/get_score_repeat/${sheet_id}/`)
+  return http.get(`/api/system/microservice/get_score_repeat/${sheet_id}/`)
 }
 // 获取历史得分
 export const request_get_past_result = (sheet_id: number) => {
-  return http.get(`api/system/microservice/get_past_scores/${sheet_id}/`)
+  return http.get(`/api/system/microservice/get_past_scores/${sheet_id}/`)
 }
 
 // 单题记分
 export const request_computed_single_score = (sheet_id: string, question_id: string) => {
-  return http.post(`api/system/microservice/grade_answer/`, {
+  return http.post(`/api/system/microservice/grade_answer/`, {
     sheet_id,
     question_id
   })
