@@ -27,11 +27,11 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, defineProps, computed, watchEffect } from 'vue'
-import { useExamStore } from "@/stores/exam"
-import DropBox from '@/views/ReadExam/components/DropBox.vue'
-import DragBox from '@/views/ReadExam/components/DragBox.vue'
-const examStore = useExamStore()
+import { useHearingExam } from "@/stores/hearingExam";
+import DragBox from '@/views/ReadExam/components/DragBox.vue';
+import DropBox from '@/views/ReadExam/components/DropBox.vue';
+import { computed, defineProps, ref, watchEffect } from 'vue';
+const examStore = useHearingExam()
 const res = ref<any[]>([])
 const props = defineProps<{
   question_title: string;
@@ -48,7 +48,7 @@ const resource = computed(() => {
   }, {})
 })
 watchEffect(() => {
-  const answerValue = examStore.examing_data?.answerData?.find((val) => val.question_id === props.question_id);
+  const answerValue = examStore?.answerData?.find((val) => val.question_id === props.question_id);
   const _answer = answerValue?.answer.map(val => `${val}`)
   if(answerValue?.is_answer) {
     res.value = _answer

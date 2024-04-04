@@ -14,9 +14,9 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, defineProps, watch } from 'vue'
-import { useExamStore } from "@/stores/exam"
-const examStore = useExamStore()
+import { useHearingExam } from "@/stores/hearingExam";
+import { defineProps, ref, watch } from 'vue';
+const examStore = useHearingExam()
 const sc_value = ref<number>(-1)
 const props = defineProps<{
   question_title: string;
@@ -26,7 +26,7 @@ const props = defineProps<{
   question_content: string;
 }>()
 watch(() => props.question_id, () => {
-  const answerValue = examStore.examing_data.answerData.find(val => val.question_id === props.question_id)
+  const answerValue = examStore?.answerData?.find(val => val.question_id === props.question_id)
   if(answerValue!.is_answer) {
     const index = answerValue?.answer.findIndex(val => val === 1) ?? -1
     sc_value.value = index
@@ -38,7 +38,7 @@ watch(() => props.question_id, () => {
 })
 watch(() => sc_value.value, () => {
   const value = props.options_label.map((val, i) => i === sc_value.value ? 1 : 0)
-  const answerValue = examStore.examing_data.answerData.find(val => val.question_id === props.question_id)?.answer
+  const answerValue = examStore?.answerData.find(val => val.question_id === props.question_id)?.answer
   if(sc_value.value > -1 && value.toString() !== answerValue?.toString()) {
     examStore.saveQuestion(props.question_id, value)
   }

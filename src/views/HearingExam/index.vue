@@ -6,154 +6,35 @@
         <template #right>
           <div class="flex">
             <HeaderBtn 
-              v-for="val in Object.keys(HeaderBtnsConfig)" 
-              v-bind="HeaderBtnsConfig[val]" 
-              :key="val"
+              v-for="(val,i) in examStore?.curQuestion?.headBtns" 
+              v-bind="val" 
+              :key="i"
             />
           </div>
         </template>
       </b-header>
-      <BaseGuide v-bind="hearingGuide" v-if="isShowGuide"/>
+      <BaseGuide v-bind="examStore?.curQuestion" v-if="examStore?.curQuestion?.type === 'info'"/>
       <QuestionItem 
-        v-else-if="questionItem" 
-        v-bind="questionItem"
-        :onAuidoEnded="onAuidoEnded"
+        v-else
+        :item="examStore?.curQuestion"
         title="Listening"
       />
     </a-layout>
   </template>
 </template>
 <script setup lang="ts">
-import QuestionItem from "./components/QuestionItem.vue"
-import HeaderBtn from "@/views/ReadExam/components/HeaderBtn.vue"
-import { onMounted, ref, reactive, computed, watchEffect } from 'vue'
-import BaseGuide from '@/components/BaseGuide/index.vue'
-import { useExamStore } from '@/stores/exam'
-import { useRoute } from "vue-router"
-const isShowGuide = ref(true)
-const examStore = useExamStore()
+import BaseGuide from '@/components/BaseGuide/index.vue';
+import { useHearingExam } from '@/stores/hearingExam';
+import HeaderBtn from "@/views/ReadExam/components/HeaderBtn.vue";
+import { onMounted, ref } from 'vue';
+import { useRoute } from "vue-router";
+import QuestionItem from "./components/QuestionItem.vue";
+const examStore = useHearingExam()
 const { query } = useRoute()
 const loading = ref(true)
 
-const hearingGuide = reactive({
-  type: 'info',
-  title: 'Listening',
-  info_title: 'Listening Section Directions',
-  is_show_footer: true,
-  question_title: [
-    `In this section, you will be able to demonstrate your ability to understand conversations and lectures in English. The section is divided into two separately timed parts. You will hear each conversation or lecture only one time.`,
-    `A clock will indicate how much time remains. The clock will count down only while you are answering questions, not while you are listening. In some questions, you`,
-    `will see this icon: <div class="listen-icon"></div> . This means that you will hear, but not see, part of the question.`,
-    `You must answer each question. After you answer, select <button class="nextbtn">Next</button> . In the actual test, you cannot return to previous questions.`
-  ]
-})
-
-const HeaderBtnsConfig = reactive<any>({
-  horn: {
-    title: 'horn',
-    id: 'horn',
-    disabled: true,
-    isShow: false,
-  },
-  help: {
-    title: 'HELP',
-    id: 'help',
-    disabled: false,
-    isShow: false,
-    onClick: () => {
-      console.log('help')
-    }
-  },
-  prev: {
-    title: 'BACK',
-    disabled: false,
-    id: 'prev',
-    isShow: false,
-    onClick: () => {
-      examStore.changeQuestion(-1)
-      const curQuestionItem = examStore.examing_data.questions[examStore.examing_data.curQuestionIndex]
-      if(curQuestionItem.step === 0) {
-        examStore.examing_data.curQuestionIndex > 0 && examStore.examing_data.curQuestionIndex--
-      } else {
-        curQuestionItem.step -= 1
-      }
-    }
-  },
-  continue: {
-    title: 'CONTINUE',
-    id: 'continue',
-    disabled: false,
-    isShow: true,
-    onClick: () => {
-      if(isShowGuide.value) {
-        isShowGuide.value = false
-      } else {
-        onAuidoEnded()
-      }
-    }
-  },
-  next: {
-    title: 'NEXT',
-    id: 'next',
-    disabled: false,
-    isShow: false,
-    onClick: () => {
-      examStore.changeQuestion(1)
-      const curQuestionItem = examStore.examing_data.questions[examStore.examing_data.curQuestionIndex]
-      if(!questionItem.value.played) {
-        curQuestionItem.step = -1
-      } else {
-        curQuestionItem.step += 1
-      }
-    }
-  },
-  submit: {
-    title: 'SUBMIT',
-    id: 'submit',
-    disabled: false,
-    isShow: false,
-    onClick: () => {
-      examStore.requestSubmitExam(query.id as string)
-    }
-  },
-})
-const onAuidoEnded = () => {
-  const curquestion = examStore.examing_data.questions[examStore.examing_data.curQuestionIndex]
-  curquestion.played = true
-  curquestion.step = 0
-}
-const questionItem = computed(() => {
-  return examStore.examing_data.questions[examStore.examing_data.curQuestionIndex]
-})
-watchEffect(() => {
-  if(!isShowGuide.value) {
-    HeaderBtnsConfig.horn.isShow = true
-  }
-  if(questionItem.value?.step >= 0){
-    HeaderBtnsConfig.next.isShow = true
-    HeaderBtnsConfig.prev.isShow = true
-    HeaderBtnsConfig.continue.isShow = false
-    HeaderBtnsConfig.help.isShow = true
-  } else {
-    HeaderBtnsConfig.next.isShow = false
-    HeaderBtnsConfig.prev.isShow = false
-    HeaderBtnsConfig.continue.isShow = true
-    HeaderBtnsConfig.help.isShow = false
-  }
-  if(examStore.examing_data.curIndex === examStore.examing_data.childrenLength - 1) {
-    HeaderBtnsConfig.submit.isShow = true
-    HeaderBtnsConfig.next.isShow = false
-  }
-})
 onMounted(async () => {
-  await examStore.getExamData(query.id as string, 'hearing')
-  if(query.sectionIndex && query.quesIndex) {
-    isShowGuide.value = false
-  }
-  examStore.examing_data.questions.map(val => {
-    val.played = query.quesIndex > -1
-    val.step = query.quesIndex > -1 ? Number(query.quesIndex) : -1
-  })
+  await examStore.getExamData(query.id as string)
   loading.value = false
 })
 </script>

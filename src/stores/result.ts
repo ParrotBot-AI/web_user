@@ -260,14 +260,15 @@ export const useResultStore = defineStore('result', () => {
     }
   }
   const formatlist = (res, data) => {
+    console.log('formatlist::', res, data)
     res.forEach(val => {
-      val.total = data.filter(v => val.include.includes(v.name))?.reduce((def, item) => def + item.count || 0, 0);
-      val.count = data.filter(v => val.include.includes(v.name))?.reduce((def, item) => def + item.sum || 0, 0);
+      val.total = data?.filter(v => val.include.includes(v.name))?.reduce((def, item) => def + item.count || 0, 0);
+      val.count = data?.filter(v => val.include.includes(v.name))?.reduce((def, item) => def + item.sum || 0, 0);
       val.isComputed = true
     })
     return {
       list: res,
-      tags: data.map(val => ({
+      tags: data?.map(val => ({
         ...val,
         name: val.name.replace(/^(阅读|听力)/g,'')
       }))
@@ -291,6 +292,7 @@ export const useResultStore = defineStore('result', () => {
           id: id
         }
       })
+      console.log(footerData)
       // 首页
       resultData.allData[0] = {
         layout: 'col',
@@ -317,7 +319,7 @@ export const useResultStore = defineStore('result', () => {
           name: 'Raw Score',
           mockScore: score_d[i]?.reduce((def, item) => def + item.count, 0),
           mockScoreTotal: score_d[i]?.reduce((def, item) => def + item.total, 0),
-          ...formatlist(formatListConfig,res.tag_d[v.id]), // 题型数据 标签
+          ...formatlist(formatListConfig, res.tag_d[i+1]), // 题型数据 标签
           // TODO 等接口字段
           aiComment: '', // ai评语
         }
@@ -488,7 +490,7 @@ export const useResultStore = defineStore('result', () => {
         mockScoreTotal: score_d[i]?.reduce((def, item) => def + item.total, 0),
         // TODO 等接口字段
         aiComment: '', // ai评语
-        ...formatlist(formatListConfig,res.tag_d[v.id * 1 + 1]), // 题型数据  标签
+        ...formatlist(formatListConfig,res.tag_d[i + 1]), // 题型数据  标签
       })))
       return footData
     }

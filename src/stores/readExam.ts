@@ -16,8 +16,8 @@ import { useRoute, useRouter } from 'vue-router'
 export const useReadExamStore = defineStore('readExam', () => {
   const showProcessDialog = ref(false)
   const showAnswerHistoryDialog = ref(false)
-  const {query, meta} = useRoute()
   const $router = useRouter()
+  const $route = useRoute()
   const examStore = useExamStore()
   const resultStore = useResultStore()
   const questionTitle = ref('')
@@ -30,12 +30,14 @@ export const useReadExamStore = defineStore('readExam', () => {
    *
    */
   const getExamData = async (id: string) => {
+    const {query} = $route
     curQuestionIndex.value = Number(query?.qi) || 0
     questionData.value = {}
     try {
       const [res, answerRes] = await Promise.all([request_getExam(id), request_getExamStutas(id)])
       questionData.value = res
       let initNum = 1;
+      console.log('getExamData::', id, query?.name)
       questionData.value.formatQuestion = res.questions.reduce((val, item: any) => {
         const contents = item.question_content?.split(/\\n/)
         const keywords = item.keywords?.k
@@ -89,6 +91,7 @@ export const useReadExamStore = defineStore('readExam', () => {
     questionData.value.formatQuestion[curQuestionIndex.value].viewText_flag = !questionData.value?.formatQuestion?.[curQuestionIndex.value].viewText_flag
   }
   const changeQuestion = (type) => {
+    const {query} = $route
     curQuestionIndex.value += type
     $router.replace({
       query: {
@@ -125,6 +128,7 @@ export const useReadExamStore = defineStore('readExam', () => {
    *
    */
   const requestSubmitExam = async () => {
+    const {query, meta} = $route
     await request_submitExam(query?.id)
     if(query?.type === 'mixedExam' && query?.mid && query?.mid){
       const mixdata = getWithExpiry(`mixedExam-${query?.mid}`)
@@ -146,6 +150,7 @@ export const useReadExamStore = defineStore('readExam', () => {
   }
 
   const saveQuestion = async (question_id: number, answer: number[]) => {
+    const {query} = $route
     const answerIndex = answerData.findIndex((item) => item.question_id === question_id)
     answerData[answerIndex] = {
       question_id,

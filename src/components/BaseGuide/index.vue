@@ -5,7 +5,7 @@
       :length="0"
   />
   <div class="flex flex-1 justify-center items-center overflow-hidden bg-white">
-    <div class="px-32 -mt-40">
+    <div class="px-32">
       <h2 class="text-[#21272A] pb-10" v-show="props.info_title">
         {{ props.info_title }}
       </h2>
@@ -19,8 +19,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import right from '@/assets/images/right.svg'
-import { defineProps } from "vue"
+import right from '@/assets/images/right.svg';
+import { defineProps } from "vue";
 const props = defineProps<{
   title: string;
   info_title: string;

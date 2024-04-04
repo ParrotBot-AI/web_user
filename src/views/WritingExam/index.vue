@@ -1,7 +1,7 @@
 <template>
 <a-spin v-if="loading" size="large" tip="试题加载中..." class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"/>
 <a-layout class="w-full h-full flex flex-col" v-else>
-    <b-header title="模拟考试">
+    <b-header :title="query?.name || '模拟考试'">
       <template #right>
         <div class="flex">
           <HeaderBtn 
@@ -121,21 +121,21 @@
  </a-layout>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, computed, reactive, watchEffect } from 'vue'
-import Timer from "@/views/ReadExam/components/Timer.vue"
-import BAudio from "@/components/BaseAudio/index.vue"
-import HeaderBtn from "@/views/ReadExam/components/HeaderBtn.vue"
-import BGuide from "@/components/BaseGuide/index.vue"
-import WtitingBtn from "./components/WtitingBtn.vue"
-import type {WritingBtnProps} from "./components/WtitingBtn.vue"
-import type {HeaderBtnProps} from "@/views/ReadExam/components/HeaderBtn.vue"
-import Avatar from "./components/Avatar.vue"
-import Man from '@/assets/images/man.jpg'
 import Man1 from '@/assets/images/man-1.jpg'
 import Man2 from '@/assets/images/man-2.jpg'
+import Man from '@/assets/images/man.jpg'
+import BAudio from "@/components/BaseAudio/index.vue"
+import BGuide from "@/components/BaseGuide/index.vue"
+import { request_computed_single_score, request_saveAnswer } from '@/service/exam'
 import { useExamStore } from '@/stores/exam'
+import type { HeaderBtnProps } from "@/views/ReadExam/components/HeaderBtn.vue"
+import HeaderBtn from "@/views/ReadExam/components/HeaderBtn.vue"
+import Timer from "@/views/ReadExam/components/Timer.vue"
+import { computed, onMounted, reactive, ref, watchEffect } from 'vue'
 import { useRoute, useRouter } from "vue-router"
-import { request_saveAnswer, request_computed_single_score } from '@/service/exam'
+import Avatar from "./components/Avatar.vue"
+import type { WritingBtnProps } from "./components/WtitingBtn.vue"
+import WtitingBtn from "./components/WtitingBtn.vue"
 const loading = ref(true)
 const examStore = useExamStore()
 const $router = useRouter()

@@ -303,20 +303,7 @@ export const useExamStore = defineStore('exam', () => {
     const {query, name} = $route
     const mixdata = getWithExpiry(`mixedExam-${query?.mid}`)
     if(query?.type === 'mixedExam' && query?.mid){
-      if(name === 'hearingExam'){
-        await request_computed_score(sheet_id)
-        await request_get_result(sheet_id)
-        await startExam('mock_exam', mixdata?.quesid[2], mixdata?.father_sheet)
-        $router.push({
-          name: 'spokenExam',
-          query: {
-            type: 'mixedExam',
-            mid: mixdata?.father_sheet,
-            name: mixdata.resource_name,
-            id: examing_data.sheet_id
-          }
-        })
-      } else if(name === 'spokenExam'){
+      if(name === 'spokenExam'){
         await request_computed_score(sheet_id)
         await request_get_result(sheet_id)
         await startExam('mock_exam', mixdata?.quesid[3], mixdata?.father_sheet)

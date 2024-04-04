@@ -19,12 +19,12 @@
     </div>
 </template>
 <script lang="ts" setup>
-import progress from '@/assets/images/progress.svg'
-import volume from '@/assets/images/volume.svg'
 import help from '@/assets/images/help.svg'
 import left from '@/assets/images/left.svg'
+import progress from '@/assets/images/progress.svg'
 import right from '@/assets/images/right.svg'
-import { defineProps, ref, onMounted, onUnmounted, watchEffect } from "vue"
+import volume from '@/assets/images/volume.svg'
+import { defineProps, onMounted, onUnmounted, ref, watchEffect } from "vue"
 const isVolumeShow = ref(false)
 const volumeVlaue = ref(100)
 const icons = {
@@ -46,6 +46,7 @@ export type HeaderBtnProps = {
 }
 
 const props = defineProps<HeaderBtnProps>()
+console.log(props)
 function getPlayingAudios() {
   const audios = document.querySelectorAll('audio');
   const playingAudios = Array.from(audios).filter(audio => !audio.paused);

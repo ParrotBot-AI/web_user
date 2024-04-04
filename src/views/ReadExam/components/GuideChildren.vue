@@ -11,10 +11,10 @@
 </a-layout>
 </template>
 <script setup lang="ts">
-import BaseGuide from '@/components/BaseGuide/index.vue'
-import HeaderBtn from "./HeaderBtn.vue"
-import type { HeaderBtnProps } from "./HeaderBtn.vue"
-import {reactive, defineProps} from 'vue'
+import BaseGuide from '@/components/BaseGuide/index.vue';
+import { defineProps, reactive } from 'vue';
+import type { HeaderBtnProps } from "./HeaderBtn.vue";
+import HeaderBtn from "./HeaderBtn.vue";
 const props = defineProps<{
   isGuide: boolean;
   navTitle: string;

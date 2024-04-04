@@ -33,7 +33,7 @@
             <div>
               <div v-for="(val,index) in resultStore.resultData.questions_r?.questions.slice(sectionIndex*3, sectionIndex*3+3)" :key="index" class="p-2 flex items-center">
                 <!-- {{ sectionVal }} -->
-                <h4 class="text-[#667085] text-base font-normal w-[120px]">{{ sectionVal.children[index]?.title }}</h4>
+                <h4 class="text-[#667085] text-base font-normal w-[120px]">{{ sectionVal?.children[index]?.title }}</h4>
                 <div class="flex pl-3">
                   <span 
                     v-for="(v,i) in val.children" :key="v.question_id" 
@@ -57,10 +57,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed, watch, watchEffect, defineProps } from 'vue'
-import { useRoute } from "vue-router"
+import { useResultStore } from "@/stores/result";
 import { useDraggable } from '@vueuse/core';
-import { useResultStore } from "@/stores/result"
+import { computed, defineProps, ref, watch, watchEffect } from 'vue';
+import { useRoute } from "vue-router";
 const props = defineProps<{
   onChangeQues: (type: 1 | -1 | 2, parentIndex?:number, curIndex?: number) => void
 }>()

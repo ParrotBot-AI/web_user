@@ -1,7 +1,7 @@
 <template>
   <a-spin v-if="loading" size="large" tip="试题加载中..." class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"/>
   <a-layout v-else class="w-full h-full flex flex-col">
-    <b-header title="模拟考试">
+    <b-header :title="query?.name || '模拟考试'">
       <template #right>
         <div class="flex">
           <HeaderBtn 
@@ -133,16 +133,16 @@
   </a-layout>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, computed, reactive, watchEffect } from 'vue'
 import BGuide from "@/components/BaseGuide/index.vue"
-import HeaderBtn from "@/views/ReadExam/components/HeaderBtn.vue"
-import TimerBlock from "./components/timeBlock.vue"
-import "@/service/file"
-import { useExamStore } from '@/stores/exam'
-import { uploadFileToOBS } from "@/service/file"
 import BTimerCircle from "@/components/BaseTimerCircle/index.vue"
-import { stop, blobToFile} from '@/utils/recorder'
-import { request_saveAnswer, request_computed_single_score } from '@/service/exam'
+import { request_computed_single_score, request_saveAnswer } from '@/service/exam'
+import "@/service/file"
+import { uploadFileToOBS } from "@/service/file"
+import { useExamStore } from '@/stores/exam'
+import { blobToFile, stop } from '@/utils/recorder'
+import HeaderBtn from "@/views/ReadExam/components/HeaderBtn.vue"
+import { computed, onMounted, reactive, ref, watchEffect } from 'vue'
+import TimerBlock from "./components/timeBlock.vue"
 
 import BAudio from "@/components/BaseAudio/index.vue"
 import { useRoute, useRouter } from "vue-router"
@@ -317,7 +317,7 @@ onMounted(async () => {
       }
     }
     v.step = 0
-    v.question_title = v.question_title.split('\n')
+    v.question_title = v.question_title?.split('\n')
     v.question_content = v.question_content?.split('\n')
   })
   speakingInfo.push(...examStore.examing_data.questions)

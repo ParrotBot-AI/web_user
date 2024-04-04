@@ -179,8 +179,8 @@ export const useWordStore = defineStore('word', () => {
       $router.push('/wordRecite')
     }
   }
-  const connectSSE = (url:string) => {
-    const eventSource = new EventSource(url);
+  const connectSSE = (clientId:string) => {
+    const eventSource = new EventSource(`${import.meta.env.VITE_AI_APP_BASEURL}/v1/modelapi/getVocabContent/${clientId}/`)
 
     eventSource.onmessage = function(event) {
       wordTaskData.payload.response = [...wordTaskData.payload.response, event.data.replace(/\[DONE!\]/, '')]
@@ -208,7 +208,7 @@ export const useWordStore = defineStore('word', () => {
         ...payload,
         response: [],
       }
-      connectSSE(streaming.url.replace('{ClientID}', clientId));
+      connectSSE(clientId);
     } else {
       wordTaskData.payload = {
         ...payload,

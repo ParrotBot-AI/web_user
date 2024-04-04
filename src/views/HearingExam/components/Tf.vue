@@ -18,9 +18,9 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { defineProps, computed, watchEffect, reactive } from 'vue'
-import { useExamStore } from "@/stores/exam"
-const examStore = useExamStore()
+import { useHearingExam } from "@/stores/hearingExam";
+import { computed, defineProps, reactive, watchEffect } from 'vue';
+const examStore = useHearingExam()
 const resource = reactive([])
 const columns = computed(() => {
   return [
@@ -45,7 +45,7 @@ const props = defineProps<{
   question_content: string;
 }>()
 watchEffect(() => {
-  const answerValue = examStore.examing_data.answerData.find(val => val.question_id === props.question_id)
+  const answerValue = examStore?.answerData.find(val => val.question_id === props.question_id)
   resource.length = 0
   resource.push(...props.detail.map((val, i) => ({
     val,

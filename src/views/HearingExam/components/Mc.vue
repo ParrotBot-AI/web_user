@@ -12,9 +12,9 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, defineProps, watch, watchEffect } from 'vue'
-import { useExamStore } from "@/stores/exam"
-const examStore = useExamStore()
+import { useHearingExam } from "@/stores/hearingExam";
+import { defineProps, ref, watch, watchEffect } from 'vue';
+const examStore = useHearingExam()
 const mc_value = ref([])
 const props = defineProps<{
   question_title: string;
@@ -29,7 +29,7 @@ const props = defineProps<{
 }>()
 
 watchEffect(() => {
-  const answerValue = examStore.examing_data?.answerData?.find(val => val.question_id === props.question_id)
+  const answerValue = examStore?.answerData?.find(val => val.question_id === props.question_id)
   if (answerValue?.is_answer) {
     mc_value.value =  answerValue?.answer?.reduce((def, val,i) => { 
       val === 1 && def.push(i)
@@ -42,7 +42,7 @@ watch(() => mc_value.value, () => {
     mc_value.value.shift()
   }
   const value = props.options_label.map((val, i) => Number((Object.values(mc_value.value) as number[]).includes(i)))
-  const answerValue = examStore.examing_data?.answerData?.find(val => val.question_id === props.question_id)?.answer
+  const answerValue = examStore?.answerData?.find(val => val.question_id === props.question_id)?.answer
   if (mc_value.value.length === props.restriction.rc && value.toString() !== answerValue?.toString()) {
     examStore.saveQuestion(props.question_id, value)
   }

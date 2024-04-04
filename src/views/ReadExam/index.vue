@@ -17,7 +17,7 @@ import type { USERINFO } from "@/service/user"
 import { useReadExamStore } from '@/stores/readExam'
 import { getWithExpiry } from '@/utils/storage'
 import WebSocketClient from '@/utils/ws'
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onUnmounted, ref, watchEffect } from 'vue'
 import { useRoute } from "vue-router"
 import GuideChildren from "./components/GuideChildren.vue"
 import ProcessDialog from './components/ProcessDialog.vue'
@@ -30,7 +30,8 @@ const examStore = useReadExamStore()
 const guideContinueClick = () => {
   examStore.changeQuestion(1)
 }
-onMounted(async () => {
+watchEffect(async () => {
+  console.log(query.id, query.name)
   await examStore.getExamData(query.id as string)
   // socket.value = new WebSocketClient('ws://' + import.meta.env.VITE_WS_BASEURL + 'ws/question/' + access + '/');
   loading.value = false
