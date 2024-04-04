@@ -259,11 +259,17 @@ export const useResultStore = defineStore('result', () => {
       model_answer
     }
   }
-  const formatlist = (res, data) => {
-    console.log('formatlist::', res, data)
+  const formatlist = (formatdata, data) => {
+    const res = JSON.parse(JSON.stringify(formatdata))
     res.forEach(val => {
-      val.total = data?.filter(v => val.include.includes(v.name))?.reduce((def, item) => def + item.count || 0, 0);
-      val.count = data?.filter(v => val.include.includes(v.name))?.reduce((def, item) => def + item.sum || 0, 0);
+      const _v = data?.filter(v => val.include.includes(v.name))
+      val.total = 0
+      val.count = 0
+      _v?.forEach(v1 => {
+        console.log(v1)
+        val.total += v1.count
+        val.count += v1.sum
+      })
       val.isComputed = true
     })
     return {
@@ -460,7 +466,7 @@ export const useResultStore = defineStore('result', () => {
     } else {
       const formatListConfig = [{
         title: '基础题',
-        include: ["阅读词汇题","阅读指代题","句子简化题","阅读细节题","阅读排除题"],
+        include: ["阅读词汇题","阅读指代题","阅读简化句子题","阅读细节题","阅读排除题"],
       },
       {
         title: '强化题',
@@ -476,7 +482,7 @@ export const useResultStore = defineStore('result', () => {
       }))
       resultData.allData[0] = {
         layout: 'row',
-        name: '阅读得分',
+        name: '模考得分',
         mockScore: res.score,
         mockScoreTotal: res.max_score,
         aiComment: '', // TODO 等接口字段 ai评语
@@ -484,7 +490,7 @@ export const useResultStore = defineStore('result', () => {
       }
       resultData.allData.push(...footData.map((v,i) => ({
         layout: 'row',
-        name: '模考得分',
+        name: 'Raw Score',
         subtitle: v.title,
         mockScore: score_d[i]?.reduce((def, item) => def + item.count, 0),
         mockScoreTotal: score_d[i]?.reduce((def, item) => def + item.total, 0),

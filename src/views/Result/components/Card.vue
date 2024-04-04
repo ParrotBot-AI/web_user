@@ -58,9 +58,9 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useResultStore } from "@/stores/result";
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { useResultStore } from "@/stores/result"
 const resultStore = useResultStore()
 const {query} = useRoute()
 const customData = computed(() => {
