@@ -1,1 +1,0 @@
-import{_ as e}from"./_plugin-vue_export-helper-x3n3nnut.js";import{c,e as o}from"./index-Qb4OZOi1.js";const t={},r={class:"flex flex-col"};function s(n,_){return c(),o("div",r," 目标管理 ")}const l=e(t,[["render",s]]);export{l as default};

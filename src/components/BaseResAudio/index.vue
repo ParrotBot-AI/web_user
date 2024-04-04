@@ -3,7 +3,6 @@
       <audio 
         controls="false" 
         class="opacity-0 w-0 h-0" 
-        autoplay
         @timeupdate="timeupdate"
         @loadedmetadata="loadedmetadata" 
         @ended="ended"
