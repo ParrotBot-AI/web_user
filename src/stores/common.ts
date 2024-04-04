@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useIndexStore } from "./index"
 export const useCommonStore = defineStore('utils', () => {
   const index = useIndexStore()

@@ -197,7 +197,7 @@ const a_writingTypes = [
 
 export const useResultStore = defineStore('result', () => {
   const showAnswerHistoryDialog = ref(false)
-  const {query} = useRoute()
+  const $route = useRoute()
   const resultData = reactive<{
     footerActiveIndex: number;
     loading: boolean;
@@ -281,6 +281,7 @@ export const useResultStore = defineStore('result', () => {
     }
   }
   const formatData = (res:any) => {
+    const {query} = $route
     const score_d = Object.values(res.score_d)
     if(query.type === 'hearing') {
       const formatListConfig = [{
@@ -506,6 +507,7 @@ export const useResultStore = defineStore('result', () => {
     return type === 1 ? exam_range[key] : practice_range[key]
   }
   const setResultData = (res: any) => {
+    console.log('setResultData:::', res)
     resultData.questions_r = res.questions_r
     resultData.score_d = Object.values(res.score_d)
     resultData.format_question = res.questions_r.questions.reduce((def, item) => {
@@ -560,7 +562,6 @@ export const useResultStore = defineStore('result', () => {
         layout: 'table',
       },
     ]
-    console.log(res)
     resultData.questions_r = []
     resultData.score_d = []
     resultData.format_question = []
@@ -595,6 +596,7 @@ export const useResultStore = defineStore('result', () => {
    *
    */
   const getExamResult = async (sheet_id: string) => {
+    const {query} = $route
     // resultData回到初始状态 
     resultData.title = ''
     resultData.level = ''
@@ -605,6 +607,7 @@ export const useResultStore = defineStore('result', () => {
     resultData.format_question = []
     resultData.score_d = []
     resultData.loading = true
+    footerData.length = 0
     await request_computed_score(sheet_id)
     const res = await request_get_result(sheet_id)
     if(res.score !== null){
