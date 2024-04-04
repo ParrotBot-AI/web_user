@@ -1,3 +1,4 @@
+import { startStream } from "@/service/ai";
 import {
   request_get_vocabs_statics,
   request_get_vocabs_tasks,
@@ -6,7 +7,6 @@ import {
   request_refuse_jump,
   request_start_vocabs_tasks,
 } from "@/service/word";
-import http from "@/utils/http";
 import { defineStore } from 'pinia';
 import { reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -199,11 +199,10 @@ export const useWordStore = defineStore('word', () => {
     if(payload.endpoints) {
       const {
         input,
-        method,
-        url
       } = payload.endpoints.init
       const streaming = payload.endpoints.streaming
-      const { clientId } = await http[method](url, input)
+      const {clientId} = await startStream(input)
+      // const { clientId } = await http[method](url, input)
       wordTaskData.is_end = false
       wordTaskData.payload = {
         ...payload,
