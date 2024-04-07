@@ -189,8 +189,9 @@ const num = computed(() => {
 })
 const formatData = (key: string) => {
   const series = wordStore.vocabs_statics_data?.series
+  console.log(series)
   if(key === 'day') {
-    return Object.keys(series)
+    return Object.keys(series).map(item => item.split('-').slice(1).join('-'))
   }
   return series ? Object.keys(series).map((item) => series[item][key]).flat() : []
 }
@@ -205,7 +206,7 @@ const onJump = () => {
 watchEffect (() => {
   let options = {
     backgroundColor: '#ffffff',
-    color: ['#FDD44E', '#1B9f8f'],
+    color: ['#FDD44E','#1B9f8f'],
     tooltip: {
       trigger: 'axis',
       position: function (point:any, params:any, dom:any, rect:any, size:any) {
@@ -213,7 +214,6 @@ watchEffect (() => {
       },
       axisPointer: {
         type: 'line',
-
         label: {
           backgroundColor: '#6a7985'
         }
@@ -261,8 +261,9 @@ watchEffect (() => {
       }
     ],
     series: [
+    
       {
-        name: '学习单词',
+        name: '遗忘单词',
         type: 'line',
         stack: 'Total',
         smooth: true,
@@ -282,10 +283,10 @@ watchEffect (() => {
         emphasis: {
           focus: 'series'
         },
-        data: formatData('correct_words')
+        data: formatData('wrong_words')
       },
       {
-        name: '遗忘单词',
+        name: '学习单词',
         type: 'line',
         stack: 'Total',
         smooth: true,
@@ -305,8 +306,8 @@ watchEffect (() => {
         emphasis: {
           focus: 'series'
         },
-        data: formatData('wrong_words')
-      }
+        data: formatData('correct_words')
+      },
     ]
   }
   Chart?.setOption(options);
@@ -345,7 +346,7 @@ const onClick = (type: 'new' | 'old') => {
   align-items: center;
 
 }
-.tooltip-title {
+:global(.tooltip-title) {
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
@@ -354,24 +355,23 @@ const onClick = (type: 'new' | 'old') => {
   justify-content: center;
   padding: 5px;
 }
-.tooltip-title-study {
+:global(.tooltip-title-study) {
   width: 14px;
   height: 14px;
   gap: 0px;
   opacity: 0.5px;
   border-radius: 50%;
-  background: rgba(249, 206, 104, 1);
+  background: rgba(27, 139, 140, 1);
   margin-right:10px ;
 }
-.tooltip-title-forget {
+:global(.tooltip-title-forget) {
   width: 14px;
   height: 14px;
   gap: 0px;
   opacity: 0.5px;
   border-radius: 50%;
   margin-right:10px ;
-  background: rgba(27, 139, 140, 1);
-
+  background: rgba(249, 206, 104, 1);
 }
 :global(.word-dialog.ant-modal) {
   top: 230px;

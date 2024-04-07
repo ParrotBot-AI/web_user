@@ -407,15 +407,16 @@ export const useResultStore = defineStore('result', () => {
       resultData.allData[0] = {
         layout: 'col',
         name: '写作得分',
-        mockScore: res.questions_r.questions.reduce((def, item) => def + item.score, 0),
-        mockScoreTotal: res.max_score,
+        mockScore: res.score.toFixed(0),
+        mockScoreTotal: footerData.length * 15,
         list: res.questions_r.questions.map((val: any, i: number) => {
           return {
             title: val.keywords.r === 1200 ? 'Integrated Writing' : 'Academic discussion',
             id: i,
             isComputed: val.score !== null,
-            count: val.score,
+            count: (val.score).toFixed(0),
             total: val.max_score
+            // total: 15,
           }
         }),
         // TODO 等接口字段
@@ -425,12 +426,11 @@ export const useResultStore = defineStore('result', () => {
         const {model_answer, model_answer_content} = formatAIModel(res.questions_r.questions[i])
         const content = model_answer_content?.Content.filter(val => Object.keys(val).length > 0);
         const ques_mark = v.title === 'Integrated Writing' ? i_quesFooterType : a_writingTypes;
-        console.log(model_answer_content)
         return {
           layout: 'col',
           name: v.title,
           ques_mark,
-          mockScore: res.questions_r.questions[i].score,
+          mockScore: (res.questions_r.questions[i].score).toFixed(0),
           mockScoreTotal: res.questions_r.questions[i].max_score,
           aiComment: model_answer_content?.format_G_F?.General,
           model_answer,

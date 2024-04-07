@@ -51,7 +51,8 @@
           v-if="resultStore.curData?.aiComment"
           :style="{ background: 'rgba(208, 240, 230, 0.50)' }"
           class="rounded-md p-5 pt-6 mt-12 ai-comment relative text-gray-500 text-[16px] leading-6"
-        >{{ resultStore.curData?.aiComment }}
+        >
+        <div class="overflow-y-auto max-h-[50px] w-full">{{ resultStore.curData?.aiComment }}</div>
         </div>
       </div>
     </div>

@@ -7,6 +7,9 @@ const tailwindConfig = {
     preflight: false,
   },
   theme: {
+    boxShadow: {
+      'lg': '0px 4px 20px 0px rgba(27, 139, 140, 0.20)',
+    },
     screens: {
       sm: '640px',
       md: '768px',

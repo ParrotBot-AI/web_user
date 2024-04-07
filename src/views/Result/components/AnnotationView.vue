@@ -123,7 +123,7 @@
           </div>
         </div>
       </div>
-      <div class="h-[70px] bg-white shadow-[0px_4.4px_22px_0px_rgba(0,0,0,0.10)] flex px-5 py-2 rounded-xl">
+      <div class="h-[70px] bg-white shadow-[0px_4.4px_22px_0px_rgba(0,0,0,0.10)] flex px-5 py-2 rounded-xl" v-if="props.data.length > 1">
         <div 
           v-for="(val,i) in props.data" 
           @click="curIndex = i"

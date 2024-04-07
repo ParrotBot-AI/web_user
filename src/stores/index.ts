@@ -113,8 +113,7 @@ export const useIndexStore = defineStore('menu', () => {
     return res
   }
   const daka = async () => {
-    const res = await request_update_checkin(userInfo.account_id)
-    console.log(res)
+    await request_update_checkin(userInfo.account_id)
   }
   const requestUserInfo = async (to, userId: number) => {
     const _userInfo = getWithExpiry<any>('userdata')!;

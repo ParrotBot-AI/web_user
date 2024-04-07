@@ -265,7 +265,7 @@ const changeQueryQuestion = () => {
   })
 }
 watchEffect(() => {
-  if(step.value === speakingInfo.length - 1 && speakingInfo[step.value].step === speakingInfo[step.value].maxStep) {
+  if(step.value === speakingInfo.length - 1 && speakingInfo[step.value]?.step === speakingInfo[step.value]?.maxStep) {
     isend.value = true
     HeaderBtnsConfig.continue.isShow = false
   } else {

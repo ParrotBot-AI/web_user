@@ -60,7 +60,7 @@ export const useUserStore = defineStore('user', () => {
     homeDaka.length = 0
     homeDaka.push(...daka.map(val => ({
       ...val,
-      class: val.lock ? 'lock' : val.count_process >= val.count_target ? 'success' : val.date === current ? 'today' : ''
+      class: val.lock ? 'lock' : val.count_process >= val.count_target ? 'success' : val.date === current ? 'today' : 'fail'
     })))
     indexStore.userTargets.forEach(val => {
       val.val = info[val.id]

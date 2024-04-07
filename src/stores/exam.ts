@@ -65,6 +65,7 @@ export const useExamStore = defineStore('exam', () => {
     'spoken': {},
     'hear': {},
     'read': {},
+    isEmpty: true
   })
   const types = ['read', 'spoken', 'hearing', 'writing']
   const questionTitle = ref('')
@@ -328,10 +329,15 @@ export const useExamStore = defineStore('exam', () => {
   const getPastResult = async () => {
     const account_id = indexStore.userInfo.account_id
     const res = await request_get_past_result(account_id)
-    pastScores.hear = res["听力"]
-    pastScores.writing = res["写作"]
-    pastScores.spoken = res["口语"]
-    pastScores.read = res["阅读"]
+    if(res['听力'] && res["写作"] && res["口语"] && res["阅读"]) {
+      pastScores.hear = res["听力"]
+      pastScores.writing = res["写作"]
+      pastScores.spoken = res["口语"]
+      pastScores.read = res["阅读"]
+      pastScores.isEmpty = false
+    } else {
+      pastScores.isEmpty = true
+    }
   }
   return {
     types,

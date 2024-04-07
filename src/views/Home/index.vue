@@ -1,9 +1,9 @@
 <template>
   <div class="flex p-5 w-full h-full">
     
-    <div class="flex flex-col flex-1 pr-4 overflow-hidden">
+    <div class="flex flex-col flex-1 pr-4 h-full relative pt-[300px]">
       <!--用户信息-->
-      <div class="pb-7">
+      <div class="absolute top-0 left-0 w-full pr-4">
         <div class="flex">
           <div class="w-[calc(100%-60px)] flex bg-white h-[130px] ml-[60px] mt-4 shadow-lg rounded-md border border-border-1 border-solid relative pl-[80px]">
             <a-avatar
@@ -12,10 +12,10 @@
               shape="square" 
               :size="100"
               :src="indexStore.userInfo.avatar" :alt="indexStore.userInfo.name">
-              {{ indexStore.userInfo.name[0] || '' }}
+              <img :src="avatar" width="70%" />
             </a-avatar>
-            <div class="overflow-hidden h-full flex flex-col pr-10 max-w-[45%]">
-              <h1 class="text-[25px] text-gray-900 pt-6">{{ $t(getCurrentTimeOfDay()+'好') }}，{{ indexStore.userInfo.name }}
+            <div class="h-full flex flex-col pr-10 max-w-[45%]">
+              <h1 class="text-[25px] text-gray-900 pt-6 truncate">{{ $t(getCurrentTimeOfDay()+'好') }}，{{ indexStore.userInfo.name }}
               </h1>
               <p class="text-gray-600 pt-6 truncate">Cease to struggle and you cease to live.</p>
             </div>
@@ -23,7 +23,7 @@
               <div class="border-l w-[0.5px] h-1/2 bg-[rgba(0,0,0,0.20)]"></div>
             </div>
             <div class="flex flex-col ml-[40px] pt-6">
-              <div class="font-bold text-[18px]">
+              <div class="font-bold text-[18px] overflow-hidden">
                 每日打卡{{ ' ' }}
                 <a-tooltip 
                   placement="bottomLeft" 
@@ -65,8 +65,8 @@
           </a-card>
         </div>
       </div>
-      <div class="grid grid-cols-5 grid-rows-5 gap-4 flex-1 overflow-hidden">
-        <div class="col-span-3 overflow-hidden row-span-5 bg-white rounded-md border border-border-1 border-solid flex-1 px-9 pb-3">
+      <div class="grid grid-cols-5 grid-rows-5 gap-4 w-full h-full">
+        <div class="col-span-3 overflow-hidden row-span-5 bg-white rounded-md border shadow-lg border-border-1 border-solid flex-1 px-9 pb-3">
           <div class="h-full relative pt-3">
             <a-tabs class="h-full" v-model:activeKey="activeKey">
               <a-tab-pane key="1" tab="我的任务">
@@ -77,37 +77,42 @@
                 </BaseCard>
               </a-tab-pane>
               <a-tab-pane key="2" tab="个人学习诊断" >
-                <div v-for="(val, i) in examStore?.pastScores" class="flex w-full items-center justify-center overflow-hidden" :key="i">
-                  <div class="flex mb-2 items-center justify-center w-[180px]">
-                    <img :src="listIcon(i)" width="26" class="mt-3"/>
-                    <div class="flex flex-col flex-1 overflow-hidden text-center">
-                      <div class="text-[50px] text-[#475467] font-medium">{{ val.avg_s }}</div>
-                      <div class="text-base text-[#6B7280] mt-2">近7日平均分</div>
+                <template v-if="examStore?.pastScores?.isEmpty">
+                  <p class="text-xs text-center text-[#999] mt-20">暂无学习诊断，快去学习吧～</p>
+                </template>
+                <template v-else>
+                  <div v-for="(val, i) in examStore?.pastScores" class="flex w-full items-center justify-center overflow-hidden" :key="i">
+                    <div class="flex mb-2 items-center justify-center w-[180px]">
+                      <img :src="listIcon(i)" width="26" class="mt-3"/>
+                      <div class="flex flex-col flex-1 overflow-hidden text-center">
+                        <div class="text-[50px] text-[#475467] font-medium">{{ val.avg_s }}</div>
+                        <div class="text-base text-[#6B7280] mt-2">近7日平均分</div>
+                      </div>
                     </div>
-                  </div>
-                  <div class="border-l w-[0.5px] bg-[#D0F0E6] ml-3 h-[78px]"></div>
-                  <div class="flex flex-1 flex-col p-6 overflow-hidden">
-                    <div class="text-gray-500 font-bold mb-4 text-[1vw]">错误率最高的题型</div>
-                    <div class="flex overflow-auto scorll-bar-hidden" v-if="val.tag"> 
-                      <div v-for="(v, i) in val.tag" :key="i">
-                        <div class=" text-[0.8vw] ml-2 justify-center text-gray-500 bg-white border-border-1 px-[12px] py-1" style=" border: 1px solid rgba(102, 112, 133, 1);  border-radius: 18px; width: auto; white-space: nowrap;">
-                          {{ v.name }}
+                    <div class="border-l w-[0.5px] bg-[#D0F0E6] ml-3 h-[78px]"></div>
+                    <div class="flex flex-1 flex-col p-6 overflow-hidden">
+                      <div class="text-gray-500 font-bold mb-4 text-[1vw]">错误率最高的题型</div>
+                      <div class="flex overflow-auto scorll-bar-hidden" v-if="val.tag"> 
+                        <div v-for="(v, i) in val.tag" :key="i">
+                          <div class=" text-[0.8vw] ml-2 justify-center text-gray-500 bg-white border-border-1 px-[12px] py-1" style=" border: 1px solid rgba(102, 112, 133, 1);  border-radius: 18px; width: auto; white-space: nowrap;">
+                            {{ v.name }}
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </template>
               </a-tab-pane>
             </a-tabs>
             </div>
         </div>
         <div class="bg-white rounded-md border-l col-start-4 col-span-2 row-span-2 shadow-lg flex flex-col items-center justify-center">
           <div class="flex mb-3">
-            <div class="flex  " style="width: 40%;">
+            <div class="flex" style="width: 40%;">
                 <img :src="NewWord"  style="width: 100%;"/>
             </div>
             <div style="width: 60%;">
-              <span class=" flex flex-col items-center text-[1vw]" style="width: 100%;">您的当前词汇量为<span class="text-[4vw]">
+              <span class=" flex flex-col items-center text-[1vw]" style="width: 100%;">您的当前词汇量为<span class="sm:text-[3vw] text-[4vw]">
                 {{ wordStore.vocabs_statics_data?.vocab ? wordStore.vocabs_statics_data?.vocab : $t('未测试') }}
               </span></span>
             </div>
@@ -120,10 +125,12 @@
             学习新单词
           </a-button>
         </div>
-        <a-card class="col-start-4 col-span-2 row-span-3 shadow-lg overflow-y-auto scorll-bar-hidden">
-          <div class="font-bold text-[20px]">近七日学习时长</div>
-          <div ref="HomeChart" style="height: 300px; width: 100%;"></div>
-        </a-card>
+        <div class="col-start-4 col-span-2 row-span-3 shadow-lg overflow-y-auto scorll-bar-hidden flex flex-col overflow-hidden rounded-md bg-white">
+          <div class="font-bold text-[20px] text-[#1B2559] pl-4 py-3">近七日访问次数</div>
+          <div class="homeChartBox flex-1 overflow-hidden p-2">
+            <div ref="HomeChart"></div>
+          </div>
+        </div>
       </div>
     </div>
     <AIComponent />
@@ -155,6 +162,7 @@
 </template>
 <script setup lang="ts">
 import bxCalendar from "@/assets/homeIcon/bx_calendar.svg"
+import avatar from "@/assets/images/avatat.jpg"
 import hint from "@/assets/images/hint.png"
 import PersionHear from '@/assets/images/persion_hear.svg'
 import PersionRead from '@/assets/images/persion_read.svg'
@@ -175,7 +183,7 @@ RightOutlined
 import { message } from 'ant-design-vue'
 import dayjs, { Dayjs } from 'dayjs'
 import * as echarts from 'echarts'
-import { computed, onMounted, ref, watchEffect } from 'vue'
+import { computed, onMounted, ref, watch, watchEffect } from 'vue'
 const calenderOpen = ref(false)
 const wordStore = useWordStore()
 const examStore = useExamStore()
@@ -194,8 +202,14 @@ const icons = {
 const listIcon = (i) => {
   return icons[i]
 }
-watchEffect (() => {
+watch(() => userStore?.homeCharts?.length, () => {
   chart.value?.setOption({
+    grid: {
+      left: '28px',
+      right: 0,
+      top: '10px',
+      bottom: '20px'
+    },
     color: [ '#f1b01f'],
     xAxis: {
       data: userStore?.homeCharts?.map(item => item?.week_day[0])
@@ -203,11 +217,9 @@ watchEffect (() => {
     yAxis: {},
     series: [{
       type: 'bar',
-      data: userStore?.homeCharts?.map(item => item?.study_time)
+      data: userStore?.homeCharts?.map(item => item?.login_count)
     }]
   });
-}, {
-  flush: 'post'
 })
 const style_bg = [
   'background: linear-gradient(256.27deg, #3E8AB3 -8.38%, #166195 128.6%)',
@@ -226,6 +238,9 @@ onMounted(() => {
   userStore.api_checkin()
   indexStore.daka()
   examDate.value = dayjs()
+  const box = document.querySelector('.homeChartBox')
+  HomeChart.value.style.width = box?.offsetWidth - 20 + 'px'
+  HomeChart.value.style.height = box?.offsetHeight - 20 + 'px'
   chart.value = echarts.init(HomeChart.value, 'main');
   window.addEventListener('resize', () => {
     const chart = echarts.getInstanceByDom(HomeChart.value);
@@ -315,8 +330,8 @@ const onselect = async (val) => {
 }
 .daka-icon.fail {
   background-color: #D0D5DD;
-  background-image: url('@/assets/homeIcon/fail-icon.svg');
-  background-size: 50% auto;
+  background-image: url('@/assets/images/sing-fail.svg');
+  background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center center;
 }

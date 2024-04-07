@@ -4,7 +4,7 @@
       <!-- left -->
       <div
         class="left relative overflow-hidden h-full flex flex-col items-start text-white text-center">
-        <img class="absolute top-4 right-4 cursor-pointer" :src="examEdit" alt="examEdit" @click="toResult"/>
+        <img class="absolute top-4 right-4 cursor-pointer" :src="examEdit" alt="examEdit" @click="toResult" v-if="isShowToResultBtn" />
         <span class="text-[30px] pl-6 flex-1 flex items-center w-full">{{ $t(props.resource_name.split('-')[0]) }}</span>
         <div v-if="isShowBtn" class="flex justify-around items-center w-full gap-3 px-3 mb-5">
           <a-button @click="onSelectQuestion('mock_exam')" class="flex w-1/2 justify-between items-center h-8 overflow-hidden">
@@ -71,8 +71,9 @@
               <template v-else-if="isHearing && i%3 === 0">Conversation{{' '}}1</template>
             </span>
             <span 
-              class="flex flex-col justify-center text-xs min-w-[50px]" 
+              class="flex flex-col justify-center text-xs min-w-[50px] cursor-pointer" 
               :style="{ color: showScore(v).color }"
+              @click="onResultClick(v)"
             >
               <span v-show="showScore(v).color === '#F7A705'"> {{ $t('完成得分') }}</span>
               {{ $t(showScore(v).text) }}
@@ -141,6 +142,16 @@ const isHearing = computed(() => {
 })
 const list = computed(() => {
   return props.section || props.children
+})
+const isShowToResultBtn = computed(() => {
+  if($route.name === 'mock') {
+    return false
+  }
+  return list.value.some(val => {
+    if(val.section_id) {
+      return val.questions[0].sheet_id && val.questions[0].last_record !== null
+    }
+  })
 })
 const isMock = computed(() => {
   return $route.name === 'mock'
@@ -241,7 +252,19 @@ const backExam = () => {
 }
 
 const toResult = () => {
-  console.log('暂不支持该功能')
+  if($route.name === 'mock') {
+    console.log('综合模考暂不支持此功能')
+    return
+  }
+  const item = list.value.find(val => val?.questions[0]?.sheet_id !== undefined && val?.questions[0]?.sheet_id !== null && val?.questions[0]?.last_record !== null)
+  $router.push(`/result/${item?.questions[0]?.sheet_id}?type=${$route?.name}`)
+}
+const onResultClick = (v) => {
+  if($route.name === 'mock') {
+    console.log('综合模考暂不支持此功能')
+    return
+  }
+  $router.push(`/result/${v.questions[0]?.sheet_id}?type=${$route?.name}`)
 }
 </script>
 <style scoped>
