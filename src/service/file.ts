@@ -1,6 +1,6 @@
 import OBSClient from "esdk-obs-browserjs";
 const obsClient = new OBSClient({
-  server: "http://obs.cn-east-3.myhuaweicloud.com/",
+  server: "https://obs.cn-east-3.myhuaweicloud.com/",
   access_key_id: "ECXZPB9CJNBSGKDVA5FC",
   secret_access_key: "yRStJuej4Cf71sLSYNxo6Hg0HPrjgrZe6G3i5Jt8",
 })

@@ -425,6 +425,7 @@ export const useResultStore = defineStore('result', () => {
       resultData.allData.push(...footerData.map((v,i) => {
         const {model_answer, model_answer_content} = formatAIModel(res.questions_r.questions[i])
         const content = model_answer_content?.Content.filter(val => Object.keys(val).length > 0);
+        console.log(model_answer_content)
         const ques_mark = v.title === 'Integrated Writing' ? i_quesFooterType : a_writingTypes;
         return {
           layout: 'col',
@@ -457,8 +458,8 @@ export const useResultStore = defineStore('result', () => {
           length: res.questions_r.questions.length,
           list: writing_result_data[v.title].map(val => ({
             title: val.title,
-            count: model_answer_content?.Grades[val.key] || 0,
-            isComputed: model_answer_content?.Grades[val.key] !== null,
+            count: model_answer_content?.Grades?.[val.key] || 0,
+            isComputed: model_answer_content?.Grades?.[val.key] !== null,
             total: 5
           })), // 题型数据
         }
