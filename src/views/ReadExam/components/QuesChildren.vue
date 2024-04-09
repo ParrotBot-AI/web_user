@@ -84,7 +84,7 @@ const HeaderBtnsConfig = reactive<{
     disabled: false,
     isShow: true,
     onClick: () => {
-      console.log('help')
+      examStore.onShowHelp()
     }
   },
   prev: {

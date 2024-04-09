@@ -20,7 +20,7 @@
     <div class="bg-white w-full overflow-hidden flex-1 flex flex-col">
       <div class="flex justify-end px-8 h-12 items-center"
         :style="{ borderBottom: '1px solid #D0D5DD', boxShadow: 'box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05)' }">
-       <Timer />
+        <BQuesTimer :times="examStore?.questionData?.time_remain" />
       </div>
       <div class="text-gray-500 px-8 py-3"
         :style="{ borderBottom: '1px solid #D0D5DD', boxShadow: 'box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05)' }">
@@ -49,10 +49,9 @@
 </template>
 <script setup lang="ts">
 import right from '@/assets/images/right.svg'
-import Timer from "./Timer.vue"
 import { useReadExamStore } from "@/stores/readExam"
-import { useRoute } from "vue-router"
 import { onMounted, ref } from "vue"
+import { useRoute } from "vue-router"
 
 const examStore = useReadExamStore()
 const $route = useRoute()

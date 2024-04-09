@@ -19,6 +19,7 @@ export const useReadExamStore = defineStore('readExam', () => {
   const $router = useRouter()
   const $route = useRoute()
   const examStore = useExamStore()
+  const isShowHelpDialog = ref(false)
   const resultStore = useResultStore()
   const questionTitle = ref('')
   const processData = reactive<any[]>([])
@@ -37,7 +38,6 @@ export const useReadExamStore = defineStore('readExam', () => {
       const [res, answerRes] = await Promise.all([request_getExam(id), request_getExamStutas(id)])
       questionData.value = res
       let initNum = 1;
-      console.log('getExamData::', id, query?.name)
       questionData.value.formatQuestion = res.questions.reduce((val, item: any) => {
         const contents = item.question_content?.split(/\\n/)
         const keywords = item.keywords?.k
@@ -164,9 +164,13 @@ export const useReadExamStore = defineStore('readExam', () => {
       duration: 0
     })
   }
-
+  const onShowHelp = () => {
+    isShowHelpDialog.value = !isShowHelpDialog.value
+  }
   return {
     changeQuestion,
+    onShowHelp,
+    isShowHelpDialog,
     getExamProcess,
     setViewText,
     questionData,

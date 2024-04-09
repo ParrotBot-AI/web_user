@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col h-full w-full overflow-y-auto">
-    <div class="w-full flex items-center justify-center" style="background: rgba(253, 212, 78, 1);">
+    <div class="w-full hidden items-center justify-center" style="background: rgba(253, 212, 78, 1);">
       <img :src="Horn"/>
       <div class="pl-[20px]">即日起至5月1日支付9.9元即可获得鹦鹉智学APP三个月会员+超值礼包！</div>
       <div class="font-bold pl-[40px] cursor-pointer" @click="onClickDel">查看详情<div class="h-[1px] bg-black-1 w-16"></div></div>

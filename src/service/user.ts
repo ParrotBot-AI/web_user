@@ -74,7 +74,7 @@ export const get_account_checkin = (account_id: number) => {
   return http.get(`/api/system/user/get_account_checkin/${account_id}/`)
 }
 export type SETUSERINFO = {
-  name: string
+  [key:string]: string
 }
 export const request_getAccount_id = (userId: number, data: {exam_id: number}) => {
   return http.post(`/api/system/user/get_user_accounts/${userId}/`, data)

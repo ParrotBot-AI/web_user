@@ -115,24 +115,8 @@ export const useIndexStore = defineStore('menu', () => {
   const daka = async () => {
     await request_update_checkin(userInfo.account_id)
   }
-  const requestUserInfo = async (to, userId: number) => {
-    userTargetsList.today = []
-    userTargetsList.wk = []
-    const _userInfo = getWithExpiry<any>('userdata')!;
-    if(_userInfo && to.name !== 'home') {
-      userInfo.userId = userId
-      userInfo.username = _userInfo.username
-      userInfo.email = _userInfo.email
-      userInfo.mobile = _userInfo.mobile
-      userInfo.avatar = _userInfo.avatar
-      userInfo.name = _userInfo.name
-      userTargetsList.today = _userInfo.today
-      userTargetsList.wk = _userInfo.wk
-      userInfo.account_id = _userInfo.account_id
-      return Promise.resolve(userInfo)
-    }
+  const requestUserInfo = async (userId: number) => {
     const res = await request_userInfo(userId)
-    const { account_id } = await request_getAccount_id(userId, { exam_id: 1 })
     userTargetsList.today = res.tdy
     userTargetsList.wk = res.wk
     userInfo.userId = userId
@@ -141,12 +125,10 @@ export const useIndexStore = defineStore('menu', () => {
     userInfo.mobile = res.mobile
     userInfo.avatar = res.avatar
     userInfo.name = res.name
+  }
+  const requestAccountId = async (id:number) => {
+    const { account_id } = await request_getAccount_id(id, { exam_id: 1 })
     userInfo.account_id = account_id
-    setWithExpiry('userdata', {
-      ...userInfo,
-      today: res.tdy,
-      wk: res.wk
-    }, 1000 * 60 * 60 * 24)
   }
   const set_update_questionnaire = async (data: any) => {
     const res = await requst_update_questionnaire({
@@ -156,6 +138,6 @@ export const useIndexStore = defineStore('menu', () => {
     console.log(res);
     
   }
-  return { daka, request_update_checkin, set_update_questionnaire, requestMenu, getMenuValue, menuData, menuList, userTargets, requestUserInfo, userTargetsList, userInfo, menuBottomList };
+  return { daka, requestAccountId, request_update_checkin, set_update_questionnaire, requestMenu, getMenuValue, menuData, menuList, userTargets, requestUserInfo, userTargetsList, userInfo, menuBottomList };
 })
 

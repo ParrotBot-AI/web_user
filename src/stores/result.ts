@@ -266,7 +266,6 @@ export const useResultStore = defineStore('result', () => {
       val.total = 0
       val.count = 0
       _v?.forEach(v1 => {
-        console.log(v1)
         val.total += v1.count
         val.count += v1.sum
       })
@@ -299,7 +298,7 @@ export const useResultStore = defineStore('result', () => {
           id: id
         }
       })
-      console.log(footerData)
+      let navNumIndex = 0
       // 首页
       resultData.allData[0] = {
         layout: 'col',
@@ -307,16 +306,30 @@ export const useResultStore = defineStore('result', () => {
         mockScore: res.score,
         mockScoreTotal: res.max_score,
         aiComment: '', // ai评语
-        list: score_d.map((val,i) => ({
-          ...footerData[i],
-          children: val.map((v: any, j: number) => ({
-            title: v.name.split(/\s/).slice(-1)[0],
-            id: `${i}-${j}`,
-            count: v.count,
-            total: v.total,
-            isComputed: val.score !== null,
-          }))
-        }))
+        list: score_d.map((val,i) => {
+          const child = val.reduce((def, v) => {
+            if(v.name.includes('Conversation')){
+              def.unshift(v)
+            } else {
+              def.push(v)
+            }
+            return def
+          }, [])
+          return {
+            ...footerData[i],
+            children: child.map((v: any, j: number) => {
+              return {
+                title: v.name.split(/\s/).slice(-1)[0],
+                id: `${i}-${j}`,
+                count: v.count,
+                total: v.total,
+                isComputed: val.score !== null,
+                index: j + i * 3,
+                navNum: res.questions_r?.questions?.[j + i * 3].children.map(() => navNumIndex++)
+              }
+            })
+          }
+        })
       }
       // 其他数据
       resultData.allData.push(...footerData.map((v,i) => {

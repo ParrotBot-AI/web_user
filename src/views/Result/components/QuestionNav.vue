@@ -23,7 +23,7 @@
                 :class="{
                   'bg-[#c22c66] text-[#fff] border-[#c22c66]': !(v.score > 0),
                 }"
-              >{{i+1}}</span>
+              >{{i + 1 + index * 10}}</span>
             </div>
           </div>
         </template>
@@ -31,18 +31,17 @@
           <div class="b-b-1 pl-[100px] relative" v-for="(sectionVal, sectionIndex) in resultStore.resultData?.allData[0].list" :key="sectionIndex">
             <h3 class="text-[#333333] font-normal text-base h-full absolute left-0 w-[100px] flex justify-center items-center" :style="{borderRight: '1px solid #B2DAC8'}">{{ sectionVal.title }}</h3>
             <div>
-              <div v-for="(val,index) in resultStore.resultData.questions_r?.questions.slice(sectionIndex*3, sectionIndex*3+3)" :key="index" class="p-2 flex items-center">
-                <!-- {{ sectionVal }} -->
-                <h4 class="text-[#667085] text-base font-normal w-[120px]">{{ sectionVal?.children[index]?.title }}</h4>
+              <div v-for="(val,index) in sectionVal?.children" :key="index" class="p-2 flex items-center">
+                <h4 class="text-[#667085] text-base font-normal w-[120px]">{{ val?.title }}</h4>
                 <div class="flex pl-3">
                   <span 
-                    v-for="(v,i) in val.children" :key="v.question_id" 
-                    @click="props.onChangeQues(2,index,i)"
+                    v-for="(v,i) in val?.navNum" :key="v.question_id" 
+                    @click="props.onChangeQues(2,val.index,i)"
                     class="w-5 h-5 mx-1 rounded-full shrink-0 text-[11px] flex justify-center items-center text-[#475467] cursor-pointer border border-solid border-[#475467]" 
                     :class="{
                       'bg-[#c22c66] text-[#fff] border-[#c22c66]': !(v.score > 0),
                     }"
-                  >{{i+1}}</span>
+                  >{{v + 1}}</span>
                 </div>
               </div>
             </div>

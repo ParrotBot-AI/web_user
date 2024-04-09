@@ -1,5 +1,5 @@
 <template>
-<a-layout class="w-full h-full flex flex-col">
+<a-layout class="w-full h-full flex flex-col" :class="props.class">
     <b-header :title="props.navTitle">
       <template #right>
         <div class="flex">
@@ -17,6 +17,7 @@ import type { HeaderBtnProps } from "./HeaderBtn.vue";
 import HeaderBtn from "./HeaderBtn.vue";
 const props = defineProps<{
   isGuide: boolean;
+  class?: string;
   navTitle: string;
   continueClick: () => void;
   guideData: {

@@ -69,7 +69,14 @@ const onChangeQues = (type, parentIndex, curIndex) => {
       step.value = resultStore.resultData.format_question.length - 1
     }
   } else {
-    step.value = resultStore.resultData.questions_r.questions[parentIndex].children.length * parentIndex + curIndex
+    step.value = resultStore.resultData.questions_r.questions.reduce((def,v,i) => {
+      if(i < parentIndex){
+        def += v.children.length
+      } else if(i === parentIndex) {
+        def += curIndex
+      }
+      return def
+    },0)
   }
 }
 </script>

@@ -1,19 +1,30 @@
 <template>
   <div class="flex w-full h-full overflow-y-auto ">
     <a-tabs class="w-full h-full page-tab-setting " >
-      <a-tab-pane key="1" tab="个人账号" class="flex  ">
-        <div class="bg-white w-[200px] h-[192px] flex flex-col  items-center justify-center border border-border-1 border-solid rounded-md ml-[100px]"  >
-          <a-avatar class="bg-green-1 top-[-10px] shadow-lg border border-border-1 border-solid" style="font-size: 40px; width: 48%;" 
-          :size="100" :src="indexStore.userInfo.avatar" :alt="indexStore.userInfo.name">
-            {{ indexStore.userInfo.name[0] || '' }}
-          </a-avatar>
-
-          <div v-if="rev" class=" text-green-1 cursor-pointer " @click="click_rev">编辑头像<div class="h-[1px] bg-green-1 w-16"></div></div>
+      <a-tab-pane key="1" tab="个人账号" class="flex">
+        <div class="bg-white w-[200px] flex shrink-0 h-[fit-content] flex-col items-center justify-center border border-border-1 border-solid rounded-md ml-[100px] pb-4">
+          <div class="w-[100px] h-[100px] relative rounded-full overflow-hidden my-4">
+            <div v-if="!rev" class="updateAvatar">
+              <CameraOutlined v-if="!cacheAvatar" />
+              <img :src="cacheAvatar" v-if="cacheAvatar" class="max-w-full max-h-full" />
+              <input type="file" class="opacity-0 absolute left-0 top-0 w-full h-full" accept=".jpg,.png,.gif,.jpeg,.svg" @change="onchange" />
+            </div>
+            <a-avatar 
+              v-show="!cacheAvatar"
+              class="bg-green-1 overflow-hidden shadow-lg border border-border-1 border-solid" 
+              :class="{avatarEdit: !rev}"
+              style="font-size: 40px;" 
+              :size="100" :src="indexStore.userInfo.avatar" 
+              :alt="indexStore.userInfo.name">
+              <img :src="avatar" width="70%" class="mt-[26px]"/>
+            </a-avatar>
+          </div>
+          <div v-if="rev" class="text-green-1 cursor-pointer decoration-solid decoration-green-1 underline" @click="click_rev">编辑头像</div>
           <div v-else class="w-full flex flex-col justify-center items-center mb-[-10px]">
-            <a-button type="primary" html-type="submit" class="shadow-none w-2/3 px-4 py-1.5 h-auto"
+            <a-button type="primary" html-type="submit" class="shadow-none w-2/3 px-4 py-1.5 h-auto" @click="updataInfo"
             >{{ $t('更新') }}</a-button
           >
-          <div class="text-green-1 py-1">删除</div>
+          <div class="text-green-1 py-1 cursor-pointer" @click="click_rev">删除</div>
           </div>
         </div>
         <div class="bg-white w-[740px] h-full flex flex-col border border-border-1 border-solid rounded-md p-[80px] ml-[50px]" style="width: 50%;">  
@@ -207,7 +218,7 @@
                     class="text px-2 cursor-pointer font-bold text-green-1"
                     @click="toLink"
                   >
-                查看
+                    查看
                   </span>
                 </template>
               </a-input>
@@ -217,14 +228,14 @@
                     class="text px-2 cursor-pointer font-bold text-green-1"
                     @click="toLink"
                   >
-                查看
+                    查看
                   </span>
                 </template>
               </a-input>
               <h1 class="text-[26px] flex w-1/2 items-start justify-start pt-10">反馈意见</h1>
-              <div class="flex items-center justify-center h-full">
+              <div class="flex items-center h-full justify-between">
                 <div class="flex flex-col mt-2" style="width: 30%;"><img :src="erweima" style="width: 127px;" /><div class="w-[127px] flex justify-center items-center text-[16px] text-[#475467]">添加企业微信</div></div>
-                <div class="flex text-[16px] h-full items-center justify-center mr-10"><div class="text-[#475467]">客服邮箱</div><div class="text-green-1 pl-2">frank_fan@parrotbot.cn</div></div>
+                <div class="text-[16px] mr-10"><span class="text-[#475467]">客服邮箱</span><a herf="mailto:frank_fan@parrotbot.cn" class="text-green-1 pl-2">frank_fan@parrotbot.cn</a></div>
               </div>
             </a-form-item>
         </div>
@@ -235,25 +246,30 @@
 </template>
 
 <script setup lang="ts">
-
 import About from '@/assets/images/about.svg';
+import avatar from "@/assets/images/avatat.jpg";
 import erweima from '@/assets/images/erweima.jpg';
+import { uploadFileToOBS } from "@/service/file";
 import type { RESRPASSWOED } from "@/service/user";
 import { useIndexStore } from '@/stores/index';
-import { useUserStore } from "@/stores/user";
+import { useUserStore } from '@/stores/user';
+import { getWithExpiry } from '@/utils/storage';
 import { useGetCode } from "@/utils/useGetCode";
 import { mobileRegex } from "@/utils/utils";
+import { CameraOutlined } from "@ant-design/icons-vue";
 import type { FormInstance } from 'ant-design-vue';
+import { message } from "ant-design-vue";
 import { reactive, ref } from "vue";
 
+const userStore = useUserStore()
 const indexStore = useIndexStore()
+const cacheAvatar = ref('')
 const isopen_web = ref(false)
 const isopen_messages = ref(false)
 const revise_password = ref(false)
 const revise_number = ref(false)
 const rev = ref(true)
 
-const userStore = useUserStore()
 const loading = ref(false)
 const formRef = ref<FormInstance>();
 const {getCodeBtnText, getCode, resetCode} = useGetCode()
@@ -284,10 +300,29 @@ const onClickGetCode = () => {
      })
   })
 }
+const toLink = () => {
+  window.open('https://yingwuzhixue.com/legal.html', '__blank')
+}
 const onClickToPassword = () => {
   userStore.onClickChangeLoginType('password')
 }
 
+const onchange = async (e) => {
+  if(e.target.files[0]){
+    const res = await uploadFileToOBS(e.target.files[0])
+    cacheAvatar.value = res.url
+  }
+}
+const updataInfo = async () => {
+   const { userId } = getWithExpiry('userinfo')!
+   message.success('更新成功！')
+    await userStore.api_setUserInfo(userId, {
+      avatar: cacheAvatar.value
+    })
+    await indexStore.requestUserInfo(userId)
+    rev.value = true
+    cacheAvatar.value = ''
+}
 const onClickpassword = () => {
   revise_password.value = true
 }
@@ -297,7 +332,7 @@ const onClicknumber = () => {
 }
 
 const click_rev = () => {
-  rev.value = false
+  rev.value = !rev.value
 }
 
 </script>
@@ -334,6 +369,26 @@ const click_rev = () => {
 
 .ant-input-wrapper .ant-input-group-addon{
   background-color:white;
+}
+
+.avatarEdit {
+  position: relative;
+}
+
+.updateAvatar {
+  position: absolute;
+  z-index: 100;
+  background: rgba(0,0,0,.7);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
+  cursor: pointer;
 }
 
 </style>

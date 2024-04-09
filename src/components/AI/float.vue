@@ -1,6 +1,6 @@
 <template>
-  <div class="fixed right-8 bottom-8 z-50" :style="transformStyle">
-    <div class="w-[60px] h-[60px]" @click.stop="onOpen" v-show="!open" ref="modalTitleRef">
+  <div class="fixed right-8 bottom-8 z-50" :style="transformStyle" ref="modalTitleRef">
+    <div class="w-[60px] h-[60px]" @click.stop="onOpen" v-show="!open" >
       <img :src="aiassistant" alt="logo" class="w-full h-full select-none" :draggable="false" />
     </div>
     <div v-show="open" class="talk-box flex flex-col">
@@ -130,6 +130,7 @@ watch([x, y], () => {
 });
 watchEffect(() => {
   if (startedDrag.value) {
+    console.log('open', open.value)
     transformX.value =
       preTransformX.value +
       Math.min(Math.max(dragRect.value.left, x.value), dragRect.value.right) -
