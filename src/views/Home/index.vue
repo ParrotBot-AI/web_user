@@ -68,16 +68,16 @@
       <div class="grid grid-cols-5 grid-rows-5 gap-4 w-full h-full">
         <div class="col-span-3 overflow-hidden row-span-5 bg-white rounded-md border shadow-lg border-border-1 border-solid flex-1 px-9 pb-3">
           <div class="h-full relative pt-3">
-            <a-tabs class="h-full" v-model:activeKey="activeKey">
+            <a-tabs class="h-full task-tabs" v-model:activeKey="activeKey">
               <a-tab-pane key="1" tab="我的任务">
                 <BaseCard :title="`${$t('今日任务')} (${indexStore.userTargetsList?.today?.length})`" :list="indexStore.userTargetsList?.today">
                 </BaseCard>
-                <BaseCard v-if="indexStore.userTargetsList?.tomorrow?.length"
-                  :title="`${$t('明日任务')} (${indexStore.userTargetsList.tomorrow.length})`" :list="indexStore.userTargetsList?.today">
+                <BaseCard v-if="indexStore.userTargetsList?.wk?.length"
+                  :title="`${$t('周度任务')} (${indexStore.userTargetsList.wk.length})`" :list="indexStore.userTargetsList?.wk">
                 </BaseCard>
               </a-tab-pane>
               <a-tab-pane key="2" tab="个人学习诊断" >
-                <template v-if="examStore?.pastScores?.isEmpty">
+                <template v-if="examStore?.pastScoresIsEmpty">
                   <p class="text-xs text-center text-[#999] mt-20">暂无学习诊断，快去学习吧～</p>
                 </template>
                 <template v-else>
@@ -202,7 +202,8 @@ const icons = {
 const listIcon = (i) => {
   return icons[i]
 }
-watch(() => userStore?.homeCharts?.length, () => {
+const setOptions =  () => {
+  console.log('userStore?.homeCharts?.length:', userStore?.homeCharts?.length)
   chart.value?.setOption({
     grid: {
       left: '28px',
@@ -220,6 +221,9 @@ watch(() => userStore?.homeCharts?.length, () => {
       data: userStore?.homeCharts?.map(item => item?.login_count)
     }]
   });
+}
+watch(() => userStore?.homeCharts?.length, setOptions, {
+  immediate: true
 })
 const style_bg = [
   'background: linear-gradient(256.27deg, #3E8AB3 -8.38%, #166195 128.6%)',
@@ -239,9 +243,11 @@ onMounted(() => {
   indexStore.daka()
   examDate.value = dayjs()
   const box = document.querySelector('.homeChartBox')
+  console.log('onMounted::::', box)
   HomeChart.value.style.width = box?.offsetWidth - 20 + 'px'
   HomeChart.value.style.height = box?.offsetHeight - 20 + 'px'
-  chart.value = echarts.init(HomeChart.value, 'main');
+  chart.value = echarts.init(HomeChart.value);
+  setOptions()
   window.addEventListener('resize', () => {
     const chart = echarts.getInstanceByDom(HomeChart.value);
     if (chart) {

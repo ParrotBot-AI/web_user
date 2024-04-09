@@ -189,7 +189,6 @@ const num = computed(() => {
 })
 const formatData = (key: string) => {
   const series = wordStore.vocabs_statics_data?.series
-  console.log(series)
   if(key === 'day') {
     return Object.keys(series).map(item => item.split('-').slice(1).join('-'))
   }

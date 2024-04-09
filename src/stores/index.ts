@@ -50,7 +50,7 @@ export const useIndexStore = defineStore('menu', () => {
   ])
   const userTargetsList = reactive({
     today: [],
-    tomorrow: [],
+    wk: [],
   })
   const menuData = reactive<{
     list: MENUITEM[];
@@ -116,6 +116,8 @@ export const useIndexStore = defineStore('menu', () => {
     await request_update_checkin(userInfo.account_id)
   }
   const requestUserInfo = async (to, userId: number) => {
+    userTargetsList.today = []
+    userTargetsList.wk = []
     const _userInfo = getWithExpiry<any>('userdata')!;
     if(_userInfo && to.name !== 'home') {
       userInfo.userId = userId
@@ -125,14 +127,14 @@ export const useIndexStore = defineStore('menu', () => {
       userInfo.avatar = _userInfo.avatar
       userInfo.name = _userInfo.name
       userTargetsList.today = _userInfo.today
-      userTargetsList.tomorrow = _userInfo.tomorrow
+      userTargetsList.wk = _userInfo.wk
       userInfo.account_id = _userInfo.account_id
       return Promise.resolve(userInfo)
     }
     const res = await request_userInfo(userId)
     const { account_id } = await request_getAccount_id(userId, { exam_id: 1 })
     userTargetsList.today = res.tdy
-    userTargetsList.tomorrow = res.tmr
+    userTargetsList.wk = res.wk
     userInfo.userId = userId
     userInfo.username = res.username
     userInfo.email = res.email
@@ -143,7 +145,7 @@ export const useIndexStore = defineStore('menu', () => {
     setWithExpiry('userdata', {
       ...userInfo,
       today: res.tdy,
-      tomorrow: res.tmr
+      wk: res.wk
     }, 1000 * 60 * 60 * 24)
   }
   const set_update_questionnaire = async (data: any) => {

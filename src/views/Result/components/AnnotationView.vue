@@ -123,7 +123,7 @@
           </div>
         </div>
       </div>
-      <div class="h-[70px] bg-white shadow-[0px_4.4px_22px_0px_rgba(0,0,0,0.10)] flex px-5 py-2 rounded-xl" v-if="props.data.length > 1">
+      <div class="h-[70px] bg-white shadow-[0px_4.4px_22px_0px_rgba(0,0,0,0.10)] flex px-5 py-2 rounded-xl scale-80" v-if="props.data.length > 1">
         <div 
           v-for="(val,i) in props.data" 
           @click="curIndex = i"
@@ -170,6 +170,9 @@ const onShowCurMark = (key, index, type) => {
 }
 </script>
 <style scoped>
+  .scale-80 {
+    transform: scale(0.8);
+  }
   .my-table {
     width: 100%;
     height: 100%;
@@ -184,15 +187,15 @@ const onShowCurMark = (key, index, type) => {
     width: 100%;
     margin-top: 10px;
   }
-  :global(.ant-tabs .ant-tabs-content) {
+  :global(.my-table .ant-tabs .ant-tabs-content) {
     height: 100%;
   }
-  :global(.ant-tabs-tabpane){
+  :global(.my-table .ant-tabs-tabpane){
     overflow-y: auto;
     height: 100%;
     padding: 0 80px;
   }
-  :global(.ant-tabs-top >.ant-tabs-nav::before) {
+  :global(.my-table .ant-tabs-top >.ant-tabs-nav::before) {
     display: none;
   }
   :global(.my-audio .audio-bar){

@@ -391,7 +391,7 @@ export const useResultStore = defineStore('result', () => {
             },0) : model_answer_content?.Grades?.[val.key]
             return {
               title: val.title,
-              count: model_answer_content ? (sum / 2).toFixed(1) : model_answer_content?.Grades?.[v.key],
+              count: model_answer_content ? (sum / 2) : model_answer_content?.Grades?.[v.key],
               isComputed: model_answer_content?.Status === "OK",
               total: 4
             }
@@ -407,14 +407,14 @@ export const useResultStore = defineStore('result', () => {
       resultData.allData[0] = {
         layout: 'col',
         name: '写作得分',
-        mockScore: res.score.toFixed(0),
+        mockScore: res.score,
         mockScoreTotal: footerData.length * 15,
         list: res.questions_r.questions.map((val: any, i: number) => {
           return {
             title: val.keywords.r === 1200 ? 'Integrated Writing' : 'Academic discussion',
             id: i,
             isComputed: val.score !== null,
-            count: (val.score).toFixed(0),
+            count: (val.score),
             total: val.max_score
             // total: 15,
           }
@@ -431,7 +431,7 @@ export const useResultStore = defineStore('result', () => {
           layout: 'col',
           name: v.title,
           ques_mark,
-          mockScore: (res.questions_r.questions[i].score).toFixed(0),
+          mockScore: (res.questions_r.questions[i].score),
           mockScoreTotal: res.questions_r.questions[i].max_score,
           aiComment: model_answer_content?.format_G_F?.General,
           model_answer,

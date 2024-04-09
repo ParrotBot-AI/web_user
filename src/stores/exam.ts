@@ -61,12 +61,12 @@ export const useExamStore = defineStore('exam', () => {
     type: number
   }>(examing_data_init)
   const pastScores = reactive({
-    'writing': {},
-    'spoken': {},
-    'hear': {},
     'read': {},
-    isEmpty: true
+    'hear': {},
+    'spoken': {},
+    'writing': {},
   })
+  const pastScoresIsEmpty = ref(true)
   const types = ['read', 'spoken', 'hearing', 'writing']
   const questionTitle = ref('')
   const processData = reactive<any[]>([])
@@ -334,9 +334,9 @@ export const useExamStore = defineStore('exam', () => {
       pastScores.writing = res["写作"]
       pastScores.spoken = res["口语"]
       pastScores.read = res["阅读"]
-      pastScores.isEmpty = false
+      pastScoresIsEmpty.value = false
     } else {
-      pastScores.isEmpty = true
+      pastScoresIsEmpty.value = true
     }
   }
   return {
@@ -346,6 +346,7 @@ export const useExamStore = defineStore('exam', () => {
     getPastResult,
     processData,
     pastScores,
+    pastScoresIsEmpty,
     setShowProcessDialog,
     showAnswerHistoryDialog,
     showProcessDialog,

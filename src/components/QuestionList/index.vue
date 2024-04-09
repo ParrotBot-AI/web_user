@@ -15,10 +15,9 @@
   </a-layout>
 </template>
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { useExamStore } from '@/stores/exam'
-import { ref } from 'vue';
-import ExamCard from "./components/QuestionCard.vue"
+import { useExamStore } from '@/stores/exam';
+import { onMounted, ref } from 'vue';
+import ExamCard from "./components/QuestionCard.vue";
 const examStore = useExamStore()
 const activeKey = ref(0);
 const loading = ref(false)
@@ -71,15 +70,15 @@ onMounted(async () => {
   border-radius: 100%;
 }
 
-.page-tab :global(.ant-tabs-top >.ant-tabs-nav) {
+:global(.page-tab .ant-tabs-top >.ant-tabs-nav) {
   margin: 0;
 }
 
-.page-tab :global(.ant-tabs .ant-tabs-tab) {
+:global(.page-tab .ant-tabs .ant-tabs-tab) {
   padding: 0 15px 12px;
 }
 
-.page-tab :global(.ant-tabs-nav) {
+:global(.page-tab .ant-tabs-nav) {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 }

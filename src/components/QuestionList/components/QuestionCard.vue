@@ -221,7 +221,7 @@ const onSelectQuestion = async (v:EXAN_START['q_type']) => {
 
 // 跳转到开始考试
 const startMockExam = async () => {
-  if (checkboxId.value.length !== 0) {
+  if (checkboxId.value.length === curCustomData.value.maxSelectCount) {
     try {
       startExamLoading.value = true
       await examStore.startExam(type.value,isHearing.value ? [...props.section.slice(0,4).map(val => val.questions[0].question_id) ,...checkboxId.value] : checkboxId.value)
