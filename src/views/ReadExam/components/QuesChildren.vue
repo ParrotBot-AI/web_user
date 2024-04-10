@@ -119,12 +119,12 @@ const HeaderBtnsConfig = reactive<{
 
 type IExamItems = {
   Toefl_Reading_sc: typeof ExamSCItem  // 单选题和填充题
-  Toefl_Reading_mc2: typeof ExamMCItem,  // 4选2多选题
+  Toefl_Reading_mc_2: typeof ExamMCItem,  // 4选2多选题
   Toefl_Reading_mc: typeof ExamLastMcItem,  // 6选3 拖动题
 }
 const examItems: IExamItems = {
   Toefl_Reading_sc: ExamSCItem,
-  Toefl_Reading_mc2: ExamMCItem,
+  Toefl_Reading_mc_2: ExamMCItem,
   Toefl_Reading_mc: ExamLastMcItem,
 }
 watchEffect(() => {

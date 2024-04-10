@@ -23,9 +23,9 @@
         <div v-for="( item, index ) in  props.answerData?.detail " :key="index" :value="index"
           class="flex pb-7 text-gray-500">
           <span class="w-5 h-5 rounded-full mr-4 opt-status" :class="{
+            default: props.answerData?.answer_weight[index] === 1,
             error: props.answerData?.answer[index] !== props.answerData?.answer_weight[index] && props.answerData?.answer[index] === 1,
-            default: props.answerData?.answer[index],
-            success: props.answerData?.answer_weight[index] === 1,
+            success: props.answerData?.answer_weight[index] === 1 && props.answerData?.answer[index] === 1,
           }"></span>
           <p class="flex-1">{{ item }}</p>
         </div>
@@ -119,8 +119,8 @@ watchEffect(() => {
   border: 1px solid #e6e6e6;
 }
 .opt-status.default {
-  background-color: rgba(195, 52, 115, 0.6);
-  border: 1px solid rgba(195, 52, 115, 0.6);
+  background-color: rgba(178, 218, 200, 1);
+  border: 1px solid rgba(178, 218, 200, 1);
   background-image: url('@/assets/homeIcon/success.svg')
 }
 .opt-status.error {

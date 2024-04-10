@@ -4,7 +4,7 @@
       <p v-for="(val,i) in question_contents" :key="i">{{ val }}</p>
     </h1>
     <!--多选-->
-    <a-checkbox-group v-model:value="mc_value" v-if="props.restriction.rc > 1 && props.question_type === 'Toefl_Reading_mc2'" class="flex flex-col">
+    <a-checkbox-group v-model:value="mc_value" v-if="props.restriction.rc > 1 && props.question_type === 'Toefl_Reading_mc_2'" class="flex flex-col">
       <a-checkbox v-for="(item, index) in props.detail" :key="index" :value="index"
         class="flex pb-7 text-gray-500 mycheckbox flex-row">
         <!-- <span class="pl-3 pr-2">{{ props.options_label[index] }}.</span> -->
@@ -14,8 +14,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, ref, watch, computed } from 'vue'
-import { useReadExamStore } from "@/stores/readExam"
+import { useReadExamStore } from "@/stores/readExam";
+import { computed, defineProps, ref, watch } from 'vue';
 const examStore = useReadExamStore()
 const mc_value = ref([]);
 const props = defineProps<{
