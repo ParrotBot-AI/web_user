@@ -52,7 +52,7 @@
       <p class="text-[#475467] text-[14px]"><span class="text-[20px]">{{ curData?.model_answer_content?.['Edited Overall'] || curData?.mockScoreTotal }}</span> / {{ curData?.mockScoreTotal }}</p>
     </div>
     <div class="flex-1 overflow-hidden bg-white w-full flex">
-      <div class="w-1/2 relative flex flex-col relative" :style="{borderRight: '1px solid #D0D5DD'}">
+      <div class="w-1/2 relative flex flex-col" :style="{borderRight: '1px solid #D0D5DD'}">
         <h2 class="text-[#667085] font-base py-4 pl-[128px] text-base" v-if="query.type === 'writing'">原版</h2>
         <h2 class="text-[#667085] font-base py-4 pl-[128px] text-base flex items-center overflow-hidden" v-else >
           <span class="mr-4 mt-4">原版录音与文字转换</span>
@@ -84,7 +84,7 @@
         </div>
       </div>
       <div class="w-1/2 relative">
-        <a-tabs v-model:activeKey="curAiIndex" class="my-table">
+        <a-tabs v-model:activeKey="curAiIndex" class="result-table">
           <a-tab-pane :key="0" tab="AI 批改">
             <div v-for="(val,i) in curData?.model_answer_content?.sent_back" :key="i" class="text-base relative mb-5">
               <p v-for="(v,k) in val" :key="k" class="relative text-base inline">
@@ -102,6 +102,16 @@
               <h4>{{ i }}</h4>
               <p>{{ val }}</p>
             </div>
+            <template v-if="curData?.model_answer_content?.['Bad Pronunciation Scores']">
+              <h4 class="text-base text-[#667085]">Bad Pronunciation Scores</h4>
+              <a-table 
+                class="mb-4 mr-6 mt-2" 
+                :pagination="false" 
+                :columns="BadPronunciationCol" 
+                size="small" 
+                :dataSource="Object.keys(curData?.model_answer_content?.['Bad Pronunciation Scores']).map(val => ({'word': val, score: curData?.model_answer_content?.['Bad Pronunciation Scores'][val]}))">
+              </a-table>
+            </template>
             <h4 class="text-base text-[#667085]">Mind Map</h4>
             <p 
               v-for="(val,i) in curData?.model_answer_content?.format_M_M" 
@@ -149,6 +159,17 @@ import { useRoute } from "vue-router";
 const showmark = ref(true)
 const resultStore = useResultStore()
 const all_p = ref(null)
+const BadPronunciationCol = [
+          {
+            title: '问题单词',
+            dataIndex: 'word',
+            key: 'word',
+          },
+          {
+            title: '发音得分',
+            dataIndex: 'score',
+            key: 'score',
+          }]
 const props = defineProps<{
   data: any[]
   onViewOrigin: (curdata:any) => void
@@ -173,30 +194,33 @@ const onShowCurMark = (key, index, type) => {
   .scale-80 {
     transform: scale(0.8);
   }
-  .my-table {
+  .result-table {
     width: 100%;
     height: 100%;
     overflow: hidden;
     display: flex;
     flex-direction: column;
   }
-  :global(.my-table .ant-tabs-nav){
+  :global(.result-table .ant-tabs-nav){
     margin: 0 80px;
   }
-  :global(.my-table .ant-tabs-content-holder){
+  :global(.result-table .ant-tabs-content-holder){
     width: 100%;
     margin-top: 10px;
   }
-  :global(.my-table .ant-tabs .ant-tabs-content) {
+  :global(.result-table .ant-tabs .ant-tabs-content) {
     height: 100%;
   }
-  :global(.my-table .ant-tabs-tabpane){
+  :global(.result-table .ant-tabs-tabpane){
     overflow-y: auto;
     height: 100%;
     padding: 0 80px;
   }
-  :global(.my-table .ant-tabs-top >.ant-tabs-nav::before) {
+  :global(.result-table .ant-tabs-top >.ant-tabs-nav::before) {
     display: none;
+  }
+  :global(.result-table .ant-tabs-content) {
+    height: 100%;
   }
   :global(.my-audio .audio-bar){
     width: 190px;

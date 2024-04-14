@@ -353,8 +353,8 @@ export const useResultStore = defineStore('result', () => {
       resultData.allData[0] = {
         layout: 'col',
         name: '口语得分',
-        mockScore: res.questions_r.questions.reduce((def, item) => def + item.score, 0),
-        mockScoreTotal : res.max_score,
+        mockScore: res?.score,
+        mockScoreTotal : 30,
         list: res.questions_r.questions.map((val: any, i: number) => {
           return {
             title: 'Task ' + val.order,
@@ -521,7 +521,6 @@ export const useResultStore = defineStore('result', () => {
     return type === 1 ? exam_range[key] : practice_range[key]
   }
   const setResultData = (res: any) => {
-    console.log('setResultData:::', res)
     resultData.questions_r = res.questions_r
     resultData.score_d = Object.values(res.score_d)
     resultData.format_question = res.questions_r.questions.reduce((def, item) => {

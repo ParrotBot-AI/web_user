@@ -83,7 +83,10 @@ export const useAIStore = defineStore('ai', () => {
     }
   }
   const setIsEnd = (id) => {
-    list.find(item => item.id === id).isEnd = true
+    const res = list.find(item => item.id === id);
+    if(res && res.isEnd){
+      res.isEnd = true
+    }
   }
   return {
     init,

@@ -41,7 +41,7 @@
 import { formatTime } from "@/utils/dayjs";
 import { CaretRightOutlined, PauseOutlined } from '@ant-design/icons-vue';
 import { computed, defineProps, onUnmounted, ref } from 'vue';
-const paused = ref(false)
+const paused = ref(true)
 const audioElement = ref<HTMLAudioElement | null>(null)
 const sumDuration = ref(0)
 const curTime = ref(0)
@@ -51,7 +51,7 @@ const props = defineProps<{
 }>()
 const loadedmetadata = () => {
   sumDuration.value = audioElement.value?.duration || 0
-  paused.value = false
+  paused.value = true
 }
 const ended = () => {
   paused.value = true

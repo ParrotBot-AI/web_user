@@ -1,20 +1,26 @@
 <template>
-  <div class="fixed right-8 bottom-8 z-50" :style="transformStyle" ref="modalTitleRef">
-    <div class="w-[60px] h-[60px]" @click.stop="onOpen" v-show="!open" >
-      <img :src="aiassistant" alt="logo" class="w-full h-full select-none" :draggable="false" />
-    </div>
+  <div 
+    class="fixed right-8 bottom-8 z-50 w-[68px] h-[68px]" 
+    :style="transformStyle" 
+    @click.stop="onOpen" 
+    v-show="!open" 
+    @mouseenter.stop 
+    @mousemove.stop ref="modalTitleRef">
+    <img :src="aiassistant" alt="logo" class="w-full h-full select-none" :draggable="false" />
+  </div>
+  <div class="fixed right-8 bottom-8 z-50" :style="transformStyle1"> 
     <div v-show="open" class="talk-box flex flex-col">
-      <header class="w-full flex pl-[34px] pr-4 items-center justify-between h-[42px] bg-white">
+      <header class="w-full flex pl-[34px] pr-4 items-center justify-between h-[42px] bg-white" ref="modalHeaderRef">
         <span class="w-[68px] h-[68px] absolute -left-[34px]">
           <img :src="aiassistant" alt="aiassistant" class="w-full"/>
         </span>
         <h2 class="text-[#475467] text-base font-semibold">{{ $t('鹦鹉AI助教') }}</h2>
-        <span class="w-[18px] h-full cursor-pointer flex justify-center items-center" @click="onOpen">
+        <span class="w-[18px] h-full cursor-pointer flex justify-center items-center" @click.stop="onOpen" @mouseenter.stop @mousemove.stop>
           <b class="w-[14px] h-[3px] bg-[#1B8B8C] rounded-md"></b>
         </span>
       </header>
       <!--聊天区-->
-      <section class="flex-1 overflow-auto px-6 pt-4 tellList bg-[#F0F7F7]" ref="messageContainer">
+      <section class="flex-1 overflow-auto px-6 pt-4 tellList bg-[#F0F7F7]">
         <Item v-for="item in list" :key="item.id" v-bind="item" :onAllEnd="onAllEnd"/>
         <div ref="bottom"></div>
       </section>
@@ -49,7 +55,7 @@ import aiassistant from '@/assets/images/aiassistant.png';
 import { startStream } from "@/service/ai";
 import Icon from '@ant-design/icons-vue';
 import { useDraggable } from '@vueuse/core';
-import { computed, defineProps, onUnmounted, ref, watch, watchEffect } from 'vue';
+import { computed, defineProps, onMounted, onUnmounted, reactive, ref, watch, watchEffect } from 'vue';
 import { useRoute } from "vue-router";
 import Item from "./item.vue";
 const timer = ref(null)
@@ -66,20 +72,114 @@ const aiParams:any = {
     problemMethod: ''
 }
 const dragRect = ref({ left: 0, right: 0, top: 0, bottom: 0 });
+const dragRect1 = ref({ left: 0, right: 0, top: 0, bottom: 0 });
 const modalTitleRef = ref<HTMLElement>();
+const modalHeaderRef = ref<HTMLElement>();
 const { query } = useRoute();
 const { x, y, isDragging } = useDraggable(modalTitleRef);
-const startX = ref<number>(0);
-const startY = ref<number>(0);
-const startedDrag = ref(false);
-const transformX = ref(0);
-const transformY = ref(0);
-const preTransformX = ref(0);
-const preTransformY = ref(0);
+const { x:x1, y:y1, isDragging:isDragging1 } = useDraggable(modalHeaderRef)
+const iconPos = reactive({
+  startX: 0,
+  startY: 0,
+  startedDrag: false,
+  transformX: 0,
+  transformY: 0,
+  preTransformX: 0,
+  preTransformY: 0
+})
+const tallPos = reactive({
+  startX: 0,
+  startY: 0,
+  startedDrag: false,
+  transformX: 0,
+  transformY: 0,
+  preTransformX: 0,
+  preTransformY: 0
+})
 const open = ref(false);
 const val = ref('')
 let starindex = 0;
 const list = ref<any[]>([]);
+const maps = {
+  'read': '阅读',
+  'hearing': '听力',
+  'spoken': '口语',
+  'writing': '写作'
+}
+
+watch([x, y], () => {
+  if (!iconPos.startedDrag && !open.value) {
+    iconPos.startX = x.value;
+    iconPos.startY = y.value;
+    const bodyRect = document.body.getBoundingClientRect();
+    const titleRect = (modalTitleRef.value as HTMLElement).getBoundingClientRect();
+    dragRect.value.right = bodyRect.width - titleRect.width;
+    dragRect.value.bottom = bodyRect.height - titleRect.height;
+    iconPos.preTransformX = iconPos.transformX;
+    iconPos.preTransformY = iconPos.transformY;
+  }
+  iconPos.startedDrag = true;
+});
+watchEffect(() => {
+  if (iconPos.startedDrag && !open.value) {
+    const transformX = iconPos.preTransformX +
+      Math.min(Math.max(dragRect.value.left, x.value), dragRect.value.right) -
+      iconPos.startX;
+    const transformY =  iconPos.preTransformY +
+      Math.min(Math.max(dragRect.value.top, y.value), dragRect.value.bottom) -
+      iconPos.startY;
+    iconPos.transformX = transformX
+    iconPos.transformY = transformY
+  }
+});
+watch([x1, y1], () => {
+  if (!tallPos.startedDrag && open.value) {
+    tallPos.startX = x1.value;
+    tallPos.startY = y1.value;
+    const bodyRect = document.body.getBoundingClientRect();
+    const titleRect = (modalHeaderRef.value as HTMLElement).getBoundingClientRect();
+    dragRect1.value.right = bodyRect.width - titleRect.width;
+    dragRect1.value.bottom = bodyRect.height - 356;
+    tallPos.preTransformX = tallPos.transformX;
+    tallPos.preTransformY = tallPos.transformY;
+  }
+  tallPos.startedDrag = true;
+});
+watchEffect(() => {
+  if (tallPos.startedDrag && open.value) {
+    tallPos.transformX =
+    tallPos.preTransformX +
+      Math.min(Math.max(dragRect1.value.left, x1.value), dragRect1.value.right) -
+      tallPos.startX;
+      tallPos.transformY =
+      tallPos.preTransformY +
+      Math.min(Math.max(dragRect1.value.top, y1.value), dragRect1.value.bottom) -
+      tallPos.startY;
+  }
+});
+watch([isDragging], () => {
+  if (!isDragging) {
+    iconPos.startedDrag = false;
+  }
+});
+watch([isDragging1], () => {
+  if (!isDragging1) {
+    tallPos.startedDrag = false;
+  }
+});
+const onOpen = () => {
+  open.value = !open.value
+}
+const transformStyle = computed(() => {
+  return {
+    transform: `translate(${iconPos.transformX}px, ${iconPos.transformY}px)`
+  };
+});
+const transformStyle1 = computed(() => {
+  return {
+    transform: `translate(${tallPos.transformX}px, ${tallPos.transformY}px)`
+  };
+});
 const btns = computed<any>(() => {
   switch (query.type) {
     case 'read':
@@ -114,48 +214,6 @@ const btns = computed<any>(() => {
   }
   return []
 })
-
-watch([x, y], () => {
-  if (!startedDrag.value) {
-    startX.value = x.value;
-    startY.value = y.value;
-    const bodyRect = document.body.getBoundingClientRect();
-    const titleRect = (modalTitleRef.value as HTMLElement).getBoundingClientRect();
-    dragRect.value.right = bodyRect.width - titleRect.width;
-    dragRect.value.bottom = bodyRect.height - titleRect.height;
-    preTransformX.value = transformX.value;
-    preTransformY.value = transformY.value;
-  }
-  startedDrag.value = true;
-});
-watchEffect(() => {
-  if (startedDrag.value) {
-    console.log('open', open.value)
-    transformX.value =
-      preTransformX.value +
-      Math.min(Math.max(dragRect.value.left, x.value), dragRect.value.right) -
-      startX.value;
-    transformY.value =
-      preTransformY.value +
-      Math.min(Math.max(dragRect.value.top, y.value), dragRect.value.bottom) -
-      startY.value;
-  }
-});
-watch(isDragging, () => {
-  if (!isDragging) {
-    startedDrag.value = false;
-  }
-});
-
-const transformStyle = computed(() => {
-  return {
-    transform: `translate(${transformX.value}px, ${transformY.value}px)`,
-  };
-});
-
-const onOpen = () => {
-  open.value = !open.value
-}
 const scrollToBottom = () => {
   // 100毫秒检查一次否滚动到底部
   clearInterval(timer.value)
@@ -166,8 +224,17 @@ const scrollToBottom = () => {
   }, 100)
 }
 const onAllEnd = () => {
+  console.log('onAllEnd')
   clearInterval(timer.value)
 }
+onMounted(() => {
+  list.value[0] = {
+    type: 'receive',
+    id: starindex++,
+    name: '',
+    content: [`有关于此篇${maps[query.type] || '文章'}的任何问题您都可以提问哦！AI助教会基于您所在的题目页面来回答您提出的问题。`]
+  }
+})
 onUnmounted(() => {
   clearInterval(timer.value)
 })
@@ -213,6 +280,7 @@ const connentAI = async (params) => {
       }
   }
 }
+
 const onSend = () => {
   if(!val.value) {
     return
