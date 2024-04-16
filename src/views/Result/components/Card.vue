@@ -2,7 +2,7 @@
   <div class="relative bg-wrap">
     <div class="bg-white rounded-md relative z-10 px-14 pb-14 pt-20" :style="{boxShadow: `0px 4px 20px 0px rgba(27, 139, 140, 0.20)`}">
       <div class="w-[190px] h-[137px] result-icon absolute -top-[70px] left-1/2 -translate-x-1/2">
-        <span class="absolute w-[46px] h-[46px] flex justify-center items-center text-white right-[40px] text-2xl">{{ resultStore.resultData.level }}</span>
+        <span class="absolute w-[46px] h-[46px] flex justify-center items-center text-white right-[40px] text-2xl">{{ resultStore.curData?.level || 'A' }}</span>
       </div>
       <div class="w-[56vw] h-full flex flex-col items-center">
         <div class="summary-wrap" :class="resultStore.curData?.layout">

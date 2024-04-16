@@ -7,8 +7,8 @@
             <span class="mx-2 flex items-center"><img :src="icon1" class="mx-1"/>已学习单词 {{ curTask.payload?.today_study || 0}}</span>
             <span class="flex items-center"><img :src="icon2" class="mx-1"/>发现生词 {{ curTask.payload?.process?.c || 0}}/{{ curTask.payload?.process?.t || 0}}</span>
           </p>
-          <a-button type="primary" class="mx-2 flex items-center justify-center"><img :src="help" class="pr-2" />帮助</a-button>
-          <a-button type="primary" class="mx-2 flex items-center justify-center" @click="wordStore.submit_Study()">直接进入背诵 <img :src="right" class="pl-2" /></a-button>
+          <a-button type="primary" class="mx-2 flex items-center justify-center h-[40px]"><img :src="help" class="pr-2" />帮助</a-button>
+          <a-button type="primary" class="mx-2 flex items-center justify-center h-[40px]" @click="wordStore.submit_Study()">直接进入背诵 <img :src="right" class="pl-2" /></a-button>
         </div>
       </template>
     </b-header>

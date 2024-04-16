@@ -48,10 +48,10 @@
   </a-layout>
 </template>
 <script setup lang="ts">
-import right from '@/assets/images/right.svg'
-import { useReadExamStore } from "@/stores/readExam"
-import { onMounted, ref } from "vue"
-import { useRoute } from "vue-router"
+import right from '@/assets/images/right.svg';
+import { useReadExamStore } from "@/stores/readExam";
+import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
 
 const examStore = useReadExamStore()
 const $route = useRoute()
@@ -59,7 +59,9 @@ const tableLoading = ref(true)
 const columns = [
   {
     title: 'Number',
-    dataIndex: 'order',
+    customRender: ({ index }: { index: number }) => {
+      return index+1
+    },
   },
   {
     title: 'Description',

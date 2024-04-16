@@ -260,7 +260,8 @@ export const useWordStore = defineStore('word', () => {
     next({payload:wordTaskData.payload})
   }
   const submit_Study = () => {
-    wordTaskData.payload.study = true
+    wordTaskData.payload.execute = true
+    wordTaskData.payload.response = wordTaskData.payload.response?.join('').replaceAll('\n','')
     wordTaskData.is_answer = true
     next({payload:wordTaskData.payload})
   }

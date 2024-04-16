@@ -260,6 +260,7 @@ const toResult = () => {
   $router.push(`/result/${item?.questions[0]?.sheet_id}?type=${$route?.name}`)
 }
 const onResultClick = (v) => {
+  if(!v.questions[0]?.last_record) return
   if($route.name === 'mock') {
     console.log('综合模考暂不支持此功能')
     return

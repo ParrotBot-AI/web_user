@@ -134,7 +134,7 @@ export const useReadExamStore = defineStore('readExam', () => {
       const mixdata = getWithExpiry(`mixedExam-${query?.mid}`)
       await request_computed_score(query?.id)
       await request_get_result(query?.id)
-      await examStore.startExam('mock_exam', mixdata?.quesid[1], mixdata?.father_sheet)
+      await examStore.startExam('mock_exam', mixdata?.quesid[1].slice(0,-1), mixdata?.father_sheet)
       $router.push({
         name: 'hearingExam',
         query: {

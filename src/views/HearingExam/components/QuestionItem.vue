@@ -13,7 +13,7 @@
       <BAudio 
         v-if="props.item?.type === 'audio'"
         :ended="onEnded"
-        title="Please listen carefully." 
+        :title="props?.item?.title ? props?.item?.title : 'Please listen carefully.'" 
         class="mt-20"
         img="2" 
         :url="props.item?.voice_link" 
@@ -45,7 +45,7 @@ const props = defineProps<{
   item: any
 }>()
 const onEnded = () => {
-  console.log('onEnded')
+  examStore.nextQuestion()
 }
 </script>
 <style scoped>

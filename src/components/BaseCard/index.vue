@@ -8,7 +8,7 @@
         <span v-if="item.status === 2" class="text-[12px] py-[2px] px-[6px] rounded-md btn-status-2" :style="{border:'1px solid var(--color-gray-300)'}">已完成</span>
         <p class="text-gray-500 flex-1 truncate px-2 text-left indent-5">{{ item.task_name }}</p>
         <a-button v-if="item.status === 0" class="text-[12px] text-green-1 border-green-1" @click="onClick(item)">去完成</a-button>
-        <a-button v-if="item.status === 1" class="text-[12px] text-[rgb(82,205,211)] border-[rgb(82,205,211)] ingbtn" @click="onClick(item)">继续完成</a-button>
+        <a-button v-if="item.status === 1" class="text-[12px] text-green-1 border-green-1 ingbtn" @click="onClick(item)">继续完成</a-button>
         <a-button v-if="item.status === 2" class="text-[12px] text-yellow-1 border-yellow-1 endbtn">已完成</a-button>
       </li>
     </ul>
@@ -53,7 +53,7 @@ const onClick = async (v) => {
     content: '';
     width: 6px;
     height: 6px;
-    background: rgb(82,205,211);
+    background: var(--color-green-1);
     display: inline-block;
     border-radius: 50%;
     vertical-align: middle;
@@ -74,7 +74,7 @@ const onClick = async (v) => {
     color: var(--color-yellow-1);
   }
   :global(.ingbtn.ant-btn-default:not(:disabled):hover) {
-    border-color: rgb(82,205,211);
-    color: rgb(82,205,211);
+    border-color: var(--color-green-1);
+    color: var(--color-green-1);
   }
 </style>

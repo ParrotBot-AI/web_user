@@ -13,7 +13,7 @@
           </div>
         </template>
       </b-header>
-      <BaseGuide v-bind="examStore?.curQuestion" v-if="examStore?.curQuestion?.type === 'info'"/>
+      <BaseGuide v-bind="examStore?.curQuestion" v-if="examStore?.curQuestion?.type === 'info' || examStore?.showHelp"/>
       <QuestionItem 
         v-else
         :item="examStore?.curQuestion"

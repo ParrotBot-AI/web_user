@@ -1,13 +1,12 @@
 import {
-    request_computed_score,
-    request_getExam,
-    request_getExamStutas,
-    request_get_result,
-    request_saveAnswer,
-    request_submitExam
+  request_computed_score,
+  request_getExam,
+  request_getExamStutas,
+  request_get_result,
+  request_saveAnswer,
+  request_submitExam
 } from '@/service/exam'
 import { useExamStore } from '@/stores/exam'
-import { useResultStore } from "@/stores/result"
 import { getWithExpiry } from '@/utils/storage'
 import { defineStore } from 'pinia'
 import { computed, reactive, ref } from 'vue'
@@ -17,10 +16,10 @@ import { useRoute, useRouter } from 'vue-router'
     const $router = useRouter()
     const $route = useRoute()
     const examStore = useExamStore()
-    const resultStore = useResultStore()
     const processData = reactive<any[]>([])
     const answerData = reactive<any[]>([])
     const questionData = ref<any>({})
+    const showHelp = ref(false)
     const step = ref(0)
     /**
      * [getExamData 考试或者练习页面根据 sheet_id 获取试题数据]
@@ -69,7 +68,7 @@ import { useRoute, useRouter } from 'vue-router'
                         voice_link: child.voice_link,
                         question_id: child.question_id,
                         order: initNum,
-                        title: "Please listen carefully.",
+                        title: child.question_content,
                         url: child.voice_link,
                         headBtns: {
                             horn: {
@@ -103,6 +102,7 @@ import { useRoute, useRouter } from 'vue-router'
                             isShow: true,
                             onClick: () => {
                               console.log('help')
+                              showHelp.value = true
                             }
                         },
                         prev: {
@@ -148,7 +148,12 @@ import { useRoute, useRouter } from 'vue-router'
                     disabled: false,
                     isShow: true,
                     onClick: () => {
+                      if(showHelp.value) {
+                        showHelp.value = false
+                      }else {
                         step.value++
+                      }
+                        
                     }
                   }
                 },
@@ -170,6 +175,9 @@ import { useRoute, useRouter } from 'vue-router'
         $router.back()
       }
     }
+    const nextQuestion = () => {
+      step.value = step.value + 1
+    }
     const curQuestion = computed(() => {
         if(!questionData.value?.formatQuestion) return {}
         $router.replace({
@@ -178,7 +186,7 @@ import { useRoute, useRouter } from 'vue-router'
                 step: step.value
             }
         })
-        return questionData.value?.formatQuestion?.[step.value]
+        return showHelp.value ? questionData.value?.formatQuestion?.[0] : questionData.value?.formatQuestion?.[step.value]
     })
     /**
      * [requestSubmitExam 计算分数，跳转到result页面]
@@ -191,7 +199,7 @@ import { useRoute, useRouter } from 'vue-router'
         const mixdata = getWithExpiry(`mixedExam-${query?.mid}`)
         await request_computed_score(query?.id)
         await request_get_result(query?.id)
-        await examStore.startExam('mock_exam', mixdata?.quesid[1], mixdata?.father_sheet)
+        await examStore.startExam('mock_exam', mixdata?.quesid[2], mixdata?.father_sheet)
         $router.push({
             name: 'spokenExam',
             query: {
@@ -224,7 +232,9 @@ import { useRoute, useRouter } from 'vue-router'
   
     return {
       questionData,
+      showHelp,
       saveQuestion,
+      nextQuestion,
       curQuestion,
       processData,
       answerData,

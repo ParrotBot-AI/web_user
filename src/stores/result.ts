@@ -7,18 +7,6 @@ import { dely } from "@/utils/utils"
 import { defineStore } from 'pinia'
 import { computed, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
-const exam_range = {
-  27: 'A+',
-  25: 'A',
-  23: 'A-',
-  21: 'B+',
-  19: 'B',
-  17: 'B-',
-  15: 'C+',
-  13: 'C',
-  10: 'C-',
-  0: 'F'
-}
 const practice_range = {
   10: 'A+',
   9: 'A',
@@ -305,6 +293,7 @@ export const useResultStore = defineStore('result', () => {
         name: '听力得分',
         mockScore: res.score,
         mockScoreTotal: res.max_score,
+        level: computedLevel(res.score, res.max_score),
         aiComment: '', // ai评语
         list: score_d.map((val,i) => {
           const child = val.reduce((def, v) => {
@@ -333,12 +322,15 @@ export const useResultStore = defineStore('result', () => {
       }
       // 其他数据
       resultData.allData.push(...footerData.map((v,i) => {
+        const mockScore = score_d[i]?.reduce((def, item) => def + item.count, 0)
+        const mockScoreTotal = score_d[i]?.reduce((def, item) => def + item.total, 0)
         return {
           subtitle: v.title,
           layout: 'row',
+          level: computedLevel(mockScore, mockScoreTotal),
           name: 'Raw Score',
-          mockScore: score_d[i]?.reduce((def, item) => def + item.count, 0),
-          mockScoreTotal: score_d[i]?.reduce((def, item) => def + item.total, 0),
+          mockScore,
+          mockScoreTotal,
           ...formatlist(formatListConfig, res.tag_d[i+1]), // 题型数据 标签
           // TODO 等接口字段
           aiComment: '', // ai评语
@@ -353,8 +345,9 @@ export const useResultStore = defineStore('result', () => {
       resultData.allData[0] = {
         layout: 'col',
         name: '口语得分',
+        level: computedLevel(res.score, footData.length === 4 ? 30 : res?.max_score),
         mockScore: res?.score,
-        mockScoreTotal : 30,
+        mockScoreTotal : footData.length === 4 ? 30 : res?.max_score,
         list: res.questions_r.questions.map((val: any, i: number) => {
           return {
             title: 'Task ' + val.order,
@@ -372,6 +365,7 @@ export const useResultStore = defineStore('result', () => {
         return {
           layout: 'col',
           name: v.title,
+          level: computedLevel(res.questions_r.questions[i].score, res.questions_r.questions[i].max_score),
           mockScore: res.questions_r.questions[i].score,
           mockScoreTotal: res.questions_r.questions[i].max_score,
           aiComment: model_answer_content?.format_G_F?.General,
@@ -422,6 +416,7 @@ export const useResultStore = defineStore('result', () => {
         name: '写作得分',
         mockScore: res.score,
         mockScoreTotal: footerData.length * 15,
+        level: computedLevel(res.score, footerData.length * 15),
         list: res.questions_r.questions.map((val: any, i: number) => {
           return {
             title: val.keywords.r === 1200 ? 'Integrated Writing' : 'Academic discussion',
@@ -446,6 +441,7 @@ export const useResultStore = defineStore('result', () => {
           ques_mark,
           mockScore: (res.questions_r.questions[i].score),
           mockScoreTotal: res.questions_r.questions[i].max_score,
+          level: computedLevel(res.questions_r.questions[i].score, res.questions_r.questions[i].max_score),
           aiComment: model_answer_content?.format_G_F?.General,
           model_answer,
           model_answer_content: {
@@ -500,25 +496,35 @@ export const useResultStore = defineStore('result', () => {
         name: '模考得分',
         mockScore: res.score,
         mockScoreTotal: res.max_score,
+        level: computedLevel(res.score, res.max_score),
         aiComment: '', // TODO 等接口字段 ai评语
         ...formatlist(formatListConfig,res.tag_d.all), // 题型数据  标签
       }
-      resultData.allData.push(...footData.map((v,i) => ({
+      resultData.allData.push(...footData.map((v,i) => {
+        const mockScore = score_d[i]?.reduce((def, item) => def + item.count, 0)
+        const mockScoreTotal = score_d[i]?.reduce((def, item) => def + item.total, 0)
+        return {
         layout: 'row',
         name: 'Raw Score',
         subtitle: v.title,
-        mockScore: score_d[i]?.reduce((def, item) => def + item.count, 0),
-        mockScoreTotal: score_d[i]?.reduce((def, item) => def + item.total, 0),
+        mockScore,
+        mockScoreTotal,
+        level: computedLevel(mockScore, mockScoreTotal),
         // TODO 等接口字段
         aiComment: '', // ai评语
         ...formatlist(formatListConfig,res.tag_d[i + 1]), // 题型数据  标签
-      })))
+      }}))
       return footData
     }
   }
-  const computedLevel = (type:number, score:number) => {
-    const key = Object.keys(type === 1 ? exam_range : practice_range).find(val => score >= Number(val))
-    return type === 1 ? exam_range[key] : practice_range[key]
+  const computedLevel = (score:number, max_score:number) => {
+    const curSore = score * (10 / max_score)
+    const keys =  Object.keys(practice_range).sort((a,b) => a-b)
+    const key = keys.find((val, i) => {
+      console.log(curSore)
+      return curSore >= Number(val) && curSore < Number(i === keys.length - 1 ? 11 : keys[i+1])
+    }, 0)
+    return practice_range[key]
   }
   const setResultData = (res: any) => {
     resultData.questions_r = res.questions_r
@@ -548,7 +554,6 @@ export const useResultStore = defineStore('result', () => {
       ...formatData(res)
     ])
     resultData.title = `${resultData.score_d[0][0].name.match(/^(TPO\s?\d+)/)[1]} 成绩单`
-    resultData.level = computedLevel(res.type,res.score)
     resultData.loading = false
   }
 
