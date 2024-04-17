@@ -31,13 +31,13 @@
     </b-header>
     <!--中间内容-->
     <div class="h-[50px] bg-[#F0F7F7] w-full pl-[128px] pr-[100px]">
-      <p v-if="query.type === 'spoken'" class="text-[#475467] truncate mt-1"><b>Question: </b>{{ curData?.question?.question_title }}</p>
+      <p v-if="resultStore.resultData.type === 'spoken'" class="text-[#475467] truncate mt-1"><b>Question: </b>{{ curData?.question?.question_title }}</p>
     </div>
     <div 
       class="w-[80px] h-[80px] bg-white fixed right-[calc(50vw+20px)] z-100 rounded-full flex flex-col justify-center items-center" 
       :style="{
         border: '10px solid #F0F7F7',
-        top: query.type === 'spoken' ? `95px` : `82px`
+        top: resultStore.resultData.type === 'spoken' ? `95px` : `82px`
       }">
       <span class="text-xs text-[rgba(0,0,0,0.50)]">评分</span>
       <p class="text-[#475467] text-[14px]"><span class="text-[20px]">{{ curData?.model_answer_content?.Overall }}</span> / {{ curData?.mockScoreTotal }}</p>
@@ -46,14 +46,14 @@
       class="w-[80px] h-[80px] bg-white fixed right-[20px] z-100 rounded-full flex flex-col justify-center items-center" 
       :style="{
         border: '10px solid #F0F7F7',
-        top: query.type === 'spoken' ? `95px` : `82px`
+        top: resultStore.resultData.type === 'spoken' ? `95px` : `82px`
       }">
       <span class="text-xs text-[rgba(0,0,0,0.50)]">评分</span>
       <p class="text-[#475467] text-[14px]"><span class="text-[20px]">{{ curData?.model_answer_content?.['Edited Overall'] || curData?.mockScoreTotal }}</span> / {{ curData?.mockScoreTotal }}</p>
     </div>
     <div class="flex-1 overflow-hidden bg-white w-full flex">
       <div class="w-1/2 relative flex flex-col" :style="{borderRight: '1px solid #D0D5DD'}">
-        <h2 class="text-[#667085] font-base py-4 pl-[128px] text-base" v-if="query.type === 'writing'">原版</h2>
+        <h2 class="text-[#667085] font-base py-4 pl-[128px] text-base" v-if="resultStore.resultData.type === 'writing'">原版</h2>
         <h2 class="text-[#667085] font-base py-4 pl-[128px] text-base flex items-center overflow-hidden" v-else >
           <span class="mr-4 mt-4">原版录音与文字转换</span>
           <BaseResAudio :src="curData?.question.answer_voice_link" class="my-audio"/>
@@ -155,7 +155,6 @@ import BaseResAudio from "@/components/BaseResAudio/index.vue";
 import { useResultStore } from "@/stores/result";
 import { AuditOutlined, EyeInvisibleOutlined, EyeOutlined, RightOutlined } from '@ant-design/icons-vue';
 import { computed, defineProps, ref } from "vue";
-import { useRoute } from "vue-router";
 const showmark = ref(true)
 const resultStore = useResultStore()
 const all_p = ref(null)
@@ -177,7 +176,6 @@ const props = defineProps<{
 }>()
 const curIndex = ref(0)
 const curAiIndex = ref(0)
-const {query} = useRoute()
 const curData = computed(() => {
   return props.data[curIndex.value]
 })

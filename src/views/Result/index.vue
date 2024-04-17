@@ -16,7 +16,8 @@
             <a-button 
               type="primary" 
               class="px-4 text-[16px] mx-1.5 py-[18px] flex items-center justify-center"
-            @click="onReviewAnswer"
+              v-if="resultStore.footerData[resultStore.resultData.footerActiveIndex].id !== 'MixedAll'"
+              @click="onReviewAnswer"
             >
               <span>回顾答案<RightOutlined /></span>
             </a-button>

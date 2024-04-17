@@ -9,7 +9,7 @@
    <!--批注-->
    <AnnotationView 
     v-else
-    :data="resultStore.resultData.allData.slice(1)"
+    :data="resultStore.resultData.AnnotationData"
     :onViewOrigin="onViewOrigin"
     :onBack="onBack"
   />

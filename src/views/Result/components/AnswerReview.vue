@@ -1,6 +1,6 @@
 <template>
   <a-layout class="w-full h-full flex flex-col absolute top-0 left-0  bg-green-2 z-50">
-    <header class="bg-green-2 px-6 py-4 flex justify-between items-center" v-show="$route.query.type === 'read' || $route.query.type === 'hearing'">
+    <header class="bg-green-2 px-6 py-4 flex justify-between items-center" v-show="showQuesNav">
       <div class="font-normal text-xl text-gray-900 ">
         <ArrowLeftOutlined class="pr-2" @click="onReviewAnswer"/> 返回
       </div>
@@ -17,14 +17,14 @@
           :title="answerData?.question_parent?.question_title" 
           :index="step + 1" 
           :length="resultStore.resultData?.format_question?.length"
-          v-show="$route.query.type === 'read' || $route.query.type === 'hearing'"
+          v-show="showQuesNav"
         > 
       </BQuesTitle>
       <component :is="reviewComponent" :answerData="answerData" />
     </div>
     <QuestionNav 
       :onChangeQues="onChangeQues"
-      v-if="$route.query.type === 'read' || $route.query.type === 'hearing'"
+      v-if="showQuesNav"
     />
   </a-layout>
 </template>
@@ -52,9 +52,11 @@ const answerData = computed(() => {
 })
 
 const reviewComponent = computed(() => {
-  return ComponentMap[$route.query.type as string] || null
+  return ComponentMap[resultStore.resultData.type as string] || null
 })
-
+const showQuesNav = computed(() => {
+  return resultStore.resultData.type  === 'read' || resultStore.resultData.type  === 'hearing'
+})
 const onReviewAnswer = () => {
   resultStore.setShowAnswerHistoryDialog()
 }

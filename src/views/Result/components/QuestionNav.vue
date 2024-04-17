@@ -12,7 +12,7 @@
       hidden: isMax
     }">
       <section class="flex flex-col">
-        <template v-if="query.type === 'read'">
+        <template v-if="resultStore.resultData.type === 'read'">
         <div v-for="(val,index) in resultStore.resultData.questions_r?.questions" :key="i" class="p-2 flex items-center">
             <h4 class="text-[#667085] text-base font-normal">Passage {{val?.order}}</h4>
             <div class="flex pl-3">
@@ -27,8 +27,8 @@
             </div>
           </div>
         </template>
-        <template v-if="query.type === 'hearing'">
-          <div class="b-b-1 pl-[100px] relative" v-for="(sectionVal, sectionIndex) in resultStore.resultData?.allData[0].list" :key="sectionIndex">
+        <template v-if="resultStore.resultData.type === 'hearing'">
+          <div class="b-b-1 pl-[100px] relative" v-for="(sectionVal, sectionIndex) in navData" :key="sectionIndex">
             <h3 class="text-[#333333] font-normal text-base h-full absolute left-0 w-[100px] flex justify-center items-center" :style="{borderRight: '1px solid #B2DAC8'}">{{ sectionVal.title }}</h3>
             <div>
               <div v-for="(val,index) in sectionVal?.children" :key="index" class="p-2 flex items-center">
@@ -59,11 +59,9 @@
 import { useResultStore } from "@/stores/result";
 import { useDraggable } from '@vueuse/core';
 import { computed, defineProps, ref, watch, watchEffect } from 'vue';
-import { useRoute } from "vue-router";
 const props = defineProps<{
   onChangeQues: (type: 1 | -1 | 2, parentIndex?:number, curIndex?: number) => void
 }>()
-const {query} = useRoute()
 const resultStore = useResultStore()
 const modalTitleRef = ref<HTMLElement>();
 const { x, y, isDragging } = useDraggable(modalTitleRef);
@@ -113,6 +111,10 @@ const transformStyle = computed(() => {
   };
 });
 
+const navData = computed(() => {
+  return resultStore.resultData?.navData || []
+  // return resultStore.resultData?.allData[0].list
+})
 
 </script>
 <style scoped>
