@@ -1,1 +1,0 @@
-import{_ as e}from"./_plugin-vue_export-helper-x3n3nnut.js";import{c,e as o}from"./index-U57YJnlT.js";const t={},r={class:"flex flex-col"};function s(n,_){return c(),o("div",r," 周报总结 ")}const l=e(t,[["render",s]]);export{l as default};
