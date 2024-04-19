@@ -24,7 +24,7 @@
         </a-avatar>
         <div class="mx-1.5 flex-1 overflow-hidden">
           <div class="truncate w-full">{{ indexStore.userInfo.name }}</div>
-          <div>{{ indexStore.userInfo.mobile || '136****7890' }}</div>
+          <div class="truncate w-full">{{ indexStore.userInfo.mobile || '136****7890' }}</div>
         </div>
         <img :src="LayOut" alt="layout" class="w-5 h-5 overflow-hidden" />
       </div>
@@ -32,11 +32,11 @@
   </div>
 </template>
 <script lang="ts" setup>
-import type { MenuProps } from 'ant-design-vue'
 import { useIndexStore } from '@/stores/index'
 import { useUserStore } from '@/stores/user'
-import logoBg from '@image/logo-bg.png'
 import LayOut from '@image/log-out-01.svg'
+import logoBg from '@image/logo-bg.png'
+import type { MenuProps } from 'ant-design-vue'
 import { RouterLink, useRouter } from 'vue-router'
 const $router = useRouter()
 const indexStore = useIndexStore()

@@ -13,7 +13,7 @@ const tailwindConfig = {
     screens: {
       sm: '640px',
       md: '768px',
-      lg: '1024px',
+      lg: '1025px',
       xl: '1400px',
     },
     colors: {

@@ -4,8 +4,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, ref, computed } from "vue"
-import PassageWord from "./children.vue"
+import { computed, defineProps, ref } from "vue";
+import PassageWord from "./children.vue";
 const startPassageIndex = ref(1)
 const props = defineProps<{
   data: string[]
@@ -18,7 +18,4 @@ const onended = () => {
 }
 </script>
 <style scoped>
-  .wrod-artial >div:nth-child(1){
-    text-align: center;
-  }
 </style>

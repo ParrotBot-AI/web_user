@@ -167,7 +167,7 @@ watchEffect(() => {
         return startindex === _i ? `<span class="fill-item" data-index="${startindex}">【 <em>${keywords_s}</em> 】</span>` : `<span class="fill-item" data-index="${startindex}">【 <b></b> 】</span>`
       })
     }
-    paragraphEl?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    paragraphEl?.scrollIntoView({ behavior: 'auto', block: 'start' })
   } else {
     contentDiv.value?.scrollTo(0, 0)
   }

@@ -22,7 +22,7 @@
             <div class="flex h-full items-center justify-start"> 
               <div class="border-l w-[0.5px] h-1/2 bg-[rgba(0,0,0,0.20)]"></div>
             </div>
-            <div class="flex flex-col ml-[40px] pt-6">
+            <div class="flex flex-col ml-[40px] pt-6 overflow-auto">
               <div class="font-bold text-[18px] overflow-hidden">
                 每日打卡{{ ' ' }}
                 <a-tooltip 
