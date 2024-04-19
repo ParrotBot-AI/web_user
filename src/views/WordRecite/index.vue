@@ -218,12 +218,11 @@ watchEffect (() => {
         }
       },
       formatter: function(params:any) {
-        console.log(params)
         var tooltipHtml = '<div class="custom-tooltip">';
         tooltipHtml += '<div class="arrow"></div>'; 
         tooltipHtml += '<div class="content">'; 
-        tooltipHtml += '<div class="tooltip-title">' + '<div class="tooltip-title-study">'+'</div>'+'学习' + params[0].value + '</div>'; // Example: Axis label
-        tooltipHtml += '<div class="tooltip-title">' + '<div class="tooltip-title-forget">'+'</div>'+'遗忘' + params[1].value + '</div>'; // Example: Axis label
+        tooltipHtml += '<div class="tooltip-title">' + '<div class="tooltip-title-study">'+'</div>'+'学习' + (params[1].value + params[0].value) + '</div>'; // Example: Axis label
+        tooltipHtml += '<div class="tooltip-title">' + '<div class="tooltip-title-forget">'+'</div>'+'遗忘' + params[0].value + '</div>'; // Example: Axis label
         return tooltipHtml;
       },
       extraCssText: 'pointer-events: none;'
@@ -232,7 +231,6 @@ watchEffect (() => {
       right: 10,
       data: ['学习单词', '遗忘单词'],
       icon: 'circle'
-      
     },
     toolbox: {
       feature: {
@@ -260,7 +258,6 @@ watchEffect (() => {
       }
     ],
     series: [
-    
       {
         name: '遗忘单词',
         type: 'line',
