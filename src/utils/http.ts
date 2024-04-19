@@ -1,7 +1,7 @@
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-import axios from 'axios'
+import { getWithExpiry } from "@/utils/storage";
 import { message } from 'ant-design-vue';
-import { getWithExpiry } from "@/utils/storage"
+import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios from 'axios';
 
 export const SUCCESS_CODE = 2000
 export const AUTHERROT_CODE = 10005
@@ -147,6 +147,14 @@ class Axios {
     options?: IRequestOptions,
   ): Promise<T> {
     return this.instance.post(url, data, options)
+  }
+
+  public async put<T = any>(
+    url: string,
+    data?: any,
+    options?: IRequestOptions,
+  ): Promise<T> {
+    return this.instance.put(url, data, options)
   }
 
   public async patch<T = any>(

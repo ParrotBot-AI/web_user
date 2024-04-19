@@ -45,11 +45,9 @@ export const request_sms = (data: SMS_TYPE) => {
   })
 }
 
-export const request_resetPassword = (data: RESRPASSWOED) => {
-  return http.post('/api/system/user/39/reset_password/', {
+export const request_resetPassword = (userid, data: RESRPASSWOED) => {
+  return http.put(`/api/system/user/${userid}/change_password/`, {
     ...data,
-  }, {
-    ignoreAuth: true
   })
 }
 

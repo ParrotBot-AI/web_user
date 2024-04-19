@@ -37,7 +37,7 @@
               </a-input>
             </a-form-item>
             <a-form-item :label="$t('密码')" name="password">
-              <a-input class="px-3.5 py-0" :placeholder="$t('输入密码')" v-model:value="userInfo.password">
+              <a-input class="px-3.5 py-0" :placeholder="$t('输入密码')" value="password" type="password">
                 <template #suffix>
                   <span class="text h-full py-2.5 px-2 cursor-pointer text-green-1 " @click="onClickpassword()">
                     修改密码
@@ -230,6 +230,7 @@ const onFinish = async () => {
   try {
     loading.value = true
     await userStore.api_findPassword(formState)
+    revise_password.value = false
   } catch (e) {
     console.log(e)
   } finally {

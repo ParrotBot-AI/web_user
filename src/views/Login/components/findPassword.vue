@@ -50,13 +50,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import {reactive, ref} from "vue"
-import { useUserStore } from "@/stores/user"
-import { mobileRegex } from "@/utils/utils"
+import type { RESRPASSWOED } from "@/service/user";
+import { useUserStore } from "@/stores/user";
+import { useGetCode } from "@/utils/useGetCode";
+import { mobileRegex } from "@/utils/utils";
 import { ArrowLeftOutlined } from '@ant-design/icons-vue';
-import type { RESRPASSWOED } from "@/service/user"
-import type { FormInstance } from 'ant-design-vue'
-import {useGetCode} from "@/utils/useGetCode"
+import type { FormInstance } from 'ant-design-vue';
+import { reactive, ref } from "vue";
 const userStore = useUserStore()
 const loading = ref(false)
 const formRef = ref<FormInstance>();
@@ -74,7 +74,13 @@ const rulesRef = reactive({
 const onFinish = async () => {
   try {
     loading.value = true
-    await userStore.api_findPassword(formState)
+    await userStore.api_login({
+      mobile: formState.mobile,
+      code: formState.code,
+      type: 'sms'
+    }, {
+      password: formState.password
+    })
   }catch(e){
     console.log(e)
   }finally{

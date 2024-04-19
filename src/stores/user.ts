@@ -25,11 +25,18 @@ export const useUserStore = defineStore('user', () => {
       resetCode()
     }
   }
-  const api_login = async (data: LOGIN_TYPE_SMS | LOGIN_TYPE_PHOME) => {
+  const api_login = async (data: LOGIN_TYPE_SMS | LOGIN_TYPE_PHOME, type) => {
     const res = await request_login(data)
     setWithExpiry('userinfo', res, null);
     removeWithExpiry('usermenu');
     removeWithExpiry('userdata');
+    if(type && type?.password){
+      await api_findPassword({
+        code: data.code,
+        mobile: data.mobile,
+        password: type.password
+      })
+    } 
     message.success('登录成功',1, () => {
       if((res.name)) {
         router.push('/home')
@@ -39,8 +46,13 @@ export const useUserStore = defineStore('user', () => {
     })
   }
   const api_findPassword = async (data: RESRPASSWOED) => {
-    const res = await request_resetPassword(data)
-    console.log('api_findPassword', res)
+    await request_resetPassword(indexStore.userInfo.userId,{
+      code: data.code,
+      phone: data.mobile,
+      newPassword: data.password,
+      newPassword2: data.password,
+    })
+    message.success('修改密码成功')
   }
 
   const api_setUserInfo = async (userId:number, data: SETUSERINFO) => {

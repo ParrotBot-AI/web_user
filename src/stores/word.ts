@@ -257,10 +257,12 @@ export const useWordStore = defineStore('word', () => {
   const submit_unknown = () => {
     wordTaskData.payload.unknown = true
     wordTaskData.is_answer = true
-    next({payload:wordTaskData.payload})
+    wordTaskData.is_error = true
+    // next({payload:wordTaskData.payload})
   }
   const submit_Study = () => {
     wordTaskData.payload.execute = true
+    wordTaskData.payload.study = true
     wordTaskData.payload.response = wordTaskData.payload.response?.join('').replaceAll('\n','')
     wordTaskData.is_answer = true
     next({payload:wordTaskData.payload})
