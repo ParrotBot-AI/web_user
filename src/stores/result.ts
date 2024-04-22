@@ -376,13 +376,13 @@ export const useResultStore = defineStore('result', () => {
           layout: 'col',
           name: v.title,
           level: computedLevel(res.questions_r.questions[i].score, res.questions_r.questions[i].max_score),
-          mockScore: res.questions_r.questions[i].score,
+          mockScore: model_answer_content?.Status === 'OK' ? res.questions_r.questions[i].score : 'Na',
           mockScoreTotal: res.questions_r.questions[i].max_score,
           aiComment: model_answer_content?.Status === 'OK' ? model_answer_content?.format_G_F?.General : model_answer_content?.msg === '用量已超使用上限制' ? '🔒您的今日免费批改次数已用尽，如需批改，请前往价格页购买。' : model_answer_content?.msg,
           model_answer,
           model_answer_content: {
             ...model_answer_content,
-            'sent_back': content.map(val => Object.keys(val).reduce((def, key) => {
+            'sent_back': content?.map(val => Object.keys(val).reduce((def, key) => {
               const style = model_answer_content['Sentence Feedback'][key].Type?.reduce((d, v) => {
                 return {
                   ...ques_mark.find(v1 => v1.id === v || v1.id.includes(v))?.style,
@@ -408,28 +408,29 @@ export const useResultStore = defineStore('result', () => {
             }, 0) : model_answer_content?.Grades?.[val.key]
             return {
               title: val.title,
-              count: model_answer_content ? (sum / 2) : model_answer_content?.Grades?.[v.key],
-              isComputed: model_answer_content?.Status === "OK",
+              count: model_answer_content?.Status === 'OK' ? (model_answer_content ? (sum / 2) : model_answer_content?.Grades?.[v.key]) : 'Na',
+              isComputed: model_answer_content?.Grades?.[val.key] !== null,
               total: 4
             }
           }), // 题型数据
         }
       })
       resultData.AnnotationData = allDatas
+      const _r = allDatas[0]
       return {
         allData: [
           {
             layout: 'col',
             name: '口语得分',
             level: computedLevel(res.score, footData.length === 4 ? 30 : res?.max_score),
-            mockScore: res?.score,
+            mockScore: _r.model_answer_content?.Status === 'OK' ? res?.score : 'Na',
             mockScoreTotal: footData.length === 4 ? 30 : res?.max_score,
             list: res.questions_r.questions.map((val: any, i: number) => {
               return {
                 title: 'Task ' + val.order,
                 id: i,
                 isComputed: val.score !== null,
-                count: val.score,
+                count: _r.model_answer_content?.Status === 'OK' ? val.score : 'Na',
                 total: val.max_score
               }
             })
@@ -451,7 +452,7 @@ export const useResultStore = defineStore('result', () => {
           layout: 'col',
           name: v.title,
           ques_mark,
-          mockScore: (res.questions_r.questions[i].score),
+          mockScore: model_answer_content?.Status === 'OK' ? (res.questions_r.questions[i].score) : 'Na',
           mockScoreTotal: res.questions_r.questions[i].max_score,
           level: computedLevel(res.questions_r.questions[i].score, res.questions_r.questions[i].max_score),
           aiComment: model_answer_content?.Status === 'OK' ? model_answer_content?.format_G_F?.General : model_answer_content?.msg === '用量已超使用上限制' ? '🔒您的今日免费批改次数已用尽，如需批改，请前往价格页购买。' : model_answer_content?.msg,
@@ -479,12 +480,13 @@ export const useResultStore = defineStore('result', () => {
           length: res.questions_r.questions.length,
           list: writing_result_data[v.title].map(val => ({
             title: val.title,
-            count: model_answer_content?.Grades?.[val.key] || 0,
+            count: model_answer_content?.Status === 'OK' ? model_answer_content?.Grades?.[val.key] : 'Na',
             isComputed: model_answer_content?.Grades?.[val.key] !== null,
             total: 5
           })), // 题型数据
         }
       })
+      const _r = allDatas[0]
       resultData.AnnotationData = allDatas
       return {
         footerData,
@@ -492,7 +494,7 @@ export const useResultStore = defineStore('result', () => {
           {
             layout: 'col',
             name: '写作得分',
-            mockScore: res.score,
+            mockScore: _r.model_answer_content?.Status === 'OK' ? res.score : 'Na',
             mockScoreTotal: footerData.length * 15,
             level: computedLevel(res.score, footerData.length * 15),
             list: res.questions_r.questions.map((val: any, i: number) => {
@@ -500,7 +502,7 @@ export const useResultStore = defineStore('result', () => {
                 title: val.keywords.r === 1200 ? 'Integrated Writing' : 'Academic discussion',
                 id: i,
                 isComputed: val.score !== null,
-                count: (val.score),
+                count: _r.model_answer_content?.Status === 'OK' ? (val.score) : 'Na',
                 total: val.max_score
                 // total: 15,
               }
