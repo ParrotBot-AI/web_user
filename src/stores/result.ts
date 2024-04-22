@@ -378,7 +378,7 @@ export const useResultStore = defineStore('result', () => {
           level: computedLevel(res.questions_r.questions[i].score, res.questions_r.questions[i].max_score),
           mockScore: res.questions_r.questions[i].score,
           mockScoreTotal: res.questions_r.questions[i].max_score,
-          aiComment: model_answer_content?.format_G_F?.General,
+          aiComment: model_answer_content?.Status === 'OK' ? model_answer_content?.format_G_F?.General : model_answer_content?.msg === '用量已超使用上限制' ? '🔒您的今日免费批改次数已用尽，如需批改，请前往价格页购买。' : model_answer_content?.msg,
           model_answer,
           model_answer_content: {
             ...model_answer_content,
@@ -454,7 +454,7 @@ export const useResultStore = defineStore('result', () => {
           mockScore: (res.questions_r.questions[i].score),
           mockScoreTotal: res.questions_r.questions[i].max_score,
           level: computedLevel(res.questions_r.questions[i].score, res.questions_r.questions[i].max_score),
-          aiComment: model_answer_content?.format_G_F?.General,
+          aiComment: model_answer_content?.Status === 'OK' ? model_answer_content?.format_G_F?.General : model_answer_content?.msg === '用量已超使用上限制' ? '🔒您的今日免费批改次数已用尽，如需批改，请前往价格页购买。' : model_answer_content?.msg,
           model_answer,
           model_answer_content: {
             ...model_answer_content,

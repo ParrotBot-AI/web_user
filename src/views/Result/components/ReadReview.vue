@@ -32,7 +32,7 @@
       </div>
     </div>
   </div>
-  <FloatAI :data="props.answerData" />
+  <FloatAI :data="props.answerData" type="read"/>
 </template>
 <script setup lang="ts">
 import FloatAI from "@/components/AI/float.vue";

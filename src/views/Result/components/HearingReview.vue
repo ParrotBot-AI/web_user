@@ -27,7 +27,7 @@
       </div>
     </div>
   </div>
-  <FloatAI :data="props.answerData" />
+  <FloatAI :data="props.answerData" type="hearing" />
 </template>
 <script setup lang="ts">
 import FloatAI from "@/components/AI/float.vue";

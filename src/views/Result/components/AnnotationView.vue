@@ -40,7 +40,7 @@
         top: resultStore.resultData.type === 'spoken' ? `95px` : `82px`
       }">
       <span class="text-xs text-[rgba(0,0,0,0.50)]">评分</span>
-      <p class="text-[#475467] text-[14px]"><span class="text-[20px]">{{ curData?.model_answer_content?.Overall }}</span> / {{ curData?.mockScoreTotal }}</p>
+      <p class="text-[#475467] text-[14px]"><span class="text-[20px]">{{ curData?.model_answer_content?.Overall || 'Na' }}</span> / {{ curData?.mockScoreTotal }}</p>
     </div>
     <div 
       class="w-[80px] h-[80px] bg-white fixed right-[20px] z-100 rounded-full flex flex-col justify-center items-center" 
@@ -49,7 +49,7 @@
         top: resultStore.resultData.type === 'spoken' ? `95px` : `82px`
       }">
       <span class="text-xs text-[rgba(0,0,0,0.50)]">评分</span>
-      <p class="text-[#475467] text-[14px]"><span class="text-[20px]">{{ curData?.model_answer_content?.['Edited Overall'] || curData?.mockScoreTotal }}</span> / {{ curData?.mockScoreTotal }}</p>
+      <p class="text-[#475467] text-[14px]"><span class="text-[20px]">{{ curData?.model_answer_content?.['Edited Overall'] || curData?.mockScoreTotal || 'Na'  }}</span> / {{ curData?.mockScoreTotal }}</p>
     </div>
     <div class="flex-1 overflow-hidden bg-white w-full flex">
       <div class="w-1/2 relative flex flex-col" :style="{borderRight: '1px solid #D0D5DD'}">
@@ -59,31 +59,44 @@
           <BaseResAudio :src="curData?.question.answer_voice_link" class="my-audio"/>
         </h2>
         <div class="overflow-y-auto flex-1 w-full pl-[128px] pr-[68px]" ref="all_p">
-          <div v-for="(val,i) in curData?.model_answer_content?.sent_back" :key="i" class="mb-4 text-base relative all-ps">
-            <p 
-              v-for="(v,k) in val" :key="k" class="relative text-base inline" 
-              @mouseover="() => onShowCurMark(k, i, 'hover')"
-              @mouseleave="() => onShowCurMark(k, i, 'leave')"
-            >
-              <span 
-                class="bg-[#1B8B8C] text-[#fff] w-[20px] h-[20px] text-xs border border-[#1B8B8C] border-solid rounded-full inline-block text-center mx-1"
-                :style="{lineHeight: '20px'}"
-                v-show="showmark"
-              >{{ k }}</span>
-              <a-tooltip 
-                placement="bottomRight" 
-                :overlayInnerStyle="{'margin-top':'-10px', background: '#D0F0E6', color: '#0A3F64',fontSize: '12px',borderRadius: '15px',borderTopLeftRadius: '0',border: '1px solid #0A3F64', marginTop: '-20px', marginLeft: '3px', padding: '10px'}"
+          <template v-if="curData?.model_answer_content?.Status === 'OK' && curData?.model_answer_content?.sent_back">
+            <div v-for="(val,i) in curData?.model_answer_content?.sent_back" :key="i" class="mb-4 text-base relative all-ps">
+              <p 
+                v-for="(v,k) in val" :key="k" class="relative text-base inline" 
+                @mouseover="() => onShowCurMark(k, i, 'hover')"
+                @mouseleave="() => onShowCurMark(k, i, 'leave')"
               >
-                  <template #title>
-                    <div>{{ v.Feedback }}</div>
-                  </template>
-                  <span :style="showmark ? v.curStyle : {}">{{ v.original }}</span>
-              </a-tooltip>
-            </p>
-          </div>
+                <span 
+                  class="bg-[#1B8B8C] text-[#fff] w-[20px] h-[20px] text-xs border border-[#1B8B8C] border-solid rounded-full inline-block text-center mx-1"
+                  :style="{lineHeight: '20px'}"
+                  v-show="showmark"
+                >{{ k }}</span>
+                <a-tooltip 
+                  placement="bottomRight" 
+                  :overlayInnerStyle="{'margin-top':'-10px', background: '#D0F0E6', color: '#0A3F64',fontSize: '12px',borderRadius: '15px',borderTopLeftRadius: '0',border: '1px solid #0A3F64', marginTop: '-20px', marginLeft: '3px', padding: '10px'}"
+                >
+                    <template #title>
+                      <div>{{ v.Feedback }}</div>
+                    </template>
+                    <span :style="showmark ? v.curStyle : {}">{{ v.original }}</span>
+                </a-tooltip>
+              </p>
+            </div>
+          </template>
+          <template v-else>
+            <div class="text-[#667085] text-base">
+              {{ curData?.question?.answer }}
+            </div>
+          </template>
         </div>
       </div>
       <div class="w-1/2 relative">
+        <div class="content-mask" v-if="curData?.model_answer_content.Status !== 'OK' && curData?.model_answer_content?.msg?.includes('用量已超使用上限制')">
+          <div>
+            <p class="text-center pb-4">🔒您的今日免费批改次数已用尽<br/>如需批改，请购买会员</p>
+            <a-button type="primary" class="!text-[14px] mx-auto block" @click="router.replace('/price')">购买会员</a-button>
+          </div>
+        </div>
         <a-tabs v-model:activeKey="curAiIndex" class="result-table">
           <a-tab-pane :key="0" tab="AI 批改">
             <div v-for="(val,i) in curData?.model_answer_content?.sent_back" :key="i" class="text-base relative mb-5">
@@ -146,7 +159,7 @@
       </div>
     </footer>
   </div>
-  <FloatAI :data="curData" />
+  <FloatAI :data="curData" v-if="curData?.model_answer_content?.Status === 'OK'" :type="resultStore.resultData.type" />
 </template>
 <script setup lang="ts">
 import resultIcon from "@/assets/images/result-icon.png";
@@ -155,7 +168,9 @@ import BaseResAudio from "@/components/BaseResAudio/index.vue";
 import { useResultStore } from "@/stores/result";
 import { AuditOutlined, EyeInvisibleOutlined, EyeOutlined, RightOutlined } from '@ant-design/icons-vue';
 import { computed, defineProps, ref } from "vue";
+import { useRouter } from "vue-router";
 const showmark = ref(true)
+const router = useRouter()
 const resultStore = useResultStore()
 const all_p = ref(null)
 const BadPronunciationCol = [
@@ -237,5 +252,25 @@ const onShowCurMark = (key, index, type) => {
   }
   :global(.ant-tooltip-arrow) {
     display: none!important;
+  }
+  .content-mask {
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.6);
+  }
+  .content-mask>div {
+    background: white;
+    padding: 25px 15px;
+    width: 260px;
+    border-radius: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    line-height: 2;
+    transform: translate(-50%, -50%);
   }
 </style>

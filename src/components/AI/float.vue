@@ -62,6 +62,7 @@ const timer = ref(null)
 const bottom = ref(null)
 const props = defineProps<{
   data: any
+  type: string
 }>()
 const aiParams:any = {
     toeflType: '',
@@ -181,7 +182,7 @@ const transformStyle1 = computed(() => {
   };
 });
 const btns = computed<any>(() => {
-  switch (query.type) {
+  switch (props.type) {
     case 'read':
       aiParams.toeflType = 'Reading'
       return [{
@@ -232,14 +233,14 @@ onMounted(() => {
     type: 'receive',
     id: starindex++,
     name: '',
-    content: [`有关于此篇${maps[query.type] || '文章'}的任何问题您都可以提问哦！AI助教会基于您所在的题目页面来回答您提出的问题。`]
+    content: [`有关于此篇${maps[props.type] || '文章'}的任何问题您都可以提问哦！AI助教会基于您所在的题目页面来回答您提出的问题。`]
   }
 })
 onUnmounted(() => {
   clearInterval(timer.value)
 })
 const getMainContent = (data) => {
-  switch (query.type) {
+  switch (props.type) {
     case 'read':
       return `${data?.question_parent?.question_content.join('\n')} \n\n ${data?.detail.join('\n')}`
     case 'hearing':
@@ -251,7 +252,7 @@ const getMainContent = (data) => {
   }
 }
 const getMcq = (data) => {
-  switch (query.type) {
+  switch (props.type) {
     case 'read':
       return data?.question_content
     case 'hearing':
@@ -314,6 +315,7 @@ const onClickTag = (title: string) => {
     'Main Content': getMainContent(props.data),
     mcq: mcq_titles.includes(title) ? getMcq(props.data) : '',
   }
+  console.log(params)
   connentAI(params)
 }
 </script>
