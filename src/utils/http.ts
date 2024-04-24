@@ -109,7 +109,11 @@ class Axios {
     if (error.code === 'ECONNABORTED') {
       message.error(error.message)
     } else {
-      message.error(error.message)
+      if(error.message.includes('not subscriptable')) {
+        message.warn('此功能为会员功能，如需使用请在“价格”页购买会员')
+      } else {
+        message.error(error.message)
+      }
     }
     return Promise.reject(error)
   }

@@ -1,8 +1,16 @@
 <template>
+  <a-modal
+      v-model:open="adDialog" 
+      title=""
+      class="!w-[800px]"
+      :footer="null"
+    >
+      <img width="100%" src="https://obs-parrotcore.obs.cn-east-3.myhuaweicloud.com/%E6%8E%A8%E5%B9%BF%E6%B4%BB%E5%8A%A8.jpeg" />
+  </a-modal>
   <div class="flex flex-col h-full w-full overflow-y-auto">
-    <div class="w-full hidden items-center justify-center" style="background: rgba(253, 212, 78, 1);">
+    <div class="w-full flex items-center justify-center" style="background: rgba(253, 212, 78, 1);">
       <img :src="Horn"/>
-      <div class="pl-[20px]">即日起至5月1日支付9.9元即可获得鹦鹉智学APP三个月会员+超值礼包！</div>
+      <div class="pl-[20px]">做任务免费领取会员!</div>
       <div class="font-bold pl-[40px] cursor-pointer" @click="onClickDel">查看详情<div class="h-[1px] bg-black-1 w-16"></div></div>
     </div>
     <div class="flex flex-1 w-full overflow-auto pt-16 pb-10 justify-center">
@@ -77,6 +85,7 @@ import Horn from '@/assets/images/horn.svg'
 import { request_menu_ad } from "@/service/user"
 import { ref } from "vue"
 const adUrl = ref('')
+const adDialog = ref(true)
 const adOpen = ref(false)
 const columns = [
   { 

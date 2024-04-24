@@ -85,7 +85,7 @@
                     <div class="flex mb-2 items-center justify-center w-[180px]">
                       <img :src="listIcon(i)" width="26" class="mt-3"/>
                       <div class="flex flex-col flex-1 overflow-hidden text-center">
-                        <div class="text-[50px] text-[#475467] font-medium">{{ val.avg_s }}</div>
+                        <div class="text-[50px] text-[#475467] font-medium">{{ val.avg_s.toFixed() }}</div>
                         <div class="text-base text-[#6B7280] mt-2">近7日平均分</div>
                       </div>
                     </div>
@@ -134,6 +134,14 @@
       </div>
     </div>
     <AIComponent />
+    <a-modal
+      v-model:open="adDialog" 
+      title=""
+      class="!w-[800px]"
+      :footer="null"
+    >
+      <img width="100%" src="https://obs-parrotcore.obs.cn-east-3.myhuaweicloud.com/%E6%8E%A8%E5%B9%BF%E6%B4%BB%E5%8A%A8.jpeg" />
+    </a-modal>
     <a-modal 
       class="calendar-modal"
       v-model:open="calenderOpen" 
@@ -175,6 +183,7 @@ import { useExamStore } from '@/stores/exam'
 import { useIndexStore } from '@/stores/index'
 import { useUserStore } from '@/stores/user'
 import { useWordStore } from '@/stores/word'
+import { getWithExpiry, setWithExpiry } from "@/utils/storage"
 import { getCurrentTimeOfDay } from "@/utils/utils"
 import {
 LeftOutlined,
@@ -189,6 +198,7 @@ const wordStore = useWordStore()
 const examStore = useExamStore()
 const userStore = useUserStore()
 const activeKey = ref('1');
+const adDialog = ref(false)
 const indexStore = useIndexStore()
 const HomeChart = ref()
 const chart = ref()
@@ -243,11 +253,15 @@ onMounted(() => {
   indexStore.daka()
   examDate.value = dayjs()
   const box = document.querySelector('.homeChartBox')
-  console.log('onMounted::::', box)
   HomeChart.value.style.width = box?.offsetWidth - 20 + 'px'
   HomeChart.value.style.height = box?.offsetHeight - 20 + 'px'
   chart.value = echarts.init(HomeChart.value);
   setOptions()
+  const todayAd = getWithExpiry('todayAD')
+  if(!todayAd) {
+    adDialog.value = true
+    setWithExpiry('todayAD', true, 86400000)
+  }
   window.addEventListener('resize', () => {
     const chart = echarts.getInstanceByDom(HomeChart.value);
     if (chart) {

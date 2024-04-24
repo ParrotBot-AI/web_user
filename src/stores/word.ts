@@ -7,6 +7,7 @@ import {
   request_refuse_jump,
   request_start_vocabs_tasks,
 } from "@/service/word";
+import { message } from "ant-design-vue";
 import { defineStore } from 'pinia';
 import { reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -170,12 +171,17 @@ export const useWordStore = defineStore('word', () => {
   const start_task = async () => {
     try {
       const task_account_id = Number($route.query.id)
-      const { payload } = await request_start_vocabs_tasks(task_account_id!)
-      wordTaskData.payload = {
-        ...payload,
+      if(task_account_id) {
+        const { payload } = await request_start_vocabs_tasks(task_account_id!)
+        wordTaskData.payload = {
+          ...payload,
+        }
+        wordTaskData.is_answer = false
+      } else {
+        message.warning('今日任务已完成')
+        $router.push('/wordRecite')
       }
-      wordTaskData.is_answer = false
-    }catch (error) {
+    } catch (error) {
       $router.push('/wordRecite')
     }
   }

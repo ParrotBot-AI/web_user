@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col">
     <h1 class="font-normal text-gray-900 sticky top-0 left-0 bg-white py-3 z-50">{{ props.title }}</h1>
-    <ul>
+    <ul v-if="props.list.length">
       <li v-for="item in props.list" :key="item.id" class="flex justify-between items-center py-4 overflow-hidden">
         <span v-if="item.status === 0" class="text-[12px] py-[2px] px-[6px] text-gray-700 rounded-md btn-status-0" :style="{border:'1px solid var(--color-gray-300)'}">未开始</span>
         <span v-if="item.status === 1" class="text-[12px] py-[2px] px-[6px] rounded-md btn-status-1" :style="{border:'1px solid var(--color-gray-300)'}">进行中</span>
@@ -12,6 +12,9 @@
         <a-button v-if="item.status === 2" class="text-[12px] text-yellow-1 border-yellow-1 endbtn">已完成</a-button>
       </li>
     </ul>
+    <div v-else class="text-xs text-center text-[#999] mt-20">
+      此功能为会员功能，如需使用请在“价格”页购买会员
+    </div>
   </div>
 </template>
 <script setup lang="ts">
