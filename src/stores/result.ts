@@ -650,18 +650,20 @@ export const useResultStore = defineStore('result', () => {
       list: mixFooterData.map((val, i) => ({
         title: val.title,
         isComputed: true,
-        total: res.detail[i].max_score,
-        count: res.detail[i].score,
+        total: 30 || res.detail[i].max_score,
+        count: res.detail[i]?.score,
       }))
     }
     for (let i = 0; i < mixFooterData.length; i++) {
-      const v = await request_get_repeat_result(res.detail[i].sheet_id)
-      const formatAllData = formatData(v, mixFooterData[i].id)
-      resultData.allData.push({
-        ...formatAllData.allData[0],
-        formatAllData,
-        originData: v
-      })
+      if(res.detail[i]?.sheet_id) {
+        const v = await request_get_repeat_result(res.detail[i]?.sheet_id)
+        const formatAllData = formatData(v, mixFooterData[i].id)
+        resultData.allData.push({
+          ...formatAllData.allData[0],
+          formatAllData,
+          originData: v
+        })
+      }
     }
     resultData.title = getWithExpiry('mixedExam-' + params.sheetId)?.resource_name || '模考成绩单'
     resultData.loading = false

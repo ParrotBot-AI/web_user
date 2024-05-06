@@ -167,6 +167,11 @@ const showScore = computed(() => {
         color: '#F7A705',
         text: `${item.questions[0]?.last_record} / ${item.questions[0]?.total}`
       }
+    } else if ($route.name === 'mock' && item?.score !== null) {
+      return {
+        color: '#F7A705',
+        text: `${item?.score} / ${item?.max_score}`
+      }
     } else if (item.xxx) {
       return {
         color: '#1B8B8C',
@@ -260,11 +265,11 @@ const toResult = () => {
   $router.push(`/result/${item?.questions[0]?.sheet_id}?type=${$route?.name}`)
 }
 const onResultClick = (v) => {
-  if(!v.questions[0]?.last_record) return
   if($route.name === 'mock') {
-    console.log('综合模考暂不支持此功能')
+    $router.push(`/result/${v.father_sheet}?type=mock`)
     return
   }
+  if(!v.questions[0]?.last_record) return
   $router.push(`/result/${v.questions[0]?.sheet_id}?type=${$route?.name}`)
 }
 </script>
