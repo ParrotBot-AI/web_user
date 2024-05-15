@@ -1,10 +1,11 @@
+import router from "@/router/index";
 import { getWithExpiry } from "@/utils/storage";
 import { message } from 'ant-design-vue';
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import axios from 'axios';
 
 export const SUCCESS_CODE = 2000
-export const AUTHERROT_CODE = 10005
+export const AUTHERROT_CODE = 401
 export const UNCONFIRMED_MSG = 'UNCONFIRMED'
 interface IRequestOptions extends AxiosRequestConfig {
   ignoreAuth?: boolean
@@ -63,6 +64,7 @@ class Axios {
 
   private handleSuccessResponse = (response: AxiosResponse) => {
     const originalRequest = response.config
+    console.log('handleSuccessResponse:',response)
     // 成功请求
     if (
       response?.data?.code === SUCCESS_CODE ||
@@ -74,34 +76,12 @@ class Axios {
     ) {
       return Promise.resolve(response.data?.data)
     }
+    message.error(response?.data?.msg?.detail || '请求失败')
     if (
-      response?.data?.code === AUTHERROT_CODE &&
-      !(response.config as IRequestOptions)?.ignoreAuth
+      response?.data?.code === AUTHERROT_CODE 
     ) {
-      if (!this.isRefreshing) {
-        this.isRefreshing = true
-        // 发起请求刷新token
-        return this.refreshToken()
-          .then((userInfo) => {
-            this.isRefreshing = false
-            this.onRefreshed(userInfo?.access)
-            // 更新token并重新发送之前被拦截的请求
-            originalRequest.headers.Authorization = `JWT ${userInfo?.access}`
-            return this.instance(originalRequest)
-          })
-          .catch((refreshError) => {
-            this.isRefreshing = false
-            return Promise.reject(refreshError)
-          })
-      }
-      return new Promise((resolve) => {
-        this.subscribeTokenRefresh((newAccessToken) => {
-          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
-          resolve(this.instance(originalRequest))
-        })
-      })
+      router.replace('/login')
     }
-    message.error(response?.data?.msg || '请求失败')
     return Promise.reject(response)
   }
 
