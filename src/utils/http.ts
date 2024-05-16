@@ -63,8 +63,11 @@ class Axios {
   }
 
   private handleSuccessResponse = (response: AxiosResponse) => {
-    const originalRequest = response.config
-    console.log('handleSuccessResponse:',response)
+    if(!response?.data) {
+      message.error('接口错误，请重新登录～')
+      router.replace('/login')
+      return Promise.reject(response)
+    }
     // 成功请求
     if (
       response?.data?.code === SUCCESS_CODE ||

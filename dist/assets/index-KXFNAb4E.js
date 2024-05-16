@@ -1,1 +1,0 @@
-import{_ as e}from"./_plugin-vue_export-helper-x3n3nnut.js";import{c as o,e as t}from"./index-vdyT4Arr.js";const r={};function c(n,s,a,p,_,f){return o(),t("div",null," 综合模考 ")}const l=e(r,[["render",c]]);export{l as default};
