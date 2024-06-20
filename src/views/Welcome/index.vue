@@ -2,9 +2,9 @@
   <div class="w-full h-full bg-green-2">
     <div class="container h-full flex relative mx-auto">
       <div class="absolute w-[380px] left-10 top-1/2 -translate-y-1/2 z-1">
-        <h1 class="text-4xl text-gray-900">开始你的学习第一步</h1>
+        <h1 class="text-4xl text-gray-900"> {{ $t('开始你的学习第一步')}} </h1>
         <p class="text-gray-600 pt-5">
-          在开始之前，我们希望通过几个问题来了解您的学习目标和期望，来为您制定最适合的学习方案。
+          {{ $t(' 在开始之前，我们希望通过几个问题来了解您的学习目标和期望，来为您制定最适合的学习方案。')}}
         </p>
         <a-form :model="formState" layout="vertical" class="mt-10" @finish="onFinish">
           <a-form-item
@@ -31,7 +31,7 @@
               html-type="submit"
               class="shadow-none w-full px-4 py-2.5 h-auto mt-4"
               :loading="loading"
-              >下一步</a-button
+              >{{ $t('下一步')}}</a-button
             >
           </a-form-item>
         </a-form>

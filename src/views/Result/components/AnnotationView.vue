@@ -17,14 +17,14 @@
             class="px-4 text-[16px] mx-1.5 py-[18px] flex items-center justify-center"
             @click="() => props.onViewOrigin(curData)"
           >
-            <span>查看原题<RightOutlined class="ml-1.5"/></span>
+            <span>{{ $t('查看原题') }}<RightOutlined class="ml-1.5"/></span>
           </a-button>
           <a-button 
             type="primary" 
             class="px-4 text-[16px] mx-1.5 py-[18px] flex items-center justify-center"
             @click="props.onBack"
           >
-            <span><AuditOutlined class="mr-1.5"/>查看报告</span>
+            <span><AuditOutlined class="mr-1.5"/>{{ $t('查看报告') }}</span>
           </a-button>
         </div>
       </template>
@@ -39,7 +39,7 @@
         border: '10px solid #F0F7F7',
         top: resultStore.resultData.type === 'spoken' ? `95px` : `82px`
       }">
-      <span class="text-xs text-[rgba(0,0,0,0.50)]">评分</span>
+      <span class="text-xs text-[rgba(0,0,0,0.50)]">{{ $t('评分')}}</span>
       <p class="text-[#475467] text-[14px]"><span class="text-[20px]">{{ curData?.model_answer_content?.Overall || 'Na' }}</span> / {{ curData?.mockScoreTotal }}</p>
     </div>
     <div 
@@ -48,14 +48,14 @@
         border: '10px solid #F0F7F7',
         top: resultStore.resultData.type === 'spoken' ? `95px` : `82px`
       }">
-      <span class="text-xs text-[rgba(0,0,0,0.50)]">评分</span>
+      <span class="text-xs text-[rgba(0,0,0,0.50)]">{{ $t('评分')}}</span>
       <p class="text-[#475467] text-[14px]"><span class="text-[20px]">{{ curData?.model_answer_content?.['Edited Overall'] || curData?.mockScoreTotal || 'Na'  }}</span> / {{ curData?.mockScoreTotal }}</p>
     </div>
     <div class="flex-1 overflow-hidden bg-white w-full flex">
       <div class="w-1/2 relative flex flex-col" :style="{borderRight: '1px solid #D0D5DD'}">
-        <h2 class="text-[#667085] font-base py-4 pl-[128px] text-base" v-if="resultStore.resultData.type === 'writing'">原版</h2>
+        <h2 class="text-[#667085] font-base py-4 pl-[128px] text-base" v-if="resultStore.resultData.type === 'writing'">{{ $t('原版')}}</h2>
         <h2 class="text-[#667085] font-base py-4 pl-[128px] text-base flex items-center overflow-hidden" v-else >
-          <span class="mr-4 mt-4">原版录音与文字转换</span>
+          <span class="mr-4 mt-4">{{ $t('原版录音与文字转换')}}</span>
           <BaseResAudio :src="curData?.question.answer_voice_link" class="my-audio"/>
         </h2>
         <div class="overflow-y-auto flex-1 w-full pl-[128px] pr-[68px]" ref="all_p">
@@ -93,8 +93,8 @@
       <div class="w-1/2 relative">
         <div class="content-mask" v-if="curData?.model_answer_content.Status !== 'OK' && curData?.model_answer_content?.msg?.includes('用量已超使用上限制')">
           <div>
-            <p class="text-center pb-4">🔒您的今日免费批改次数已用尽<br/>如需批改，请购买会员</p>
-            <a-button type="primary" class="!text-[14px] mx-auto block" @click="router.replace('/price')">购买会员</a-button>
+            <p class="text-center pb-4">{{ $t('🔒您的今日免费批改次数已用尽')}}<br/>{{ $t('如需批改，请购买会员')}}</p>
+            <a-button type="primary" class="!text-[14px] mx-auto block" @click="router.replace('/price')">{{ $t('购买会员')}}</a-button>
           </div>
         </div>
         <a-tabs v-model:activeKey="curAiIndex" class="result-table">
@@ -138,7 +138,7 @@
     <!---footer-->
     <footer class="bg-[#F0F7F7] h-[124px] flex justify-between items-center px-10">
       <div>
-        <h2 class="text-[#667085] text-base pb-2">问题标注</h2>
+        <h2 class="text-[#667085] text-base pb-2">{{ $t('问题标注')}}</h2>
         <div class="flex">
           <div v-for="val in curData?.ques_mark" :key="val.id" class="flex text-base">
             <p :style="val.style">Aa</p>

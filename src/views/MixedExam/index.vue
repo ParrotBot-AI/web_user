@@ -1,6 +1,6 @@
 <template>
   <div>
-    综合模考
+    {{ $t('综合模考') }}
   </div>
 </template>
 <script>

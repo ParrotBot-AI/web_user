@@ -3,34 +3,34 @@
     <b-header title="单词练习" :onClickBack="onClickHelp">
       <template #right>
         <div class="flex items-center">
-          <a-button type="primary" class="mx-2 flex items-center justify-center h-[40px]" @click="onClickHelp"><img :src="left" class="pr-2" />返回</a-button>
+          <a-button type="primary" class="mx-2 flex items-center justify-center h-[40px]" @click="onClickHelp"><img :src="left" class="pr-2" />{{ $t('返回') }}</a-button>
         </div>
       </template>
     </b-header>
     <div class="help-container">
-      <h2 class="text-center mb-6">鹦鹉智学AI单词背诵</h2>
-      <p class="text-[#667085]">鹦鹉智学AI单词背诵会使用生词用AI生成文章来辅助背诵。这种背诵方式功能会让你的背诵记忆更加牢固、快速，也更加适应托福考试的要求。在我们过去做的实验中，100%的学生认为背诵效果提升，100%的学生认为这让单词背诵变得有趣。</p>
-      <h3 class="text-center mt-16">鹦鹉智学 4步AI背诵法</h3>
+      <h2 class="text-center mb-6">{{ $t('鹦鹉智学AI单词背诵') }}</h2>
+      <p class="text-[#667085]">{{ $t('鹦鹉智学AI单词背诵会使用生词用AI生成文章来辅助背诵。这种背诵方式功能会让你的背诵记忆更加牢固、快速，也更加适应托福考试的要求。在我们过去做的实验中，100%的学生认为背诵效果提升，100%的学生认为这让单词背诵变得有趣。') }}</p>
+      <h3 class="text-center mt-16">{{ $t('鹦鹉智学 4步AI背诵法') }}</h3>
       <ul class="help-block">
         <li>
           <span>1</span>
           <img :src="helpicon1" />
-          <h1>AI筛选生词</h1>
+          <h1>{{ $t('AI筛选生词') }}</h1>
         </li>
         <li>
           <span>2</span>
           <img :src="helpicon2" />
-          <h1>AI生词生成文章</h1>
+          <h1>{{ $t('AI生词生成文章') }}</h1>
         </li>
         <li>
           <span>3</span>
           <img :src="helpicon3" />
-          <h1>语境单词背诵</h1>
+          <h1>{{ $t('语境单词背诵') }}</h1>
         </li>
         <li class="review">
           <span>4</span>
           <img :src="helpicon4" />
-          <h1>AI模考复习</h1>
+          <h1>{{ $t('AI模考复习') }}</h1>
         </li>
       </ul>
     </div>
@@ -40,14 +40,14 @@
       <template #right>
         <div class="flex items-center">
           <p class="text-xs text-[#1B8B8C] mr-3 flex" v-if="curTask?.payload?.word && !curTask?.payload?.after_model">
-            <span class="mx-2 flex items-center"><img :src="icon1" class="mx-1"/>已学习单词 {{ curTask.payload?.today_study || 0}}</span>
-            <span class="flex items-center"><img :src="icon2" class="mx-1"/>发现生词 {{ curTask.payload?.process?.c || 0}}/{{ curTask.payload?.process?.t || 0}}</span>
+            <span class="mx-2 flex items-center"><img :src="icon1" class="mx-1"/>{{ $t('已学习单词') }} {{ curTask.payload?.today_study || 0}}</span>
+            <span class="flex items-center"><img :src="icon2" class="mx-1"/>{{ $t('发现生词') }} {{ curTask.payload?.process?.c || 0}}/{{ curTask.payload?.process?.t || 0}}</span>
           </p>
           <p class="text-xs text-[#1B8B8C] mr-3 flex" v-else>
-            <span class="mx-2 flex items-center"><img :src="icon1" class="mx-1"/>已学习单词 {{ curTask.payload?.process?.c || 0}}/{{ curTask.payload?.process?.t || 0}}</span>
+            <span class="mx-2 flex items-center"><img :src="icon1" class="mx-1"/>{{ $t('已学习单词') }} {{ curTask.payload?.process?.c || 0}}/{{ curTask.payload?.process?.t || 0}}</span>
           </p>
-          <a-button type="primary" class="mx-2 flex items-center justify-center h-[40px]" @click="onClickHelp"><img :src="help" class="pr-2" />帮助</a-button>
-          <a-button type="primary" class="mx-2 flex items-center justify-center h-[40px]" @click="wordStore.submit_Study()" v-if="curTask?.payload?.word && !curTask?.payload?.after_model">直接进入背诵 <img :src="right" class="pl-2" /></a-button>
+          <a-button type="primary" class="mx-2 flex items-center justify-center h-[40px]" @click="onClickHelp"><img :src="help" class="pr-2" />{{ $t('帮助') }}</a-button>
+          <a-button type="primary" class="mx-2 flex items-center justify-center h-[40px]" @click="wordStore.submit_Study()" v-if="curTask?.payload?.word && !curTask?.payload?.after_model">{{ $t('直接进入背诵') }} <img :src="right" class="pl-2" /></a-button>
         </div>
       </template>
     </b-header>
@@ -57,7 +57,7 @@
         <!--单词背诵-->
         <div class="flex w-full items-center flex-col bg-[#edf6f6] pt-44" :class="{'!pt-20': curTask?.payload?.hint }" v-if="curTask?.payload?.word">
           <p v-if="curTask?.payload?.hint" class="text-[#667085] text-[18px] font-medium pb-5 w-[500px]"> {{ curTask?.payload?.hint }} </p>
-          <h2 class="pb-20">{{curTask?.payload?.word}}的意思是？</h2>
+          <h2 class="pb-20">{{curTask?.payload?.word}}{{ $t('的意思是？') }}</h2>
           <div class="grid grid-cols-2 gap-8">
             <div 
               v-for="(val, i) in curTask?.payload?.stem" :key="i" 
@@ -71,8 +71,8 @@
               {{val}}
             </div>
           </div>
-          <a-button type="primary" class="mt-10 w-[270px] h-11" @click="wordStore.error_next()" v-if="curTask?.is_error">下一步</a-button>
-          <a-button type="primary" class="mt-10 w-[270px] h-11" @click="wordStore.submit_unknown()" v-else>不认识该词</a-button>
+          <a-button type="primary" class="mt-10 w-[270px] h-11" @click="wordStore.error_next()" v-if="curTask?.is_error">{{ $t('下一步') }}</a-button>
+          <a-button type="primary" class="mt-10 w-[270px] h-11" @click="wordStore.submit_unknown()" v-else>{{ $t('不认识该词') }}</a-button>
         </div>
         <!--AI文章-->
         <div class="flex w-full h-full items-center flex-col bg-[#edf6f6] md:px-40 px-12 py-14" v-else>
@@ -83,15 +83,15 @@
                 :data="curTask?.payload?.response!"
               />
             </div>
-            <a-button type="primary" class="w-[300px] h-[44px] shrink-0 mt-6" @click="onClickAINext" v-if="curTask?.is_end">下一步</a-button>
+            <a-button type="primary" class="w-[300px] h-[44px] shrink-0 mt-6" @click="onClickAINext" v-if="curTask?.is_end">{{ $t('下一步') }}</a-button>
           </div>
         </div>
       </template>
     </div>
     <div class="bg-[#edf6f6] flex flex-1 overflow-hidden items-center justify-center" v-else>
       <div class="flex flex-col items-center justify-center h-full">
-        <h2 class="text-2xl">恭喜你完成了今天的任务</h2>
-        <a-button type="primary" class="mt-10 w-[300px] h-[44px]" @click="router.push('/wordRecite')">返回单词首页</a-button>
+        <h2 class="text-2xl">{{ $t('恭喜你完成了今天的任务') }}</h2>
+        <a-button type="primary" class="mt-10 w-[300px] h-[44px]" @click="router.push('/wordRecite')">{{ $t('返回单词首页') }}</a-button>
       </div>
     </div>
   </div>

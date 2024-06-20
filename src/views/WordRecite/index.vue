@@ -91,8 +91,8 @@
                 <div class="text-sm">{{ $t(val.name) }}</div>
                 <div class="text-sm font-normal">{{ $t('总计')+ val.counts +$t('个') }}</div>
               </div>
-              <span class="text-base text-[#1B8B8C] font-noraml cursor-pointer" v-if="isshowJump(val)" @click="onShowDialog(i+1)">跳过</span>
-              <span class="text-base text-[#1B8B8C] font-noraml cursor-pointer" v-if="val.id > wordStore.vocabs_statics_data.status_book?.current_level"  @click="onShowDialog(i)">跳到</span>
+              <span class="text-base text-[#1B8B8C] font-noraml cursor-pointer" v-if="isshowJump(val)" @click="onShowDialog(i+1)">{{ $t('跳过') }}</span>
+              <span class="text-base text-[#1B8B8C] font-noraml cursor-pointer" v-if="val.id > wordStore.vocabs_statics_data.status_book?.current_level"  @click="onShowDialog(i)">{{ $t('跳到') }}</span>
             </div>
           </div>
         </div>
@@ -107,7 +107,7 @@
               class="bg-green-1 text-white w-[150px] h-[40px] rounded-lg border mb-[15px]  flex items-center justify-center cursor-pointer"
               @click="onClick('new')"
             >
-              学习新单词
+            {{ $t('学习新单词') }} 
             </a-button>
           </template>
         </a-card-meta>
@@ -121,7 +121,7 @@
               class="bg-green-1 text-white w-[150px] h-[40px] mb-[15px] rounded-lg border flex items-center justify-center cursor-pointer"
               @click="onClick('old')"
             >
-              复习旧单词
+            {{ $t('复习旧单词') }} 
             </a-button>
           </template>
         </a-card-meta>
@@ -139,7 +139,7 @@
     @cancel="() => wordStore.dialogEvent(false)"
   >
     <span class="-mt-[80px] w-[200px] block mx-auto"><img :src="WordIcon1" alt="dialog" class="w-full" /></span>
-    <p class="pt-7 text-base text-center px-3">这座小山已经容不下你了 <br /> <br /> 您的正确率过高，推荐您跳级下一个词库</p>
+    <p class="pt-7 text-base text-center px-3">{{ $t('这座小山已经容不下你了') }} <br /> <br />{{ $t('您的正确率过高，推荐您跳级下一个词库') }} </p>
   </a-modal>
   <a-modal 
     title="" 
@@ -150,7 +150,7 @@
     @ok="onJump"
   >
     <span class="-mt-[80px] w-[200px] block mx-auto"><img :src="WordIcon" alt="dialog" class="w-full" /></span>
-    <p class="pt-7 text-base text-center px-3">自行跳过词库可能让您词汇掌握不扎实，且不能跳回原来的等级。为保证快速提升成绩，我们会从最基础的词库开始查漏补缺。当我们发现您已经掌握这个词库时，会主动提醒您更新到更高级的词汇库。</p>
+    <p class="pt-7 text-base text-center px-3">{{ $t('自行跳过词库可能让您词汇掌握不扎实，且不能跳回原来的等级。为保证快速提升成绩，我们会从最基础的词库开始查漏补缺。当我们发现您已经掌握这个词库时，会主动提醒您更新到更高级的词汇库。') }}</p>
   </a-modal>
 </template>
 

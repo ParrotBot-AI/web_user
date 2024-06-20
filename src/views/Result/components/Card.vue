@@ -21,7 +21,7 @@
                 <h2 class="text-black font-semibold text-base mb-2">{{ val.title }}</h2>
                 <ul class="flex">
                   <li v-for="(v, j) in val.children" :key="j" class="flex flex-col items-center px-2">
-                    <h4 class="font-normal text-[#475467] text-nowrap">{{ v.title }} 错题</h4>
+                    <h4 class="font-normal text-[#475467] text-nowrap">{{ v.title }} {{ $t('错题') }}</h4>
                     <p class="font-bold text-gray-600">
                       <span class="text-[36px] text-[#C33473]">{{ v.count }}</span><span class="text-[24px]"> / {{ v.total }}</span>
                     </p>
@@ -35,7 +35,7 @@
                   <span class="text-[36px]">{{ val.count }}</span><span class="text-[24px]"> / {{ val.total }}</span>
                 </p>
                 <p v-else>
-                  <span class="text-xs text-gray-600 opacity-90">正在打分中...</span>
+                  <span class="text-xs text-gray-600 opacity-90">{{ $t('正在打分中...') }}</span>
                 </p>
               </template>
             </li>

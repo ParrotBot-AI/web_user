@@ -13,7 +13,7 @@
         :index="i"
       ></DropBox>
     </div>
-    <h2 class="text-gray-500 text-[16px] font-bold pb-3 pt-4">Answer Choices</h2>
+    <h2 class="text-gray-500 text-[16px] font-bold pb-3 pt-4">{{ $t('Answer Choices') }}</h2>
     <div class="flex flex-wrap w-[calc(100%+20px)] -ml-[10px]">
       <DragBox
         v-for="(val, i) in props.detail"

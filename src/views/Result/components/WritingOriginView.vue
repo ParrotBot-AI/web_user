@@ -8,7 +8,7 @@
             class="px-4 text-[16px] mx-1.5 py-[18px] flex items-center justify-center"
             @click="props.onExit"
           >
-            <span><AuditOutlined class="mr-1.5"/>查看批注</span>
+            <span><AuditOutlined class="mr-1.5"/>{{ $t('查看批注')}}</span>
           </a-button>
         </div>
       </template>

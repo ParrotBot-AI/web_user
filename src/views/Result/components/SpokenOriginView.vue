@@ -8,7 +8,7 @@
             class="px-4 text-[16px] mx-1.5 py-[18px] flex items-center justify-center"
             @click="props.onExit"
           >
-            <span><AuditOutlined class="mr-1.5"/>查看批注</span>
+            <span><AuditOutlined class="mr-1.5"/>{{ $t('查看批注')}}</span>
           </a-button>
         </div>
       </template>
@@ -26,7 +26,7 @@
               {{ val }}
           </p>
         </div>
-        <h4 class="text-[#667085] font-normal text-base mb-4">播放听力材料</h4>
+        <h4 class="text-[#667085] font-normal text-base mb-4">{{ $t('播放听力材料')}}</h4>
         <BaseResAudio :src="props.data?.question.answer_voice_link" />
       </div>
       <div class="w-1/2 flex flex-col overflow-y-auto px-[80px] pt-[20px] text-[#475467] text-base">
@@ -34,7 +34,7 @@
           <b>Question：</b> {{ props.data?.question.question_title }}
         </p>
         <div v-if="props.data?.question?.question_content">
-          <b class="mb-2 block">口语阅读原文</b>
+          <b class="mb-2 block">{{ $t('口语阅读原文')}}</b>
           <p v-for="(val,i) in props.data?.question?.question_content?.split('\n')" class="mb-4" :key="i">
               {{ val }}
           </p>

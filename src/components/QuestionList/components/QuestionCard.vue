@@ -1,80 +1,70 @@
 <template>
   <div class="flex px-3 pb-5 xl:w-1/3 w-1/2">
-    <div class="flex bg-white exam-card w-full" :style="{height: curCustomData.height + 'px' || 'auto'}">
+    <div class="flex bg-white exam-card w-full" :style="{ height: curCustomData.height + 'px' || 'auto' }">
       <!-- left -->
-      <div
-        class="left relative overflow-hidden h-full flex flex-col items-start text-white text-center">
-        <img class="absolute top-4 right-4 cursor-pointer" :src="examEdit" alt="examEdit" @click="toResult" v-if="isShowToResultBtn" />
-        <span class="text-[30px] pl-6 flex-1 flex items-center w-full">{{ $t(props.resource_name.split('-')[0]) }}</span>
+      <div class="left relative overflow-hidden h-full flex flex-col items-start text-white text-center">
+        <img class="absolute top-4 right-4 cursor-pointer" :src="examEdit" alt="examEdit" @click="toResult"
+          v-if="isShowToResultBtn" />
+        <span class="text-[30px] pl-6 flex-1 flex items-center w-full">{{ $t(props.resource_name.split('-')[0])
+          }}</span>
         <div v-if="isShowBtn" class="flex justify-around items-center w-full gap-3 px-3 mb-5">
-          <a-button @click="onSelectQuestion('mock_exam')" class="flex w-1/2 justify-between items-center h-8 overflow-hidden">
+          <a-button @click="onSelectQuestion('mock_exam')"
+            class="flex w-1/2 justify-between items-center h-8 overflow-hidden">
             <img :src="time" alt="time" />
             {{ $t('模考') }}
           </a-button>
-          <a-button v-show="$route.name !== 'mock'" @click="onSelectQuestion('practice')" class="flex w-1/2 justify-between items-center h-8 overflow-hidden">
+          <a-button v-show="$route.name !== 'mock'" @click="onSelectQuestion('practice')"
+            class="flex w-1/2 justify-between items-center h-8 overflow-hidden">
             <img :src="practice" alt="practice" />
             {{ $t('练习') }}
           </a-button>
         </div>
-        <div class="h-10 mb-1 -translate-y-8 flex flex-col items-start pl-3.5" :class="{'mb-1': !isHearing, 'mb-4': isHearing}" v-else>
+        <div class="h-10 mb-1 -translate-y-8 flex flex-col items-start pl-3.5"
+          :class="{ 'mb-1': !isHearing, 'mb-4': isHearing }" v-else>
           <span class="pb-2">
-            {{ $t('请选择此次'+( type === 'mock_exam' ? '模考' : '练习' )+'文章') }}
-            <a-tooltip 
-              placement="bottomLeft" 
-              v-if="curCustomData.promptText" 
-              color="#D0F0E6" 
-              :overlayInnerStyle="{color: '#0A3F64',fontSize: '12px',borderRadius: '15px',borderTopLeftRadius: '0',border: '1px solid #0A3F64', marginTop: '-20px', marginLeft: '3px', padding: '10px'}"
-            >
+            {{ $t('请选择此次' + (type === 'mock_exam' ? '模考' : '练习') + '文章') }}
+            <a-tooltip placement="bottomLeft" v-if="curCustomData.promptText" color="#D0F0E6"
+              :overlayInnerStyle="{ color: '#0A3F64', fontSize: '12px', borderRadius: '15px', borderTopLeftRadius: '0', border: '1px solid #0A3F64', marginTop: '-20px', marginLeft: '3px', padding: '10px' }">
               <template #title>
-                <span>{{curCustomData.promptText}}</span>
+                <span>{{ curCustomData.promptText }}</span>
               </template>
               <img :src="hint" alt="hint" />
             </a-tooltip>
           </span>
-          <span class="pb-6">{{computedCheckboxId.length}}/{{ curCustomData.maxSelectCount }}</span>
+          <span class="pb-6">{{ computedCheckboxId.length }}/{{ curCustomData.maxSelectCount }}</span>
         </div>
       </div>
       <!-- right 默认展示 -->
-      <div
-        v-if="isShowBtn" 
-        class="flex flex-col flex-1 overflow-hidden"
-      >
-        <template v-for="(v,i) in list" :key="v.section_id">
-          <h2 v-if="isHearing && i%3===0" class="pl-2 pt-2 text-[#333] text-base font-medium" :style="{borderTop: i===3 ? '1px solid #D0D5DD' : '1px solid transparent'}">Section {{i === 0 ? 1 : 2}}</h2>
-          <div class="flex justify-between items-center flex-1 px-3" :class="{separator: !isHearing}">
-            <span 
-              class="text-gray-500 break-word w-24 font-semibold text-base" 
-              v-if="Array.isArray(curCustomData.remark)"
-            >
+      <div v-if="isShowBtn" class="flex flex-col flex-1 overflow-hidden">
+        <template v-for="(v, i) in list" :key="v.section_id">
+          <h2 v-if="isHearing && i % 3 === 0" class="pl-2 pt-2 text-[#333] text-base font-medium"
+            :style="{ borderTop: i === 3 ? '1px solid #D0D5DD' : '1px solid transparent' }">Section {{ i === 0 ? 1 : 2
+            }}</h2>
+          <div class="flex justify-between items-center flex-1 px-3" :class="{ separator: !isHearing }">
+            <span class="text-gray-500 break-word w-24 font-semibold text-base"
+              v-if="Array.isArray(curCustomData.remark)">
               {{ curCustomData.remark[i] }}
-              <a-tooltip 
-                placement="bottomLeft" 
-                v-if="i === list.length - 1 && $route.name !== 'mock'"
-                color="#D0F0E6" 
-                :overlayInnerStyle="{color: '#0A3F64',fontSize: '12px',borderRadius: '15px',borderTopLeftRadius: '0',border: '1px solid #0A3F64', marginTop: '-20px', marginLeft: '3px', padding: '10px'}"
-              >
+              <a-tooltip placement="bottomLeft" v-if="i === list.length - 1 && $route.name !== 'mock'" color="#D0F0E6"
+                :overlayInnerStyle="{ color: '#0A3F64', fontSize: '12px', borderRadius: '15px', borderTopLeftRadius: '0', border: '1px solid #0A3F64', marginTop: '-20px', marginLeft: '3px', padding: '10px' }">
                 <template #title>
-                  <span>小啾预测题是AI自动生成的写作题目，<br/>帮您更好地迎战新的写作考核模式</span>
+                  <span>{{ $t('小啾预测题是AI自动生成的写作题目') }}，<br />{{ $t('帮您更好地迎战新的写作考核模式') }}</span>
                 </template>
-                <span class="!font-normal text-[#B2DAC8] text-xs flex items-center"><img :src="hint" alt="hint" class="mr-1"/>小啾预测题</span>
+                <span class="!font-normal text-[#B2DAC8] text-xs flex items-center"><img :src="hint" alt="hint"
+                    class="mr-1" />{{
+                      $t('小啾预测题') }}</span>
               </a-tooltip>
             </span>
-            <span 
-              class="text-gray-500 text-base" 
-              :class="{'w-[110px]':isHearing}"
-              v-else
-            >
-              <template v-if="!isHearing">{{ curCustomData.remark }}{{' '}}{{ v.questions[0].order }}</template>
-              <template v-else-if="isHearing && i === 4">{{ curCustomData.remark }}{{' '}}3</template>
-              <template v-else-if="isHearing && i === 5">{{ curCustomData.remark }}{{' '}}4</template>
-              <template v-else-if="isHearing && i%3 !== 0">{{ curCustomData.remark }}{{' '}}{{ v.questions[0].order - 1 }}</template>
-              <template v-else-if="isHearing && i%3 === 0">Conversation{{' '}}1</template>
+            <span class="text-gray-500 text-base" :class="{ 'w-[110px]': isHearing }" v-else>
+              <template v-if="!isHearing">{{ curCustomData.remark }}{{ ' ' }}{{ v.questions[0].order }}</template>
+              <template v-else-if="isHearing && i === 4">{{ curCustomData.remark }}{{ ' ' }}3</template>
+              <template v-else-if="isHearing && i === 5">{{ curCustomData.remark }}{{ ' ' }}4</template>
+              <template v-else-if="isHearing && i % 3 !== 0">{{ curCustomData.remark }}{{ ' ' }}{{ v.questions[0].order
+                - 1
+                }}</template>
+              <template v-else-if="isHearing && i % 3 === 0">Conversation{{ ' ' }}1</template>
             </span>
-            <span 
-              class="flex flex-col justify-center text-xs min-w-[50px] cursor-pointer" 
-              :style="{ color: showScore(v).color }"
-              @click="onResultClick(v)"
-            >
+            <span class="flex flex-col justify-center text-xs min-w-[50px] cursor-pointer"
+              :style="{ color: showScore(v).color }" @click="onResultClick(v)">
               <span v-show="showScore(v).color === '#F7A705'"> {{ $t('完成得分') }}</span>
               {{ $t(showScore(v).text) }}
             </span>
@@ -85,11 +75,16 @@
       <!-- right 选择内容 -->
       <div v-else class="flex flex-col flex-1 overflow-hidden py-2.5 justify-between">
         <a-checkbox-group v-model:value="checkboxId" class="w-full pl-2 flex flex-col">
-          <h2 v-if="isHearing" class="pt-2 pb-1 text-[#333] text-base font-medium">Section {{2}}</h2>
-          <p v-for="(v,i) in checkboxVal" :key="v.section_id" class="py-1.5">
+          <h2 v-if="isHearing" class="pt-2 pb-1 text-[#333] text-base font-medium">Section {{ 2 }}</h2>
+          <p v-for="(v, i) in checkboxVal" :key="v.section_id" class="py-1.5">
             <a-checkbox class="radius" :value="v.questions[0].question_id">
-              <span class="text-gray-500 break-word w-24 font-bold text-base" v-if="Array.isArray(curCustomData.remark)">{{ curCustomData.remark[i] }}</span>
-              <span class="font-bold pl-2 text-gray-500" v-else>{{ curCustomData.remark }}{{' '}}{{ isHearing ? i + 3 : i + 1 }}</span>
+              <span class="text-gray-500 break-word w-24 font-bold text-base"
+                v-if="Array.isArray(curCustomData.remark)">{{
+                  curCustomData.remark[i] }}</span>
+              <span class="font-bold pl-2 text-gray-500" v-else>{{ curCustomData.remark }}{{ ' ' }}{{ isHearing ? i + 3
+                :
+                i + 1
+                }}</span>
             </a-checkbox>
           </p>
         </a-checkbox-group>
@@ -144,11 +139,11 @@ const list = computed(() => {
   return props.section || props.children
 })
 const isShowToResultBtn = computed(() => {
-  if($route.name === 'mock') {
+  if ($route.name === 'mock') {
     return false
   }
   return list.value.some(val => {
-    if(val.section_id) {
+    if (val.section_id) {
       return val.questions[0].sheet_id && val.questions[0].last_record !== null
     }
   })
@@ -187,8 +182,8 @@ const showScore = computed(() => {
 })
 
 // 开始模拟考试
-const onSelectQuestion = async (v:EXAN_START['q_type']) => {
-  if($route.name === 'mock') { // 综合模考
+const onSelectQuestion = async (v: EXAN_START['q_type']) => {
+  if ($route.name === 'mock') { // 综合模考
     const res = await examStore.startMixedExam(type.value)
     setWithExpiry(`mixedExam-${res.sheet_id}`, {
       id: props.id,
@@ -199,7 +194,7 @@ const onSelectQuestion = async (v:EXAN_START['q_type']) => {
       quesid: props.children.map(val => val.questions)
     })
     await examStore.startExam(type.value, getRandomSubarray(props.children[0].questions, 2), res.sheet_id)
-    await $router.push({ 
+    await $router.push({
       name: 'readExam',
       query: {
         type: 'mixedExam',
@@ -210,13 +205,13 @@ const onSelectQuestion = async (v:EXAN_START['q_type']) => {
     })
     return
   }
-  if(
+  if (
     curCustomData.value.maxSelectCount === curCustomData.value.minSelectCount && props.section.length === curCustomData.value.maxSelectCount ||
     isHearing.value && props.section.length === 5
   ) {
     checkboxId.value = props.section.map(val => val.questions[0].question_id)
     type.value = v
-    await examStore.startExam(type.value,checkboxId.value)
+    await examStore.startExam(type.value, checkboxId.value)
     await $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id, name: props.resource_name.split('-')[0] } })
   } else {
     isShowBtn.value = !isShowBtn.value
@@ -229,19 +224,19 @@ const startMockExam = async () => {
   if (checkboxId.value.length === curCustomData.value.maxSelectCount) {
     try {
       startExamLoading.value = true
-      await examStore.startExam(type.value,isHearing.value ? [...props.section.slice(0,4).map(val => val.questions[0].question_id) ,...checkboxId.value] : checkboxId.value)
-      $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id , name: props.resource_name.split('-')[0] } })
+      await examStore.startExam(type.value, isHearing.value ? [...props.section.slice(0, 4).map(val => val.questions[0].question_id), ...checkboxId.value] : checkboxId.value)
+      $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id, name: props.resource_name.split('-')[0] } })
     } finally {
       startExamLoading.value = false
     }
-    
+
   } else {
     message.info('请选择Passage')
   }
 }
-const onEditClick = async (v:any) => {
+const onEditClick = async (v: any) => {
   await examStore.startExam('practice', [v.questions[0].question_id])
-  $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id, name: props.resource_name.split('-')[0]  } })
+  $router.push({ name: `${$route.name as string}Exam`, query: { id: examStore.examing_data.sheet_id, name: props.resource_name.split('-')[0] } })
 }
 // 计算选中的checkboxId
 const computedCheckboxId = computed(() => {
@@ -257,7 +252,7 @@ const backExam = () => {
 }
 
 const toResult = () => {
-  if($route.name === 'mock') {
+  if ($route.name === 'mock') {
     console.log('综合模考暂不支持此功能')
     return
   }
@@ -265,11 +260,11 @@ const toResult = () => {
   $router.push(`/result/${item?.questions[0]?.sheet_id}?type=${$route?.name}`)
 }
 const onResultClick = (v) => {
-  if($route.name === 'mock') {
+  if ($route.name === 'mock') {
     $router.push(`/result/${v.father_sheet}?type=mock`)
     return
   }
-  if(!v.questions[0]?.last_record) return
+  if (!v.questions[0]?.last_record) return
   $router.push(`/result/${v.questions[0]?.sheet_id}?type=${$route?.name}`)
 }
 </script>
@@ -306,7 +301,8 @@ const onResultClick = (v) => {
 .separator:last-child:after {
   height: 0;
 }
+
 :global(.ant-tooltip-arrow) {
-  display: none!important;
+  display: none !important;
 }
 </style>

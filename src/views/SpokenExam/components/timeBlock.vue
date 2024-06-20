@@ -13,7 +13,7 @@
       v-if="props.status === 'speak'"
       @click="endRecording"
     >
-      STOP RECORDING
+     STOP RECORDING
     </a-button>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <div class="absolute right-5 top-1/2 -translate-y-1/2 bg-white shadow-[0_4px_20px_0px_rgba(27,139,140,0.2)] w-[456px] z-10 rounded-lg p-12">
-      <h1 class="font-normal text-4xl text-gray-900"><ArrowLeftOutlined class="pr-2" @click="onClickToPassword" />忘记密码</h1>
+      <h1 class="font-normal text-4xl text-gray-900"><ArrowLeftOutlined class="pr-2" @click="onClickToPassword" />{{ $t('忘记密码') }}</h1>
       <a-form
         ref="formRef"
         :model="formState"
@@ -44,7 +44,7 @@
         </a-input>
       </a-form-item>
       <a-form-item class="mb-0">
-        <a-button type="primary" html-type="submit" class="shadow-none w-full px-4 py-2.5 h-auto" :loading="loading">确认</a-button>
+        <a-button type="primary" html-type="submit" class="shadow-none w-full px-4 py-2.5 h-auto" :loading="loading">{{ $t('确认') }}</a-button>
       </a-form-item>
     </a-form>
   </div>

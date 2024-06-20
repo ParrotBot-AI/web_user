@@ -6,7 +6,7 @@
           v-for="(val, i) in props.answerData?.question_parent.voice_content.split(/\n/)" v-html="val" :key="i"></p>
       </div>
       <div class="mt-4 mx-8">
-        <h4 class="text-[#667085] font-normal text-base mb-4">播放听力材料</h4>
+        <h4 class="text-[#667085] font-normal text-base mb-4">{{ $t('播放听力材料') }}</h4>
         <BaseResAudio :src="props.answerData?.question_parent.voice_link" />
       </div>
     </div>

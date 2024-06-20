@@ -1,48 +1,46 @@
 <template>
   <div class="flex p-5 w-full h-full">
-    
+
     <div class="flex flex-col flex-1 pr-4 h-full relative pt-[300px]">
       <!--用户信息-->
       <div class="absolute top-0 left-0 w-full pr-4">
         <div class="flex">
-          <div class="w-[calc(100%-60px)] flex bg-white h-[130px] ml-[60px] mt-4 shadow-lg rounded-md border border-border-1 border-solid relative pl-[80px]">
+          <div
+            class="w-[calc(100%-60px)] flex bg-white h-[130px] ml-[60px] mt-4 shadow-lg rounded-md border border-border-1 border-solid relative pl-[80px]">
             <a-avatar
-             class="bg-green-1 absolute top-[-10px] left-[-60px] shadow-lg rounded-md border border-border-1 border-solid" 
-              style="font-size: 40px;" 
-              shape="square" 
-              :size="100"
-              :src="indexStore.userInfo.avatar" :alt="indexStore.userInfo.name">
+              class="bg-green-1 absolute top-[-10px] left-[-60px] shadow-lg rounded-md border border-border-1 border-solid"
+              style="font-size: 40px;" shape="square" :size="100" :src="indexStore.userInfo.avatar"
+              :alt="indexStore.userInfo.name">
               <img :src="avatar" width="70%" />
             </a-avatar>
             <div class="h-full flex flex-col pr-10 max-w-[45%]">
-              <h1 class="text-[25px] text-gray-900 pt-6 truncate">{{ $t(getCurrentTimeOfDay()+'好') }}，{{ indexStore.userInfo.name }}
+              <h1 class="text-[25px] text-gray-900 pt-6 truncate">{{ $t(getCurrentTimeOfDay() + '好') }}，{{
+                indexStore.userInfo.name }}
               </h1>
               <p class="text-gray-600 pt-6 truncate">Cease to struggle and you cease to live.</p>
             </div>
-            <div class="flex h-full items-center justify-start"> 
+            <div class="flex h-full items-center justify-start">
               <div class="border-l w-[0.5px] h-1/2 bg-[rgba(0,0,0,0.20)]"></div>
             </div>
             <div class="flex flex-col ml-[40px] pt-6 overflow-auto">
               <div class="font-bold text-[18px] overflow-hidden">
-                每日打卡{{ ' ' }}
-                <a-tooltip 
-                  placement="bottomLeft" 
-                  color="#D0F0E6" 
-                  :overlayInnerStyle="{color: '#0A3F64',fontSize: '12px',borderRadius: '15px',borderTopLeftRadius: '0',border: '1px solid #0A3F64', marginTop: '-20px', marginLeft: '3px', padding: '10px'}"
-                >
+                {{ $t('每日打卡') }}{{ ' ' }}
+                <a-tooltip placement="bottomLeft" color="#D0F0E6"
+                  :overlayInnerStyle="{ color: '#0A3F64', fontSize: '12px', borderRadius: '15px', borderTopLeftRadius: '0', border: '1px solid #0A3F64', marginTop: '-20px', marginLeft: '3px', padding: '10px' }">
                   <template #title>
-                    <span>每日学习30分钟以上即完成当日<br/>打卡任务！加油哦！</span>
+                    <span>{{ $t('每日学习30分钟以上即完成当日') }}<br />{{ $t('打卡任务！加油哦！') }}</span>
                   </template>
                   <img :src="hint" alt="hint" />
                 </a-tooltip>
               </div>
               <div class="flex text-[12px] font-normal pt-3 ml-[-8px]">
-                <div class="flex px-[10px] flex-col items-center" v-for="(val,i) in userStore.homeDaka" :key="val?.date">
+                <div class="flex px-[10px] flex-col items-center" v-for="(val, i) in userStore.homeDaka"
+                  :key="val?.date">
                   <span class="w-[24px] h-[24px] daka-icon" :class="val.class">
-                      <svg width="24px" height="24px" v-if="val.class==='today'">
-                        <path id="fanPath" fill="#F3B84E" :d="computedStyle(val)"/>
-                      </svg>
-                    </span>
+                    <svg width="24px" height="24px" v-if="val.class === 'today'">
+                      <path id="fanPath" fill="#F3B84E" :d="computedStyle(val)" />
+                    </svg>
+                  </span>
                   <span class="mt-1">{{ val.week_day[0] }}</span>
                 </div>
               </div>
@@ -50,51 +48,59 @@
           </div>
         </div>
         <div class="grid w-full grid-cols-4 gap-2 h-[130px] py-4 ">
-          <a-card class="h-[116px] flex items-center justify-center" v-for="(val, id) in indexStore.userTargets" :key="val.id" :style="style_bg[id]" >
-            <a-card-meta >
+          <a-card class="h-[116px] flex items-center justify-center" v-for="(val, id) in indexStore.userTargets"
+            :key="val.id" :style="style_bg[id]">
+            <a-card-meta>
               <template #title>
-                <span v-if="val.id === 'test_due'" class="absolute right-1 top-1 w-6 h-6 cursor-pointer" @click="openCalendar">
+                <span v-if="val.id === 'test_due'" class="absolute right-1 top-1 w-6 h-6 cursor-pointer"
+                  @click="openCalendar">
                   <img :src="bxCalendar" />
                 </span>
                 <span class="flex items-center justify-center text-[34px] text-white">{{ val.val || 0 }}</span>
               </template>
               <template #description>
-                <span class="text-white">{{  $t(val.desc) }}</span>
+                <span class="text-white">{{ $t(val.desc) }}</span>
               </template>
             </a-card-meta>
           </a-card>
         </div>
       </div>
       <div class="grid grid-cols-5 grid-rows-5 gap-4 w-full h-full">
-        <div class="col-span-3 overflow-hidden row-span-5 bg-white rounded-md border shadow-lg border-border-1 border-solid flex-1 px-9 pb-3">
+        <div
+          class="col-span-3 overflow-hidden row-span-5 bg-white rounded-md border shadow-lg border-border-1 border-solid flex-1 px-9 pb-3">
           <div class="h-full relative pt-3">
             <a-tabs class="h-full task-tabs" v-model:activeKey="activeKey">
               <a-tab-pane key="1" tab="我的任务">
-                <BaseCard :title="`${$t('今日任务')} (${indexStore.userTargetsList?.today?.length})`" :list="indexStore.userTargetsList?.today">
+                <BaseCard :title="`${$t('今日任务')} (${indexStore.userTargetsList?.today?.length})`"
+                  :list="indexStore.userTargetsList?.today">
                 </BaseCard>
                 <BaseCard v-if="indexStore.userTargetsList?.wk?.length"
-                  :title="`${$t('周度任务')} (${indexStore.userTargetsList.wk.length})`" :list="indexStore.userTargetsList?.wk">
+                  :title="`${$t('周度任务')} (${indexStore.userTargetsList.wk.length})`"
+                  :list="indexStore.userTargetsList?.wk">
                 </BaseCard>
               </a-tab-pane>
-              <a-tab-pane key="2" tab="个人学习诊断" >
+              <a-tab-pane key="2" tab="个人学习诊断">
                 <template v-if="examStore?.pastScoresIsEmpty">
-                  <p class="text-xs text-center text-[#999] mt-20">暂无学习诊断，快去学习吧～</p>
+                  <p class="text-xs text-center text-[#999] mt-20">{{ $t('暂无学习诊断，快去学习吧～') }}</p>
                 </template>
                 <template v-else>
-                  <div v-for="(val, i) in examStore?.pastScores" class="flex w-full items-center justify-center overflow-hidden" :key="i">
+                  <div v-for="(val, i) in examStore?.pastScores"
+                    class="flex w-full items-center justify-center overflow-hidden" :key="i">
                     <div class="flex mb-2 items-center justify-center w-[180px]">
-                      <img :src="listIcon(i)" width="26" class="mt-3"/>
+                      <img :src="listIcon(i)" width="26" class="mt-3" />
                       <div class="flex flex-col flex-1 overflow-hidden text-center">
                         <div class="text-[50px] text-[#475467] font-medium">{{ val.avg_s.toFixed() }}</div>
-                        <div class="text-base text-[#6B7280] mt-2">近7日平均分</div>
+                        <div class="text-base text-[#6B7280] mt-2">{{ $t('近7日平均分') }}</div>
                       </div>
                     </div>
                     <div class="border-l w-[0.5px] bg-[#D0F0E6] ml-3 h-[78px]"></div>
                     <div class="flex flex-1 flex-col p-6 overflow-hidden">
-                      <div class="text-gray-500 font-bold mb-4 text-[1vw]">错误率最高的题型</div>
-                      <div class="flex overflow-auto scorll-bar-hidden" v-if="val.tag"> 
+                      <div class="text-gray-500 font-bold mb-4 text-[1vw]">{{ $t('错误率最高的题型') }}</div>
+                      <div class="flex overflow-auto scorll-bar-hidden" v-if="val.tag">
                         <div v-for="(v, i) in val.tag" :key="i">
-                          <div class=" text-[0.8vw] ml-2 justify-center text-gray-500 bg-white border-border-1 px-[12px] py-1" style=" border: 1px solid rgba(102, 112, 133, 1);  border-radius: 18px; width: auto; white-space: nowrap;">
+                          <div
+                            class=" text-[0.8vw] ml-2 justify-center text-gray-500 bg-white border-border-1 px-[12px] py-1"
+                            style=" border: 1px solid rgba(102, 112, 133, 1);  border-radius: 18px; width: auto; white-space: nowrap;">
                             {{ v.name }}
                           </div>
                         </div>
@@ -104,29 +110,30 @@
                 </template>
               </a-tab-pane>
             </a-tabs>
-            </div>
+          </div>
         </div>
-        <div class="bg-white rounded-md border-l col-start-4 col-span-2 row-span-2 shadow-lg flex flex-col items-center justify-center">
+        <div
+          class="bg-white rounded-md border-l col-start-4 col-span-2 row-span-2 shadow-lg flex flex-col items-center justify-center">
           <div class="flex mb-3">
             <div class="flex" style="width: 40%;">
-                <img :src="NewWord"  style="width: 100%;"/>
+              <img :src="NewWord" style="width: 100%;" />
             </div>
             <div style="width: 60%;">
-              <span class=" flex flex-col items-center text-[1vw]" style="width: 100%;">您的当前词汇量为<span class="sm:text-[3vw] text-[4vw]">
-                {{ wordStore.vocabs_statics_data?.vocab ? wordStore.vocabs_statics_data?.vocab : $t('未测试') }}
-              </span></span>
+              <span class=" flex flex-col items-center text-[1vw]" style="width: 100%;">{{ $t('您的当前词汇量为') }}<span
+                  class="sm:text-[3vw] text-[4vw]">
+                  {{ wordStore.vocabs_statics_data?.vocab ? wordStore.vocabs_statics_data?.vocab : $t('未测试') }}
+                </span></span>
             </div>
           </div>
-          <a-button
-            type="primary"
-            class="bg-green-1 text-white w-2/3 h-[34px] rounded-lg border  flex items-center justify-center cursor-pointer"  
-            @click="onClick('new')"
-          >
-            学习新单词
+          <a-button type="primary"
+            class="bg-green-1 text-white w-2/3 h-[34px] rounded-lg border  flex items-center justify-center cursor-pointer"
+            @click="onClick('new')">
+            {{ $t('学习新单词') }}
           </a-button>
         </div>
-        <div class="col-start-4 col-span-2 row-span-3 shadow-lg overflow-y-auto scorll-bar-hidden flex flex-col overflow-hidden rounded-md bg-white">
-          <div class="font-bold text-[20px] text-[#1B2559] pl-4 py-3">近七日访问次数</div>
+        <div
+          class="col-start-4 col-span-2 row-span-3 shadow-lg overflow-y-auto scorll-bar-hidden flex flex-col overflow-hidden rounded-md bg-white">
+          <div class="font-bold text-[20px] text-[#1B2559] pl-4 py-3">{{ $t('近七日访问次数') }}</div>
           <div class="homeChartBox flex-1 overflow-hidden p-2">
             <div ref="HomeChart"></div>
           </div>
@@ -134,33 +141,19 @@
       </div>
     </div>
     <AIComponent />
-    <a-modal
-      v-model:open="adDialog" 
-      title=""
-      class="!w-[800px]"
-      :footer="null"
-    >
-      <img width="100%" src="https://obs-parrotcore.obs.cn-east-3.myhuaweicloud.com/%E6%8E%A8%E5%B9%BF%E6%B4%BB%E5%8A%A8.jpeg" />
+    <a-modal v-model:open="adDialog" title="" class="!w-[800px]" :footer="null">
+      <img width="100%"
+        src="https://obs-parrotcore.obs.cn-east-3.myhuaweicloud.com/%E6%8E%A8%E5%B9%BF%E6%B4%BB%E5%8A%A8.jpeg" />
     </a-modal>
-    <a-modal 
-      class="calendar-modal"
-      v-model:open="calenderOpen" 
-      title=""
-      :closable="false"
-      :footer="null"
-      width="320px"
-    >
-      <a-calendar 
-        :fullscreen="false" 
-        v-model:value="examDate" 
-        :disabledDate="current => current < dayjs().startOf('day')"
-        @select="onselect"
-      >
-        <template #headerRender="{value:current}"> 
-          <div style="margin-bottom: 10px" class="h-[50px] bg-[#1B8B8C] text-white flex justify-center items-center">选择你的托福考试时间</div>
+    <a-modal class="calendar-modal" v-model:open="calenderOpen" title="" :closable="false" :footer="null" width="320px">
+      <a-calendar :fullscreen="false" v-model:value="examDate"
+        :disabledDate="current => current < dayjs().startOf('day')" @select="onselect">
+        <template #headerRender="{ value: current }">
+          <div style="margin-bottom: 10px" class="h-[50px] bg-[#1B8B8C] text-white flex justify-center items-center">{{
+            $t('选择你的托福考试时间') }}</div>
           <header class="flex justify-between items-center px-3 pb-2">
             <LeftOutlined class="cursor-pointer" @click="onclickChangeMonth(-1)" />
-            <span>{{current.year()}}年{{current.month() + 1}}月</span>
+            <span>{{ current.year() }}{{ $t('年') }}{{ current.month() + 1 }}{{ $t('月') }}</span>
             <RightOutlined class="cursor-pointer" @click="onclickChangeMonth(1)" />
           </header>
         </template>
@@ -186,8 +179,8 @@ import { useWordStore } from '@/stores/word'
 import { getWithExpiry, setWithExpiry } from "@/utils/storage"
 import { getCurrentTimeOfDay } from "@/utils/utils"
 import {
-LeftOutlined,
-RightOutlined
+  LeftOutlined,
+  RightOutlined
 } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
 import dayjs, { Dayjs } from 'dayjs'
@@ -212,7 +205,7 @@ const icons = {
 const listIcon = (i) => {
   return icons[i]
 }
-const setOptions =  () => {
+const setOptions = () => {
   console.log('userStore?.homeCharts?.length:', userStore?.homeCharts?.length)
   chart.value?.setOption({
     grid: {
@@ -221,7 +214,7 @@ const setOptions =  () => {
       top: '10px',
       bottom: '20px'
     },
-    color: [ '#f1b01f'],
+    color: ['#f1b01f'],
     xAxis: {
       data: userStore?.homeCharts?.map(item => item?.week_day[0])
     },
@@ -242,11 +235,11 @@ const style_bg = [
   'background: linear-gradient(254.37deg, #27B170 -16.85%, #49BD86 96.58%)'
 ]
 
-const onClick = (type: 'new' ) => {
+const onClick = (type: 'new') => {
   wordStore.to_task(type)
 }
 onMounted(() => {
-  wordStore.get_vocabs_statics() 
+  wordStore.get_vocabs_statics()
   wordStore.get_vocabs_tasks()
   examStore.getPastResult()
   userStore.api_checkin()
@@ -258,7 +251,7 @@ onMounted(() => {
   chart.value = echarts.init(HomeChart.value);
   setOptions()
   const todayAd = getWithExpiry('todayAD')
-  if(!todayAd) {
+  if (!todayAd) {
     adDialog.value = true
     setWithExpiry('todayAD', true, 86400000)
   }
@@ -310,37 +303,47 @@ const onselect = async (val) => {
 :global(.ant-picker-calendar) {
   overflow: hidden;
 }
+
 :global(.ant-tabs-content-holder) {
   overflow-y: auto;
 }
+
 :global(.calendar-modal .ant-modal-content) {
   padding: 0;
 }
+
 :global(.calendar-modal .ant-picker-calendar-date-content) {
   display: none;
 }
+
 :global(.calendar-modal .ant-picker-calendar.ant-picker-calendar-full .ant-picker-calendar-date) {
   width: 17px;
   height: 17px;
   padding: 0;
 }
+
 :global(.calendar-modal .ant-picker-calendar .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner) {
   background: #F3B84E;
   border-radius: 100%;
 }
+
 :global(.calendar-modal .ant-picker-calendar .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before) {
   border: none;
 }
+
 :global(.calendar-modal .ant-picker-content>tbody) {
-  margin-top: 10px!important;
+  margin-top: 10px !important;
 }
+
 .scorll-bar-hidden {
   scrollbar-width: none;
 }
+
 .daka-icon {
   border-radius: 50%;
   overflow: hidden;
 }
+
 .daka-icon.success {
   background-color: #F3B84E;
   background-image: url('@/assets/images/signed.svg');
@@ -348,6 +351,7 @@ const onselect = async (val) => {
   background-repeat: no-repeat;
   background-position: center center;
 }
+
 .daka-icon.fail {
   background-color: #D0D5DD;
   background-image: url('@/assets/images/sing-fail.svg');
@@ -355,10 +359,12 @@ const onselect = async (val) => {
   background-repeat: no-repeat;
   background-position: center center;
 }
+
 .daka-icon.today {
   background-color: #FFEAA4;
   position: relative;
 }
+
 .daka-icon.lock {
   background-color: #D0D5DD;
   background-image: url('@/assets/images/unsign.svg');
@@ -367,7 +373,3 @@ const onselect = async (val) => {
   background-position: center center;
 }
 </style>
-
-
-
-

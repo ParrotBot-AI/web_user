@@ -7,9 +7,9 @@
         <img :src="Form1" alt="login-bg" class="w-1/3" />
         </div>
         <div v-if="index===1" class="flex flex-col w-full  items-center justify-center mt-[30px] mb-[-100px] " style="height: 80%;"> 
-            <div class="text-[#475467] text-[16px] mb-1">学习目标</div>
-            <div class="my-2 text-[36px]">问题1 </div>
-            <div class="text-[#475467] text-[20px]">您目前的学习阶段是？</div>
+            <div class="text-[#475467] text-[16px] mb-1">{{ $t('学习目标') }}</div>
+            <div class="my-2 text-[36px]">{{ $t('问题1') }} </div>
+            <div class="text-[#475467] text-[20px]">{{$t('您目前的学习阶段是？')}}</div>
             <div class="flex w-full justify-center mt-[70px]" style=" height: 30%">
                 <div v-for="(v,i) in question[index-1]" :key="i"  class="flex flex-col items-center justify-center bg-white  rounded-md mx-4" style="width: 186px; height: 200px; border-radius: 8px 8px 8px 8px;border: 1px 1px 1px 1px;border: 1px solid rgba(208, 213, 221, 1)" :style="{ backgroundColor: v.backgroundColor }" @click="toggleImage(0, i)">
                     <img :src="v.isselect ? v.selectimg : v.img" class="w-[74.85px] mt-2" >
@@ -18,9 +18,9 @@
             </div>
         </div>
         <div v-if="index===2" class="flex flex-col w-full  items-center justify-center mt-[30px] mb-[-100px] " style="height: 80%;"> 
-            <div class="text-[#475467] text-[16px] mb-1">学习目标</div>
-            <div class="my-2 text-[36px]">问题2 </div>
-            <div class="text-[#475467] text-[20px]">您的学习目的是？</div>
+            <div class="text-[#475467] text-[16px] mb-1">{{$t('学习目标')}}</div>
+            <div class="my-2 text-[36px]"> {{ $t('问题2') }}</div>
+            <div class="text-[#475467] text-[20px]">{{ $t('您的学习目的是？') }}</div>
             <div class="flex w-full justify-center mt-[70px]" style=" height: 30%">
                 <div v-for="(v,i) in question[index-1]" :key="i" class="flex flex-col items-center justify-center bg-white  rounded-md mx-4" style="width: 186px; height: 200px; border-radius: 8px 8px 8px 8px;border: 1px 1px 1px 1px;border: 1px solid rgba(208, 213, 221, 1)" :style="{ backgroundColor: v.backgroundColor }"  @click="toggleImage(1, i)">
                     <img :src="v.isselect ? v.selectimg : v.img" class="w-[74.85px] mt-2">
@@ -29,9 +29,9 @@
             </div>
         </div>
         <div v-if="index===3" class="flex flex-col w-full  items-center justify-center mt-[30px] mb-[-100px] " style="height: 80%;"> 
-            <div class="text-[#475467] text-[16px] mb-1">学习目标</div>
-            <div class="my-2 text-[36px]">问题3 </div>
-            <div class="text-[#475467] text-[20px]">您是否正在机构补习托福？</div>
+            <div class="text-[#475467] text-[16px] mb-1">{{$t('学习目标')}}</div>
+            <div class="my-2 text-[36px]">{{ $t('问题3 ') }}</div>
+            <div class="text-[#475467] text-[20px]">{{ $t('您是否正在机构补习托福？') }}</div>
             <div class="flex w-full justify-center mt-[70px]" style=" height: 30%">
                 <div v-for="(v,i) in question[index-1]" :key="i" class="flex flex-col items-center justify-center bg-white  rounded-md mx-4" style="width: 186px; height: 200px; border-radius: 8px 8px 8px 8px;border: 1px 1px 1px 1px;border: 1px solid rgba(208, 213, 221, 1)" :style="{ backgroundColor: v.backgroundColor }"  @click="toggleImage(2, i)">
                     <img :src="v.isselect ? v.selectimg : v.img" class="w-[74.85px] mt-2">
@@ -50,10 +50,10 @@
                     <img :src="index === 1 ? LeftDisable : Left"  class="w-[22px]">
                 </a-button>
 
-                <a-button type="primary" class="shadow-none w-[293px] px-4 py-2.5 h-[44px] " @click="addindex">下一步</a-button>
+                <a-button type="primary" class="shadow-none w-[293px] px-4 py-2.5 h-[44px] " @click="addindex">{{ $t('下一步') }}</a-button>
             </div>
                 <a-progress :percent="percent" :showInfo="false" strokeColor="#F3B84E" style="width: 360px" />
-                <div class="text-gray-500">问题{{ index }}/3</div>
+                <div class="text-gray-500">{{$t('问题')}}{{ index }}/3</div>
         </div>
     </div>
 </template>

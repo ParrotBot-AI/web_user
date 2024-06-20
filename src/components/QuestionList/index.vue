@@ -1,5 +1,6 @@
 <template>
-  <a-spin v-if="loading" size="large" tip="题库加载中..." class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 ml-[100px]"/>
+  <a-spin v-if="loading" size="large" tip="题库加载中..."
+    class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 ml-[100px]" />
   <a-layout class="w-full h-full overflow-hidden" v-else>
     <header class="bg-green-2 pt-4 flex flex-col">
       <a-tabs v-model:activeKey="activeKey" @change="onTabChange" class="page-tab">
@@ -8,7 +9,7 @@
     </header>
     <div class="flex content-start flex-wrap flex-1 overflow-y-auto py-5 px-3 bg-green-2">
       <div v-if="!examStore.exam_data?.list?.length">
-          暂无数据
+        {{ $t('暂无数据') }}
       </div>
       <ExamCard v-else v-for="val in examStore.exam_data?.list" :key="val.resource_id" v-bind="val" />
     </div>
@@ -21,7 +22,7 @@ import ExamCard from "./components/QuestionCard.vue";
 const examStore = useExamStore()
 const activeKey = ref(0);
 const loading = ref(false)
-const onTabChange = async (activeKey:number) => {
+const onTabChange = async (activeKey: number) => {
   await examStore.getExamResource(activeKey)
 }
 onMounted(async () => {

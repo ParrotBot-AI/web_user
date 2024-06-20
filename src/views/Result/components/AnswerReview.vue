@@ -2,14 +2,14 @@
   <a-layout class="w-full h-full flex flex-col absolute top-0 left-0  bg-green-2 z-50">
     <header class="bg-green-2 px-6 py-4 flex justify-between items-center" v-show="showQuesNav">
       <div class="font-normal text-xl text-gray-900 ">
-        <ArrowLeftOutlined class="pr-2" @click="onReviewAnswer"/> 返回
+        <ArrowLeftOutlined class="pr-2" @click="onReviewAnswer"/> {{ $t('返回')}}
       </div>
       <a-button 
         type="primary" 
         class="px-4 text-[16px] mx-1.5 py-[18px] flex items-center justify-center"
         @click="onReviewAnswer"
       >
-        <span><AuditOutlined />{{ ' ' }}{{ ' ' }}查看报告</span>
+        <span><AuditOutlined />{{ ' ' }}{{ ' ' }}{{ $t('查看报告') }}</span>
       </a-button>
     </header>
     <div class="flex-1 overflow-hidden flex flex-col">

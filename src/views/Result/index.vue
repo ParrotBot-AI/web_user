@@ -11,7 +11,7 @@
               class="px-4 text-[16px] mx-1.5 py-[18px] flex items-center justify-center bg-[#B2DAC8] text-[#1B8B8C]"
             @click="onBackClick"
             >
-              <span><LeftOutlined />返回主页</span>
+              <span><LeftOutlined />{{ $t('返回主页')}}</span>
             </a-button>
             <a-button 
               type="primary" 
@@ -19,7 +19,7 @@
               v-if="resultStore.footerData[resultStore.resultData.footerActiveIndex].id !== 'MixedAll'"
               @click="onReviewAnswer"
             >
-              <span>回顾答案<RightOutlined /></span>
+              <span>{{ $t('回顾答案')}}<RightOutlined /></span>
             </a-button>
           </div>
         </template>

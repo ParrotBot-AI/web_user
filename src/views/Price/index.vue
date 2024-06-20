@@ -10,8 +10,8 @@
   <div class="flex flex-col h-full w-full overflow-y-auto">
     <div class="w-full flex items-center justify-center" style="background: rgba(253, 212, 78, 1);">
       <img :src="Horn"/>
-      <div class="pl-[20px]">做任务免费领取会员!</div>
-      <div class="font-bold pl-[40px] cursor-pointer" @click="onClickDel">查看详情<div class="h-[1px] bg-black-1 w-16"></div></div>
+      <div class="pl-[20px]">{{ $t('做任务免费领取会员!') }}</div>
+      <div class="font-bold pl-[40px] cursor-pointer" @click="onClickDel">{{ $t('查看详情') }}<div class="h-[1px] bg-black-1 w-16"></div></div>
     </div>
     <div class="flex flex-1 w-full overflow-auto pt-16 pb-10 justify-center">
       <a-table 
@@ -24,15 +24,15 @@
         <template #column1 = "{ text, index }">
           <div class="px-[10px]">
             <div class="text-[15px]">{{ text }}</div>
-            <div v-if="index === 7" class="text-[12px] font-normal">无限接近真实考试题，有几率在真实考试中复现。</div>
+            <div v-if="index === 7" class="text-[12px] font-normal">{{ $t('无限接近真实考试题，有几率在真实考试中复现。') }}</div>
           </div>
         </template>
         <template #column2 = "{ text, index }">
           <div class="px-[10px]">
             <img v-if="text === 'Contain'" :src="Contain" class="w-[25px]"  alt="Contain" />
             <span v-else >{{ text }}</span>
-            <div v-if="index === 0" class="text-[17px] font-bold text-green-1">免费版<div class="text-black-1 text-[30px] pt-[20px]">0元/月<div class="text-[12px] font-normal text-gray-500 pt-[20px]">免费使用我们所有模考，练习系统以及预测题，并获得个人问题诊断。
-  免费提供每日一次口语写作批改功能辅助您的学习。<div class="pt-[35px]">5月前注册赠送1年留学顾问。扫描企业微信领取</div></div></div></div>
+            <div v-if="index === 0" class="text-[17px] font-bold text-green-1">{{ $t('免费版') }}<div class="text-black-1 text-[30px] pt-[20px]">{{ $t('0元/月') }}<div class="text-[12px] font-normal text-gray-500 pt-[20px]">{{ $t('免费使用我们所有模考，练习系统以及预测题，并获得个人问题诊断。') }}
+  {{ $t('免费提供每日一次口语写作批改功能辅助您的学习。') }}<div class="pt-[35px]">{{ $t('5月前注册赠送1年留学顾问。扫描企业微信领取') }}</div></div></div></div>
           </div>
         </template>
         <template #column3 = "{ text, index }">
@@ -41,10 +41,10 @@
             <img v-else-if="index === 7" :src="Contain" class="w-[25px] pt-[16px] "  alt="Contain" />
             <span v-else >{{ text }}</span>
             <div v-if="index === 0" class="text-[17px] font-bold text-green-1" style="color: rgba(47, 223, 181, 1);">
-            <div class="absolute top-0 left-0 w-full" style="background: rgba(47, 223, 181, 1); height: 10px;"><div class="absolute left-0 w-full top-[-25px] text-[12px]">最受欢迎</div></div>练习版会员 
-            <div class="text-black-1 text-[30px] pt-[20px]">49元/月
-              <div class="text-[12px] font-normal text-gray-500 pt-[20px]">您可使用我们软件的全部功能：包括每日30题批改，实时答疑，单词无痛背诵，全能版心理支持等功能。
-                <div class="pt-[35px]">赠送：三年留学顾问</div>
+            <div class="absolute top-0 left-0 w-full" style="background: rgba(47, 223, 181, 1); height: 10px;"><div class="absolute left-0 w-full top-[-25px] text-[12px]">{{ $t('最受欢迎') }}</div></div>{{ $t('练习版会员') }} 
+            <div class="text-black-1 text-[30px] pt-[20px]">{{ $t('49元/月') }}
+              <div class="text-[12px] font-normal text-gray-500 pt-[20px]">{{ $t('您可使用我们软件的全部功能：包括每日30题批改，实时答疑，单词无痛背诵，全能版心理支持等功能。') }}
+                <div class="pt-[35px]">{{ $t('赠送：三年留学顾问') }}</div>
               </div>
             </div>
           </div>
@@ -55,11 +55,11 @@
             <img v-if="text === 'Contain' && index !== 7" :src="Contain" class="w-[25px] "  alt="Contain" />
             <img v-else-if="index === 7" :src="Contain" class="w-[25px] pt-[16px] "  alt="Contain" />
             <span v-else >{{ text }}</span>
-            <div v-if="index === 0" class="text-[17px] font-bold text-green-1" style="color:  rgba(36, 135, 189, 1);">自适应学习版
-              <div class="text-black-1 text-[30px] pt-[20px]">即将推出
+            <div v-if="index === 0" class="text-[17px] font-bold text-green-1" style="color:  rgba(36, 135, 189, 1);">{{ $t('自适应学习版') }}
+              <div class="text-black-1 text-[30px] pt-[20px]">{{ $t('即将推出') }}
                 <div class="text-[12px] font-normal text-gray-500 pt-[20px]">
-                  在练习版会员的基础上，您将获得网课及每日智能任务功能。<br />
-                  我们将附赠您12个月会员及终身留学顾问。
+                  {{ $t('在练习版会员的基础上，您将获得网课及每日智能任务功能。') }}<br />
+                  {{ $t('我们将附赠您12个月会员及终身留学顾问。') }}
                 </div>
               </div>
             </div>
@@ -68,13 +68,13 @@
       </a-table>
       <div class="fixed flex right-4 bottom-8 flex-col">
         <div class="bg-white h-28 w-28 p-2 mb-2"><img :src="erweima" class="w-full h-full" /></div>
-        <p class="text-[#3B3205]">扫码联系客服</p>
+        <p class="text-[#3B3205]">{{ $t('扫码联系客服') }}</p>
       </div>
     </div>
   </div>
   <a-modal v-model:open="adOpen" class="ad-modal" :footer="null">  
     <img :src="adUrl" width="100%"/>
-    <a-button @click="toAD" class="mx-auto block w-[220px] text-[#1B8B8C] border-[#1B8B8C]">领取礼包</a-button>
+    <a-button @click="toAD" class="mx-auto block w-[220px] text-[#1B8B8C] border-[#1B8B8C]">{{ $t('领取礼包') }}</a-button>
   </a-modal>
 </template>
 

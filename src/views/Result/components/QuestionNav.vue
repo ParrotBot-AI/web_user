@@ -2,7 +2,7 @@
   <div class="absolute right-40 bottom-20 z-40 flex flex-col bg-white shadow-[0px_2px_20px_10px_rgba(0,0,0,0.1)] min-w-52 rounded-xl"
     :style="transformStyle">
     <header class="h-10 flex justify-between items-center pl-4 pr-2 cursor-move border-solid border-[#B2DAC8] border-x-0 border-t-0 border-[1px]" ref="modalTitleRef">
-      <span class="text-[#475467]">快速导航</span>
+      <span class="text-[#475467]">{{ $t('快速导航') }}</span>
       <span class="size-icon cursor-pointer" @click="isMax = !isMax" :class="{
         min: !isMax,
         max: isMax
@@ -50,8 +50,8 @@
       </section>
     </main>
     <footer class="h-10 flex justify-between items-center px-2">
-      <span class="before:content-['<'] before:mr-2 block text-[#1B8B8C] cursor-pointer" @click="props.onChangeQues(-1)">上一题</span>
-      <span class="after:content-['>'] after:ml-2 block text-[#1B8B8C] cursor-pointer" @click="props.onChangeQues(1)">下一题</span>
+      <span class="before:content-['<'] before:mr-2 block text-[#1B8B8C] cursor-pointer" @click="props.onChangeQues(-1)">{{ $t('上一题') }}</span>
+      <span class="after:content-['>'] after:ml-2 block text-[#1B8B8C] cursor-pointer" @click="props.onChangeQues(1)">{{ $t('下一题') }}</span>
     </footer>
   </div>
 </template>
