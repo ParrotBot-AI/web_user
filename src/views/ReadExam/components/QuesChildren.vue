@@ -160,6 +160,46 @@ watchEffect(() => {
     HeaderBtnsConfig.next.isShow = true
   }
 })
+const formatKeyWords = (p, keywords_k, keywords_s) => {
+  if (p) {
+    const originText = examStore.curQuestion?.parentQuestion?.question_content[p - 1]
+    const paragraphEls = contentDiv.value?.querySelectorAll('p')
+    const paragraphEl = contentDiv.value?.querySelector('.read-mock-content-' + p)
+    paragraphEls?.forEach((val, i) => {
+      val.innerHTML = examStore.curQuestion?.parentQuestion?.question_content[i]
+    })
+    if (keywords_k && keywords_k !== '$$' && paragraphEl) {
+      paragraphEl.innerHTML = originText.replace(
+        new RegExp(keywords_k, 'g'),
+        `<b class="bg-[rgba(253,212,78,0.3)]">${keywords_k}</b>`
+      )
+    }
+    if (keywords_s && p && keywords_k !== '$$' && paragraphEl) {
+      paragraphEl.innerHTML = originText.replace(
+        new RegExp(keywords_s, 'g'),
+        `<b class="bg-[rgba(253,212,78,0.3)]">${keywords_s}</b>`
+      )
+    }
+    if (keywords_k === '$$' && keywords_s && p && paragraphEl) {
+      const answerValue = examStore.answerData.find(
+        (val) => val.question_id === examStore.curQuestion?.question_id
+      )?.answer
+      const _i = answerValue.findIndex((val) => val === 1)
+      let startindex = -1
+      paragraphEl.innerHTML = examStore.curQuestion?.parentQuestion?.original_question_content[
+        p - 1
+      ].replace(/\$\$/g, ($0, index) => {
+        startindex++
+        return startindex === _i
+          ? `<span class="fill-item" data-index="${startindex}">【 <em>${keywords_s}</em> 】</span>`
+          : `<span class="fill-item" data-index="${startindex}">【 <b></b> 】</span>`
+      })
+    }
+    paragraphEl?.scrollIntoView({ behavior: 'auto', block: 'start' })
+  } else {
+    contentDiv.value?.scrollTo(0, 0)
+  }
+}
 watchEffect(
   () => {
     if (examStore.curQuestion?.isViewPassage) {
@@ -169,44 +209,12 @@ watchEffect(
     const keywords_p = examStore.curQuestion?.keywords?.p //Todo: array 得判断
     const keywords_k = examStore.curQuestion?.keywords?.k
     const keywords_s = examStore.curQuestion?.keywords?.s
-    const p = Array.isArray(keywords_p) ? keywords_p[0] : keywords_p
-    if (p) {
-      const originText = examStore.curQuestion?.parentQuestion?.question_content[p - 1]
-      const paragraphEls = contentDiv.value?.querySelectorAll('p')
-      const paragraphEl = contentDiv.value?.querySelector('.read-mock-content-' + p)
-      paragraphEls?.forEach((val, i) => {
-        val.innerHTML = examStore.curQuestion?.parentQuestion?.question_content[i]
+    if (Array.isArray(keywords_p)) {
+      keywords_p.forEach((val) => {
+        formatKeyWords(val, keywords_k, keywords_s)
       })
-      if (keywords_k && keywords_k !== '$$' && paragraphEl) {
-        paragraphEl.innerHTML = originText.replace(
-          new RegExp(keywords_k, 'g'),
-          `<b class="bg-[rgba(253,212,78,0.3)]">${keywords_k}</b>`
-        )
-      }
-      if (keywords_s && keywords_p && keywords_k !== '$$' && paragraphEl) {
-        paragraphEl.innerHTML = originText.replace(
-          new RegExp(keywords_s, 'g'),
-          `<b class="bg-[rgba(253,212,78,0.3)]">${keywords_s}</b>`
-        )
-      }
-      if (keywords_k === '$$' && keywords_s && keywords_p && paragraphEl) {
-        const answerValue = examStore.answerData.find(
-          (val) => val.question_id === examStore.curQuestion?.question_id
-        )?.answer
-        const _i = answerValue.findIndex((val) => val === 1)
-        let startindex = -1
-        paragraphEl.innerHTML = examStore.curQuestion?.parentQuestion?.original_question_content[
-          p - 1
-        ].replace(/\$\$/g, ($0, index) => {
-          startindex++
-          return startindex === _i
-            ? `<span class="fill-item" data-index="${startindex}">【 <em>${keywords_s}</em> 】</span>`
-            : `<span class="fill-item" data-index="${startindex}">【 <b></b> 】</span>`
-        })
-      }
-      paragraphEl?.scrollIntoView({ behavior: 'auto', block: 'start' })
     } else {
-      contentDiv.value?.scrollTo(0, 0)
+      formatKeyWords(keywords_p, keywords_k, keywords_s)
     }
   },
   {
