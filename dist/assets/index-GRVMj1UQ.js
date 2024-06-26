@@ -1,0 +1,1 @@
+import{_ as e}from"./_plugin-vue_export-helper-x3n3nnut.js";import{c as o,e as r,t as n}from"./index-pJH6OLf6.js";const s={};function a(t,c,p,i,_,f){return o(),r("div",null,n(t.$t("综合模考")),1)}const m=e(s,[["render",a]]);export{m as default};
