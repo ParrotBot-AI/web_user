@@ -50,6 +50,7 @@
           <TimerBlock
             v-bind="curInfo.keywords!"
             v-else-if="curInfo.step === 3"
+            :disabledContinue="onDisabledContinue"
             status="speak"
             :onended="onSpeakended"
           />
@@ -103,6 +104,7 @@
               v-bind="curInfo.keywords!"
               v-if="curInfo.step === 4"
               status="speak"
+              :disabledContinue="onDisabledContinue"
               :onended="onSpeakended"
             />
           </template>
@@ -137,6 +139,7 @@
               v-bind="curInfo.keywords!"
               v-if="curInfo.step === 3"
               status="speak"
+              :disabledContinue="onDisabledContinue"
               :onended="onSpeakended"
             />
           </template>
@@ -152,7 +155,7 @@ import { request_computed_single_score, request_saveAnswer } from '@/service/exa
 import '@/service/file'
 import { uploadFileToOBS } from '@/service/file'
 import { useExamStore } from '@/stores/exam'
-import { blobToFile, stop } from '@/utils/recorder'
+import { blobToFile } from '@/utils/recorder'
 import HeaderBtn from '@/views/ReadExam/components/HeaderBtn.vue'
 import { computed, onMounted, reactive, ref, watchEffect } from 'vue'
 import TimerBlock from './components/timeBlock.vue'
@@ -185,22 +188,26 @@ const HeaderBtnsConfig = reactive<{
       if (step.value === 0) {
         step.value = 1
       } else {
-        if (curInfo.value.order === 1 && curInfo.value.step === 2) {
-          onPrepareended()
-        } else if (
-          (curInfo.value.order === 1 && curInfo.value.step === 3) ||
-          (curInfo.value.order === 2 && curInfo.value.step === 4) ||
-          (curInfo.value.order === 3 && curInfo.value.step === 4)
-        ) {
-          onSpeakended()
-        } else {
-          curInfo.value.step++
-        }
+        // console.log(curInfo.value.order, curInfo.value.step)
+        // if (curInfo.value.order === 1 && curInfo.value.step === 2) {
+        //   onPrepareended()
+        // } else if (
+        //   (curInfo.value.order === 1 && curInfo.value.step === 3) ||
+        //   (curInfo.value.order === 2 && curInfo.value.step === 4) ||
+        //   (curInfo.value.order === 3 && curInfo.value.step === 4)
+        // ) {
+        //   onSpeakended()
+        // } else {
+        curInfo.value.step++
+        // }
       }
       changeQueryQuestion()
     }
   }
 })
+const onDisabledContinue = () => {
+  HeaderBtnsConfig.continue.disabled = true
+}
 const speakingInfo = reactive<
   Array<{
     type?: 'info'
@@ -236,11 +243,6 @@ const curInfo = computed(() => {
 })
 const onPrepareended = () => {
   speakingInfo[step.value].step++
-  try {
-    console.log('start record')
-  } catch (error) {
-    console.error(error)
-  }
 }
 const saveSingleAnswer = async (link: string) => {
   await request_saveAnswer({
@@ -251,13 +253,14 @@ const saveSingleAnswer = async (link: string) => {
   })
   await request_computed_single_score(query.id as string, curInfo.value?.question_id!)
 }
-const onSpeakended = async () => {
+const onSpeakended = async (fileData) => {
   try {
-    const BlobAudio: Blob = stop()
+    const BlobAudio: Blob = fileData
     const fileName = `${curInfo.value.question_id}-${indexStore?.userInfo?.mobile}_${Date.now()}_answer.wav`
     const FileAudio = blobToFile(BlobAudio, fileName)
     const { url } = await uploadFileToOBS(FileAudio)
     await saveSingleAnswer(url)
+    HeaderBtnsConfig.continue.disabled = false
     if (step.value < speakingInfo.length - 1) {
       step.value++
       speakingInfo[step.value].step = 0

@@ -1,18 +1,17 @@
+import { message } from 'ant-design-vue'
 import Recorder from 'js-audio-recorder'
 
-let OReCorder: Recorder | null = null
-
 export function InitRecorder(): Recorder {
-  if (OReCorder) {
-    return OReCorder
+  if (window.OReCorder) {
+    return window.OReCorder
   }
   const oRecorder = new Recorder({
     sampleBits: 16, // 采样位数，支持 8 或 16，默认是16
     sampleRate: 16000, // 采样率，支持 11025、16000、22050、24000、44100、48000，根据浏览器默认值，我的chrome是48000
-    numChannels: 1,
+    numChannels: 1
   })
   // 单例模式 创建recorder
-  OReCorder = oRecorder
+  window.OReCorder = oRecorder
   return oRecorder
 }
 
@@ -32,11 +31,18 @@ export function stop() {
 
 export function destroy() {
   getRecorder().destroy()
-  OReCorder = null
+  window.OReCorder = null
 }
-
+export async function getMicrophoneAccess() {
+  try {
+    await navigator.mediaDevices.getUserMedia({ audio: true })
+    console.log('Microphone access granted.')
+  } catch (error) {
+    message.error(`Microphone access denied:${error}`)
+  }
+}
 export function blobToFile(blob: Blob, fileName: string) {
   // 创建一个新的File对象
-  const file = new File([blob], fileName, {type: blob.type})
+  const file = new File([blob], fileName, { type: blob.type })
   return file
 }
