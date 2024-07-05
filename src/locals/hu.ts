@@ -99,9 +99,9 @@ export default {
   未开始: 'Nem kezdett',
   进行中: 'Folyamatban',
   已完成: 'Befejezett',
-  '此功能为会员功能，如需使用请在“价格”页购买会员': 
+  '此功能为会员功能，如需使用请在“价格”页购买会员':
     'Ez a funkció csak tagok számára elérhető, kérjük, vásároljon tagságot az "Árak" oldalon, ha szükséges',
-  'Your browser does not support the audio element': 
+  'Your browser does not support the audio element':
     'A böngészője nem támogatja az audio elemet',
   暂无数据: 'Nincs adat',
   查看原题: 'Eredeti kérdés megtekintése',
@@ -141,15 +141,15 @@ export default {
   目标管理: 'Célkezelés',
   周报总结: 'Heti összefoglaló',
   开始你的学习第一步: 'Kezdje az első lépést a tanulásban',
-  '在开始之前，我们希望通过几个问题来了解您的学习目标和期望，来为您制定最适合的学习方案。': 
+  '在开始之前，我们希望通过几个问题来了解您的学习目标和期望，来为您制定最适合的学习方案。':
     'Mielőtt elkezdjük, szeretnénk néhány kérdés segítségével megismerni a tanulási céljait és elvárásait, hogy a legmegfelelőbb tanulási tervet készíthessük el Önnek.',
   跳到: 'Ugrás ide',
   这座小山已经容不下你了: 'Ez a domb már nem tud befogadni',
   '您的正确率过高，推荐您跳级下一个词库': 'A pontossága túl magas, javasoljuk, hogy lépjen át a következő szókincs szintre',
-  '自行跳过词库可能让您词汇掌握不扎实，且不能跳回原来的等级。为保证快速提升成绩，我们会从最基础的词库开始查漏补缺。当我们发现您已经掌握这个词库时，会主动提醒您更新到更高级的词汇库。': 
+  '自行跳过词库可能让您词汇掌握不扎实，且不能跳回原来的等级。为保证快速提升成绩，我们会从最基础的词库开始查漏补缺。当我们发现您已经掌握这个词库时，会主动提醒您更新到更高级的词汇库。':
     'A szókincs szintjeinek önálló átugrása instabil szókincs ismerethez vezethet, és nem térhet vissza az előző szintre. A gyors eredményjavulás érdekében a legalsó szintről kezdjük, hogy feltárjuk és pótoljuk a hiányosságokat. Ha úgy találjuk, hogy már elsajátította ezt a szintet, értesítjük, hogy lépjen fel egy magasabb szintre.',
   鹦鹉智学AI单词背诵: 'PapagájBot AI szókincs tanulás',
-  '鹦鹉智学AI单词背诵会使用生词用AI生成文章来辅助背诵。这种背诵方式功能会让你的背诵记忆更加牢固、快速，也更加适应托福考试的要求。在我们过去做的实验中，100%的学生认为背诵效果提升，100%的学生认为这让单词背诵变得有趣。': 
+  '鹦鹉智学AI单词背诵会使用生词用AI生成文章来辅助背诵。这种背诵方式功能会让你的背诵记忆更加牢固、快速，也更加适应托福考试的要求。在我们过去做的实验中，100%的学生认为背诵效果提升，100%的学生认为这让单词背诵变得有趣。':
     'A PapagájBot AI szókincs tanulás AI által generált szövegeket használ a szavak memorizálásának segítésére. Ez a módszer stabilabb és gyorsabb memorizálást eredményez, jobban megfelelve a TOEFL követelményeinek. Korábbi kísérleteinkben a diákok 100%-a úgy találta, hogy ez a módszer javította a memorizálást, és érdekesebbé tette a szavak tanulását.',
   '鹦鹉智学 4步AI背诵法': 'PapagájBot AI 4 lépéses AI szókincs tanulási módszer',
   AI筛选生: 'AI szűrt új szavak',
@@ -158,12 +158,11 @@ export default {
   AI模考复习: 'AI próbavizsga áttekintés',
   已学习单词: 'Már megtanult szavak',
   发现生词: 'Új szavak felfedezése',
-  直接进入背诵 'Közvetlenül a memorizálásba lép',
   '的意思是？': 'jelentése?',
   不认识该词: 'Nem ismerem ezt a szót',
   恭喜你完成了今天的任务: 'Gratulálunk a mai feladat teljesítéséhez',
   返回单词首页: 'Vissza a szókincs főoldalra',
-  
+  直接进入背诵: 'Közvetlenül a memorizálásba lép',
   学习目标: 'Tanulási célok',
   问题1: '1. kérdés',
   '您目前的学习阶段是？': 'Mi a jelenlegi tanulási szakasza?',
@@ -190,20 +189,20 @@ export default {
   '无限接近真实考试题，有几率在真实考试中复现。': 'Majdnem azonos a valós vizsgakérdésekkel, esély van rá, hogy a valós vizsgán is megjelenjenek.',
   免费版: 'Ingyenes verzió',
   '0元/月': '0 yuan/hónap',
-  '免费使用我们所有模考，练习系统以及预测题，并获得个人问题诊断。': 
+  '免费使用我们所有模考，练习系统以及预测题，并获得个人问题诊断。':
     'Ingyenes hozzáférés az összes próbavizsgánkhoz, gyakorló rendszerünkhöz és előrejelzett kérdéseinkhez, valamint személyes problémadiagnózishoz.',
-  '免费提供每日一次口语写作批改功能辅助您的学习。': 
+  '免费提供每日一次口语写作批改功能辅助您的学习。':
     'Ingyenes napi egyszeri beszéd- és írásjavítás a tanulás segítéséhez.',
   '5月前注册赠送1年留学顾问。扫描企业微信领取': 'Regisztráljon május előtt, hogy egyéves tanulmányi tanácsadót kapjon. Szkannelje be a Vállalati WeChat kódot a fogadáshoz.',
   最受欢迎: 'Legnépszerűbb',
   练习版会员: 'Gyakorló verzió tagság',
   '49元/月': '49 yuan/hónap',
-  '您可使用我们软件的全部功能：包括每日30题批改，实时答疑，单词无痛背诵，全能版心理支持等功能。': 
+  '您可使用我们软件的全部功能：包括每日30题批改，实时答疑，单词无痛背诵，全能版心理支持等功能。':
     'Hozzáférhet szoftverünk összes funkciójához: napi 30 kérdés javítása, valós idejű kérdések és válaszok, fájdalommentes szókincs tanulás, átfogó pszichológiai támogatás stb.',
   '赠送：三年留学顾问': 'Bónusz: Három éves tanulmányi tanácsadó',
   自适应学习版: 'Adaptív tanulási verzió',
   即将推出: 'Hamarosan érkezik',
-  '在练习版会员的基础上，您将获得网课及每日智能任务功能。': 
+  '在练习版会员的基础上，您将获得网课及每日智能任务功能。':
     'A gyakorló verzió tagságon felül kapni fog online kurzusokat és napi intelligens feladatokat.',
   '我们将附赠您12个月会员及终身留学顾问。': '12 hónapos tagság és életre szóló tanulmányi tanácsadó jár mellé.',
   扫码联系客服: 'Szkennelem a QR kódot a kapcsolatfelvételhez',

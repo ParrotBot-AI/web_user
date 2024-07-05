@@ -5,7 +5,7 @@ interface StorageItem<T> {
   expiry: number | null;
 }
 
-export function setWithExpiry<T>(key: string, value: T, ttl: number | null, storageType: StorageType = 'localStorage'): void {
+export function setWithExpiry<T>(key: string, value: T, ttl?: number | null, storageType: StorageType = 'localStorage'): void {
   const storage = storageType === 'localStorage' ? localStorage : sessionStorage;
   const now = new Date();
   const item: StorageItem<T> = {

@@ -19,17 +19,17 @@
             </a-avatar>
           </div>
           <div v-if="rev" class="text-green-1 cursor-pointer decoration-solid decoration-green-1 underline"
-            @click="click_rev">{{ $t('编辑头像')}}</div>
+            @click="click_rev">{{ $t('编辑头像') }}</div>
           <div v-else class="w-full flex flex-col justify-center items-center mb-[-10px]">
             <a-button type="primary" html-type="submit" class="shadow-none w-2/3 px-4 py-1.5 h-auto"
               @click="updataAvatarInfo">{{ $t('更新') }}</a-button>
-            <div class="text-green-1 py-1 cursor-pointer" @click="click_rev">{{ $t('删除')}}</div>
+            <div class="text-green-1 py-1 cursor-pointer" @click="click_rev">{{ $t('删除') }}</div>
           </div>
         </div>
         <div
           class="bg-white w-[740px] h-full flex flex-col border border-border-1 border-solid rounded-md p-[80px] ml-[50px]"
           style="width: 50%;">
-          <h1 class="text-[26px]">{{ $t('账户信息')}}</h1>
+          <h1 class="text-[26px]">{{ $t('账户信息') }}</h1>
           <a-form ref="formRef" layout="vertical" name="login" autocomplete="off" class="mt-8" :model="userInfo"
             @finish="onsubmitUserinfo">
             <a-form-item :label="$t('用户名')" name="name">
@@ -40,7 +40,7 @@
               <a-input class="px-3.5 py-0" :placeholder="$t('输入密码')" value="password" type="password">
                 <template #suffix>
                   <span class="text h-full py-2.5 px-2 cursor-pointer text-green-1 " @click="onClickpassword()">
-                    {{ $t('修改密码')}}
+                    {{ $t('修改密码') }}
                   </span>
                 </template>
               </a-input>
@@ -54,12 +54,12 @@
                 </template>
                 <template #suffix>
                   <span class="text px-2 cursor-pointer  text-green-1" @click="onClicknumber()">
-                    {{ $t('修改手机号')}}
+                    {{ $t('修改手机号') }}
                   </span>
                 </template>
               </a-input>
             </a-form-item>
-            <h1 class="text-[26px]">{{ $t('通知提醒管理')}}</h1>
+            <h1 class="text-[26px]">{{ $t('通知提醒管理') }}</h1>
             <a-form-item name="code">
               <a-input class="mt-8 setting-item" :placeholder="$t('打开网站提醒')" disabled>
                 <template #addonAfter>
@@ -71,6 +71,17 @@
                   <a-switch v-model:checked="isopen_messages" />
                 </template>
               </a-input>
+            </a-form-item>
+            <a-form-item class="mb-6" label="请选择语言模式:" name="region">
+              <a-select :value="language" placeholder="请选择语言模式" size="large" @change="(val) => {
+                setWithExpiry('language', val)
+                language = val
+                locale = val
+              }">
+                <a-select-option value="cn">汉语</a-select-option>
+                <a-select-option value="en">英语</a-select-option>
+                <a-select-option value="hu">匈牙利语</a-select-option>
+              </a-select>
             </a-form-item>
             <a-form-item class="mb-0">
               <a-button type="primary" html-type="submit" class="shadow-none w-full px-4 py-2.5 h-auto">{{ $t('更新账户信息')
@@ -86,29 +97,31 @@
             <img :src="About" alt="about">
             <span class="text-[20px] pt-3">Version 1.0.0</span>
           </div>
-          <h1 class="text-[26px] flex w-1/2 items-start justify-start pt-10">{{ $t('隐私条款')}}</h1>
+          <h1 class="text-[26px] flex w-1/2 items-start justify-start pt-10">{{ $t('隐私条款') }}</h1>
           <a-form-item name="code">
             <a-input class="px-3.5 py-2.5 mt-8" :placeholder="$t('《鹦鹉智学协议》')" disabled="true">
               <template #suffix>
                 <span class="text px-2 cursor-pointer font-bold text-green-1" @click="toLink">
-                  {{ $t('查看')}}
+                  {{ $t('查看') }}
                 </span>
               </template>
             </a-input>
             <a-input class="px-3.5 py-2.5 mt-8" :placeholder="$t('《隐私保护指引》')" disabled="true">
               <template #suffix>
                 <span class="text px-2 cursor-pointer font-bold text-green-1" @click="toLink">
-                  {{ $t('查看')}} 
+                  {{ $t('查看') }}
                 </span>
               </template>
             </a-input>
-            <h1 class="text-[26px] flex w-1/2 items-start justify-start pt-10">{{ $t('反馈意见')}}</h1>
+            <h1 class="text-[26px] flex w-1/2 items-start justify-start pt-10">{{ $t('反馈意见') }}</h1>
             <div class="flex items-center h-full justify-between">
               <div class="flex flex-col mt-2" style="width: 30%;"><img :src="erweima" style="width: 127px;" />
-                <div class="w-[127px] flex justify-center items-center text-[16px] text-[#475467]">{{ $t('添加企业微信')}}</div>
+                <div class="w-[127px] flex justify-center items-center text-[16px] text-[#475467]">{{ $t('添加企业微信') }}
+                </div>
               </div>
-              <div class="text-[16px] mr-10"><span class="text-[#475467]">{{ $t('客服邮箱')}}</span><a
-                  herf="mailto:frank_fan@parrotbot.cn" class="text-green-1 pl-2">{{ $t('frank_fan@parrotbot.cn')}}</a></div>
+              <div class="text-[16px] mr-10"><span class="text-[#475467]">{{ $t('客服邮箱') }}</span><a
+                  herf="mailto:frank_fan@parrotbot.cn" class="text-green-1 pl-2">{{ $t('frank_fan@parrotbot.cn') }}</a>
+              </div>
             </div>
           </a-form-item>
         </div>
@@ -116,7 +129,7 @@
     </a-tabs>
   </div>
   <a-modal v-model:open="revise_password" closable=false footer='' class="mt-[100px] my-modal">
-    <div class="text-[26px] py-[30px] text-black-1">{{ $t('修改密码')}}</div>
+    <div class="text-[26px] py-[30px] text-black-1">{{ $t('修改密码') }}</div>
     <a-form ref="formRef1" :model="formState" layout="vertical" name="login" autocomplete="off" @finish="onFinish">
       <a-form-item label="手机号" name="mobile" :rules="rulesRef.mobile">
         <a-input v-model:value="formState.mobile" type="tel" class="py-2.5 px-3.5" placeholder="输入您的手机号">
@@ -141,15 +154,15 @@
         </a-input>
       </a-form-item>
       <a-form-item class="mb-0">
-        <a-button type="primary" html-type="submit" class="shadow-none w-full px-4 py-2.5 h-auto"
-          :loading="loading">{{ $t('确认')}}</a-button>
+        <a-button type="primary" html-type="submit" class="shadow-none w-full px-4 py-2.5 h-auto" :loading="loading">{{
+          $t('确认') }}</a-button>
       </a-form-item>
     </a-form>
   </a-modal>
   <a-modal v-model:open="revise_number" closable=false class="w-[250px] mt-[100px] my-modal " footer=''>
-    <div class="text-[26px] py-[30px] text-black-1">{{ $t('修改手机号')}}</div>
+    <div class="text-[26px] py-[30px] text-black-1">{{ $t('修改手机号') }}</div>
     <a-form-item name="mobile">
-      <div class="pb-[15px]">{{ $t('原手机号')}}</div>
+      <div class="pb-[15px]">{{ $t('原手机号') }}</div>
       <a-input type="tel" class="py-2 px-3.5" :placeholder="$t('您的手机号')" v-model:value=indexStore.userInfo.mobile
         disabled="true">
         <template #prefix>
@@ -159,22 +172,22 @@
       </a-input>
     </a-form-item>
     <a-form-item name="mobile">
-      <div class="pb-[15px]">{{ $t('验证码')}}</div>
+      <div class="pb-[15px]">{{ $t('验证码') }}</div>
       <a-input type="tel" class="py-2 px-3.5" :placeholder="$t('请输入验证码')">
         <template #suffix>
           <span class="text px-2 cursor-pointer  text-green-1">
-            {{ $t('获取验证码')}} 
+            {{ $t('获取验证码') }}
           </span>
         </template>
       </a-input>
     </a-form-item>
     <a-form-item name="mobile">
-      <div class="pb-[15px]">{{ $t('设置新手机号')}}</div>
+      <div class="pb-[15px]">{{ $t('设置新手机号') }}</div>
       <a-input type="tel" class="py-2 px-3.5" :placeholder="$t('请输入新手机号')">
       </a-input>
     </a-form-item>
     <a-button type="primary" html-type="submit" class="shadow-none w-full px-4 py-2.5 h-auto">{{
-              $t('确认') }}</a-button>
+      $t('确认') }}</a-button>
   </a-modal>
 </template>
 
@@ -186,13 +199,14 @@ import { uploadFileToOBS } from "@/service/file";
 import type { RESRPASSWOED } from "@/service/user";
 import { useIndexStore } from '@/stores/index';
 import { useUserStore } from '@/stores/user';
-import { getWithExpiry } from '@/utils/storage';
+import { getWithExpiry, setWithExpiry } from '@/utils/storage';
 import { useGetCode } from "@/utils/useGetCode";
 import { mobileRegex } from "@/utils/utils";
 import { CameraOutlined } from "@ant-design/icons-vue";
 import type { FormInstance } from 'ant-design-vue';
 import { message } from "ant-design-vue";
 import { reactive, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n'
 
 const userStore = useUserStore()
 const indexStore = useIndexStore()
@@ -202,10 +216,12 @@ const isopen_messages = ref(false)
 const revise_password = ref(false)
 const revise_number = ref(false)
 const rev = ref(true)
-
 const loading = ref(false)
 const formRef = ref<FormInstance>();
 const { getCodeBtnText, getCode, resetCode } = useGetCode()
+const { locale } = useI18n()
+const language = ref(getWithExpiry('language'));
+
 const userInfo = reactive({
   name: '',
   password: '',

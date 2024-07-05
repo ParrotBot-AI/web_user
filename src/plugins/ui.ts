@@ -1,16 +1,16 @@
-import { 
-  Button, 
-  message, 
-  ConfigProvider, 
-  StyleProvider, 
-  Form, 
-  Input, 
-  Layout, 
-  Menu, 
-  Avatar, 
-  Card, 
-  Modal, 
-  Checkbox, 
+import {
+  Button,
+  message,
+  ConfigProvider,
+  StyleProvider,
+  Form,
+  Input,
+  Layout,
+  Menu,
+  Avatar,
+  Card,
+  Modal,
+  Checkbox,
   Tabs,
   Table,
   Radio,
@@ -19,7 +19,8 @@ import {
   Slider,
   Spin,
   Switch,
-  Calendar
+  Calendar,
+  Select
 } from 'ant-design-vue';
 import type { App } from 'vue'
 import { createFromIconfontCN } from '@ant-design/icons-vue'
@@ -50,6 +51,7 @@ export function registerUI() {
     app.use(Switch)
     app.use(Modal)
     app.use(Calendar)
+    app.use(Select)
     app.component('IconFont', IconFont)
     app.config.globalProperties.$message = message
   }
