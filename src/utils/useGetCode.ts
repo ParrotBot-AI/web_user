@@ -1,15 +1,15 @@
-import {ref, computed} from "vue"
-export function useGetCode(count:number = 60) {
+import { ref, computed } from "vue"
+export function useGetCode(count: number = 60) {
   const getCodeCountdown = ref(count)
   const getCodeCountdownFlag = ref(false)
   const getCodeBtnText = computed(() => {
-    if(getCodeCountdown.value > 0 && getCodeCountdownFlag.value) {
+    if (getCodeCountdown.value > 0 && getCodeCountdownFlag.value) {
       return `${getCodeCountdown.value}秒后重新获取`
     }
     return '获取验证码'
   })
-  function getCode(phoneNumber:string, onGetCode: (phoneNumber: string) => void) {
-    if(!phoneNumber || getCodeCountdownFlag.value){
+  function getCode(phoneNumber: string, onGetCode: (phoneNumber: string) => void) {
+    if (!phoneNumber || getCodeCountdownFlag.value) {
       return
     }
     onGetCode(phoneNumber)
@@ -29,5 +29,5 @@ export function useGetCode(count:number = 60) {
     getCodeCountdown.value = 60
     getCodeCountdownFlag.value = false
   }
-  return {getCode, getCodeBtnText, getCodeCountdownFlag, resetCode}
+  return { getCode, getCodeBtnText, getCodeCountdownFlag, resetCode }
 }

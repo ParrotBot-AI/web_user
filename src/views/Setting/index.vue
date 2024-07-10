@@ -144,7 +144,7 @@
         <a-input v-model:value="formState.code" class="px-3.5 py-0" placeholder="输入验证码">
           <template #suffix>
             <span @click="onClickGetCode" class="text h-full py-2.5 px-2 cursor-pointer text-green-1">
-              {{ getCodeBtnText }}
+              {{ $t(getCodeBtnText) }}
             </span>
           </template>
         </a-input>
