@@ -70,7 +70,7 @@
           class="col-span-3 overflow-hidden row-span-5 bg-white rounded-md border shadow-lg border-border-1 border-solid flex-1 px-9 pb-3">
           <div class="h-full relative pt-3">
             <a-tabs class="h-full task-tabs" v-model:activeKey="activeKey">
-              <a-tab-pane key="1" tab="我的任务">
+              <a-tab-pane key="1" :tab="$t('我的任务')">
                 <BaseCard :title="`${$t('今日任务')} (${indexStore.userTargetsList?.today?.length})`"
                   :list="indexStore.userTargetsList?.today">
                 </BaseCard>
@@ -79,7 +79,7 @@
                   :list="indexStore.userTargetsList?.wk">
                 </BaseCard>
               </a-tab-pane>
-              <a-tab-pane key="2" tab="个人学习诊断">
+              <a-tab-pane key="2" :tab="$t('个人学习诊断')">
                 <template v-if="examStore?.pastScoresIsEmpty">
                   <p class="text-xs text-center text-[#999] mt-20">{{ $t('暂无学习诊断，快去学习吧～') }}</p>
                 </template>

@@ -9,7 +9,7 @@ import { formatStr } from "@/utils/utils"
 import { defineStore } from 'pinia'
 import { computed, h, reactive, watchEffect } from 'vue'
 import { useRoute } from "vue-router"
-
+import i18n from '@/plugins/i18n'
 
 export const useIndexStore = defineStore('menu', () => {
   const curRoute = useRoute()
@@ -65,21 +65,21 @@ export const useIndexStore = defineStore('menu', () => {
   async function getMenuValue(data: MENUITEM[]) {
 
     menuData.list = [
-      { "id": "home", "name": "看板", icon: 'home', key: 'home' },
+      { "id": "home", "name": i18n.global.t("看板"), icon: 'home', key: 'home' },
       ...data.map(item => {
         const name = formatStr(item.icon)
         return {
           key: name[0].toLowerCase() + name.slice(1),
           "id": item.id,
-          "name": item.name,
+          "name": i18n.global.t(item.name),
           icon: item.icon,
           pattern_id: item.pattern_id
         }
       })
     ]
     menuData.bottomList = [
-      { "id": "price", "name": "价格", icon: 'price', 'key': 'price' },
-      { "id": "setting", "name": "设置", icon: 'setting', 'key': 'setting' }
+      { "id": "price", "name": i18n.global.t("价格"), icon: 'price', 'key': 'price' },
+      { "id": "setting", "name": i18n.global.t("设置"), icon: 'setting', 'key': 'setting' }
     ]
   }
   watchEffect(() => {
@@ -105,7 +105,7 @@ export const useIndexStore = defineStore('menu', () => {
   })
   const requestMenu = async () => {
     const _usermenu = getWithExpiry('usermenu')!
-    if(_usermenu) {
+    if (_usermenu) {
       return Promise.resolve(_usermenu)
     }
     const res = await request_menu()
@@ -126,7 +126,7 @@ export const useIndexStore = defineStore('menu', () => {
     userInfo.avatar = res.avatar
     userInfo.name = res.name
   }
-  const requestAccountId = async (id:number) => {
+  const requestAccountId = async (id: number) => {
     const { account_id } = await request_getAccount_id(id, { exam_id: 1 })
     userInfo.account_id = account_id
   }
@@ -136,7 +136,7 @@ export const useIndexStore = defineStore('menu', () => {
       ...data,
     })
     console.log(res);
-    
+
   }
   return { daka, requestAccountId, request_update_checkin, set_update_questionnaire, requestMenu, getMenuValue, menuData, menuList, userTargets, requestUserInfo, userTargetsList, userInfo, menuBottomList };
 })

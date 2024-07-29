@@ -18,7 +18,8 @@
           </a-menu>
         </div>
       </div>
-      <div class="flex text-white mb-24 mt-4 px-3 w-full overflow-hidden items-center cursor-pointer" @click="onClickOut">
+      <div class="flex text-white mb-24 mt-4 px-3 w-full overflow-hidden items-center cursor-pointer"
+        @click="onClickOut">
         <a-avatar :src="indexStore.userInfo.avatar" :alt="indexStore.userInfo.name" :size="40">
           {{ indexStore.userInfo.name[0] || '' }}
         </a-avatar>
@@ -74,7 +75,7 @@ const onClickOut = () => {
 }
 
 .my-menu-list :global(.ant-menu-item-selected .ant-menu-item-icon) {
-  opacity: 1!important;
+  opacity: 1 !important;
 }
 
 .my-menu-list :global(.ant-menu .ant-menu-item .ant-menu-item-icon) {
@@ -84,9 +85,11 @@ const onClickOut = () => {
 :global(.ant-menu-title-content) {
   padding-left: 8px;
 }
+
 .bottomlist {
   position: relative;
 }
+
 .bottomlist:before {
   content: '';
   position: absolute;

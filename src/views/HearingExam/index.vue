@@ -1,24 +1,18 @@
 <template>
-  <a-spin v-if="loading" size="large" tip="试题加载中..." class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"/>
+  <a-spin v-if="loading" size="large" :tip="$t('试题加载中') + '...'"
+    class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50" />
   <template v-else>
     <a-layout class="w-full h-full flex flex-col">
       <b-header :title="query?.name || '模拟考试'">
         <template #right>
           <div class="flex">
-            <HeaderBtn 
-              v-for="(val,i) in examStore?.curQuestion?.headBtns" 
-              v-bind="val" 
-              :key="i"
-            />
+            <HeaderBtn v-for="(val, i) in examStore?.curQuestion?.headBtns" v-bind="val" :key="i" />
           </div>
         </template>
       </b-header>
-      <BaseGuide v-bind="examStore?.curQuestion" v-if="examStore?.curQuestion?.type === 'info' || examStore?.showHelp"/>
-      <QuestionItem 
-        v-else
-        :item="examStore?.curQuestion"
-        title="Listening"
-      />
+      <BaseGuide v-bind="examStore?.curQuestion"
+        v-if="examStore?.curQuestion?.type === 'info' || examStore?.showHelp" />
+      <QuestionItem v-else :item="examStore?.curQuestion" title="Listening" />
     </a-layout>
   </template>
 </template>
@@ -38,6 +32,4 @@ onMounted(async () => {
   loading.value = false
 })
 </script>
-<style scoped>
-  
-</style>
+<style scoped></style>

@@ -1,10 +1,12 @@
-import { ref, computed } from "vue"
+import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 export function useGetCode(count: number = 60) {
+  const { t } = useI18n()
   const getCodeCountdown = ref(count)
   const getCodeCountdownFlag = ref(false)
   const getCodeBtnText = computed(() => {
     if (getCodeCountdown.value > 0 && getCodeCountdownFlag.value) {
-      return `${getCodeCountdown.value}秒后重新获取`
+      return `${getCodeCountdown.value} ${t('秒后重新获取')}`
     }
     return '获取验证码'
   })

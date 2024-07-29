@@ -1,98 +1,57 @@
 <template>
   <div class="flex w-full h-full overflow-y-auto">
     <a-tabs class="w-full h-full page-tab-setting">
-      <a-tab-pane key="1" tab="个人账号" class="flex">
+      <a-tab-pane key="1" :tab="$t('个人账号')" class="flex">
         <div
-          class="bg-white w-[200px] flex shrink-0 h-[fit-content] flex-col items-center justify-center border border-border-1 border-solid rounded-md ml-[100px] pb-4"
-        >
+          class="bg-white w-[200px] flex shrink-0 h-[fit-content] flex-col items-center justify-center border border-border-1 border-solid rounded-md ml-[100px] pb-4">
           <div class="w-[100px] h-[100px] relative rounded-full overflow-hidden my-4">
             <div v-if="!rev" class="updateAvatar">
               <CameraOutlined v-if="!cacheAvatar" />
               <img :src="cacheAvatar" v-if="cacheAvatar" class="max-w-full max-h-full" />
-              <input
-                type="file"
-                class="opacity-0 absolute left-0 top-0 w-full h-full"
-                accept=".jpg,.png,.gif,.jpeg,.svg"
-                @change="onchange"
-              />
+              <input type="file" class="opacity-0 absolute left-0 top-0 w-full h-full"
+                accept=".jpg,.png,.gif,.jpeg,.svg" @change="onchange" />
             </div>
-            <a-avatar
-              v-show="!cacheAvatar"
+            <a-avatar v-show="!cacheAvatar"
               class="bg-green-1 overflow-hidden shadow-lg border border-border-1 border-solid"
-              :class="{ avatarEdit: !rev }"
-              style="font-size: 40px"
-              :size="100"
-              :src="indexStore.userInfo.avatar"
-              :alt="indexStore.userInfo.name"
-            >
+              :class="{ avatarEdit: !rev }" style="font-size: 40px" :size="100" :src="indexStore.userInfo.avatar"
+              :alt="indexStore.userInfo.name">
               <img :src="avatar" width="70%" class="mt-[26px]" />
             </a-avatar>
           </div>
-          <div
-            v-if="rev"
-            class="text-green-1 cursor-pointer decoration-solid decoration-green-1 underline"
-            @click="click_rev"
-          >
+          <div v-if="rev" class="text-green-1 cursor-pointer decoration-solid decoration-green-1 underline"
+            @click="click_rev">
             {{ $t('编辑头像') }}
           </div>
           <div v-else class="w-full flex flex-col justify-center items-center mb-[-10px]">
-            <a-button
-              type="primary"
-              html-type="submit"
-              class="shadow-none w-2/3 px-4 py-1.5 h-auto"
-              @click="updataAvatarInfo"
-              >{{ $t('更新') }}</a-button
-            >
+            <a-button type="primary" html-type="submit" class="shadow-none w-2/3 px-4 py-1.5 h-auto"
+              @click="updataAvatarInfo">{{ $t('更新') }}</a-button>
             <div class="text-green-1 py-1 cursor-pointer" @click="click_rev">{{ $t('删除') }}</div>
           </div>
         </div>
         <div
           class="bg-white w-[740px] h-full flex flex-col border border-border-1 border-solid rounded-md p-[80px] ml-[50px]"
-          style="width: 50%"
-        >
+          style="width: 50%">
           <h1 class="text-[26px]">{{ $t('账户信息') }}</h1>
-          <a-form
-            ref="formRef"
-            layout="vertical"
-            name="login"
-            autocomplete="off"
-            class="mt-8"
-            :model="userInfo"
-            @finish="onsubmitUserinfo"
-          >
+          <a-form ref="formRef" layout="vertical" name="login" autocomplete="off" class="mt-8" :model="userInfo"
+            @finish="onsubmitUserinfo">
             <a-form-item :label="$t('用户名')" name="name">
               <a-input class="px-3.5 py-2.5" v-model:value="userInfo.name"> </a-input>
             </a-form-item>
             <a-form-item :label="$t('密码')" name="password">
-              <a-input
-                class="px-3.5 py-0"
-                :placeholder="$t('输入密码')"
-                value="password"
-                type="password"
-              >
+              <a-input class="px-3.5 py-0" :placeholder="$t('输入密码')" value="password" type="password">
                 <template #suffix>
-                  <span
-                    class="text h-full py-2.5 px-2 cursor-pointer text-green-1"
-                    @click="onClickpassword()"
-                  >
+                  <span class="text h-full py-2.5 px-2 cursor-pointer text-green-1" @click="onClickpassword()">
                     {{ $t('修改密码') }}
                   </span>
                 </template>
               </a-input>
             </a-form-item>
             <a-form-item :label="$t('手机号')" name="mobile">
-              <a-input
-                type="tel"
-                class="py-2.5 px-3.5"
-                :placeholder="$t('您的手机号')"
-                v-model:value="indexStore.userInfo.mobile"
-                disabled="true"
-              >
+              <a-input type="tel" class="py-2.5 px-3.5" :placeholder="$t('您的手机号')"
+                v-model:value="indexStore.userInfo.mobile" disabled="true">
                 <template #prefix>
                   <span
-                    class="text-gray-500 pr-2 relative after:content-[''] after:w-[1px] after:h-5 after:bg-gray-500 after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2"
-                    >+86</span
-                  >
+                    class="text-gray-500 pr-2 relative after:content-[''] after:w-[1px] after:h-5 after:bg-gray-500 after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2">+86</span>
                 </template>
                 <template #suffix>
                   <span class="text px-2 cursor-pointer text-green-1" @click="onClicknumber()">
@@ -114,40 +73,28 @@
                 </template>
               </a-input>
             </a-form-item>
-            <a-form-item class="mb-6" label="请选择语言模式:" name="region">
-              <a-select
-                :value="language"
-                placeholder="请选择语言模式"
-                size="large"
-                @change="
-                  (val) => {
-                    setWithExpiry('language', val)
-                    language = val
-                    locale = val
-                  }
-                "
-              >
-                <a-select-option value="cn">汉语</a-select-option>
-                <a-select-option value="en">英语</a-select-option>
-                <a-select-option value="hu">匈牙利语</a-select-option>
+            <a-form-item class="mb-6" :label="$t('请选择语言模式') + ':'" name="region">
+              <a-select :value="language" placeholder="请选择语言模式" size="large" @change="(val) => {
+                setWithExpiry('language', val)
+                language = val
+                locale = val
+              }
+                ">
+                <a-select-option value="cn">{{ $t('汉语') }}</a-select-option>
+                <a-select-option value="en">{{ $t('英语') }}</a-select-option>
+                <a-select-option value="hu">{{ $t('匈牙利语') }}</a-select-option>
               </a-select>
             </a-form-item>
             <a-form-item class="mb-0">
-              <a-button
-                type="primary"
-                html-type="submit"
-                class="shadow-none w-full px-4 py-2.5 h-auto"
-                >{{ $t('更新账户信息') }}</a-button
-              >
+              <a-button type="primary" html-type="submit" class="shadow-none w-full px-4 py-2.5 h-auto">{{ $t('更新账户信息')
+                }}</a-button>
             </a-form-item>
           </a-form>
         </div>
       </a-tab-pane>
-      <a-tab-pane key="2" tab="关于鹦鹉智学" class="w-full h-full flex items-center justify-center">
-        <div
-          class="bg-white w-[740px] h-[818px] flex border border-border-1 border-solid rounded-md flex-col p-[80px]"
-          style="width: 50%"
-        >
+      <a-tab-pane key="2" :tab="$t('关于鹦鹉智学')" class="w-full h-full flex items-center justify-center">
+        <div class="bg-white w-[740px] h-[818px] flex border border-border-1 border-solid rounded-md flex-col p-[80px]"
+          style="width: 50%">
           <div class="flex flex-col w-full items-center justify-center">
             <img :src="About" alt="about" />
             <span class="text-[20px] pt-3">Version 1.0.0</span>
@@ -156,22 +103,14 @@
             {{ $t('隐私条款') }}
           </h1>
           <a-form-item name="code">
-            <a-input
-              class="px-3.5 py-2.5 mt-8"
-              :placeholder="$t('《鹦鹉智学协议》')"
-              disabled="true"
-            >
+            <a-input class="px-3.5 py-2.5 mt-8" :placeholder="$t('《鹦鹉智学协议》')" disabled="true">
               <template #suffix>
                 <span class="text px-2 cursor-pointer font-bold text-green-1" @click="toLink">
                   {{ $t('查看') }}
                 </span>
               </template>
             </a-input>
-            <a-input
-              class="px-3.5 py-2.5 mt-8"
-              :placeholder="$t('《隐私保护指引》')"
-              disabled="true"
-            >
+            <a-input class="px-3.5 py-2.5 mt-8" :placeholder="$t('《隐私保护指引》')" disabled="true">
               <template #suffix>
                 <span class="text px-2 cursor-pointer font-bold text-green-1" @click="toLink">
                   {{ $t('查看') }}
@@ -189,10 +128,8 @@
                 </div>
               </div>
               <div class="text-[16px] mr-10">
-                <span class="text-[#475467]">{{ $t('客服邮箱') }}</span
-                ><a herf="mailto:frank_fan@parrotbot.cn" class="text-green-1 pl-2"
-                  >frank_fan@parrotbot.cn</a
-                >
+                <span class="text-[#475467]">{{ $t('客服邮箱') }}</span><a herf="mailto:frank_fan@parrotbot.cn"
+                  class="text-green-1 pl-2">frank_fan@parrotbot.cn</a>
               </div>
             </div>
           </a-form-item>
@@ -202,26 +139,12 @@
   </div>
   <a-modal v-model:open="revise_password" closable="false" footer="" class="mt-[100px] my-modal">
     <div class="text-[26px] py-[30px] text-black-1">{{ $t('修改密码') }}</div>
-    <a-form
-      ref="formRef1"
-      :model="formState"
-      layout="vertical"
-      name="login"
-      autocomplete="off"
-      @finish="onFinish"
-    >
+    <a-form ref="formRef1" :model="formState" layout="vertical" name="login" autocomplete="off" @finish="onFinish">
       <a-form-item label="手机号" name="mobile" :rules="rulesRef.mobile">
-        <a-input
-          v-model:value="formState.mobile"
-          type="tel"
-          class="py-2.5 px-3.5"
-          placeholder="输入您的手机号"
-        >
+        <a-input v-model:value="formState.mobile" type="tel" class="py-2.5 px-3.5" placeholder="输入您的手机号">
           <template #prefix>
             <span
-              class="text-gray-500 pr-2 relative after:content-[''] after:w-[1px] after:h-5 after:bg-gray-500 after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2"
-              >+86</span
-            >
+              class="text-gray-500 pr-2 relative after:content-[''] after:w-[1px] after:h-5 after:bg-gray-500 after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2">+86</span>
           </template>
         </a-input>
       </a-form-item>
@@ -229,10 +152,7 @@
       <a-form-item label="验证码" name="code" :rules="rulesRef.code">
         <a-input v-model:value="formState.code" class="px-3.5 py-0" placeholder="输入验证码">
           <template #suffix>
-            <span
-              @click="onClickGetCode"
-              class="text h-full py-2.5 px-2 cursor-pointer text-green-1"
-            >
+            <span @click="onClickGetCode" class="text h-full py-2.5 px-2 cursor-pointer text-green-1">
               {{ $t(getCodeBtnText) }}
             </span>
           </template>
@@ -243,37 +163,20 @@
         </a-input>
       </a-form-item>
       <a-form-item class="mb-0">
-        <a-button
-          type="primary"
-          html-type="submit"
-          class="shadow-none w-full px-4 py-2.5 h-auto"
-          :loading="loading"
-          >{{ $t('确认') }}</a-button
-        >
+        <a-button type="primary" html-type="submit" class="shadow-none w-full px-4 py-2.5 h-auto" :loading="loading">{{
+          $t('确认') }}</a-button>
       </a-form-item>
     </a-form>
   </a-modal>
-  <a-modal
-    v-model:open="revise_number"
-    closable="false"
-    class="w-[250px] mt-[100px] my-modal"
-    footer=""
-  >
+  <a-modal v-model:open="revise_number" closable="false" class="w-[250px] mt-[100px] my-modal" footer="">
     <div class="text-[26px] py-[30px] text-black-1">{{ $t('修改手机号') }}</div>
     <a-form-item name="mobile">
       <div class="pb-[15px]">{{ $t('原手机号') }}</div>
-      <a-input
-        type="tel"
-        class="py-2 px-3.5"
-        :placeholder="$t('您的手机号')"
-        v-model:value="indexStore.userInfo.mobile"
-        disabled="true"
-      >
+      <a-input type="tel" class="py-2 px-3.5" :placeholder="$t('您的手机号')" v-model:value="indexStore.userInfo.mobile"
+        disabled="true">
         <template #prefix>
           <span
-            class="text-gray-500 pr-2 relative after:content-[''] after:w-[1px] after:h-5 after:bg-gray-500 after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2"
-            >+86</span
-          >
+            class="text-gray-500 pr-2 relative after:content-[''] after:w-[1px] after:h-5 after:bg-gray-500 after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2">+86</span>
         </template>
       </a-input>
     </a-form-item>
@@ -469,7 +372,7 @@ const click_rev = () => {
   cursor: pointer;
 }
 
-.setting-item .ant-input-group > .ant-input:first-child {
+.setting-item .ant-input-group>.ant-input:first-child {
   height: 50px;
 }
 

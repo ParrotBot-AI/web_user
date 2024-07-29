@@ -1,8 +1,9 @@
-import { startStream } from "@/service/ai";
-import { useIndexStore } from "@/stores/index";
-import { defineStore } from 'pinia';
-import { reactive, ref } from 'vue';
-let starindex = 0;
+import i18n from '@/plugins/i18n'
+import { startStream } from '@/service/ai'
+import { useIndexStore } from '@/stores/index'
+import { defineStore } from 'pinia'
+import { reactive, ref } from 'vue'
+let starindex = 0
 export const useAIStore = defineStore('ai', () => {
   const list = reactive<any>([])
   const indexStore = useIndexStore()
@@ -20,7 +21,7 @@ export const useAIStore = defineStore('ai', () => {
     // 【听力】： 错题解析”,“解题思路”,“重点信息",听力逻辑  /  其他问题 input 发送的时候
     // 【口语】： 其他问题 input 发送的时候
     // 【写作】： 其他问题 input 发送的时候
-    queryType: '', 
+    queryType: '',
     // Contains the query the student enters into the chatbox
     // Only needed for 其他问题 queryType
     // 输入的文本内容
@@ -42,49 +43,51 @@ export const useAIStore = defineStore('ai', () => {
     problemMethod: ''
   }
   const init = async () => {
-    if(indexInit.value) return
+    if (indexInit.value) return
     list.push({
       type: 'receive',
-      name: '鹦鹉AI助教',
+      name: i18n.global.t('鹦鹉AI助教'),
       isEnd: false,
       id: 'init',
-      content: ['Hi\n there! \nNice \nto \nmeet \nyou! \n如\n果\n你\n对\n托\n福\n学\n习\n有\n任\n何\n问\n题\n都\n可\n以\n在\n这\n里\n向\n我\n提\n问\n！']
+      content: [i18n.global.t('nice to meet you')]
     })
     indexInit.value = true
   }
 
-  const sendMessage = async (chatbotQuery:string) => {
+  const sendMessage = async (chatbotQuery: string) => {
     list.push({
       type: 'send',
       id: starindex++,
       name: indexStore.userInfo.name,
       content: chatbotQuery
     })
-    const {clientId} = await startStream({
+    const { clientId } = await startStream({
       ...aiParams,
       chatbotQuery,
       toeflType: 'Writing',
       queryType: '其他问题'
     })
-    const massages = [] 
-    const eventSource = new EventSource(`${import.meta.env.VITE_AI_APP_BASEURL}/v1/modelapi/assistantChatbot/${clientId}/`)
-    eventSource.onmessage = function(event) {
+    const massages = []
+    const eventSource = new EventSource(
+      `${import.meta.env.VITE_AI_APP_BASEURL}/v1/modelapi/assistantChatbot/${clientId}/`
+    )
+    eventSource.onmessage = function (event) {
       massages.push(event.data.replace(/\[DONE!\]/, ''))
-      if(event.data.match(/\[DONE!\]/)){
-          list.push({
-            type: 'receive',
-            id: starindex++,
-            isEnd: false,
-            name: '鹦鹉AI助教',
-            content: massages
-          })
-          eventSource.close()
+      if (event.data.match(/\[DONE!\]/)) {
+        list.push({
+          type: 'receive',
+          id: starindex++,
+          isEnd: false,
+          name: '鹦鹉AI助教',
+          content: massages
+        })
+        eventSource.close()
       }
     }
   }
   const setIsEnd = (id) => {
-    const res = list.find(item => item.id === id);
-    if(res && res.isEnd){
+    const res = list.find((item) => item.id === id)
+    if (res && res.isEnd) {
       res.isEnd = true
     }
   }
