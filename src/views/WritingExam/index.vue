@@ -1,38 +1,42 @@
 <template>
-<a-spin v-if="loading" size="large" tip="试题加载中..." class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"/>
-<a-layout class="w-full h-full flex flex-col" v-else>
+  <a-spin
+    v-if="loading"
+    size="large"
+    tip="试题加载中..."
+    class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"
+  />
+  <a-layout class="w-full h-full flex flex-col" v-else>
     <b-header :title="query?.name || '模拟考试'">
       <template #right>
         <div class="flex">
-          <HeaderBtn 
-            v-for="val in Object.keys(HeaderBtnsConfig)" 
-            v-bind="HeaderBtnsConfig[val]" 
+          <HeaderBtn
+            v-for="val in Object.keys(HeaderBtnsConfig)"
+            v-bind="HeaderBtnsConfig[val]"
             :key="val"
           />
         </div>
       </template>
     </b-header>
     <div class="flex flex-1 bg-white flex-col overflow-hidden">
-      <BGuide 
+      <BGuide
         v-if="curInfo?.type === 'info'"
         :title="curInfo.title!"
         :info_title="curInfo.info_title"
         :question_title="curInfo.question_title"
         :is_show_footer="true"
       />
-      <BGuide 
+      <BGuide
         v-else-if="curInfo?.type === 'question' && curInfo?.step === 0"
         :title="curInfo.guide?.title!"
         :info_title="curInfo.guide?.info_title"
         :question_title="curInfo.guide?.question_title"
         :is_show_footer="true"
       />
-      <div v-else-if="curInfo?.type === 'question' && curInfo?.step > 0" class="flex flex-col flex-1 overflow-hidden">
-        <BQuesTitle 
-          :title="curInfo.title" 
-          :index="step" 
-          :length="questions.length - 1"
-        > 
+      <div
+        v-else-if="curInfo?.type === 'question' && curInfo?.step > 0"
+        class="flex flex-col flex-1 overflow-hidden"
+      >
+        <BQuesTitle :title="curInfo.title" :index="step" :length="questions.length - 1">
           <template #right>
             <Timer />
           </template>
@@ -40,14 +44,23 @@
         <template v-if="curInfo?.keywords?.r === 1200">
           <template v-if="curInfo.step === 1">
             <div class="h-[100px]"></div>
-            <div class="flex flex-1 overflow-hidden" :style="{borderTop: '1px solid #D0D5DD'}">
-              <div class="w-1/2 text-base h-full overflow-y-auto px-10 pt-10" :style="{borderRight: '1px solid #D0D5DD'}">
-                <p class="text-[#475467] text-base pb-4 indent-8" v-for="(val,i) in curInfo.question_content" :key="i">{{ val }}</p>
+            <div class="flex flex-1 overflow-hidden" :style="{ borderTop: '1px solid #D0D5DD' }">
+              <div
+                class="w-1/2 text-base h-full overflow-y-auto px-10 pt-10"
+                :style="{ borderRight: '1px solid #D0D5DD' }"
+              >
+                <p
+                  class="text-[#475467] text-base pb-4 indent-8"
+                  v-for="(val, i) in curInfo.question_content"
+                  :key="i"
+                >
+                  {{ val }}
+                </p>
               </div>
             </div>
           </template>
           <template v-if="curInfo.step === 2">
-            <BAudio 
+            <BAudio
               title="Please listen carefully."
               :url="curInfo.voice_link!"
               img="1"
@@ -60,23 +73,36 @@
               <div class="text-base">
                 <p class="bg-[#F6F6F6] px-10 py-2">
                   <b>Directions:</b>
-                  You have 20 minutes to plan and write your response. Your response will be judged on the basis of the quality of your writing and on how well your response presents the points in the lecture and their relationship to the reading passage. Typically, an effective response will be 150 to 225 words.
+                  You have 20 minutes to plan and write your response. Your response will be judged
+                  on the basis of the quality of your writing and on how well your response presents
+                  the points in the lecture and their relationship to the reading passage.
+                  Typically, an effective response will be 150 to 225 words.
                 </p>
                 <p class="px-10 py-1">
-                  <b>Question: </b>Summarize the points made in the lecture, being sure to explain how they cast doubt on the specific points made in the reading passage.
+                  <b>Question: </b>Summarize the points made in the lecture, being sure to explain
+                  how they cast doubt on the specific points made in the reading passage.
                 </p>
               </div>
             </div>
-            <div class="flex flex-1 overflow-hidden" :style="{borderTop: '1px solid #D0D5DD'}">
-              <div class="w-1/2 text-base h-full overflow-y-auto px-10 pt-10" :style="{borderRight: '1px solid #D0D5DD'}">
-                <p class="text-[#475467] text-base pb-4 indent-8" v-for="(val,i) in curInfo.question_content" :key="i">{{ val }}</p>
+            <div class="flex flex-1 overflow-hidden" :style="{ borderTop: '1px solid #D0D5DD' }">
+              <div
+                class="w-1/2 text-base h-full overflow-y-auto px-10 pt-10"
+                :style="{ borderRight: '1px solid #D0D5DD' }"
+              >
+                <p
+                  class="text-[#475467] text-base pb-4 indent-8"
+                  v-for="(val, i) in curInfo.question_content"
+                  :key="i"
+                >
+                  {{ val }}
+                </p>
               </div>
               <div class="w-1/2 flex flex-col overflow-hidden">
-                <WtitingBtn             
-                  v-for="val in Object.keys(WritingBtnsConfig)" 
-                  v-bind="WritingBtnsConfig[val]" 
+                <WtitingBtn
+                  v-for="val in Object.keys(WritingBtnsConfig)"
+                  v-bind="WritingBtnsConfig[val]"
                   :onChange="onChange"
-                  :key="val" 
+                  :key="val"
                 />
               </div>
             </div>
@@ -85,32 +111,34 @@
         <template v-if="curInfo.keywords?.r === 600">
           <div class="flex text-base flex-1">
             <div class="flex w-1/2 flex-col py-10 px-10 text-[#475467]">
-              <div v-for="(val,i) in curInfo.question_title" :key="i">
+              <div v-for="(val, i) in curInfo.question_title" :key="i">
                 {{ val }}
               </div>
-              <Avatar 
+              <Avatar
                 :src="Man"
                 class="my-10"
                 :name="curInfo?.question_content[0]?.name"
                 :size="80"
               />
               <div>
-                <p v-for="(v,i) in curInfo?.question_content[0]?.content" :key="i">{{ v }}</p>
+                <p v-for="(v, i) in curInfo?.question_content[0]?.content" :key="i">{{ v }}</p>
               </div>
             </div>
-            <div class="flex w-1/2 flex-col py-4" :style="{ borderLeft: `1px solid #D0D5DD`}" >
-              <div v-for="(val,i) in curInfo?.question_content?.slice(1)" :key="i" class="text-[#475467] text-base flex mb-4 items-start">
-                <Avatar 
-                  :src="i == 0 ? Man1 : Man2"
-                  class="mx-10"
-                  :name="val.name"
-                  :size="80"
-                /><div><p v-for="(v,i) in val.content" :key="i">{{ v }}</p></div>
+            <div class="flex w-1/2 flex-col py-4" :style="{ borderLeft: `1px solid #D0D5DD` }">
+              <div
+                v-for="(val, i) in curInfo?.question_content?.slice(1)"
+                :key="i"
+                class="text-[#475467] text-base flex mb-4 items-start"
+              >
+                <Avatar :src="i == 0 ? Man1 : Man2" class="mx-10" :name="val.name" :size="80" />
+                <div>
+                  <p v-for="(v, i) in val.content" :key="i">{{ v }}</p>
+                </div>
               </div>
-              <WtitingBtn             
-                v-for="val in Object.keys(WritingBtnsConfig)" 
-                v-bind="WritingBtnsConfig[val]" 
-                :key="val" 
+              <WtitingBtn
+                v-for="val in Object.keys(WritingBtnsConfig)"
+                v-bind="WritingBtnsConfig[val]"
+                :key="val"
                 :onChange="onChange"
               />
             </div>
@@ -118,54 +146,54 @@
         </template>
       </div>
     </div>
- </a-layout>
+  </a-layout>
 </template>
 <script setup lang="ts">
 import Man1 from '@/assets/images/man-1.jpg'
 import Man2 from '@/assets/images/man-2.jpg'
 import Man from '@/assets/images/man.jpg'
-import BAudio from "@/components/BaseAudio/index.vue"
-import BGuide from "@/components/BaseGuide/index.vue"
+import BAudio from '@/components/BaseAudio/index.vue'
+import BGuide from '@/components/BaseGuide/index.vue'
 import { request_computed_single_score, request_saveAnswer } from '@/service/exam'
 import { useExamStore } from '@/stores/exam'
-import type { HeaderBtnProps } from "@/views/ReadExam/components/HeaderBtn.vue"
-import HeaderBtn from "@/views/ReadExam/components/HeaderBtn.vue"
-import Timer from "@/views/ReadExam/components/Timer.vue"
+import type { HeaderBtnProps } from '@/views/ReadExam/components/HeaderBtn.vue'
+import HeaderBtn from '@/views/ReadExam/components/HeaderBtn.vue'
+import Timer from '@/views/ReadExam/components/Timer.vue'
 import { computed, onMounted, reactive, ref, watchEffect } from 'vue'
-import { useRoute, useRouter } from "vue-router"
-import Avatar from "./components/Avatar.vue"
-import type { WritingBtnProps } from "./components/WtitingBtn.vue"
-import WtitingBtn from "./components/WtitingBtn.vue"
+import { useRoute, useRouter } from 'vue-router'
+import Avatar from './components/Avatar.vue'
+import type { WritingBtnProps } from './components/WtitingBtn.vue'
+import WtitingBtn from './components/WtitingBtn.vue'
 const loading = ref(true)
 const examStore = useExamStore()
 const $router = useRouter()
 const { query } = useRoute()
 const step = ref(query.step ? Number(query.step) : 0)
-const questions = reactive<Array<{
+const questions = reactive<
+  Array<{
     type?: 'info'
     title?: string
     question?: number
     info_title: string
     question_title: Array<string>
- }>>(
-    [
-      {
-        type: 'info',
-        title: 'Writing',
-        info_title: 'Writing Section Directions',
-        question_title: [
-          `In this section, you will be able to demonstrate your ability to use writing to communicate in anacademic environment. `,
-          `There will be two writing tasks.`,
-          `Now listen to the directions for the frst writing task.`
-        ]
-      }
+  }>
+>([
+  {
+    type: 'info',
+    title: 'Writing',
+    info_title: 'Writing Section Directions',
+    question_title: [
+      `In this section, you will be able to demonstrate your ability to use writing to communicate in anacademic environment. `,
+      `There will be two writing tasks.`,
+      `Now listen to the directions for the first writing task.`
     ]
-  )
+  }
+])
 const curInfo = computed(() => {
-  return questions[step.value] 
+  return questions[step.value]
 })
 
-const onChange = (content:string) => {
+const onChange = (content: string) => {
   questions[step.value].answer = content
 }
 const onAudioEnded = () => {
@@ -188,7 +216,7 @@ const HeaderBtnsConfig = reactive<{
     title: 'horn',
     id: 'horn',
     disabled: true,
-    isShow: false,
+    isShow: false
   },
   continue: {
     title: 'CONTINUE',
@@ -196,7 +224,8 @@ const HeaderBtnsConfig = reactive<{
     disabled: false,
     isShow: true,
     onClick: () => {
-      if(step.value === 0) { // 0 1 2
+      if (step.value === 0) {
+        // 0 1 2
         step.value = 1
       } else {
         questions[step.value].step++
@@ -211,17 +240,18 @@ const HeaderBtnsConfig = reactive<{
     isShow: false,
     onClick: async () => {
       const cur = questions[step.value]
-      if(step.value > 0) { // 0 1 2
-        if(questions[step.value].step < cur.maxStep){
+      if (step.value > 0) {
+        // 0 1 2
+        if (questions[step.value].step < cur.maxStep) {
           questions[step.value].step++
         } else {
-          if(step.value < questions.length - 1) {
+          if (step.value < questions.length - 1) {
             await saveSingleAnswer()
             step.value++
             cur.step = 0
           }
         }
-      } 
+      }
       changeQueryQuestion()
     }
   },
@@ -237,16 +267,15 @@ const HeaderBtnsConfig = reactive<{
   }
 })
 
-
 watchEffect(() => {
-  if(curInfo.value?.type === 'info') {
+  if (curInfo.value?.type === 'info') {
     HeaderBtnsConfig.horn.isShow = false
   }
-  if(curInfo.value?.step > 0) {
+  if (curInfo.value?.step > 0) {
     HeaderBtnsConfig.continue.isShow = false
     HeaderBtnsConfig.next.isShow = true
   }
-  if(step.value === questions.length - 1 && curInfo.value?.step === curInfo.value?.maxStep) {
+  if (step.value === questions.length - 1 && curInfo.value?.step === curInfo.value?.maxStep) {
     HeaderBtnsConfig.next.isShow = false
     HeaderBtnsConfig.submit.isShow = true
   } else {
@@ -259,7 +288,7 @@ const WritingBtnsConfig = reactive<{
 }>({
   cut: {
     bt_name: ['Copy', 'Cut', 'Paste']
-  },
+  }
 })
 
 const changeQueryQuestion = () => {
@@ -273,8 +302,8 @@ const changeQueryQuestion = () => {
 }
 onMounted(async () => {
   await examStore.getExamData(query.id as string)
-  examStore.examing_data.questions.map(val => {
-    if(val.keywords.r === 1200) {
+  examStore.examing_data.questions.map((val) => {
+    if (val.keywords.r === 1200) {
       val.type = 'question'
       val.step = 0
       val.maxStep = 3
@@ -303,10 +332,13 @@ onMounted(async () => {
       val.maxStep = 1
       val.answer = ''
       val.title = 'Academic discussion'
-      val.question_content = val.question_content.split(name_reg).slice(1).map((val:string, i:number) => ({
-        name: names[i].replace(/:/g, '').replace(/\n/g, ''),
-        content: val.split(/\n/g)
-      }))
+      val.question_content = val.question_content
+        .split(name_reg)
+        .slice(1)
+        .map((val: string, i: number) => ({
+          name: names[i].replace(/:/g, '').replace(/\n/g, ''),
+          content: val.split(/\n/g)
+        }))
       val.question_title = val.question_title.split(/\n/g)
       val.guide = {
         type: 'info',
@@ -316,7 +348,7 @@ onMounted(async () => {
         question_title: [
           `For this task, you will read an online discussion. A professor has posted a question about a topic, and someclassmates have responded with their ideas.
           You will write a response that contributes to the discussion. in the actual test and in Timed Mode in thispractice test, you will have 10 minutes to write your response.
-          If you finish your response before time is up, you may select <button class="nextbtn">Next</button> to end this section.`,
+          If you finish your response before time is up, you may select <button class="nextbtn">Next</button> to end this section.`
         ]
       }
     }
@@ -326,13 +358,10 @@ onMounted(async () => {
   changeQueryQuestion()
   loading.value = false
 })
-
 </script>
 <style scoped>
-
-.word{
+.word {
   justify-content: flex-start;
   align-items: flex-start;
 }
- 
 </style>
